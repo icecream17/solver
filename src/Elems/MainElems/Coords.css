@@ -1,0 +1,45 @@
+
+.Coords {
+   display: grid;
+   grid-template-columns: 3.5em 50vh 1fr; /* Copied from Main.css */
+   grid-template-rows: 3.5em 50vh;
+   grid-template-areas:
+      ". CoordCols ."
+      "CoordRows . .";
+   gap: 0 0;
+}
+
+.CoordCols, .CoordRows {
+   display: flex;
+   justify-content: center;
+   align-content: center;
+   text-align: center;
+   padding: 0;
+}
+
+.CoordCol, .CoordRow {
+   display: flex;
+   justify-content: center;
+   text-align: center;
+   align-items: center;
+   font-size: 100%;
+   padding: 0;
+}
+
+.CoordCols {
+   grid-area: CoordCols;
+   flex-direction: row;
+}
+
+.CoordRows {
+   grid-area: CoordRows;
+   flex-direction: column;
+}
+
+.CoordCol {
+   width: 11%;
+}
+
+.CoordRow {
+   height: 11%;
+}

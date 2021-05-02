@@ -1,0 +1,55 @@
+
+table.Sudoku {
+   border: 3px solid white;
+   border-collapse: collapse;
+
+   text-align: center;
+   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+      monospace;
+}
+
+tr.Row {
+   height: 10%;
+}
+
+tr.Row:nth-child(3n) > td.Cell {
+   border-bottom: 3px solid white;
+}
+
+td.Cell {
+   width: 10%;
+   border: 1.5px solid white;
+   font-size: 200%;
+}
+
+td.Cell[error="true"] {
+   background-color: rgb(139, 0, 0);
+}
+
+td.Cell[active="true"] {
+   background-color: gray;
+}
+
+td.Cell:nth-child(3n) {
+   border-right: 3px solid white;
+}
+
+table.Candidates {
+   width: 100%;
+   height: 100%;
+}
+
+table.Candidates > tbody > tr {
+   height: 33%;
+   font-size: 45%; /*
+      The font-size property is here instead of td.Candidate since its more specific
+      = half of 90%
+   */
+}
+
+td.Candidate {
+   width: 33.3%;
+   padding: 0;
+   line-height: 0;
+}
+

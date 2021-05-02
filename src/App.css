@@ -1,5 +1,28 @@
 .App {
-  text-align: center;
+   background-color: #282c34;
+   min-height: 100vh;
+   color: white;
+
+   display: grid;
+   grid-template-columns: 500fr 1432fr 1314fr 500fr; /* ~ (13%, 38%, 35%, 13%)  */
+   grid-template-rows: 0.3fr 0.3fr 2em 3.1fr 0.3fr; /* ~ (7%, 7%, 7%, 72%, 7%) */
+   gap: 0 0;
+   grid-template-areas:
+      ". . . ."
+      ". Header . ."
+      ". . . ."
+      ". Main Aside ."
+      ". . . .";
+}
+
+/*
+@keyframes App-logo-spin {
+   from {
+      transform: rotate(0deg);
+   }
+   to {
+      transform: rotate(360deg);
+   }
 }
 
 .App-logo {
@@ -8,31 +31,28 @@
 }
 
 @media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+   .App-logo {
+      animation: App-logo-spin infinite 20s linear;
+   }
 }
+*/
 
 .App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+   font-size: calc(10px + 2vmin);
+
+   grid-area: Header;
+}
+
+.App-header > .Version {
+   color: silver;
 }
 
 .App-link {
-  color: #61dafb;
+   color: #61dafb;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
+.App-aside { grid-area: Aside; }
+.App-main { grid-area: Main; }
+
+
+

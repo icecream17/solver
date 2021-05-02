@@ -33,6 +33,8 @@
 }
 
 .Data {
+   margin-top: 1.5em;
+   padding: 0.2em 0.4em;
    grid-area: data;
 
    background-color: #373A40;

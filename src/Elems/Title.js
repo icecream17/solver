@@ -9,6 +9,6 @@ import React from 'react';
  */
 export default class Title extends React.Component {
    render() {
-      return <h1>Sudoku solver</h1>
+      return <h1 className='Title'>Sudoku solver</h1>
    }
 }

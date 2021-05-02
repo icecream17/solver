@@ -5,13 +5,26 @@ export default class Data extends React.Component {
       super(props)
 
       this.state = {
-         value: this.props.children
+         value: this.props.value ?? ''
       }
    }
 
    render() {
       return (
-         <textarea className="Data">{this.state.value}</textarea>
+         <textarea
+            className="Data"
+            placeholder="stuff will show here"
+            value={this.state.value}
+            onChange={this.handleChange.bind(this)}
+         />
       )
+   }
+
+   setValue(value) {
+      this.setState(_state => ({ value }))
+   }
+
+   handleChange(event) {
+      this.setState({ value: event.target.value });
    }
 }

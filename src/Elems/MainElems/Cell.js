@@ -1,6 +1,8 @@
 
 import React from 'react';
 
+import { getGlobalRef } from '../../globalRef';
+
 import Candidates from './Candidates';
 import SetCandidates from './SetCandidates';
 
@@ -92,8 +94,10 @@ export default class Cell extends React.Component {
          }
 
          this.setState(_state => ({ candidates: [...candidates] }))
+
+         getGlobalRef('Data').current.setValue([...candidates].join(''))
       } else if (event.key === 'Backspace') {
-         this.setState(_state => ({ candidates: [] }))
+         this.setState({ candidates: [] })
       }
    }
 }

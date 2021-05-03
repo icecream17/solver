@@ -4,35 +4,59 @@ import { getGlobalRef } from './globalRef'
 
 render(<App />);
 
-test('app exists', () => {
-   expect(document.getElementsByClassName('App')).toHaveLength(1)
-})
-
-describe('header', () => {
-   const AppHeaders = document.getElementsByClassName('App-header')
-
+describe('app', () => {
    test('it exists', () => {
-      expect(AppHeaders).toHaveLength(1)
-      expect(AppHeaders[0].tagName).toBe('HEADER')
-   })
-   
-   test('has title and version', () => {
-      expect(AppHeaders[0].children).toHaveLength(2)
-   })
-});
-
-describe('main', () => {
-   test('it exists', () => {
-      expect(document.getElementsByClassName('App-main')).toHaveLength(1)
-   })
-})
-
-describe('aside', () => {
-   test('it exists', () => {
-      expect(document.getElementsByClassName('App-aside')).toHaveLength(1)
+      expect(document.getElementsByClassName('App')).toHaveLength(1)
    })
 
-   test('globalRef exists', () => {
-      expect(getGlobalRef('Aside')).not.toBeUndefined()
+   const appElement = document.getElementsByClassName('App')[0]
+
+   describe('header', () => {
+      const appHeader = appElement.children[0]
+
+      test('it exists', () => {
+         expect(appHeader).not.toBeUndefined()
+      })
+
+      test('is a <header>', () => {
+         expect(appHeader.tagName).toBe('HEADER')
+      })
+
+      test('has class App-header', () => {
+         expect(appHeader).toHaveClass('App-header')
+      })
+
+      test('has title and version', () => {
+         expect(appHeader.children).toHaveLength(2)
+         expect(appHeader.children[0]).toHaveClass('Title')
+         expect(appHeader.children[1]).toHaveClass('Version')
+      })
+   });
+
+   describe('main', () => {
+      const mainElement = appElement.children[1]
+      test('it exists', () => {
+         expect(mainElement).not.toBeUndefined()
+      })
+
+      test('has class App-main', () => {
+         expect(mainElement).toHaveClass('App-main')
+      })
+   })
+
+   describe('aside', () => {
+      const asideElement = appElement.children[2]
+      test('it exists', () => {
+         expect(asideElement).not.toBeUndefined()
+      })
+
+      test('has class App-aside', () => {
+         expect(asideElement).toHaveClass('App-aside')
+      })
+
+      test('globalRef matches', () => {
+         expect(getGlobalRef('Aside')).not.toBeUndefined()
+         expect(getGlobalRef('Aside').current).toBe(asideElement)
+      })
    })
 })

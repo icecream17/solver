@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/react';
 import App from './App';
-import { getGlobalRef } from './globalRef'
+import { hasGlobalRef, getGlobalRef } from './globalRef'
 
 render(<App />);
 
@@ -55,7 +55,7 @@ describe('app', () => {
       })
 
       test('globalRef matches', () => {
-         expect(getGlobalRef('Aside')).not.toBeUndefined()
+         expect(hasGlobalRef('Aside')).toBe(true)
          expect(getGlobalRef('Aside').current).toBe(asideElement)
       })
    })

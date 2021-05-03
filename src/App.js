@@ -14,8 +14,8 @@ function App() {
             <Title />
             <Version />
          </header>
-         <Main className="App-main" />
-         <Aside className="App-aside" id="Aside" />
+         <Main />
+         <Aside />
       </div>
    );
 }

@@ -33,7 +33,7 @@ export default class Cell extends React.Component {
          /** An array of possible candidates. Starts at [1, 2, 3, 4, 5, 6, 7, 8, 9] */
          candidates: [1, 2, 3, 4, 5, 6, 7, 8, 9],
          showCandidates: false,
-         error: false,
+         error: false, /** Whether the candidates array is empty */
          active: false
       }
    }
@@ -48,6 +48,8 @@ export default class Cell extends React.Component {
 
       if (this.state.active) {
          content = <SetCandidates data={this.state.candidates} />
+      } else if (this.numCandidates === 0) {
+         content = "0"
       } else if (this.numCandidates === 1) {
          content = this.state.candidates[0]
       } else if (this.state.showCandidates) {
@@ -65,39 +67,63 @@ export default class Cell extends React.Component {
             error={this.state.error ? "true" : undefined}
             active={this.state.active ? "true" : undefined}
             tabIndex="3"
-            onFocus={this.processFocus.bind(this)}
-            onBlur={this.processBlur.bind(this)}
+            onFocus={this.whenFocus.bind(this)}
+            onBlur={this.whenBlur.bind(this)}
             onKeyPress={this.processKeyPress.bind(this)}
          >{content}</td>
       )
    }
 
-   processFocus(_event) {
-      this.setState(_state => ({ active: true, showCandidates: true }))
+   whenFocus(_event) {
+      this.setState({ active: true, showCandidates: true })
    }
 
-   processBlur(_event) {
-      const showCandidates = this.numCandidates !== 0
-
-      this.setState(_state => ({ active: false, showCandidates }))
+   whenBlur(_event) {
+      this.setState(state => {
+         const showCandidates = state.candidates.length !== 0
+         return { active: false, showCandidates }
+      })
    }
 
    processKeyPress(event) {
       if ('123456789'.includes(event.key)) {
          const candidate = Number(event.key)
-         const candidates = new Set(this.state.candidates)
 
-         if (candidates.has(candidate)) {
-            candidates.delete(candidate)
+         this.setState(state => {
+            const candidates = new Set(state.candidates)
+
+            if (candidates.has(candidate)) {
+               candidates.delete(candidate)
+            } else {
+               candidates.add(candidate)
+            }
+
+            if (candidates.size === 0) {
+               getGlobalRef('Data').current.setValue("empty!")
+               return {
+                  candidates: [],
+                  error: true
+               }
+            }
+
+            getGlobalRef('Data').current.setValue([...candidates].join(''))
+            return {
+               candidates: [...candidates],
+               error: false
+            }
+         })
+      } else if (['Backspace', 'Delete', 'Clear'].includes(event.key)) {
+         if (event.shiftKey) {
+            this.setState({
+               candidates: [1, 2, 3, 4, 5, 6, 7, 8, 9],
+               error: false
+            })
          } else {
-            candidates.add(candidate)
+            this.setState({
+               candidates: [],
+               error: true
+            })
          }
-
-         this.setState(_state => ({ candidates: [...candidates] }))
-
-         getGlobalRef('Data').current.setValue([...candidates].join(''))
-      } else if (event.key === 'Backspace') {
-         this.setState({ candidates: [] })
       }
    }
 }

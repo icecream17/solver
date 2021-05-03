@@ -13,6 +13,7 @@ export default class Data extends React.Component {
       return (
          <textarea
             className="Data"
+            id="Data"
             placeholder="stuff will show here"
             value={this.state.value}
             onChange={this.handleChange.bind(this)}

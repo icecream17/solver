@@ -6,7 +6,6 @@ import Title from './Elems/Title'
 import Version from './Elems/Version'
 import Main from './Elems/Main'
 import Aside from './Elems/Aside'
-import { createGlobalRef } from './globalRef'
 
 function App() {
    return (
@@ -16,7 +15,7 @@ function App() {
             <Version />
          </header>
          <Main className="App-main" />
-         <Aside className="App-aside" ref={createGlobalRef('Aside')} />
+         <Aside className="App-aside" id="Aside" />
       </div>
    );
 }

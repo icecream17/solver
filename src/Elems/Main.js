@@ -8,7 +8,7 @@ import Coords from './MainElems/Coords';
 function Main() {
    return (
       <main className="App-main">
-         <Data id="Data" />
+         <Data />
          <Sudoku />
          <Coords />
       </main>

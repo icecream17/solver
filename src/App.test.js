@@ -1,6 +1,5 @@
 import { render, screen } from '@testing-library/react';
 import App from './App';
-import { hasGlobalRef, getGlobalRef } from './globalRef'
 
 render(<App />);
 

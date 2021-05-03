@@ -104,7 +104,7 @@ describe('Main', () => {
             firstCell.focus()
             expect(firstCell.innerText).not.toBe('4') // Candidate table!
          })
-      }
+      })
 
    })
 })

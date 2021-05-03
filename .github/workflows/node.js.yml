@@ -35,4 +35,4 @@ jobs:
     - run: npm test
 
     - name: deploy to github pages
-    - run: npm run deploy
+      run: npm run deploy

@@ -52,9 +52,5 @@ describe('app', () => {
       test('has class App-aside', () => {
          expect(asideElement).toHaveClass('App-aside')
       })
-
-      test('has id Aside', () => {
-         expect(asideElement.id).toBe('Aside')
-      })
    })
 })

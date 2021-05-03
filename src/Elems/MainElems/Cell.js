@@ -84,8 +84,6 @@ export default class Cell extends React.Component {
    }
 
    processKeyPress(event) {
-      const getById = document.getElementById
-
       if ('123456789'.includes(event.key)) {
          const candidate = Number(event.key)
 
@@ -99,14 +97,14 @@ export default class Cell extends React.Component {
             }
 
             if (candidates.size === 0) {
-               getById('Data').value = "empty!"
+               document.getElementById('Data').value = "empty!"
                return {
                   candidates: [],
                   error: true
                }
             }
 
-            getById('Data').value = [...candidates].join('')
+            document.getElementById('Data').value = [...candidates].join('')
             return {
                candidates: [...candidates],
                error: false

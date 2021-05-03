@@ -1,8 +1,6 @@
 
 import React from 'react';
 
-import { getGlobalRef } from '../../globalRef';
-
 import Candidates from './Candidates';
 import SetCandidates from './SetCandidates';
 
@@ -86,6 +84,8 @@ export default class Cell extends React.Component {
    }
 
    processKeyPress(event) {
+      const getById = document.getElementById
+
       if ('123456789'.includes(event.key)) {
          const candidate = Number(event.key)
 
@@ -99,14 +99,14 @@ export default class Cell extends React.Component {
             }
 
             if (candidates.size === 0) {
-               getGlobalRef('Data').current.setValue("empty!")
+               getById('Data').value = "empty!"
                return {
                   candidates: [],
                   error: true
                }
             }
 
-            getGlobalRef('Data').current.setValue([...candidates].join(''))
+            getById('Data').value = [...candidates].join('')
             return {
                candidates: [...candidates],
                error: false

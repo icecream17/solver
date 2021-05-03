@@ -35,4 +35,7 @@ jobs:
     - run: npm test
 
     - name: deploy to github pages
-      run: npm run deploy
+      run: |
+        git config --global user.email "icecream17.github@gmail.com"
+        git config --global user.name "Steven Nguyen"
+        npm run deploy

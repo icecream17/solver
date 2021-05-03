@@ -54,9 +54,8 @@ describe('app', () => {
          expect(asideElement).toHaveClass('App-aside')
       })
 
-      test('globalRef matches', () => {
-         expect(hasGlobalRef('Aside')).toBe(true)
-         expect(getGlobalRef('Aside').current).toBe(asideElement)
+      test('has id Aside', () => {
+         expect(asideElement.id).toBe('Aside')
       })
    })
 })

@@ -33,9 +33,3 @@ jobs:
     - run: npm ci
     - run: npm run build --if-present
     - run: npm test
-
-    - name: deploy to github pages
-      run: |
-        git config --global user.email "icecream17.github@gmail.com"
-        git config --global user.name "icecream17"
-        npm run deploy

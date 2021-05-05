@@ -37,9 +37,9 @@
 }
 
 .CoordCol {
-   width: 11%;
+   width: var(--one-ninth);
 }
 
 .CoordRow {
-   height: 11%;
+   height: var(--one-ninth);
 }

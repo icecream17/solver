@@ -27,6 +27,7 @@ export default class StrategyToggler extends React.Component {
             aria-label="toggle strategy"
             role="switch"
             onChange={this.callback.bind(this)}
+            aria-checked={String(this.state.checked)}
             checked={this.state.checked ? 'checked' : ''}
          />
       )

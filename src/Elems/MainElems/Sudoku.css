@@ -2,6 +2,7 @@
 /*
    References:
    [1]: https://stackoverflow.com/questions/4457506
+   [2]: https://stackoverflow.com/questions/13667941
 */
 
 table.Sudoku {
@@ -12,7 +13,9 @@ table.Sudoku {
    font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
       monospace;
 
-   table-layout: fixed; /* [ref 1] */
+   /* [ref 1] */
+   table-layout: fixed;
+   width: 100%;
 }
 
 tr.Row {
@@ -25,10 +28,20 @@ tr.Row:nth-child(3n) > td.Cell {
 
 td.Cell {
    width: calc(100% / 9);
+   height: calc(100% / 9); /* part of trying @[ref 1] */
    border: 1.5px solid white;
-   font-size: 200%;
-   
-   text-overflow: hidden; /* [ref 1]* */
+   font-size: 175%;
+
+   padding: 0;
+}
+
+td.Cell > * {
+   /* [ref 2] */
+   height: initial;
+
+   /* & [ref 1] */
+   overflow: hidden;
+   text-overflow: clip;
 }
 
 td.Cell[error="true"] {
@@ -51,9 +64,8 @@ table.Candidates {
 
 table.Candidates > tbody > tr {
    height: calc(100% / 3);
-   font-size: 45%; /*
+   font-size: calc(100% / 3); /*
       The font-size property is here instead of td.Candidate since its more specific
-      = half of 90%
    */
 }
 
@@ -61,6 +73,9 @@ td.Candidate {
    width: calc(100% / 3);
    padding: 0;
    line-height: 0;
-   text-overflow: hidden; /* [ref 1]* */
+
+   /* [ref 1] */
+   overflow: hidden;
+   text-overflow: clip;
 }
 

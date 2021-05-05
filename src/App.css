@@ -1,3 +1,8 @@
+/* root variables */
+::root {
+  --one-third: 33.333333333333333333333333333333%;
+}
+
 .App {
    background-color: #282c34;
    min-height: 100vh;

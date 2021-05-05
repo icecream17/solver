@@ -18,14 +18,34 @@
    left: -1em;
 }
 
-/* Checkbox - disabled list item styling */
-.StrategyItem.disabled:marker {
-   background-color: #2c3036;
+/* Alternating colors */
+.StrategyItem:nth-child(odd) {
+   background-color: #1f2329;
 }
 
+.StrategyItem:nth-child(even) {
+   background-color: #31353f;
+}
+
+/* Checkbox - disabled list items */
 .StrategyItem.disabled {
    color: rgb(170, 170, 170);
-   background-color: #2c3036;
+}
+
+.StrategyItem.disabled:nth-child(even) {
+   background-color: #282b31;
+}
+
+.StrategyItem.disabled:nth-child(even)::marker {
+   background-color: #282b31;
+}
+
+.StrategyItem.disabled:nth-child(odd) {
+   background-color: #31353c;
+}
+
+.StrategyItem.disabled:nth-child(odd)::marker {
+   background-color: #31353c;
 }
 
 .StrategyItem.disabled > .StrategyLabel > .StrategyLabelTooltip {

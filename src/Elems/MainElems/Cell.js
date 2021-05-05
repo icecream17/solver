@@ -120,11 +120,13 @@ export default class Cell extends React.Component {
                candidates: [1, 2, 3, 4, 5, 6, 7, 8, 9],
                error: false
             })
+            document.getElementById('Data').value = '123456789'
          } else {
             this.setState({
                candidates: [],
                error: true
             })
+            document.getElementById('Data').value = 'Empty!'
          }
       }
    }

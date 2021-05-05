@@ -62,7 +62,7 @@ export default class Cell extends React.Component {
       return (
          <td
             className='Cell'
-            error={this.state.error ? "true" : undefined}
+            data-error={this.state.error ? "true" : undefined}
             active={this.state.active ? "true" : undefined}
             tabIndex="0"
             onFocus={this.whenFocus.bind(this)}

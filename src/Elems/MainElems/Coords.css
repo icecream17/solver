@@ -36,10 +36,11 @@
    flex-direction: column;
 }
 
+/* 9x9 Cells */
 .CoordCol {
-   width: var(--one-ninth);
+   width: 11.11111111%;
 }
 
 .CoordRow {
-   height: var(--one-ninth);
+   width: 11.11111111%;
 }

@@ -9,8 +9,8 @@
    gap: 0 0;
    grid-template-areas:
       ". . . ."
-      ". Header . ."
-      ". . . ."
+      ". Header Aside ."
+      ". . Aside ."
       ". Main Aside ."
       ". . . .";
 }

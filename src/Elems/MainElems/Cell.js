@@ -59,15 +59,17 @@ export default class Cell extends React.Component {
          }
       }
 
+      // tabIndex for focusability
+      // ="0" because of a11y thing
       return (
          <td
             className='Cell'
             error={this.state.error ? "true" : undefined}
             active={this.state.active ? "true" : undefined}
-            tabIndex="3"
+            tabIndex="0"
             onFocus={this.whenFocus.bind(this)}
             onBlur={this.whenBlur.bind(this)}
-            onKeyPress={this.processKeyPress.bind(this)}
+            onKeyDown={this.processKeyDown.bind(this)}
          >{content}</td>
       )
    }
@@ -83,7 +85,11 @@ export default class Cell extends React.Component {
       })
    }
 
-   processKeyPress(event) {
+   /**
+    * Handler for "keyDown" events
+    * Not handling "keypress" since that's deprecated.
+    */
+   processKeyDown(event) {
       if ('123456789'.includes(event.key)) {
          const candidate = Number(event.key)
 

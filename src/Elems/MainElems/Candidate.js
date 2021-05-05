@@ -23,7 +23,7 @@ export default class Candidate extends React.Component {
       return (
          <td
             className="Candidate"
-            index={this.props.index}
+            data-index={this.props.index}
          >{this.props.children}</td>
       )
    }

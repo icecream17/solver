@@ -3,7 +3,7 @@ import React from 'react';
 import CoordRow from './CoordRow';
 
 /**
- * Group of Sudoku row coordinates
+ * Group of Sudoku rows
  *
  * @example
  * <CoordRows />

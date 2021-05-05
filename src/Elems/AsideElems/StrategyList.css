@@ -1,0 +1,104 @@
+
+ /* Checkbox positioning */
+.StrategyList {
+   position: relative;
+   padding-left: 2em;
+}
+
+.StrategyItem {
+   padding-left: 1.5em;
+
+   /* But this is for list item positioning */
+   height: 1em;
+   padding-bottom: 0.5em;
+}
+
+.StrategyToggler {
+   position: absolute;
+   left: -1em;
+}
+
+/* Checkbox styling */
+.StrategyItem.disabled {
+   color: rgb(170, 170, 170);
+   background-color: #2c3036;
+}
+
+.StrategyItem.disabled > .StrategyLabel > .StrategyLabelTooltip {
+   background-color: rgb(42, 42, 46);
+   border: 2px solid rgb(177, 156, 130);
+}
+
+/* Label structure: Name+Tooltip Status */
+.StrategyLabel {
+   --my-width: 20em;
+
+   height: 0;
+   width: var(--my-width);
+
+   align-content: center;
+   text-overflow: ellipsis;
+
+   display: inline-grid;
+   grid-template-columns: 1fr 1fr;
+   grid-template-areas:
+      'name status';
+}
+
+.StrategyLabelName {
+   grid-area: name;
+   text-decoration: underline dotted;
+   height: 0;
+   width: fit-content;
+}
+
+.StrategyLabelTooltip {
+   visibility: hidden;
+   text-decoration: none; /* unneccessary but explicit */
+
+   /* tooltip visuals */
+   background-color: rgb(15, 29, 78);
+   border: 2px solid rgb(190, 158, 120);
+   border-radius: 0.5em;
+   padding: 0.5em;
+   text-overflow: ellipsis;
+
+   /* tooltip positioning */
+   min-width: 100%;
+   width: fit-content;
+   position: relative;
+   bottom: calc(50% - 0.5em - 2px);
+   margin-left: calc(100% - var(--my-width));
+   margin-right: 1em;
+}
+
+.StrategyLabel:hover > .StrategyLabelTooltip {
+   visibility: visible;
+   text-decoration: none;
+}
+
+/* z-index */
+.StrategyLabelName {
+   z-index: 3;
+}
+
+.StrategyLabel:hover > .StrategyLabelName {
+   z-index: 1
+}
+
+.StrategyLabel:hover > .StrategyLabelTooltip {
+   z-index: 2
+}
+
+/* Result */
+.StrategyResult {
+   grid-area: status;
+}
+
+.StrategyResult.pass {
+   color: green;
+}
+
+.StrategyResult.fail {
+   color: red;
+}

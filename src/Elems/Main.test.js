@@ -3,22 +3,25 @@ import React from 'react'
 
 import Main from './Main'
 
-render(<Main />)
-
 describe('Main', () => {
-   test('it exists', () => {
-      expect(document.getElementsByClassName('App-main')).toHaveLength(1)
+   // beforeAll??
+   beforeEach(async () => {
+      await render(<Main />)
    })
 
-   const mainElement = document.getElementsByClassName('App-main')[0]
+   let mainElement;
+   test('it exists', () => {
+      expect(document.getElementsByClassName('App-main')).toHaveLength(1)
+      mainElement = document.getElementsByClassName('App-main')[0]
+   })
 
    test('has 3 elements', () => {
       expect(mainElement.children).toHaveLength(3)
    })
 
-   const [dataElement, sudokuElement, _coordsElement] = mainElement.children
+   test.todo('more tests')
 
-   test.todo('more simple stuff')
+   const [dataElement, sudokuElement, _coordsElement] = mainElement.children
 
    describe('functionality', () => {
       describe('cell changing', () => {

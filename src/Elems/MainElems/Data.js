@@ -1,5 +1,15 @@
 import React from 'react'
 
+/**
+ * Used to display info to the user
+ *
+ * unique, id = "Data"
+ *
+ * Currently used
+ * - to show the updated candidates
+ *
+ * @param {React.TextareaHTMLAttributes<HTMLTextAreaElement>.value} [props.value] - Optional textarea value
+ */
 export default class Data extends React.Component {
    constructor (props) {
       super(props)

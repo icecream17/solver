@@ -6,11 +6,14 @@
  */
 
 import React from 'react'
+import StrategyList from './AsideElems/StrategyList'
 
 export default class Aside extends React.Component {
    render() {
       return (
-         <section className="App-aside"></section>
+         <section className="App-aside">
+            <StrategyList />
+         </section>
       );
    }
 }

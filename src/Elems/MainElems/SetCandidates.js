@@ -3,17 +3,14 @@ import React from 'react';
 import Candidates from './Candidates';
 
 /**
- * A cell in a sudoku
+ * Temporary candidate table when cell is focused
  *
  * Requires a "row" and "column" property
  *
- * In state
- * - candidates
- * - showCandidates
- * - error
+ * @param {number[]} props.data
  *
  * @example
- * <Cell row={1} column={4} />
+ * <SetCandidates data={[2, 3, 5, 7]} />
  */
 export default class SetCandidates extends React.Component {
    constructor(props) {

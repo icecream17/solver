@@ -3,17 +3,7 @@ import React from 'react';
 import Candidate from './Candidate';
 
 /**
- * A cell in a sudoku
- *
- * Requires a "row" and "column" property
- *
- * In state
- * - candidates
- * - showCandidates
- * - error
- *
- * @example
- * <Cell row={1} column={4} />
+ * The candidates of a cell
  */
 export default class Candidates extends React.Component {
    constructor(props) {

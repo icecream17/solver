@@ -50,7 +50,7 @@ table.Candidates {
 }
 
 table.Candidates > tbody > tr {
-   height: var(--one-third);
+   height: calc(100% / 3);
    font-size: 45%; /*
       The font-size property is here instead of td.Candidate since its more specific
       = half of 90%
@@ -58,7 +58,7 @@ table.Candidates > tbody > tr {
 }
 
 td.Candidate {
-   width: var(--one-third);
+   width: calc(100% / 3);
    padding: 0;
    line-height: 0;
    text-overflow: hidden; /* [ref 1]* */

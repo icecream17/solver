@@ -16,7 +16,7 @@ table.Sudoku {
 }
 
 tr.Row {
-   height: 10%;
+   height: calc(100% / 9);
 }
 
 tr.Row:nth-child(3n) > td.Cell {
@@ -24,7 +24,7 @@ tr.Row:nth-child(3n) > td.Cell {
 }
 
 td.Cell {
-   width: 10%;
+   width: calc(100% / 9);
    border: 1.5px solid white;
    font-size: 200%;
    

@@ -1,8 +1,8 @@
 
 .Coords {
    display: grid;
-   grid-template-columns: 3.5em 50vh 1fr; /* Copied from Main.css */
-   grid-template-rows: 3.5em 50vh;
+   grid-template-columns: var(--coord-margin) var(--sudoku-length) 1fr; /* Variables from Main.css */
+   grid-template-rows: var(--coord-margin) var(--sudoku-length);
    grid-template-areas:
       ". CoordCols ."
       "CoordRows . .";

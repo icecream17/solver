@@ -44,7 +44,7 @@ td.Cell > * {
    text-overflow: clip;
 }
 
-td.Cell[error="true"] {
+td.Cell[data-error="true"] {
    background-color: rgb(139, 0, 0);
 }
 

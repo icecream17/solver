@@ -22,7 +22,7 @@
    justify-content: center;
    text-align: center;
    align-items: center;
-   font-size: 75%;
+   font-size: 0.75rem;
    padding: 0; /* Doesn't do anything */
 }
 

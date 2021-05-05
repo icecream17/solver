@@ -2,13 +2,30 @@
    As in ../App.css we have ~72vh to work with
 
    And the sudoku gets 50vh, leaving 12vh
-   But the coords and celldath will take 6em height, so that's why there's leftover
+   But the coords and celldath will take 6rem height, so that's why there's leftover
 */
 
 .App-main {
    /* variables (inherited by children) */
-   --coord-margin: 1.75em;
-   --sudoku-length: 50vh;
+   --coord-margin: 1.75rem;
+   --sudoku-length: calc(
+      9 * 4rem +
+      calc(7 * var(--regular-border) * 2) +
+      calc(2 * var(--regular-border) * 1) +
+      calc(2 * 8 * var(--regular-border) / 3)
+   ); /*
+      Length = Row width
+      Row width = 9 cells
+
+      7 cells = width + 2regular-border
+      2 cells = width + 1regular-border + 1large-border
+
+      large-border = 8 * regular / 3
+      total   = 9 * width +
+                (7 * 2 * regular) +
+                (2 * 1 * regular) +
+                (2 * (8 * regular / 3))
+   */
 
    display: grid;
    grid-template-columns: var(--coord-margin) var(--sudoku-length) 1fr; /* The 1fr is just leftover space */
@@ -29,16 +46,16 @@
 }
 
 .Sudoku {
-   width: 50vh;
-   height: 50vh;
+   width: var(--sudoku-length);
+   height: var(--sudoku-length);
    grid-area: 2 / 2 / 3 / 3;
 
    z-index: 3;
 }
 
 .Data {
-   margin-top: 1.5em;
-   padding: 0.2em 0.4em;
+   margin-top: 1.5rem;
+   padding: 0.2rem 0.4rem;
    grid-area: data;
 
    background-color: #373A40;

@@ -2,20 +2,20 @@
  /* Checkbox positioning */
 .StrategyList {
    position: relative;
-   padding-left: 2em;
+   padding-left: 2rem;
 }
 
 .StrategyItem {
-   padding-left: 1.5em;
+   padding-left: 1.5rem;
 
    /* But this is for list item positioning */
-   height: 1em;
-   padding-bottom: 0.5em;
+   height: 1rem;
+   padding-bottom: 0.5rem;
 }
 
 .StrategyToggler {
    position: absolute;
-   left: -1em;
+   left: -1rem;
 }
 
 /* Alternating colors */
@@ -50,7 +50,7 @@
 
 .StrategyItem.disabled > .StrategyLabel > .StrategyLabelTooltip {
    background-color: rgb(42, 42, 46);
-   border: 2px solid rgb(177, 156, 130);
+   border: var(--regular-border) solid rgb(177, 156, 130);
 }
 
 /* Label structure: Name+Tooltip Status */
@@ -82,18 +82,18 @@
 
    /* tooltip visuals */
    background-color: rgb(15, 29, 78);
-   border: 2px solid rgb(190, 158, 120);
-   border-radius: 0.5em;
-   padding: 0.5em;
+   border: var(--regular-border) solid rgb(190, 158, 120);
+   border-radius: 0.5rem;
+   padding: 0.5rem;
    text-overflow: ellipsis;
 
    /* tooltip positioning */
    min-width: 100%;
    width: fit-content;
    position: relative;
-   bottom: calc(50% - 0.5em - 2px);
+   bottom: calc(50% - 0.5rem - var(--regular-border));
    margin-left: calc(100% - var(--my-width));
-   margin-right: 1em;
+   margin-right: 1rem;
 }
 
 .StrategyLabel:hover > .StrategyLabelTooltip {

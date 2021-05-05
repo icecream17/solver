@@ -6,8 +6,13 @@
 */
 
 table.Sudoku {
-   border: 3px solid white;
+   /* Border variables to make it look like a sudoku */
+   --larger-border: calc(8 * var(--regular-border));
+   --large-border: calc(var(--larger-border) / 3);
+
+   border: var(--larger-border) solid white;
    border-collapse: collapse;
+   border-spacing: 0;
 
    text-align: center;
    font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
@@ -16,28 +21,40 @@ table.Sudoku {
    /* [ref 1] */
    table-layout: fixed;
    width: 100%;
+
+   /* Also the width */
+   --cell-height: calc(100% / 9);
+
+   vertical-align: middle;
+   cursor: pointer;
 }
 
 tr.Row {
-   height: calc(100% / 9);
+   height: var(--cell-height);
 }
 
-tr.Row:nth-child(3n) > td.Cell {
-   border-bottom: 3px solid white;
+tr.Row:nth-child(3n):not(:last-child) > td.Cell {
+   border-bottom: var(--large-border) solid white;
 }
 
 td.Cell {
-   width: calc(100% / 9);
-   height: calc(100% / 9); /* part of trying @[ref 1] */
-   border: 1.5px solid white;
-   font-size: 175%;
+   width: var(--cell-height);
+   height: var(--cell-height); /* part of trying @[ref 1] */
+   max-width: var(--cell-height);
+   max-height: var(--cell-height);
+   border: var(--regular-border) solid white;
+   border-spacing: 0;
+   font-size: 2.5rem;
 
    padding: 0;
+
+   text-align: center;
+   vertical-align: middle;
 }
 
 td.Cell > * {
    /* [ref 2] */
-   height: initial;
+   height: var(--cell-height);
 
    /* & [ref 1] */
    overflow: hidden;
@@ -52,27 +69,32 @@ td.Cell[active="true"] {
    background-color: gray;
 }
 
-td.Cell:nth-child(3n) {
-   border-right: 3px solid white;
+td.Cell:nth-child(3n):not(:last-child) {
+   border-right: var(--large-border) solid white;
 }
 
 table.Candidates {
+   /* Also the width */
+   --candidate-height: calc(100% / 3);
+
+   padding: 2pt;
    width: 100%;
    height: 100%;
    table-layout: fixed; /* [ref 1] */
-}
 
-table.Candidates > tbody > tr {
-   height: calc(100% / 3);
-   font-size: calc(100% / 3); /*
-      The font-size property is here instead of td.Candidate since its more specific
-   */
+   border-collapse: separate;
+   empty-cells: show;
+   font-size: 1rem;
 }
 
 td.Candidate {
-   width: calc(100% / 3);
    padding: 0;
    line-height: 0;
+
+   height: var(--candidate-height);
+   width: var(--candidate-height);
+   font-size: 0.9rem;
+   text-align: center;
 
    /* [ref 1] */
    overflow: hidden;

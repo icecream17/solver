@@ -23,7 +23,7 @@
    text-align: center;
    align-items: center;
    font-size: 75%;
-   padding: 0;
+   padding: 0; /* Doesn't do anything */
 }
 
 .CoordCols {
@@ -42,5 +42,5 @@
 }
 
 .CoordRow {
-   width: calc(100% / 9);
+   height: calc(100% / 9);
 }

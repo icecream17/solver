@@ -38,9 +38,9 @@
 
 /* 9x9 Cells */
 .CoordCol {
-   width: 11.11111111%;
+   width: calc(100% / 9);
 }
 
 .CoordRow {
-   width: 11.11111111%;
+   width: calc(100% / 9);
 }

@@ -44,19 +44,17 @@ export default class Cell extends React.Component {
    render() {
       let content = <></>;
 
+      // Using a span for the digits
+      // so that I can force cells to always be [css height: 1/9th]
       if (this.state.active) {
          content = <SetCandidates data={this.state.candidates} />
       } else if (this.numCandidates === 0) {
-         content = "0"
+         content = <span class="ugh tables"> 0 </span>
       } else if (this.numCandidates === 1) {
-         content = this.state.candidates[0]
+         content = <span class="ugh tables"> this.state.candidates[0] </span>
       } else if (this.state.showCandidates) {
-         if (this.numCandidates === 0) {
-            content = 0
-         } else {
-            // numCandidates > 1
-            content = <Candidates data={this.state.candidates} />
-         }
+         // numCandidates > 1
+         content = <Candidates data={this.state.candidates} />
       }
 
       // tabIndex for focusability

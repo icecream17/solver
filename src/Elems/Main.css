@@ -1,14 +1,18 @@
 /*
-  As in ../App.css we have ~72vh to work with
+   As in ../App.css we have ~72vh to work with
 
-  And the sudoku gets 50vh, leaving 12vh
-  But the coords and celldath will take 6em height, so that's why there's leftover
+   And the sudoku gets 50vh, leaving 12vh
+   But the coords and celldath will take 6em height, so that's why there's leftover
 */
 
 .App-main {
+   /* variables (inherited by children) */
+   --coord-margin: 1.75em;
+   --sudoku-length: 50vh;
+
    display: grid;
-   grid-template-columns: 3.5em 50vh 1fr;
-   grid-template-rows: 3.5em 50vh 1fr; /* Remember to update Coords.css too! */
+   grid-template-columns: var(--coord-margin) var(--sudoku-length) 1fr; /* The 1fr is just leftover space */
+   grid-template-rows: var(--coord-margin) var(--sudoku-length) 1fr; /* Remember to update Coords.css too! */
    grid-template-areas:
       "coords coords ."
       "coords coords ."

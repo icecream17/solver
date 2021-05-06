@@ -21,7 +21,7 @@ export default class Cell extends React.Component {
    constructor(props) {
       super(props)
 
-      for (const requiredProperty of ["row", "column"]) {
+      for (const requiredProperty of ["row", "column", "callback"]) {
          if (!(requiredProperty in props)) {
             throw TypeError(`Cell: Required property "${requiredProperty}" is missing`)
          }
@@ -34,6 +34,8 @@ export default class Cell extends React.Component {
          error: false, /** Whether the candidates array is empty */
          active: false
       }
+
+      this.props.callback(this) /** See sudoku.js */
    }
 
    /** How many candidates are left */

@@ -2,7 +2,7 @@
    /* variables (inherited by children) */
    --coord-margin: 1.75rem;
    --sudoku-length: calc(
-      9 * 4rem +
+      9 * var(--sudokucell-length) +
       calc(7 * var(--regular-border) * 2) +
       calc(2 * var(--regular-border) * 1) +
       calc(2 * 8 * var(--regular-border) / 3)

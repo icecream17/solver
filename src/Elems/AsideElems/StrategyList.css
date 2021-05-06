@@ -18,7 +18,7 @@
    left: -1rem;
 }
 
-/* Alternating colors */
+/* Alternating colors - note that the markers are not in color*/
 .StrategyItem:nth-child(odd) {
    background-color: #1f2329;
 }
@@ -36,15 +36,7 @@
    background-color: #282b31;
 }
 
-.StrategyItem.disabled:nth-child(even)::marker {
-   background-color: #282b31;
-}
-
 .StrategyItem.disabled:nth-child(odd) {
-   background-color: #31353c;
-}
-
-.StrategyItem.disabled:nth-child(odd)::marker {
    background-color: #31353c;
 }
 
@@ -73,7 +65,7 @@
    grid-area: name;
    text-decoration: underline dotted;
    height: 0;
-   width: fit-content;
+   width: max-content;
 }
 
 .StrategyLabelTooltip {
@@ -89,7 +81,7 @@
 
    /* tooltip positioning */
    min-width: 100%;
-   width: fit-content;
+   width: max-content;
    position: relative;
    bottom: calc(50% - 0.5rem - var(--regular-border));
    margin-left: calc(100% - var(--my-width));

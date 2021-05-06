@@ -10,15 +10,7 @@
    color: white;
 
    display: grid;
-   grid-template-columns: 250fr 1432fr 1314fr 250fr; /* ~ (8%, 44%, 40%, 8%)  */
-   grid-template-rows: 0.3fr 0.3fr 2rem 3.1fr 0.3fr; /* ~ (7%, 7%, 7%, 72%, 7%) */
-   gap: 0 0;
-   grid-template-areas:
-      ". . . ."
-      ". Header Aside ."
-      ". . Aside ."
-      ". Main Aside ."
-      ". . . .";
+   /* default moved to min-width: 750px */
 }
 
 @media (min-width: 750px) {

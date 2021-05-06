@@ -5,6 +5,7 @@
  * But it's still... _aside_ ```<Main />```
  */
 
+import './Aside.css'
 import React from 'react'
 import StrategyControls from './AsideElems/StrategyControls'
 import StrategyList from './AsideElems/StrategyList'
@@ -14,7 +15,10 @@ export default class Aside extends React.Component {
       return (
          <section className="App-aside">
             <StrategyControls />
-            <StrategyList />
+            <fieldset className="StrategyListContainer">
+               <legend>strategies</legend>
+               <StrategyList />
+            </fieldset>
          </section>
       );
    }

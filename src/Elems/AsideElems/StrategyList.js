@@ -20,6 +20,14 @@ export default class StrategyList extends React.Component {
                name='Example strategy'
                description='[todo]'
             />
+            <StrategyItem
+               name='Example strategy 2'
+               description='[todo]'
+            />
+            <StrategyItem
+               name='Another Example strategy'
+               description='[todo]'
+            />
          </ol>
       )
    }

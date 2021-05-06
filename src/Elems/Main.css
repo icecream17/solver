@@ -21,8 +21,8 @@
    */
 
    display: grid; /* Remember to update Coords.css too! */
-   grid-template-columns: var(--coord-margin) var(--sudoku-length);
-   grid-template-rows: var(--coord-margin) var(--sudoku-length);
+   grid-template-columns: var(--coord-margin) var(--sudoku-length); /* And also see App.css! */
+   grid-template-rows: var(--coord-margin) var(--sudoku-length) 1fr;
    grid-template-areas:
       "coords coords"
       "coords coords"

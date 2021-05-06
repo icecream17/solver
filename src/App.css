@@ -1,7 +1,7 @@
 /* root variables */
 :root {
-  --relative-pixel: calc(1ch / 25);
-  --regular-border: calc(2 * var(--relative-pixel))
+   --relative-pixel: calc(1ch / 25);
+   --regular-border: calc(2 * var(--relative-pixel))
 }
 
 .App {
@@ -11,12 +11,24 @@
 
    display: grid;
    /* default moved to min-width media querys */
+
+   /* See app.main */
+   --app-main-height: calc(
+      1.75rem + /* --coord-margin */
+      calc( /* --sudoku-length */
+         9 * 4rem +
+         calc(7 * var(--regular-border) * 2) +
+         calc(2 * var(--regular-border) * 1) +
+         calc(2 * 8 * var(--regular-border) / 3)
+      ) +
+      2rem + 5vh /* min Data height + view height */
+   );
 }
 
 @media (min-width: 800px) {
    .App {
       grid-template-columns: 250fr 1432fr 1314fr 250fr; /* ~ (8%, 44%, 40%, 8%)  */
-      grid-template-rows: 0.3fr 0.3fr 2rem 3.1fr 0.3fr; /* ~ (7%, 7%, 7%, 72%, 7%) */
+      grid-template-rows: 0.3fr 0.3fr 2rem var(--app-main-height) 0.3fr; /* prev ~ (7%, 7%, 2rem, 72%, 7%) */
       gap: 0 0;
       grid-template-areas:
          ". . . ."
@@ -29,8 +41,8 @@
 
 @media (max-width: 800px) {
    .App {
-      grid-template-columns: 250fr 2745fr 250fr; /* ~ (8%, 44%, 40%, 8%)  */
-      grid-template-rows: 7vh 7vh 2rem 84vh 2rem 93vh;
+      grid-template-columns: 250fr 2745fr 250fr; /* ~ (8%, 84%, 8%)  */
+      grid-template-rows: 7vh 7vh 2rem var(--app-main-height) 2rem calc(var(--app-main-height) + 9vh);
       gap: 0 0;
       grid-template-areas:
          ". . ."

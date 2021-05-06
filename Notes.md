@@ -20,6 +20,9 @@ To use:
 
 1. https://reactjs.org/blog/2018/06/07/you-probably-dont-need-derived-state.html
 1. https://www.freecodecamp.org/news/testing-react-hooks/
+1. https://reactjs.org/docs/thinking-in-react.html
+1. https://reactjs.org/docs/testing-recipes.html
+1. https://reactjs.org/docs/test-utils.html
 
 ## List of bugs
 

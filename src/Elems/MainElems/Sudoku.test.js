@@ -6,6 +6,6 @@ import Sudoku from './Sudoku'
 // sudokuInstance !== sudokuElement
 const sudoku = render(<Sudoku />)
 
-test('the data callbacks were called / cells were processed', () => {
-   expect(sudoku.data.flat(Infinity)).toHaveLength(64)
+test('is sudoku', () => {
+   expect(sudoku).toBeInstanceOf(Sudoku)
 })

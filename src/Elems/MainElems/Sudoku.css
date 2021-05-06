@@ -24,6 +24,8 @@ table.Sudoku {
 
    /* Also the width */
    --cell-height: calc(100% / 9);
+   --cell-fontsize: calc(2.5 * (1vh + 0.3rem));
+   --candidate-fontsize: calc(var(--cell-fontsize) / 2.25);
 
    vertical-align: middle;
    cursor: pointer;
@@ -44,7 +46,7 @@ td.Cell {
    max-height: var(--cell-height);
    border: var(--regular-border) solid white;
    border-spacing: 0;
-   font-size: 2.5rem;
+   font-size: var(--cell-fontsize);
 
    padding: 0;
 
@@ -93,7 +95,7 @@ td.Candidate {
 
    height: var(--candidate-height);
    width: var(--candidate-height);
-   font-size: 0.9rem;
+   font-size: var(--candidate-fontsize);
    text-align: center;
 
    /* [ref 1] */

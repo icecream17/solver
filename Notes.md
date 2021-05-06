@@ -16,6 +16,11 @@ inspired by <https://www.sudokuwiki.org>
 1. <https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement/beforeinput_event>
 1. css variables in Main are used by child elements
 
+To use:
+
+1. https://reactjs.org/blog/2018/06/07/you-probably-dont-need-derived-state.html
+1. https://www.freecodecamp.org/news/testing-react-hooks/
+
 ## List of bugs
 
 Putting them here so that I can add tests for them later.

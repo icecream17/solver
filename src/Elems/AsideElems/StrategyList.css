@@ -88,7 +88,8 @@
    margin-right: 1rem;
 }
 
-.StrategyLabel:hover > .StrategyLabelTooltip {
+.StrategyLabel:hover > .StrategyLabelTooltip,
+.StrategyLabel:focus > .StrategyLabelTooltip {
    visibility: visible;
    text-decoration: none;
 }
@@ -98,11 +99,13 @@
    z-index: 3;
 }
 
-.StrategyLabel:hover > .StrategyLabelName {
+.StrategyLabel:hover > .StrategyLabelName,
+.StrategyLabel:focus > .StrategyLabelName {
    z-index: 1
 }
 
-.StrategyLabel:hover > .StrategyLabelTooltip {
+.StrategyLabel:hover > .StrategyLabelTooltip,
+.StrategyLabel:focus > .StrategyLabelTooltip {
    z-index: 2
 }
 

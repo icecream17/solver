@@ -33,21 +33,23 @@ export default class Sudoku extends React.Component {
       for (let i = 0; i < 9; i++) {
          this.data[i] = []
       }
+
+      this.updateInnerArray = this.updateInnerArray.bind(this)
    }
 
    render() {
       return (
          <table className='Sudoku' id='Sudoku'>
             <tbody>
-               <Row index={0} callback={this.updateInnerArray.bind(this)} />
-               <Row index={1} callback={this.updateInnerArray.bind(this)} />
-               <Row index={2} callback={this.updateInnerArray.bind(this)} />
-               <Row index={3} callback={this.updateInnerArray.bind(this)} />
-               <Row index={4} callback={this.updateInnerArray.bind(this)} />
-               <Row index={5} callback={this.updateInnerArray.bind(this)} />
-               <Row index={6} callback={this.updateInnerArray.bind(this)} />
-               <Row index={7} callback={this.updateInnerArray.bind(this)} />
-               <Row index={8} callback={this.updateInnerArray.bind(this)} />
+               <Row index={0} callback={this.updateInnerArray} />
+               <Row index={1} callback={this.updateInnerArray} />
+               <Row index={2} callback={this.updateInnerArray} />
+               <Row index={3} callback={this.updateInnerArray} />
+               <Row index={4} callback={this.updateInnerArray} />
+               <Row index={5} callback={this.updateInnerArray} />
+               <Row index={6} callback={this.updateInnerArray} />
+               <Row index={7} callback={this.updateInnerArray} />
+               <Row index={8} callback={this.updateInnerArray} />
             </tbody>
          </table>
       )

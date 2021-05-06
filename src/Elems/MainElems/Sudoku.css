@@ -24,8 +24,8 @@ table.Sudoku {
 
    /* Also the width */
    --cell-height: calc(100% / 9);
-   --cell-fontsize: calc(2.5 * (1vh + 0.3rem));
-   --candidate-fontsize: calc(var(--cell-fontsize) / 2.25);
+   --cell-fontsize: 2.5rem; /* Currently unneccesary variables */
+   --candidate-fontsize: 0.9rem;
 
    vertical-align: middle;
    cursor: pointer;

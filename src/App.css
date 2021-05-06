@@ -10,10 +10,10 @@
    color: white;
 
    display: grid;
-   /* default moved to min-width: 750px */
+   /* default moved to min-width media querys */
 }
 
-@media (min-width: 750px) {
+@media (min-width: 800px) {
    .App {
       grid-template-columns: 250fr 1432fr 1314fr 250fr; /* ~ (8%, 44%, 40%, 8%)  */
       grid-template-rows: 0.3fr 0.3fr 2rem 3.1fr 0.3fr; /* ~ (7%, 7%, 7%, 72%, 7%) */
@@ -27,7 +27,7 @@
    }
 }
 
-@media (max-width: 750px) {
+@media (max-width: 800px) {
    .App {
       grid-template-columns: 250fr 2745fr 250fr; /* ~ (8%, 44%, 40%, 8%)  */
       grid-template-rows: 7vh 7vh 2rem 84vh 2rem 93vh;

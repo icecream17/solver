@@ -179,8 +179,8 @@ export default class Cell extends React.Component {
 
          // blur this and focus the other cell
          event.target.blur()
-         sudokuElement.children[(this.row + 9 + step.vRow) % 9]
-                      .children[(this.column + 9 + step.vColumn) % 9].focus()
+         sudokuElement.children[(this.props.row + 9 + step.vRow) % 9]
+                      .children[(this.props.column + 9 + step.vColumn) % 9].focus()
       } else if (event.key === 'Escape') {
          // const sudokuElement = event.target.parentElement.parentElement
          event.target.blur()

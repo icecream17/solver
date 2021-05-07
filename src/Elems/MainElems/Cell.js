@@ -4,6 +4,18 @@ import React from 'react';
 import Candidates from './Candidates';
 import SetCandidates from './SetCandidates';
 
+// Maps keys to coords - Object.assign prevents prototype pollution
+const keyboardMappings = Object.assign(Object.create(null), {
+   'ArrowUp': {vRow: 0, vColumn: -1},
+   'KeyW': {vRow: 0, vColumn: -1},
+   'ArrowLeft': {vRow: -1, vColumn: 0},
+   'KeyA': {vRow: -1, vColumn: 0},
+   'ArrowDown': {vRow: 0, vColumn: 1},
+   'KeyS': {vRow: 0, vColumn: 1},
+   'ArrowRight': {vRow: 1, vColumn: 0},
+   'KeyD': {vRow: 1, vColumn: 0},
+})
+
 /**
  * A cell in a sudoku
  *
@@ -160,6 +172,19 @@ export default class Cell extends React.Component {
             })
             document.getElementById('Data').value = 'Empty!'
          }
+      } else if (event.key in keyboardMappings) {
+         // = tbody
+         const sudokuElement = event.target.parentElement.parentElement
+         const step = keyboardMappings[event.key]
+
+         // blur this and focus the other cell
+         event.target.blur()
+         sudokuElement.children[(this.row + 9 + step.vRow) % 9]
+                      .children[(this.column + 9 + step.vColumn) % 9].focus()
+      } else if (event.key === 'Escape') {
+         // const sudokuElement = event.target.parentElement.parentElement
+         event.target.blur()
+         // TODO: Focus something else?
       }
    }
 }

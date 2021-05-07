@@ -3,7 +3,7 @@
    --relative-pixel: calc(1ch / 25);
    --regular-border: calc(2 * var(--relative-pixel));
 
-   --scaling-factor: calc(100vmin / 1000px);
+   --scaling-factor: calc(100vmin / 1000);
    --sudokucell-length: calc(4rem * var(--scaling-factor));
    --cell-fontsize: calc(2.5rem * var(--scaling-factor));
    --candidate-fontsize: calc(0.9rem * var(--scaling-factor));

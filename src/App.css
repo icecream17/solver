@@ -1,9 +1,11 @@
+
+
 /* root variables */
 :root {
    --relative-pixel: calc(1ch / 25);
-   --regular-border: calc(2 * var(--relative-pixel));
+   --regular-border: calc(2 * var(--relative-pixel) * var(--scaling-factor));
 
-   --scaling-factor: calc(100vmin / 1000);
+   --scaling-factor: 1;
    --sudokucell-length: calc(4rem * var(--scaling-factor));
    --cell-fontsize: calc(2.5rem * var(--scaling-factor));
    --candidate-fontsize: calc(0.9rem * var(--scaling-factor));

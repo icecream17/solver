@@ -45,8 +45,10 @@ export default class StrategyItem extends React.Component {
 
       return (
          <li className={thisClass} id={'strategy-' + this.props.name.replaceAll(' ', '-')}>
-            <StrategyToggler callback={this.toggle.bind(this)} />
-            <StrategyLabel name={this.props.name} description={this.props.description} />
+            <label>
+               <StrategyToggler callback={this.toggle.bind(this)} />
+               <StrategyLabel name={this.props.name} description={this.props.description} />
+            </label>
             <StrategyStatus state={this.state} />
          </li>
       )

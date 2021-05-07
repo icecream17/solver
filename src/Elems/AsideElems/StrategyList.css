@@ -32,11 +32,11 @@
    color: rgb(170, 170, 170);
 }
 
-.StrategyItem.disabled:nth-child(even) {
+.StrategyItem.disabled:nth-child(odd) {
    background-color: #282b31;
 }
 
-.StrategyItem.disabled:nth-child(odd) {
+.StrategyItem.disabled:nth-child(even) {
    background-color: #31353c;
 }
 

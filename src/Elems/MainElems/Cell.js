@@ -28,14 +28,33 @@ export default class Cell extends React.Component {
       }
 
       this.state = {
-         /** An array of possible candidates. Starts at [1, 2, 3, 4, 5, 6, 7, 8, 9] */
+         /** An array of possible candidates.
+           * Starts at [1, 2, 3, 4, 5, 6, 7, 8, 9] and updates in `whenKeyDown`
+           */
          candidates: [1, 2, 3, 4, 5, 6, 7, 8, 9],
+
+         /** Whether to show candidates
+           *
+           * This has no effect when there's 0 or 1 candidates -
+           * in those cases only a single digit is shown: 0 || 1 to 9
+           *
+           * `whenFocus` sets this to true
+           * `whenBlur` sets this to true when 1 < candidates < 9
+           * `shift+backspace` sets this to false
+           */
          showCandidates: false,
-         error: false, /** Whether the candidates array is empty */
+
+         /** Whether the candidates array is empty */
+         error: false,
+
+         /** If this is currently focused by the user - set by whenFocus and whenBlur */
          active: false
       }
 
       this.props.callback(this) /** See sudoku.js */
+      this.whenFocus = this.whenFocus.bind(this)
+      this.whenBlur = this.whenBlur.bind(this)
+      this.whenKeyDown = this.whenKeyDown.bind(this)
    }
 
    /** How many candidates are left */
@@ -67,9 +86,9 @@ export default class Cell extends React.Component {
             data-error={this.state.error ? "true" : undefined}
             active={this.state.active ? "true" : undefined}
             tabIndex="0"
-            onFocus={this.whenFocus.bind(this)}
-            onBlur={this.whenBlur.bind(this)}
-            onKeyDown={this.processKeyDown.bind(this)}
+            onFocus={this.whenFocus}
+            onBlur={this.whenBlur}
+            onKeyDown={this.whenKeyDown}
          >{content}</td>
       )
    }
@@ -80,16 +99,26 @@ export default class Cell extends React.Component {
 
    whenBlur(_event) {
       this.setState(state => {
-         const showCandidates = state.candidates.length !== 0
-         return { active: false, showCandidates }
+         if (1 < state.candidates.length && state.candidates.length < 9) {
+            return { active: false, showCandidates: true }
+         }
+         return { active: false }
       })
    }
 
    /**
     * Handler for "keyDown" events
     * Not handling "keypress" since that's deprecated.
+    *
+    * When a digit is pressed: "123456789",
+    * then it toggles that candidate.
+    *
+    * Shift+Backspace resets the candidates
+    * Backspace deletes the candidates
+    *
+    * "Undocumented": The `delete` and `clear` keys also work
     */
-   processKeyDown(event) {
+   whenKeyDown(event) {
       if ('123456789'.includes(event.key)) {
          const candidate = Number(event.key)
 
@@ -120,6 +149,7 @@ export default class Cell extends React.Component {
          if (event.shiftKey) {
             this.setState({
                candidates: [1, 2, 3, 4, 5, 6, 7, 8, 9],
+               showCandidates: false,
                error: false
             })
             document.getElementById('Data').value = '123456789'

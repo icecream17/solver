@@ -93,15 +93,18 @@ export default class Cell extends React.Component {
       // tabIndex for focusability
       // ="0" because of a11y thing
       return (
-         <td
-            className='Cell'
-            data-error={this.state.error ? "true" : undefined}
-            active={this.state.active ? "true" : undefined}
-            tabIndex="0"
-            onFocus={this.whenFocus}
-            onBlur={this.whenBlur}
-            onKeyDown={this.whenKeyDown}
-         >{content}</td>
+         <td className='Cell'>
+            <button
+               className='Cell'
+               type='button'
+               data-error={this.state.error ? "true" : undefined}
+               active={this.state.active ? "true" : undefined}
+               tabIndex="0"
+               onFocus={this.whenFocus}
+               onBlur={this.whenBlur}
+               onKeyDown={this.whenKeyDown}
+            >{content}</button>
+         </td>
       )
    }
 

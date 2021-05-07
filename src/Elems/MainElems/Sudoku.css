@@ -24,8 +24,10 @@ table.Sudoku {
 
    /* Also the width */
    --cell-height: calc(100% / 9);
-   --cell-fontsize: 2.5rem; /* Currently unneccesary variables */
+   /* The following variables are inherited by :root
+   --cell-fontsize: 2.5rem;
    --candidate-fontsize: 0.9rem;
+   */
 
    vertical-align: middle;
    cursor: pointer;

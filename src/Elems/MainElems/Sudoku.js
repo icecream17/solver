@@ -39,7 +39,7 @@ export default class Sudoku extends React.Component {
 
    render() {
       return (
-         <table className='Sudoku' id='Sudoku'>
+         <table className='Sudoku' id='Sudoku' title='Sudoku' aria-label='Sudoku'>
             <tbody>
                <Row index={0} callback={this.updateInnerArray} />
                <Row index={1} callback={this.updateInnerArray} />

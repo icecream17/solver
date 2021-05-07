@@ -56,7 +56,19 @@ td.Cell {
    vertical-align: middle;
 }
 
-td.Cell > * {
+td.Cell:nth-child(3n):not(:last-child) {
+   border-right: var(--large-border) solid white;
+}
+
+button.Cell {
+   border: none;
+   width: 100%;
+   height: 100%;
+   padding: 0;
+   background-color: transparent;
+}
+
+button.Cell > * {
    /* [ref 2] */
    height: var(--cell-height);
 
@@ -65,16 +77,12 @@ td.Cell > * {
    text-overflow: clip;
 }
 
-td.Cell[data-error="true"] {
+button.Cell[data-error="true"] {
    background-color: rgb(139, 0, 0);
 }
 
-td.Cell[active="true"] {
+button.Cell[active="true"] {
    background-color: gray;
-}
-
-td.Cell:nth-child(3n):not(:last-child) {
-   border-right: var(--large-border) solid white;
 }
 
 table.Candidates {

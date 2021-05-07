@@ -6,12 +6,12 @@ import SetCandidates from './SetCandidates';
 
 // Maps keys to coords - Object.assign prevents prototype pollution
 const keyboardMappings = Object.assign(Object.create(null), {
-   'ArrowUp': {vRow: 1, vColumn: 0},
-   'KeyW': {vRow: 1, vColumn: 0},
+   'ArrowUp': {vRow: -1, vColumn: 0},
+   'KeyW': {vRow: -1, vColumn: 0},
    'ArrowLeft': {vRow: 0, vColumn: -1},
    'KeyA': {vRow: 0, vColumn: -1},
-   'ArrowDown': {vRow: -1, vColumn: 0},
-   'KeyS': {vRow: -1, vColumn: 0},
+   'ArrowDown': {vRow: 1, vColumn: 0},
+   'KeyS': {vRow: 1, vColumn: 0},
    'ArrowRight': {vRow: 0, vColumn: 1},
    'KeyD': {vRow: 0, vColumn: 1},
 })

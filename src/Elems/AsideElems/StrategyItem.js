@@ -20,6 +20,10 @@ export default class StrategyItem extends React.Component {
          }
       }
 
+      this.id = 'strategy-' + this.props.name.replaceAll(' ', '-')
+      if (!this.props.required) {
+         this.togglerId = 'strategy-toggler-' + this.props.name.replaceAll(' ', '-')
+      }
       this.state = {
          success: null,
          successcount: null,
@@ -36,7 +40,7 @@ export default class StrategyItem extends React.Component {
 
       if (this.props.required) {
          return (
-            <li className={thisClass} id={'strategy-' + this.props.name.replaceAll(' ', '-')}>
+            <li className={thisClass} id={this.id}>
                <StrategyLabel name={this.props.name} description={this.props.description} />
                <StrategyStatus state={this.state} />
             </li>
@@ -44,9 +48,9 @@ export default class StrategyItem extends React.Component {
       }
 
       return (
-         <li className={thisClass} id={'strategy-' + this.props.name.replaceAll(' ', '-')}>
-            <label>
-               <StrategyToggler callback={this.toggle.bind(this)} />
+         <li className={thisClass} id={this.id}>
+            <label htmlFor={this.togglerId}>
+               <StrategyToggler callback={this.toggle.bind(this)} id={this.togglerId} />
                <StrategyLabel name={this.props.name} description={this.props.description} />
             </label>
             <StrategyStatus state={this.state} />
@@ -54,7 +58,7 @@ export default class StrategyItem extends React.Component {
       )
    }
 
-   toggle() {
+   toggle(_event) {
       this.setState(state => ({ disabled: !state.disabled }))
    }
 }

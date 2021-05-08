@@ -8,7 +8,7 @@ export default class StrategyToggler extends React.Component {
    constructor(props) {
       super(props)
 
-      for (const requiredProperty of ["callback"]) {
+      for (const requiredProperty of ["callback", "id"]) {
          if (!(requiredProperty in props)) {
             throw TypeError(`StrategyToggler: Required prop.state "${requiredProperty}" is missing`)
          }
@@ -23,6 +23,7 @@ export default class StrategyToggler extends React.Component {
       return (
          <input
             className="StrategyToggler"
+            id={this.props.id}
             type="checkbox"
             aria-label="toggle strategy"
             role="switch"
@@ -33,8 +34,8 @@ export default class StrategyToggler extends React.Component {
       )
    }
 
-   callback() {
+   callback(_event) {
       this.setState(state => ({ checked: !state.checked }))
-      this.props.callback()
+      this.props.callback(_event)
    }
 }

@@ -9,12 +9,17 @@ import StrategyStatus from './StrategyStatus';
  * The strategy element
  *
  * Passes props to StrategyLabel
+ *
+ * @requiredProps
+ * - name
+ * - solver
+ * - description
  */
 export default class StrategyItem extends React.Component {
    constructor(props) {
       super(props)
 
-      for (const requiredProperty of ["name", "description"]) {
+      for (const requiredProperty of ["name", "solver", "description"]) {
          if (!(requiredProperty in props)) {
             throw TypeError(`StrategyLabel: Required property "${requiredProperty}" is missing`)
          }
@@ -41,7 +46,7 @@ export default class StrategyItem extends React.Component {
       if (this.props.required) {
          return (
             <li className={thisClass} id={this.id}>
-               <StrategyLabel name={this.props.name} description={this.props.description} />
+               <StrategyLabel {...this.props} />
                <StrategyStatus state={this.state} />
             </li>
          )
@@ -51,7 +56,7 @@ export default class StrategyItem extends React.Component {
          <li className={thisClass} id={this.id}>
             <label htmlFor={this.togglerId}>
                <StrategyToggler callback={this.toggle.bind(this)} id={this.togglerId} />
-               <StrategyLabel name={this.props.name} description={this.props.description} />
+               <StrategyLabel {...this.props} />
             </label>
             <StrategyStatus state={this.state} />
          </li>

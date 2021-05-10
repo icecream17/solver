@@ -51,15 +51,15 @@ export default class Sudoku extends React.Component {
       return (
          <table className='Sudoku' id='Sudoku' title='Sudoku' aria-label='Sudoku'>
             <tbody>
-               <Row index={0} callback={this.updateInnerArray} />
-               <Row index={1} callback={this.updateInnerArray} />
-               <Row index={2} callback={this.updateInnerArray} />
-               <Row index={3} callback={this.updateInnerArray} />
-               <Row index={4} callback={this.updateInnerArray} />
-               <Row index={5} callback={this.updateInnerArray} />
-               <Row index={6} callback={this.updateInnerArray} />
-               <Row index={7} callback={this.updateInnerArray} />
-               <Row index={8} callback={this.updateInnerArray} />
+               <Row index={0} whenCellConstructs={this.updateInnerArray} />
+               <Row index={1} whenCellConstructs={this.updateInnerArray} />
+               <Row index={2} whenCellConstructs={this.updateInnerArray} />
+               <Row index={3} whenCellConstructs={this.updateInnerArray} />
+               <Row index={4} whenCellConstructs={this.updateInnerArray} />
+               <Row index={5} whenCellConstructs={this.updateInnerArray} />
+               <Row index={6} whenCellConstructs={this.updateInnerArray} />
+               <Row index={7} whenCellConstructs={this.updateInnerArray} />
+               <Row index={8} whenCellConstructs={this.updateInnerArray} />
             </tbody>
          </table>
       )

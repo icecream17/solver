@@ -90,20 +90,22 @@ export default class Cell extends React.Component {
          content = <Candidates data={this.state.candidates} />
       }
 
-      // tabIndex for focusability
-      // ="0" because of a11y thing
+      // 1. inner div to separate aria roles
+      //    and because <button> elements cannot contain tables
+      // 2. tabIndex for focusability
+      //    ="0" because of a11y thing
       return (
          <td className='Cell'>
-            <button
+            <div
                className='Cell'
-               type='button'
+               role='button'
                data-error={this.state.error ? "true" : undefined}
                active={this.state.active ? "true" : undefined}
                tabIndex="0"
                onFocus={this.whenFocus}
                onBlur={this.whenBlur}
                onKeyDown={this.whenKeyDown}
-            >{content}</button>
+            >{content}</div>
          </td>
       )
    }

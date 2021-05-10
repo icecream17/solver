@@ -1,7 +1,13 @@
 import React from 'react';
 
 /**
- * Controls strategies
+ * Strategy control
+ * When a user clicks on the control... something happens,
+ * like a strategy being run against the sudoku.
+ *
+ * @requiredProps
+ * - onClick
+ * - name
  */
 export default class StrategyControl extends React.Component {
    constructor(props) {

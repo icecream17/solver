@@ -107,6 +107,7 @@ td.Candidate {
    width: var(--candidate-height);
    font-size: var(--candidate-fontsize);
    text-align: center;
+   color: white;
 
    /* [ref 1] */
    overflow: hidden;

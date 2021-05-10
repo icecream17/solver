@@ -14,8 +14,17 @@ import Aside from './Elems/Aside'
 class App extends React.Component {
    constructor (props) {
       super(props)
-      
+
       this.state = {
+         /**
+          * See `sudoku.js`.
+          * When none of the sudoku's cells are initialized,
+          * the prop defaults to null
+          *
+          * @name Sudoku.state.sudoku
+          * @type {null | Cell[][]}
+          * @default {null}
+          */
          sudoku: null
       }
 
@@ -29,13 +38,14 @@ class App extends React.Component {
                <Title />
                <Version />
             </header>
-            <Main whenSudokuUpdates={this.whenSudokuUpdates} />
+            <Main whenSudokuConstructs={this.whenSudokuConstructs} />
             <Aside />
          </div>
       );
    }
 
-   whenSudokuUpdates(sudoku) {
+   whenSudokuConstructs(sudoku) {
+      // Only have to set once, since Arrays are "reference like". Lol
       this.setState({ sudoku: sudoku.data })
    }
 }

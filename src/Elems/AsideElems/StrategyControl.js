@@ -5,14 +5,14 @@ import React from 'react';
  */
 export default class StrategyControl extends React.Component {
    constructor(props) {
-      super(props)
-
-      for (const requiredProperty of ["callback", "name"]) {
+      for (const requiredProperty of ["onClick", "name"]) {
          if (!(requiredProperty in props)) {
             throw TypeError(
                `StrategyControl: Required property "${requiredProperty}" is missing`)
          }
       }
+
+      super(props)
    }
 
    render() {
@@ -20,7 +20,7 @@ export default class StrategyControl extends React.Component {
          <button
             className='StrategyControl'
             type='button'
-            onClick={this.props.callback}
+            onClick={this.props.onClick}
          >{this.props.name}</button>
       )
    }

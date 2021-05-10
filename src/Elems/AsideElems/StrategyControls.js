@@ -10,9 +10,9 @@ export default class StrategyControls extends React.Component {
       return (
          <fieldset className='StrategyControls'>
             <legend>controls (todo)</legend>
-            <StrategyControl callback={new Todo.func("run")} name="run" />
-            <StrategyControl callback={new Todo.func("step")} name="step" />
-            <StrategyControl callback={new Todo.func("undo")} name="undo" />
+            <StrategyControl onClick={new Todo.func("run")} name="run" />
+            <StrategyControl onClick={new Todo.func("step")} name="step" />
+            <StrategyControl onClick={new Todo.func("undo")} name="undo" />
          </fieldset>
       )
    }

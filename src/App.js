@@ -28,7 +28,7 @@ class App extends React.Component {
          sudoku: null
       }
 
-      this.whenSudokuUpdates = this.whenSudokuUpdates.bind(this)
+      this.whenSudokuConstructs = this.whenSudokuConstructs.bind(this)
    }
 
    render() {

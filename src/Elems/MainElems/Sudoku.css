@@ -60,7 +60,7 @@ td.Cell:nth-child(3n):not(:last-child) {
    border-right: var(--large-border) solid white;
 }
 
-button.Cell {
+div.Cell {
    border: none;
    width: 100%;
    height: 100%;
@@ -68,7 +68,7 @@ button.Cell {
    background-color: transparent;
 }
 
-button.Cell > * {
+div.Cell > * {
    /* [ref 2] */
    height: var(--cell-height);
 
@@ -77,11 +77,11 @@ button.Cell > * {
    text-overflow: clip;
 }
 
-button.Cell[data-error="true"] {
+div.Cell[data-error="true"] {
    background-color: rgb(139, 0, 0);
 }
 
-button.Cell[active="true"] {
+div.Cell[active="true"] {
    background-color: gray;
 }
 

@@ -14,6 +14,8 @@
 .App {
    background-color: #282c34;
    min-height: 100vh;
+   min-width: 100vw;
+   width: fit-content;
    color: white;
 
    display: grid;

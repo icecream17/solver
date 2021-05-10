@@ -9,11 +9,11 @@ import Coords from './MainElems/Coords';
  * The "main" component, which includes the Data, Sudoku, and Coords components
  *
  * @requiredProps
- * - whenSudokuUpdates
+ * - whenSudokuConstructs
  */
 class Main extends React.Component {
    constructor(props) {
-      for (const requiredProperty of ["whenSudokuUpdates"]) {
+      for (const requiredProperty of ["whenSudokuConstructs"]) {
          if (!(requiredProperty in props)) {
             throw TypeError(`Sudoku: Required property "${requiredProperty}" is missing`)
          }
@@ -26,7 +26,7 @@ class Main extends React.Component {
       return (
          <main className="App-main">
             <Data />
-            <Sudoku whenUpdate={this.props.whenSudokuUpdates} />
+            <Sudoku whenConstruct={this.props.whenSudokuConstructs} />
             <Coords />
          </main>
       );

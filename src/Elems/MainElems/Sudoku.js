@@ -5,14 +5,24 @@ import './Sudoku.css'
 import Row from './Row';
 
 /**
- * The main sudoku!!!!
- * No setup required!
+ * The main sudoku!!!
+ * The sudoku board state is sent back all the way to `App.js`
  *
  * @example
- * <Sudoku />
+ * // Sending state up
+ * <Sudoku whenUpdate={callback} />
+ *
+ * @requiredProps
+ * - whenUpdate
  */
 export default class Sudoku extends React.Component {
    constructor(props) {
+      for (const requiredProperty of ["whenUpdate"]) {
+         if (!(requiredProperty in props)) {
+            throw TypeError(`Sudoku: Required property "${requiredProperty}" is missing`)
+         }
+      }
+
       super(props)
 
       /**
@@ -79,5 +89,6 @@ export default class Sudoku extends React.Component {
 
    updateInnerArray(cell) {
       this.data[cell.props.row][cell.props.column] = cell
+      this.props.whenUpdate(this) // See props.whenUpdate
    }
 }

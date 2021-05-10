@@ -77,6 +77,15 @@ div.Cell > * {
    text-overflow: clip;
 }
 
+/*  This selector was made before I needed to use it
+ *  This is for vertically aligning the big digits
+ */
+div.Cell > span.ugh.tables {
+   display: inline-flex;
+   height: 100%;
+   align-items: center;
+}
+
 div.Cell[data-error="true"] {
    background-color: rgb(139, 0, 0);
 }

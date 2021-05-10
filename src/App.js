@@ -36,7 +36,7 @@ class App extends React.Component {
    }
 
    whenSudokuUpdates(sudoku) {
-      this.state.sudoku = sudoku.data
+      this.setState({ sudoku: sudoku.data })
    }
 }
 

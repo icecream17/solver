@@ -13,11 +13,11 @@ import Row from './Row';
  * <Sudoku whenUpdate={callback} />
  *
  * @requiredProps
- * - whenUpdate
+ * - whenConstruct
  */
 export default class Sudoku extends React.Component {
    constructor(props) {
-      for (const requiredProperty of ["whenUpdate"]) {
+      for (const requiredProperty of ["whenConstruct"]) {
          if (!(requiredProperty in props)) {
             throw TypeError(`Sudoku: Required property "${requiredProperty}" is missing`)
          }
@@ -45,6 +45,7 @@ export default class Sudoku extends React.Component {
       }
 
       this.updateInnerArray = this.updateInnerArray.bind(this)
+      this.props.whenConstruct(this) // See props.whenUpdate
    }
 
    render() {
@@ -89,6 +90,5 @@ export default class Sudoku extends React.Component {
 
    updateInnerArray(cell) {
       this.data[cell.props.row][cell.props.column] = cell
-      this.props.whenUpdate(this) // See props.whenUpdate
    }
 }

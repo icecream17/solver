@@ -28,16 +28,21 @@ const keyboardMappings = Object.assign(Object.create(null), {
  *
  * @example
  * <Cell row={1} column={4} />
+ *
+ * @requiredProps
+ * - row
+ * - column
+ * - whenConstruct
  */
 export default class Cell extends React.Component {
    constructor(props) {
-      super(props)
-
-      for (const requiredProperty of ["row", "column", "callback"]) {
+      for (const requiredProperty of ["row", "column", "whenConstruct"]) {
          if (!(requiredProperty in props)) {
             throw TypeError(`Cell: Required property "${requiredProperty}" is missing`)
          }
       }
+
+      super(props)
 
       this.state = {
          /** An array of possible candidates.
@@ -63,7 +68,7 @@ export default class Cell extends React.Component {
          active: false
       }
 
-      this.props.callback(this) /** See sudoku.js */
+      this.props.whenConstruct(this) /** See sudoku.js */
       this.whenFocus = this.whenFocus.bind(this)
       this.whenBlur = this.whenBlur.bind(this)
       this.whenKeyDown = this.whenKeyDown.bind(this)

@@ -22,7 +22,7 @@ export default class StrategyControls extends React.Component {
       return (
          <fieldset className='StrategyControls'>
             <legend>controls (todo)</legend>
-            <StrategyControl onClick={this.props.solver.Run} name="run" />
+            <StrategyControl onClick={this.props.solver.Go} name="go" />
             <StrategyControl onClick={this.props.solver.Step} name="step" />
             <StrategyControl onClick={this.props.solver.Undo} name="undo" />
          </fieldset>

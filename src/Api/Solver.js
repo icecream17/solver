@@ -2,15 +2,15 @@
 export default class Solver {
    constructor (sudokuData) {
       this.sudokuData = sudokuData
+      this.strategyIndex = 0
    }
 
    Step () {
       // TODO
    }
 
-   // This is a bad name
-   // Does "Step" until it reaches the end or a strategy succeeds
-   Run () {
+   /** Does "Step" until it reaches the end or a strategy succeeds */
+   Go () {
       // TODO
    }
 

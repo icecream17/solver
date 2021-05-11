@@ -50,8 +50,10 @@
 
 @media (max-width: 900px) {
    .App {
+      --header-height: calc(2rem + 10px + 2vmin + 2rem);
+
       grid-template-columns: 250fr 2745fr 250fr; /* ~ (8%, 84%, 8%)  */
-      grid-template-rows: 7vh 7vh 2rem var(--app-main-height) 2rem calc(var(--app-main-height) + 9vh);
+      grid-template-rows: 7vh var(--header-height) 2rem var(--app-main-height) 2rem calc(var(--app-main-height) + 9vh);
       gap: 0 0;
       grid-template-areas:
          ". . ."
@@ -60,6 +62,10 @@
          ". Main ."
          ". . ."
          ". Aside .";
+   }
+
+   .App-aside {
+      font-size: calc(1rem + 1vh);
    }
 }
 
@@ -89,6 +95,7 @@
    font-size: calc(10px + 2vmin);
 
    grid-area: Header;
+   height: fit-content;
 }
 
 .App-header > .Title {

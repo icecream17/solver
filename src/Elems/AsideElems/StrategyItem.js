@@ -21,7 +21,7 @@ export default class StrategyItem extends React.Component {
 
       for (const requiredProperty of ["name", "solver", "description"]) {
          if (!(requiredProperty in props)) {
-            throw TypeError(`StrategyLabel: Required property "${requiredProperty}" is missing`)
+            throw TypeError(`StrategyItem: Required property "${requiredProperty}" is missing`)
          }
       }
 

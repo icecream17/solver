@@ -39,7 +39,7 @@ class App extends React.Component {
                <Version />
             </header>
             <Main whenSudokuConstructs={this.whenSudokuConstructs} />
-            <Aside />
+            <Aside sudoku={this.state.sudoku} />
          </div>
       );
    }

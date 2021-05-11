@@ -11,18 +11,9 @@ import Row from './Row';
  * @example
  * // Sending state up
  * <Sudoku whenUpdate={callback} />
- *
- * @requiredProps
- * - whenConstruct
  */
 export default class Sudoku extends React.Component {
    constructor(props) {
-      for (const requiredProperty of ["whenConstruct"]) {
-         if (!(requiredProperty in props)) {
-            throw TypeError(`Sudoku: Required property "${requiredProperty}" is missing`)
-         }
-      }
-
       super(props)
 
       /**
@@ -35,9 +26,9 @@ export default class Sudoku extends React.Component {
        * this.data[cell.row][cell.column] = cell
        * ```
        *
-       * @name Sudoku#data
-       * @type {Cell[][]}
-       * @default {[[], [], [], [], [], [], [], [], []]}
+       * @name Sudoku.data
+       * @type Cell[][]
+       * @default [[], [], [], [], [], [], [], [], []]
        */
       this.data = []
       for (let i = 0; i < 9; i++) {
@@ -45,7 +36,13 @@ export default class Sudoku extends React.Component {
       }
 
       this.updateInnerArray = this.updateInnerArray.bind(this)
-      this.props.whenConstruct(this) // See props.whenUpdate
+
+      /** See App.js - this if statement is anticipating future code changes */
+      if ("whenConstruct" in this.props) {
+         this.props.whenConstruct(this)
+      } else {
+         console.warn("Remove useless code in Sudoku.js")
+      }
    }
 
    render() {

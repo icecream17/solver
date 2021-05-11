@@ -17,7 +17,7 @@ export default class StrategyList extends React.Component {
       }
 
       super(props)
-   }   
+   }
 
    render() {
       return (

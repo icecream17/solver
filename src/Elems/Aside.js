@@ -7,13 +7,27 @@
 
 import './Aside.css'
 import React from 'react'
-import SolverPart from './SolverPart'
+import SolverPart from './AsideElems/SolverPart'
 
+/**
+ * @requiredProps
+ * - sudoku
+ */
 export default class Aside extends React.Component {
+   constructor(props) {
+      for (const requiredProperty of ["sudoku"]) {
+         if (!(requiredProperty in props)) {
+            throw TypeError(`Aside: Required property "${requiredProperty}" is missing`)
+         }
+      }
+
+      super(props)
+   }
+
    render() {
       return (
          <section className="App-aside">
-            <SolverPart />
+            <SolverPart sudoku={this.props.sudoku} />
          </section>
       );
    }

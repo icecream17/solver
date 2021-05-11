@@ -1,17 +1,20 @@
 
 export default class Solver {
-   // TODO
-   static Step () {
+   constructor (sudokuData) {
+      this.sudokuData = sudokuData
+   }
+
+   Step () {
       // TODO
    }
 
    // This is a bad name
    // Does "Step" until it reaches the end or a strategy succeeds
-   static Run () {
+   Run () {
       // TODO
    }
-   
-   static Undo () {
+
+   Undo () {
       // TODO
    }
 }

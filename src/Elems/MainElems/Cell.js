@@ -32,11 +32,10 @@ const keyboardMappings = Object.assign(Object.create(null), {
  * @requiredProps
  * - row
  * - column
- * - whenConstruct
  */
 export default class Cell extends React.Component {
    constructor(props) {
-      for (const requiredProperty of ["row", "column", "whenConstruct"]) {
+      for (const requiredProperty of ["row", "column"]) {
          if (!(requiredProperty in props)) {
             throw TypeError(`Cell: Required property "${requiredProperty}" is missing`)
          }
@@ -68,7 +67,13 @@ export default class Cell extends React.Component {
          active: false
       }
 
-      this.props.whenConstruct(this) /** See sudoku.js */
+      /** See sudoku.js - this if statement is anticipating future code changes */
+      if ("whenConstruct" in this.props) {
+         this.props.whenConstruct(this)
+      } else {
+         console.warn("Remove useless code in Cell.js")
+      }
+
       this.whenFocus = this.whenFocus.bind(this)
       this.whenBlur = this.whenBlur.bind(this)
       this.whenKeyDown = this.whenKeyDown.bind(this)

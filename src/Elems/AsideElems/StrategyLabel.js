@@ -6,13 +6,13 @@ import React from 'react';
  */
 export default class StrategyLabel extends React.Component {
    constructor(props) {
-      super(props)
-
       for (const requiredProperty of ["name", "description"]) {
          if (!(requiredProperty in props)) {
             throw TypeError(`StrategyLabel: Required property "${requiredProperty}" is missing`)
          }
       }
+
+      super(props)
 
       this.state = {
          bold: false

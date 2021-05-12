@@ -1,5 +1,6 @@
 
 import React from 'react';
+import CoordLine from './CoordLine';
 
 /**
  * Letters for the columns of the sudoku
@@ -7,12 +8,10 @@ import React from 'react';
  * @example
  * <CoordCol children={3} />
  */
-export default class CoordCol extends React.Component {
+export default class CoordCol extends CoordLine {
    render() {
       return (
-         <div className='CoordCol'>
-            {this.props.value}
-         </div>
+         <CoordLine className='CoordRow' {...this.props} />
       )
    }
 }

@@ -3,6 +3,12 @@ import React from 'react';
 
 import './Sudoku.css'
 import Row from './Row';
+import Cell from './Cell';
+import { SudokuDigits } from '../../Types';
+
+type SudokuProps = Readonly<{
+   whenConstruct?(...args: any): any
+} & typeof React.Component.prototype.props>
 
 /**
  * The main sudoku!!!
@@ -10,10 +16,13 @@ import Row from './Row';
  *
  * @example
  * // Sending state up
- * <Sudoku whenUpdate={callback} />
+ * <Sudoku whenConstruct={callback} />
  */
 export default class Sudoku extends React.Component {
-   constructor(props) {
+   props!: SudokuProps;
+   data: Cell[][];
+   element: null | HTMLTableElement;
+   constructor(props: SudokuProps) {
       super(props)
 
       /**
@@ -36,10 +45,14 @@ export default class Sudoku extends React.Component {
       }
 
       this.updateInnerArray = this.updateInnerArray.bind(this)
+      this.element = null
 
+      // HELP: this.props === undefined !??
       /** See App.js - this if statement is anticipating future code changes */
       if ("whenConstruct" in this.props) {
-         this.props.whenConstruct(this)
+         (this.props as Readonly<{
+            whenConstruct(...args: any): any
+         } & typeof React.Component.prototype.props>).whenConstruct(this)
       } else {
          console.warn("Remove useless code in Sudoku.js")
       }
@@ -47,7 +60,13 @@ export default class Sudoku extends React.Component {
 
    render() {
       return (
-         <table className='Sudoku' id='Sudoku' title='Sudoku' aria-label='Sudoku'>
+         <table
+            className='Sudoku'
+            id='Sudoku'
+            title='Sudoku'
+            aria-label='Sudoku'
+            ref={element => this.element = element}
+         >
             <tbody>
                <Row index={0} whenCellConstructs={this.updateInnerArray} />
                <Row index={1} whenCellConstructs={this.updateInnerArray} />
@@ -64,7 +83,7 @@ export default class Sudoku extends React.Component {
    }
 
    /** Gets the cell _element_ at the row and column. */
-   getCell(row, column) {
+   getCell(row: SudokuDigits, column: SudokuDigits) {
       if (this.data[row][column] !== undefined) {
          return this.data[row][column]
       }
@@ -76,16 +95,16 @@ export default class Sudoku extends React.Component {
    }
 
    /** Gets the row _element_ at the index provided */
-   getRow(index) {
-      if (this.element.current === null) {
+   getRow(index: SudokuDigits): Element {
+      if (this.element === null) {
          throw new TypeError('null element??')
       }
 
       // this.element > tbody > row
-      return this.element.current.firstChild.children[index]
+      return (this.element.firstChild as HTMLTableRowElement).children[index]
    }
 
-   updateInnerArray(cell) {
+   updateInnerArray(cell: Cell) {
       this.data[cell.props.row][cell.props.column] = cell
    }
 }

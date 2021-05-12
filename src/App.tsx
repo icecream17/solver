@@ -6,13 +6,23 @@ import Title from './Elems/Title'
 import Version from './Elems/Version'
 import Main from './Elems/Main'
 import Aside from './Elems/Aside'
+import Cell from './Elems/MainElems/Cell'
+import Sudoku from './Elems/MainElems/Sudoku'
+
+interface AppState {
+   sudoku: null | Cell[][]
+}
 
 /**
  * The <App /> component
  * Stores the global "state.sudoku" property
+ *
+ * @example
+ * <App />
  */
 class App extends React.Component {
-   constructor (props) {
+   state: AppState
+   constructor (props: any) {
       super(props)
 
       this.state = {
@@ -22,7 +32,6 @@ class App extends React.Component {
           * the prop defaults to null
           *
           * @name Sudoku.state.sudoku
-          * @type {null | Cell[][]}
           * @default {null}
           */
          sudoku: null
@@ -44,7 +53,7 @@ class App extends React.Component {
       );
    }
 
-   whenSudokuConstructs(sudoku) {
+   whenSudokuConstructs(sudoku: Sudoku) {
       // Only have to set once, since Arrays are "reference like". Lol
       this.setState({ sudoku: sudoku.data })
    }

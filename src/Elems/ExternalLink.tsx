@@ -11,6 +11,11 @@ const exampleUsage = `
    }/>
 `
 
+type ExternalLinkProps = Readonly<{
+   children?: React.ReactNode
+   href: any
+} & typeof React.Component.prototype.props>
+
 /**
  * An external link.
  * Since the link is external it'll open up in a new tab.
@@ -25,15 +30,16 @@ const exampleUsage = `
  * }/>
  */
 export default class ExternalLink extends React.Component {
-   constructor (props) {
-      super(props)
-
+   props!: ExternalLinkProps
+   constructor (props: ExternalLinkProps) {
       for (const requiredProperty of ["children", "href"]) {
          if (!(requiredProperty in props)) {
             throw TypeError(
                `ExternalLink: Required property "${requiredProperty}" is missing\n${exampleUsage}`)
          }
       }
+
+      super(props)
    }
 
    render() {

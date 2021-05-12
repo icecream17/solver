@@ -17,13 +17,13 @@ import StrategyStatus from './StrategyStatus';
  */
 export default class StrategyItem extends React.Component {
    constructor(props) {
-      super(props)
-
       for (const requiredProperty of ["name", "solver", "description"]) {
          if (!(requiredProperty in props)) {
             throw TypeError(`StrategyItem: Required property "${requiredProperty}" is missing`)
          }
       }
+
+      super(props)
 
       this.id = 'strategy-' + this.props.name.replaceAll(' ', '-')
       if (!this.props.required) {

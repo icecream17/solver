@@ -1,5 +1,10 @@
 import React from 'react'
 
+type DataState = Readonly<{
+   value: typeof HTMLTextAreaElement.prototype.value
+} & typeof React.Component.prototype.state>
+
+
 /**
  * Used to display info to the user
  *
@@ -11,11 +16,12 @@ import React from 'react'
  * @param {React.TextareaHTMLAttributes<HTMLTextAreaElement>.value} [props.value] - Optional textarea value
  */
 export default class Data extends React.Component {
-   constructor (props) {
+   state: DataState
+   constructor (props: any) {
       super(props)
 
       this.state = {
-         value: this.props.value ?? ''
+         value: ''
       }
    }
 
@@ -31,11 +37,11 @@ export default class Data extends React.Component {
       )
    }
 
-   setValue(value) {
+   setValue(value: any) {
       this.setState(_state => ({ value }))
    }
 
-   handleChange(event) {
+   handleChange(event: React.ChangeEvent & { target: HTMLTextAreaElement }) {
       this.setState({ value: event.target.value });
    }
 }

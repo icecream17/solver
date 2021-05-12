@@ -3,16 +3,20 @@ import React from 'react';
 
 /**
  * Turns a strategy off or on
+ *
+ * @requiredProps
+ * - callback
+ * - id
  */
 export default class StrategyToggler extends React.Component {
    constructor(props) {
-      super(props)
-
       for (const requiredProperty of ["callback", "id"]) {
          if (!(requiredProperty in props)) {
             throw TypeError(`StrategyToggler: Required prop.state "${requiredProperty}" is missing`)
          }
       }
+
+      super(props)
 
       this.state = {
          checked: true

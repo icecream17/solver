@@ -1,12 +1,16 @@
 
 import React from 'react';
+import { IndexToNine } from '../../Types';
 
 import Cell from './Cell';
 
+type RowProps = Readonly<{
+   index: IndexToNine,
+   whenCellConstructs?(...args: any): any
+} & typeof React.Component.prototype.props>
+
 /**
  * A row in a sudoku
- *
- * @param {integer} props.index
  *
  * @example
  * <Row index={3} />
@@ -16,7 +20,8 @@ import Cell from './Cell';
  * - whenCellConstructs
  */
 export default class Row extends React.Component {
-   constructor(props) {
+   props!: RowProps
+   constructor(props: RowProps) {
       for (const requiredProp of ['index', 'whenCellConstructs']) {
          if (!(requiredProp in props)) {
             throw TypeError(`Row: Required property ${requiredProp} is missing`)

@@ -3,16 +3,20 @@ import React from 'react';
 
 /**
  * How did trying the strategy go?
+ *
+ * @requiredProps
+ * - success
+ * - successcount
  */
 export default class StrategyStatus extends React.Component {
    constructor(props) {
-      super(props)
-
       for (const requiredProperty of ["success", "successcount"]) {
          if (!(requiredProperty in props.state)) {
             throw TypeError(`StrategyLabel: Required prop.state "${requiredProperty}" is missing`)
          }
       }
+
+      super(props)
 
       this.state = {...this.props.state}
    }

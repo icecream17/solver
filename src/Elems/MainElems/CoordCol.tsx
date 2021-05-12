@@ -11,7 +11,7 @@ import CoordLine from './CoordLine';
 export default class CoordCol extends CoordLine {
    render() {
       return (
-         <CoordLine className='CoordRow' {...this.props} />
+         <CoordLine className='CoordCol' {...this.props} />
       )
    }
 }

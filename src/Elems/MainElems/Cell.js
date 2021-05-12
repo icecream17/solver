@@ -1,20 +1,10 @@
 
 import React from 'react';
-import { IndexToNine, SudokuDigits } from '../../Types';
 
 import Candidates from './Candidates';
 
 // Maps keys to coords - Object.assign prevents prototype pollution
 const keyboardMappings = Object.assign(Object.create(null), {
-   'ArrowUp': {vRow: -1, vColumn: 0},
-   'KeyW': {vRow: -1, vColumn: 0},
-   'ArrowLeft': {vRow: 0, vColumn: -1},
-   'KeyA': {vRow: 0, vColumn: -1},
-   'ArrowDown': {vRow: 1, vColumn: 0},
-   'KeyS': {vRow: 1, vColumn: 0},
-   'ArrowRight': {vRow: 0, vColumn: 1},
-   'KeyD': {vRow: 0, vColumn: 1},
-}) as Readonly<{
    'ArrowUp': { vRow: -1, vColumn: 0 },
    'KeyW': { vRow: -1, vColumn: 0 },
    'ArrowLeft': { vRow: 0, vColumn: -1 },
@@ -23,25 +13,7 @@ const keyboardMappings = Object.assign(Object.create(null), {
    'KeyS': { vRow: 1, vColumn: 0 },
    'ArrowRight': { vRow: 0, vColumn: 1 },
    'KeyD': { vRow: 0, vColumn: 1 },
-}>
-
-type CellProps = Readonly<{
-   row: IndexToNine,
-   column: IndexToNine
-} & typeof React.Component.prototype.props>
-
-type CellState = Readonly<{
-   candidates: SudokuDigits[],
-   showCandidates: boolean,
-   error: boolean,
-   active: boolean
-} & typeof React.Component.prototype.props>
-
-type CellElement = HTMLTableDataCellElement & {
-   parentElement: HTMLTableRowElement & {
-      parentElement: HTMLTableSectionElement
-   }
-}
+})
 
 /**
  * A cell in a sudoku
@@ -61,11 +33,8 @@ type CellElement = HTMLTableDataCellElement & {
  * - column
  */
 export default class Cell extends React.Component {
-   props!: CellProps
-   state: CellState
-   element: null | CellElement;
-   constructor(props: CellProps) {
-      for (const requiredProperty of ["row", "column"] as const) {
+   constructor(props) {
+      for (const requiredProperty of ["row", "column"]) {
          if (!(requiredProperty in props)) {
             throw TypeError(`Cell: Required property "${requiredProperty}" is missing`)
          }
@@ -107,8 +76,6 @@ export default class Cell extends React.Component {
       this.whenFocus = this.whenFocus.bind(this)
       this.whenBlur = this.whenBlur.bind(this)
       this.whenKeyDown = this.whenKeyDown.bind(this)
-
-      this.element = null
    }
 
    /** How many candidates are left */
@@ -137,13 +104,13 @@ export default class Cell extends React.Component {
       // 2. tabIndex for focusability
       //    ="0" because of a11y thing
       return (
-         <td className='Cell' ref={element => this.element = element as typeof Cell.prototype.element}>
+         <td className='Cell'>
             <div
                className='Cell'
                role='button'
                data-error={this.state.error ? "true" : undefined}
-               data-active={this.state.active ? "true" : undefined}
-               tabIndex={0}
+               active={this.state.active ? "true" : undefined}
+               tabIndex="0"
                onFocus={this.whenFocus}
                onBlur={this.whenBlur}
                onKeyDown={this.whenKeyDown}
@@ -152,12 +119,12 @@ export default class Cell extends React.Component {
       )
    }
 
-   whenFocus(_event: React.FocusEvent) {
+   whenFocus(_event) {
       this.setState({ active: true, showCandidates: true })
    }
 
-   whenBlur(_event: React.FocusEvent) {
-      this.setState((state: CellState) => {
+   whenBlur(_event) {
+      this.setState(state => {
          if (1 < state.candidates.length && state.candidates.length < 9) {
             return { active: false, showCandidates: true }
          }
@@ -176,13 +143,12 @@ export default class Cell extends React.Component {
     * Backspace deletes the candidates
     *
     * "Undocumented": The `delete` and `clear` keys also work
-    * WARNING: uses document.getElementById('Data')
     */
-   whenKeyDown(event: React.KeyboardEvent) {
+   whenKeyDown(event) {
       if ('123456789'.includes(event.key)) {
-         const candidate = Number(event.key) as SudokuDigits
+         const candidate = Number(event.key)
 
-         this.setState((state: CellState) => {
+         this.setState(state => {
             const candidates = new Set(state.candidates)
 
             if (candidates.has(candidate)) {
@@ -192,14 +158,14 @@ export default class Cell extends React.Component {
             }
 
             if (candidates.size === 0) {
-               (document.getElementById('Data') as HTMLTextAreaElement).value = "empty!"
+               document.getElementById('Data').value = "empty!"
                return {
                   candidates: [],
                   error: true
                }
             }
 
-            (document.getElementById('Data') as HTMLTextAreaElement).value = [...candidates].join('')
+            document.getElementById('Data').value = [...candidates].join('')
             return {
                candidates: [...candidates],
                error: false
@@ -211,34 +177,28 @@ export default class Cell extends React.Component {
                candidates: [1, 2, 3, 4, 5, 6, 7, 8, 9],
                showCandidates: false,
                error: false
-            });
-            (document.getElementById('Data') as HTMLTextAreaElement).value = '123456789'
+            })
+            document.getElementById('Data').value = '123456789'
          } else {
             this.setState({
                candidates: [],
                error: true
-            });
-            (document.getElementById('Data') as HTMLTextAreaElement).value = 'Empty!'
+            })
+            document.getElementById('Data').value = 'Empty!'
          }
-      } else {
-         if (this.element === null) {
-            throw ReferenceError("AAAA [this.element === null inside whenKeyDown handler]")
-         }
-         if (event.key in keyboardMappings) {
-            // = tbody
-            const sudokuElement = this.element.parentElement.parentElement
-            const step = keyboardMappings[event.key as keyof typeof keyboardMappings]
+      } else if (event.key in keyboardMappings) {
+         // = tbody
+         const sudokuElement = event.target.parentElement.parentElement
+         const step = keyboardMappings[event.key]
 
-            // blur this and focus the other cell
-            this.element.blur();
-            (sudokuElement
-               .children[(this.props.row + 9 + step.vRow) % 9]
-               .children[(this.props.column + 9 + step.vColumn) % 9] as HTMLTableDataCellElement).focus()
-         } else if (event.key === 'Escape') {
-            // const sudokuElement = event.target.parentElement.parentElement
-            this.element.blur()
-            // TODO: Focus something else?
-         }
+         // blur this and focus the other cell
+         event.target.blur()
+         sudokuElement.children[(this.props.row + 9 + step.vRow) % 9]
+            .children[(this.props.column + 9 + step.vColumn) % 9].focus()
+      } else if (event.key === 'Escape') {
+         // const sudokuElement = event.target.parentElement.parentElement
+         event.target.blur()
+         // TODO: Focus something else?
       }
    }
 }

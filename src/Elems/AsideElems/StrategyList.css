@@ -3,14 +3,21 @@
 .StrategyList {
    position: relative;
    padding-left: 2rem;
+   width: fit-content; /* Not checkbox, just for overflow */
 }
 
 .StrategyItem {
+   --label-width: 20rem; /* For status */
+   --status-width: 5rem; /* For status */
    padding-left: 1.5rem;
 
    /* But this is for list item positioning */
    height: 1rem;
    padding-bottom: 0.5rem;
+
+   /* Making room for status */
+   min-width: 100%;
+   width: calc(var(--label-width) + var(--status-width))
 }
 
 .StrategyToggler {
@@ -47,10 +54,8 @@
 
 /* Label structure: Name+Tooltip Status */
 .StrategyLabel {
-   --my-width: 20em;
-
    height: 0;
-   width: var(--my-width);
+   width: var(--label-width);
 
    align-content: center;
    text-overflow: ellipsis;

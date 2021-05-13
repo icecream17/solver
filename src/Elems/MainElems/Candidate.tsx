@@ -32,7 +32,7 @@ export default class Candidate extends React.Component {
    render() {
       return (
          <td
-            className="CoordCol"
+            className="Candidate"
             data-index={this.props.index}
          >{this.props.children}</td>
       )

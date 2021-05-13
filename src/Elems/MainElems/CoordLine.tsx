@@ -4,7 +4,8 @@ import { IndexToNine } from '../../Types';
 
 type CoordLineProps = Readonly<{
    index: IndexToNine,
-   value: typeof React.Component.prototype.props.children
+   value: typeof React.Component.prototype.props.children,
+   className?: typeof React.Component.prototype.props.className
 } & typeof React.Component.prototype.props>
 
 /**
@@ -18,7 +19,7 @@ export default class CoordLine extends React.Component {
 
    render() {
       return (
-         <div data-index={this.props.index}>
+         <div data-index={this.props.index} className={this.props?.className ?? "CoordLine"}>
             {this.props.value}
          </div>
       )

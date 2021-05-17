@@ -20,7 +20,7 @@ export default class SolverPart extends React.Component {
 
       super(props)
 
-      this.solver = new Solver()
+      this.solver = new Solver(this.props.sudoku)
       this.children = {
          controls: null,
          list: null

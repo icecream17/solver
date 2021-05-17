@@ -1,10 +1,12 @@
 
 import React from 'react';
+import { HasWhenConstruct, IndexToNine, PossibleConstructCallback, SudokuDigits } from '../../Types';
 
 import Candidates from './Candidates';
+import Sudoku from './Sudoku';
 
-// Maps keys to coords - Object.assign prevents prototype pollution
-const keyboardMappings = Object.assign(Object.create(null), {
+// Maps keys to coords
+const keyboardMappings = {
    'ArrowUp': { vRow: -1, vColumn: 0 },
    'KeyW': { vRow: -1, vColumn: 0 },
    'ArrowLeft': { vRow: 0, vColumn: -1 },
@@ -13,7 +15,21 @@ const keyboardMappings = Object.assign(Object.create(null), {
    'KeyS': { vRow: 1, vColumn: 0 },
    'ArrowRight': { vRow: 0, vColumn: 1 },
    'KeyD': { vRow: 0, vColumn: 1 },
-})
+}
+
+type CellProps = PossibleConstructCallback & Readonly<{
+   row: IndexToNine,
+   column: IndexToNine,
+   sudoku: Sudoku
+}>
+
+type CellState = Readonly<{
+   candidates: SudokuDigits[],
+   showCandidates: boolean,
+   error: boolean,
+   active: boolean
+}> & typeof React.Component.prototype.state
+
 
 /**
  * A cell in a sudoku
@@ -33,14 +49,17 @@ const keyboardMappings = Object.assign(Object.create(null), {
  * - column
  */
 export default class Cell extends React.Component {
-   constructor(props) {
-      for (const requiredProperty of ["row", "column"]) {
+   props: CellProps
+   state: CellState
+   constructor(props: CellProps) {
+      for (const requiredProperty of ["row", "column", "sudoku"] as const) {
          if (!(requiredProperty in props)) {
             throw TypeError(`Cell: Required property "${requiredProperty}" is missing`)
          }
       }
 
       super(props)
+      this.props = props; // WHYY
 
       this.state = {
          /** An array of possible candidates.
@@ -67,7 +86,7 @@ export default class Cell extends React.Component {
       }
 
       /** See sudoku.js - this if statement is anticipating future code changes */
-      if ("whenConstruct" in this.props) {
+      if (HasWhenConstruct(this.props)) {
          this.props.whenConstruct(this)
       } else {
          console.warn("Remove useless code in Cell.js")
@@ -109,8 +128,8 @@ export default class Cell extends React.Component {
                className='Cell'
                role='button'
                data-error={this.state.error ? "true" : undefined}
-               active={this.state.active ? "true" : undefined}
-               tabIndex="0"
+               data-active={this.state.active ? "true" : undefined}
+               tabIndex={0}
                onFocus={this.whenFocus}
                onBlur={this.whenBlur}
                onKeyDown={this.whenKeyDown}
@@ -119,12 +138,12 @@ export default class Cell extends React.Component {
       )
    }
 
-   whenFocus(_event) {
+   whenFocus(_event: React.FocusEvent) {
       this.setState({ active: true, showCandidates: true })
    }
 
-   whenBlur(_event) {
-      this.setState(state => {
+   whenBlur(_event: React.FocusEvent) {
+      this.setState((state: CellState) => {
          if (1 < state.candidates.length && state.candidates.length < 9) {
             return { active: false, showCandidates: true }
          }
@@ -144,12 +163,14 @@ export default class Cell extends React.Component {
     *
     * "Undocumented": The `delete` and `clear` keys also work
     */
-   whenKeyDown(event) {
+   whenKeyDown(event: React.KeyboardEvent) {
+      const target = event.target as HTMLTableDataCellElement
       if ('123456789'.includes(event.key)) {
-         const candidate = Number(event.key)
+         const candidate = Number(event.key) as SudokuDigits
 
-         this.setState(state => {
+         this.setState((state: CellState) => {
             const candidates = new Set(state.candidates)
+            const dataElement = document.getElementById('Data') as HTMLTextAreaElement
 
             if (candidates.has(candidate)) {
                candidates.delete(candidate)
@@ -158,47 +179,46 @@ export default class Cell extends React.Component {
             }
 
             if (candidates.size === 0) {
-               document.getElementById('Data').value = "empty!"
+               dataElement.value = "empty!"
                return {
                   candidates: [],
                   error: true
                }
             }
 
-            document.getElementById('Data').value = [...candidates].join('')
+            dataElement.value = [...candidates].join('')
             return {
                candidates: [...candidates],
                error: false
             }
          })
       } else if (['Backspace', 'Delete', 'Clear'].includes(event.key)) {
+         const dataElement = document.getElementById('Data') as HTMLTextAreaElement
          if (event.shiftKey) {
             this.setState({
                candidates: [1, 2, 3, 4, 5, 6, 7, 8, 9],
                showCandidates: false,
                error: false
             })
-            document.getElementById('Data').value = '123456789'
+            dataElement.value = '123456789'
          } else {
             this.setState({
                candidates: [],
                error: true
             })
-            document.getElementById('Data').value = 'Empty!'
+            dataElement.value = 'Empty!'
          }
       } else if (event.key in keyboardMappings) {
-         // = tbody
-         const sudokuElement = event.target.parentElement.parentElement
-         const step = keyboardMappings[event.key]
+         const step = keyboardMappings[(event.key as keyof typeof keyboardMappings)]
 
          // blur this and focus the other cell
-         event.target.blur()
-         sudokuElement.children[(this.props.row + 9 + step.vRow) % 9]
-            .children[(this.props.column + 9 + step.vColumn) % 9].focus()
+         target.blur()
+         this.props.sudoku.focusCell(
+            (this.props.row + 9 + step.vRow) % 9 as IndexToNine,
+            (this.props.column + 9 + step.vColumn) % 9 as IndexToNine
+         )
       } else if (event.key === 'Escape') {
-         // const sudokuElement = event.target.parentElement.parentElement
-         event.target.blur()
-         // TODO: Focus something else?
+         target.blur()
       }
    }
 }

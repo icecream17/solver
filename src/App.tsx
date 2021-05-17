@@ -6,11 +6,10 @@ import Title from './Elems/Title'
 import Version from './Elems/Version'
 import Main from './Elems/Main'
 import Aside from './Elems/Aside'
-import Cell from './Elems/MainElems/Cell'
 import Sudoku from './Elems/MainElems/Sudoku'
 
 interface AppState {
-   sudoku: null | Cell[][]
+   sudoku: null | typeof Sudoku.prototype.data
 }
 
 /**

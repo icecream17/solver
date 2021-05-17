@@ -1,8 +1,12 @@
+import Sudoku from "./Sudoku"
 
 export default class Solver {
-   constructor (sudokuData) {
-      this.sudokuData = sudokuData
+   sudoku: Sudoku
+   strategyIndex: number
+   constructor (sudoku: Sudoku) {
+      this.sudoku = sudoku
       this.strategyIndex = 0
+      console.debug(this)
    }
 
    Step () {

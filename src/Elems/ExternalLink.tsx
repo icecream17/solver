@@ -32,7 +32,7 @@ type ExternalLinkProps = Readonly<{
 export default class ExternalLink extends React.Component {
    props!: ExternalLinkProps
    constructor (props: ExternalLinkProps) {
-      for (const requiredProperty of ["children", "href"]) {
+      for (const requiredProperty of ["children", "href"] as const) {
          if (!(requiredProperty in props)) {
             throw TypeError(
                `ExternalLink: Required property "${requiredProperty}" is missing\n${exampleUsage}`)

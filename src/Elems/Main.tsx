@@ -18,7 +18,7 @@ type MainProps = Readonly<{
 class Main extends React.Component {
    props!: MainProps
    constructor(props: MainProps) {
-      for (const requiredProperty of ["whenSudokuConstructs"]) {
+      for (const requiredProperty of ["whenSudokuConstructs"] as const) {
          if (!(requiredProperty in props)) {
             throw TypeError(`Sudoku: Required property "${requiredProperty}" is missing`)
          }

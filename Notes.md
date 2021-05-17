@@ -18,11 +18,12 @@ inspired by <https://www.sudokuwiki.org>
 
 To use:
 
-1. https://reactjs.org/blog/2018/06/07/you-probably-dont-need-derived-state.html
-1. https://www.freecodecamp.org/news/testing-react-hooks/
-1. https://reactjs.org/docs/thinking-in-react.html
-1. https://reactjs.org/docs/testing-recipes.html
-1. https://reactjs.org/docs/test-utils.html
+1. <https://reactjs.org/blog/2018/06/07/you-probably-dont-need-derived-state.html>
+1. <https://www.freecodecamp.org/news/testing-react-hooks/>
+1. <https://reactjs.org/docs/thinking-in-react.html>
+1. <https://reactjs.org/docs/testing-recipes.html>
+1. <https://reactjs.org/docs/test-utils.html>
+1. <https://reactjs.org/docs/context.html>
 
 ## List of bugs
 
@@ -71,8 +72,8 @@ Next
 
 The CSS Media Query gives you a way to apply CSS only when the browser and device environment matches a rule that you specify, for example "viewport is wider than 480 pixels". Media queries are a key part of responsive web design, as they allow you to create different layouts depending on the size of the viewport, but they can also be used to detect other things about the environment your site is running on, for example whether the user is using a touchscreen rather than a mouse. In this lesson you will first learn about the syntax used in media queries, and then move on to use them in a worked example showing how a simple design might be made responsive.
 
-Prerequisites:	HTML basics (study Introduction to HTML), and an idea of how CSS works (study CSS first steps and CSS building blocks.)
-Objective:	To understand how to use media queries, and the most common approach for using them to create responsive designs.
+Prerequisites: HTML basics (study Introduction to HTML), and an idea of how CSS works (study CSS first steps and CSS building blocks.)
+Objective: To understand how to use media queries, and the most common approach for using them to create responsive designs.
 Media Query Basics
 
 The simplest media query syntax looks like this:
@@ -564,6 +565,7 @@ Terms
 Privacy
 Cookies
 ```
+
 </details>
 
 And my page shows (with 2 cells having their candidates shown)
@@ -572,23 +574,23 @@ And my page shows (with 2 cells having their candidates shown)
 ```
 Sudoku solver
 v0.2.0
-								
-								
-1	2	3
-4	5	6
-7	8	9
 
-								
-1	2	3
-4	5	6
-7	8	9
 
-								
-								
-								
-								
-								
-								
+1 2 3
+4 5 6
+7 8 9
+
+
+1 2 3
+4 5 6
+7 8 9
+
+
+
+
+
+
+
 A
 B
 C

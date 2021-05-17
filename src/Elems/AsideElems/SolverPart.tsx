@@ -1,8 +1,13 @@
 
 import React from 'react'
 import Solver from '../../Api/Solver'
+import Sudoku from '../../Api/Sudoku'
 import StrategyControls from './StrategyControls'
 import StrategyList from './StrategyList'
+
+type SolverPartProps = Readonly<{
+   sudoku: null | Sudoku
+}>
 
 /**
  * The solver part of the sudoku solver
@@ -10,9 +15,14 @@ import StrategyList from './StrategyList'
  * @requiredProps
  * - sudoku
  */
-export default class SolverPart extends React.Component {
-   constructor(props) {
-      for (const requiredProperty of ["sudoku"]) {
+export default class SolverPart extends React.Component<SolverPartProps> {
+   solver: Solver
+   children: {
+      controls: null | StrategyControls,
+      list: null | StrategyList
+   }
+   constructor(props: SolverPartProps) {
+      for (const requiredProperty of ["sudoku"] as const) {
          if (!(requiredProperty in props)) {
             throw TypeError(`SolverPart: Required property "${requiredProperty}" is missing`)
          }
@@ -42,11 +52,11 @@ export default class SolverPart extends React.Component {
       )
    }
 
-   whenControlsConstruct(controls) {
+   whenControlsConstruct(controls: StrategyControls) {
       this.children.controls = controls
    }
 
-   whenListConstructs(list) {
+   whenListConstructs(list: StrategyList) {
       this.children.list = list
    }
 }

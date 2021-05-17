@@ -15,8 +15,7 @@ type CandidatesProps = Readonly<{
  * @requiredProps
  * - data: Array<any>
  */
-export default class Candidates extends React.Component {
-   props!: CandidatesProps;
+export default class Candidates extends React.Component<CandidatesProps> {
    constructor(props: CandidatesProps) {
       if (!("data" in props)) {
          throw TypeError('Candidates: Required property "data" is missing')

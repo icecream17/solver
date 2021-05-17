@@ -21,8 +21,7 @@ type RowProps = Readonly<{
  * - index
  * - whenCellConstructs
  */
-export default class Row extends React.Component {
-   props!: RowProps
+export default class Row extends React.Component<RowProps> {
    constructor(props: RowProps) {
       for (const requiredProp of ['index', 'whenCellConstructs', 'parent'] as const) {
          if (!(requiredProp in props)) {

@@ -28,7 +28,7 @@ type CellState = Readonly<{
    showCandidates: boolean,
    error: boolean,
    active: boolean
-}> & typeof React.Component.prototype.state
+}>
 
 
 /**
@@ -48,9 +48,7 @@ type CellState = Readonly<{
  * - row
  * - column
  */
-export default class Cell extends React.Component {
-   props: CellProps
-   state: CellState
+export default class Cell extends React.Component<CellProps, CellState> {
    constructor(props: CellProps) {
       for (const requiredProperty of ["row", "column", "sudoku"] as const) {
          if (!(requiredProperty in props)) {
@@ -59,7 +57,6 @@ export default class Cell extends React.Component {
       }
 
       super(props)
-      this.props = props; // WHYY
 
       this.state = {
          /** An array of possible candidates.
@@ -143,11 +140,11 @@ export default class Cell extends React.Component {
    }
 
    whenBlur(_event: React.FocusEvent) {
-      this.setState((state: CellState) => {
+      this.setState((state: CellState): CellState => {
          if (1 < state.candidates.length && state.candidates.length < 9) {
-            return { active: false, showCandidates: true }
+            return { active: false, showCandidates: true } as CellState
          }
-         return { active: false }
+         return { active: false } as CellState
       })
    }
 

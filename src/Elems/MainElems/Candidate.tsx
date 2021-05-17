@@ -13,8 +13,7 @@ type CandidateProps = Readonly<{
  * - index: number
  * - children
  */
-export default class Candidate extends React.Component {
-   props!: CandidateProps
+export default class Candidate extends React.Component<CandidateProps> {
    constructor(props: CandidateProps) {
       for (const requiredProperty of ["index", "children"]) {
          if (!(requiredProperty in props)) {

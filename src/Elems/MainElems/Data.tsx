@@ -2,7 +2,7 @@ import React from 'react'
 
 type DataState = Readonly<{
    value: typeof HTMLTextAreaElement.prototype.value
-} & typeof React.Component.prototype.state>
+}>
 
 
 /**
@@ -15,8 +15,7 @@ type DataState = Readonly<{
  *
  * @param {React.TextareaHTMLAttributes<HTMLTextAreaElement>.value} [props.value] - Optional textarea value
  */
-export default class Data extends React.Component {
-   state: DataState
+export default class Data extends React.Component<any, DataState> {
    constructor (props: any) {
       super(props)
 

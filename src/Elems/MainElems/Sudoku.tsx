@@ -15,13 +15,11 @@ import Cell from './Cell';
  * // Sending state up
  * <Sudoku whenUpdate={callback} />
  */
-export default class Sudoku extends React.Component {
+export default class Sudoku extends React.Component<PossibleConstructCallback> {
    data: SudokuData;
-   props: PossibleConstructCallback;
    tbodyElement: HTMLTableSectionElement | null;
    constructor(props: PossibleConstructCallback) {
       super(props)
-      this.props = props // WHY
 
       /**
        * Cells are added as they are processed
@@ -37,7 +35,7 @@ export default class Sudoku extends React.Component {
        */
       this.data = new SudokuData();
 
-      this.updateInnerArray = this.updateInnerArray.bind(this)
+      this.updateInnerData = this.updateInnerData.bind(this)
 
       /** See App.js - this if statement is anticipating future code changes */
       if (HasWhenConstruct(this.props)) {
@@ -53,15 +51,15 @@ export default class Sudoku extends React.Component {
       return (
          <table className='Sudoku' id='Sudoku' title='Sudoku' aria-label='Sudoku'>
             <tbody ref={elem => this.tbodyElement = elem}>
-               <Row index={0} whenCellConstructs={this.updateInnerArray} parent={this} />
-               <Row index={1} whenCellConstructs={this.updateInnerArray} parent={this} />
-               <Row index={2} whenCellConstructs={this.updateInnerArray} parent={this} />
-               <Row index={3} whenCellConstructs={this.updateInnerArray} parent={this} />
-               <Row index={4} whenCellConstructs={this.updateInnerArray} parent={this} />
-               <Row index={5} whenCellConstructs={this.updateInnerArray} parent={this} />
-               <Row index={6} whenCellConstructs={this.updateInnerArray} parent={this} />
-               <Row index={7} whenCellConstructs={this.updateInnerArray} parent={this} />
-               <Row index={8} whenCellConstructs={this.updateInnerArray} parent={this} />
+               <Row index={0} whenCellConstructs={this.updateInnerData} parent={this} />
+               <Row index={1} whenCellConstructs={this.updateInnerData} parent={this} />
+               <Row index={2} whenCellConstructs={this.updateInnerData} parent={this} />
+               <Row index={3} whenCellConstructs={this.updateInnerData} parent={this} />
+               <Row index={4} whenCellConstructs={this.updateInnerData} parent={this} />
+               <Row index={5} whenCellConstructs={this.updateInnerData} parent={this} />
+               <Row index={6} whenCellConstructs={this.updateInnerData} parent={this} />
+               <Row index={7} whenCellConstructs={this.updateInnerData} parent={this} />
+               <Row index={8} whenCellConstructs={this.updateInnerData} parent={this} />
             </tbody>
          </table>
       )
@@ -93,7 +91,7 @@ export default class Sudoku extends React.Component {
       }
    }
 
-   updateInnerArray(cell: Cell) {
-      this.data.cells[cell.props.row][cell.props.column] = cell
+   updateInnerData(cell: Cell) {
+      this.data.updateFromCell(cell)
    }
 }

@@ -19,8 +19,7 @@ interface AppState {
  * @example
  * <App />
  */
-class App extends React.Component {
-   state: AppState
+class App extends React.Component<any, AppState> {
    constructor (props: any) {
       super(props)
 

@@ -6,7 +6,7 @@ type CoordLineProps = Readonly<{
    index: IndexToNine,
    value: typeof React.Component.prototype.props.children,
    className?: typeof React.Component.prototype.props.className
-} & typeof React.Component.prototype.props>
+}>
 
 /**
  * Abstract class
@@ -14,9 +14,7 @@ type CoordLineProps = Readonly<{
  * @example
  * <CoordLine children={3} />
  */
-export default class CoordLine extends React.Component {
-   props!: CoordLineProps
-
+export default class CoordLine extends React.Component<CoordLineProps> {
    render() {
       return (
          <div data-index={this.props.index} className={this.props?.className ?? "CoordLine"}>

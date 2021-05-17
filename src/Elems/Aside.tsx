@@ -18,8 +18,7 @@ type AsideProps = Readonly<{
  * @requiredProps
  * - sudoku
  */
-export default class Aside extends React.Component {
-   props!: AsideProps
+export default class Aside extends React.Component<AsideProps> {
    constructor(props: AsideProps) {
       for (const requiredProperty of ["sudoku"] as const) {
          if (!(requiredProperty in props)) {

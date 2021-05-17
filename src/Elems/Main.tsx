@@ -7,7 +7,7 @@ import Coords from './MainElems/Coords';
 
 type MainProps = Readonly<{
    whenSudokuConstructs (...args: any): any
-} & typeof React.Component.prototype.props>
+}>
 
 /**
  * The "main" component, which includes the Data, Sudoku, and Coords components
@@ -15,8 +15,7 @@ type MainProps = Readonly<{
  * @requiredProps
  * - whenSudokuConstructs
  */
-class Main extends React.Component {
-   props!: MainProps
+class Main extends React.Component<MainProps> {
    constructor(props: MainProps) {
       for (const requiredProperty of ["whenSudokuConstructs"] as const) {
          if (!(requiredProperty in props)) {

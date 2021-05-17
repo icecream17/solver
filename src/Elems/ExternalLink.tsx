@@ -14,7 +14,7 @@ const exampleUsage = `
 type ExternalLinkProps = Readonly<{
    children?: React.ReactNode
    href: any
-} & typeof React.Component.prototype.props>
+}>
 
 /**
  * An external link.
@@ -29,8 +29,7 @@ type ExternalLinkProps = Readonly<{
  *    What does <code>this</code> do?
  * }/>
  */
-export default class ExternalLink extends React.Component {
-   props!: ExternalLinkProps
+export default class ExternalLink extends React.Component<ExternalLinkProps> {
    constructor (props: ExternalLinkProps) {
       for (const requiredProperty of ["children", "href"] as const) {
          if (!(requiredProperty in props)) {

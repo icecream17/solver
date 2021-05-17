@@ -9,6 +9,7 @@
 
 .DataLabelText {
    padding-right: inherit;
+   min-width: fit-content;
 }
 
 .Data {

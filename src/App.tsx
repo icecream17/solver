@@ -45,12 +45,13 @@ class App extends React.Component<any, AppState> {
    }
 
    render() {
-      let thisClass = "App"
+      let classNames = ["App"]
       if (this.state.error) {
-         thisClass += "error"
+         classNames.push("error")
       }
+
       return (
-         <div className={thisClass}>
+         <div className={classNames.join(' ')}>
             <header className="App-header">
                <Title />
                <Version />

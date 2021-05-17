@@ -623,3 +623,14 @@ Another Example strategy
 ```
 
 </details>
+
+# css
+
+Ooh, `normalize.css` and `sanitize.css`.
+
+1. Many of the opinionated stuff... are opinionated. Maybe change some of them
+1. Currently the ones that kinda break the website are:
+   ```css
+   * {box-sizing: border-box;} /* strategy list height minusequal padding */
+   input {margin: 0;} /* checkbox centering */
+   ```

@@ -3,7 +3,7 @@
    background-color: #373A40;
    color: whitesmoke;
    border: var(--regular-border) solid whitesmoke;
-   display: flex block;
+   display: flex;
    align-items: center;
 }
 

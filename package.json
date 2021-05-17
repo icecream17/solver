@@ -29,7 +29,8 @@
     "production": [
       ">0.2%",
       "not dead",
-      "not op_mini all"
+      "not OperaMini all",
+      "since 2021"
     ],
     "development": [
       "last 1 chrome version",

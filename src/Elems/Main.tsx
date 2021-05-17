@@ -2,7 +2,7 @@ import './Main.css'
 import React from 'react'
 
 import Sudoku from './MainElems/Sudoku'
-import Data from './MainElems/Data';
+import DataContainer from './MainElems/Data';
 import Coords from './MainElems/Coords';
 
 type MainProps = Readonly<{
@@ -29,7 +29,7 @@ class Main extends React.Component<MainProps> {
    render() {
       return (
          <main className="App-main">
-            <Data />
+            <DataContainer />
             <Sudoku whenConstruct={this.props.whenSudokuConstructs} />
             <Coords />
          </main>

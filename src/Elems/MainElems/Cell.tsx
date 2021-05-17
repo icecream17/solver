@@ -124,6 +124,7 @@ export default class Cell extends React.Component<CellProps, CellState> {
             <div
                className='Cell'
                role='button'
+               aria-label={`Cell at row ${this.props.row}, column ${this.props.column}`}
                data-error={this.state.error ? "true" : undefined}
                data-active={this.state.active ? "true" : undefined}
                tabIndex={0}

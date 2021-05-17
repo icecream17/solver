@@ -91,6 +91,16 @@
 }
 */
 
+/* TODO: Fix layout when error */
+.App.error {
+   border: 0.5rem solid red;
+}
+
+.App.error > .App-header::before {
+   content: "Error! ";
+   color: red;
+}
+
 .App-header {
    font-size: calc(10px + 2vmin);
 

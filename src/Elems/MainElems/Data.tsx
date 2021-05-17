@@ -1,3 +1,4 @@
+import './Data.css'
 import React from 'react'
 
 type DataState = Readonly<{
@@ -15,7 +16,7 @@ type DataState = Readonly<{
  *
  * @param {React.TextareaHTMLAttributes<HTMLTextAreaElement>.value} [props.value] - Optional textarea value
  */
-export default class Data extends React.Component<any, DataState> {
+export default class DataContainer extends React.Component<any, DataState> {
    constructor (props: any) {
       super(props)
 
@@ -26,13 +27,17 @@ export default class Data extends React.Component<any, DataState> {
 
    render() {
       return (
-         <textarea
-            className="Data"
-            id="Data"
-            placeholder="stuff will show here"
-            value={this.state.value}
-            onChange={this.handleChange.bind(this)}
-         />
+         <label className="DataLabel DataContainer">
+            <span className="DataLabelText">Data</span>
+            <textarea
+               className="Data"
+               id="Data"
+               placeholder="stuff will show here"
+               autoComplete="off"
+               value={this.state.value}
+               onChange={this.handleChange.bind(this)}
+            />
+         </label>
       )
    }
 

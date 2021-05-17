@@ -45,14 +45,8 @@
    z-index: 3;
 }
 
-.Data {
+.DataContainer {
    margin-top: 1.5rem;
    padding: 0.2rem 0.4rem;
    grid-area: data;
-
-   background-color: #373A40;
-   color: whitesmoke;
-   border: none;
-   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-      monospace;
 }

@@ -1,0 +1,25 @@
+
+.DataContainer {
+   background-color: #373A40;
+   color: whitesmoke;
+   border: var(--regular-border) solid whitesmoke;
+   display: flex block;
+   align-items: center;
+}
+
+.DataLabelText {
+   padding-right: inherit;
+}
+
+.Data {
+   box-sizing: border-box; /* accounts for padding and stuff */
+   width: 100%; /* remaining width */
+   height: 100%;
+   background-color: #373A40;
+   color: whitesmoke;
+   border: none;
+   border-left: var(--regular-border) solid whitesmoke;
+   padding-left: inherit;
+   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+      monospace;
+}

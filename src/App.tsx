@@ -9,7 +9,8 @@ import Aside from './Elems/Aside'
 import Sudoku from './Elems/MainElems/Sudoku'
 
 interface AppState {
-   sudoku: null | typeof Sudoku.prototype.data
+   sudoku: null | typeof Sudoku.prototype.data,
+   error: boolean
 }
 
 /**
@@ -32,15 +33,24 @@ class App extends React.Component<any, AppState> {
           * @name Sudoku.state.sudoku
           * @default {null}
           */
-         sudoku: null
+         sudoku: null,
+         error: false
       }
 
       this.whenSudokuConstructs = this.whenSudokuConstructs.bind(this)
    }
 
+   componentDidCatch(_error: Error, _errorInfo: React.ErrorInfo) {
+      this.setState({ error: true })
+   }
+
    render() {
+      let thisClass = "App"
+      if (this.state.error) {
+         thisClass += "error"
+      }
       return (
-         <div className="App">
+         <div className={thisClass}>
             <header className="App-header">
                <Title />
                <Version />

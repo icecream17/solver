@@ -1,6 +1,15 @@
 
 import React from 'react';
 
+type StrategyTogglerProps = Readonly<{
+   callback: React.ChangeEventHandler
+   id: string
+}>
+
+type StrategyTogglerState = Readonly<{
+   checked: boolean
+}>
+
 /**
  * Turns a strategy off or on
  *
@@ -8,8 +17,8 @@ import React from 'react';
  * - callback
  * - id
  */
-export default class StrategyToggler extends React.Component {
-   constructor(props) {
+export default class StrategyToggler extends React.Component<StrategyTogglerProps, StrategyTogglerState> {
+   constructor(props: StrategyTogglerProps) {
       for (const requiredProperty of ["callback", "id"]) {
          if (!(requiredProperty in props)) {
             throw TypeError(`StrategyToggler: Required prop.state "${requiredProperty}" is missing`)
@@ -32,13 +41,13 @@ export default class StrategyToggler extends React.Component {
             aria-label="toggle strategy"
             role="switch"
             onChange={this.callback.bind(this)}
-            aria-checked={String(this.state.checked)}
-            checked={this.state.checked ? 'checked' : ''}
+            aria-checked={this.state.checked}
+            checked={this.state.checked}
          />
       )
    }
 
-   callback(_event) {
+   callback(_event: React.ChangeEvent) {
       this.setState(state => ({ checked: !state.checked }))
       this.props.callback(_event)
    }

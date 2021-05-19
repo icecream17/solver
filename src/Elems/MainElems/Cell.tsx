@@ -141,6 +141,7 @@ export default class Cell extends React.Component<CellProps, CellState> {
    }
 
    whenBlur(_event: React.FocusEvent) {
+      this.props.sudoku.data.data[this.props.row][this.props.column] = this.state.candidates
       this.setState((state: CellState): CellState => {
          if (1 < state.candidates.length && state.candidates.length < 9) {
             return { active: false, showCandidates: true } as CellState

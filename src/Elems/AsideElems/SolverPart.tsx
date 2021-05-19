@@ -2,6 +2,7 @@
 import React from 'react'
 import Solver from '../../Api/Solver'
 import Sudoku from '../../Api/Sudoku'
+import { StrategyResult } from '../../Api/Types'
 import StrategyControls from './StrategyControls'
 import StrategyList from './StrategyList'
 
@@ -21,6 +22,7 @@ export default class SolverPart extends React.Component<SolverPartProps> {
       controls: null | StrategyControls,
       list: null | StrategyList
    }
+   strategyItemStates: StrategyResult[]
    constructor(props: SolverPartProps) {
       for (const requiredProperty of ["sudoku"] as const) {
          if (!(requiredProperty in props)) {
@@ -30,11 +32,12 @@ export default class SolverPart extends React.Component<SolverPartProps> {
 
       super(props)
 
-      this.solver = new Solver(this.props.sudoku)
       this.children = {
          controls: null,
          list: null
       }
+      this.solver = new Solver(this.props.sudoku, this as SolverPart)
+      this.strategyItemStates = []
 
       this.whenControlsConstruct = this.whenControlsConstruct.bind(this)
       this.whenListConstructs = this.whenListConstructs.bind(this)
@@ -58,5 +61,10 @@ export default class SolverPart extends React.Component<SolverPartProps> {
 
    whenListConstructs(list: StrategyList) {
       this.children.list = list
+   }
+
+   /** Called when a strategy is tried - see the Solver api */
+   notify(strategyIndex: number, strategyResult: StrategyResult) {
+      this.strategyItemStates[strategyIndex] = strategyResult
    }
 }

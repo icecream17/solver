@@ -9,8 +9,10 @@ inspired by <https://www.sudokuwiki.org>
 1. Shift+\<Delete> just resets a cell
 1. Using IDs to identify elements since that's what IDs are for
 1. Current IDs:
+    1. `root` in `index`
     1. `Aside` in `App`
     1. `Data` in `App > Main`
+    1. `strategyList` in `Elems > AsideElems > SolverPart`
 1. Render is asynchronous...
 1. <https://developer.mozilla.org/en-US/docs/Web/API/Document/keydown_event> (keypress is deprecated - but it's a better name)
 1. <https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement/beforeinput_event>

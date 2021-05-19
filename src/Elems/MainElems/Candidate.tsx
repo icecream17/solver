@@ -15,7 +15,7 @@ type CandidateProps = Readonly<{
  */
 export default class Candidate extends React.Component<CandidateProps> {
    constructor(props: CandidateProps) {
-      for (const requiredProperty of ["index", "children"]) {
+      for (const requiredProperty of ["index", "children"] as const) {
          if (!(requiredProperty in props)) {
             throw TypeError(`Candidate: Required property "${requiredProperty}" is missing`)
          }

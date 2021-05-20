@@ -162,6 +162,7 @@ export default [
                {
                   updated++
                   datacell.splice(k, 1) // Deletes the candidate
+                  sudoku.set(i, j).to(...datacell) // Updates/renders the cell too
 
                   // Now that the candidate is deleted,
                   // the index already corresponds to the next candidate.

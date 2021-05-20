@@ -90,7 +90,7 @@ div.Cell[data-error="true"] {
    background-color: rgb(139, 0, 0);
 }
 
-div.Cell[active="true"] {
+div.Cell[data-active="true"] {
    background-color: gray;
 }
 

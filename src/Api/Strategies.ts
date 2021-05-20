@@ -155,7 +155,7 @@ export default [
          for (let j: IndexToNine = 0; j < 9; j = j+1 as IndexToNine) {
             const datacell = sudoku.data[i][j]
             for (let k: IndexToNine = 0; k < datacell.length; k = k+1 as IndexToNine) {
-               const candidate = sudoku[k]
+               const candidate = datacell[k]
                if (solved.rows[i].has(candidate) ||
                    solved.columns[j].has(candidate) ||
                    solved.boxes[boxAt(i, j)].has(candidate))

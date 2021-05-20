@@ -128,15 +128,15 @@ export default [
    function updateCandidates (sudoku, _solver) {
       let updated = 0
       let solved = {
-         rows: [] as Array<Set<sudokuDigits>>,
-         columns: [] as Array<Set<sudokuDigits>>,
-         boxes: [] as Array<Set<sudokuDigits>>
+         rows: [] as Array<Set<SudokuDigits>>,
+         columns: [] as Array<Set<SudokuDigits>>,
+         boxes: [] as Array<Set<SudokuDigits>>
       }
 
       for (let i = 0; i < 9; i++) {
-         solved.rows.push(new Set<sudokuDigits>())
-         solved.columns.push(new Set<sudokuDigits>())
-         solved.boxes.push(new Set<sudokuDigits>())
+         solved.rows.push(new Set<SudokuDigits>())
+         solved.columns.push(new Set<SudokuDigits>())
+         solved.boxes.push(new Set<SudokuDigits>())
       }
 
       for (let i = 0; i < 9; i = i+1 as IndexToNine) {

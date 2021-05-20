@@ -19,6 +19,7 @@ export function checkValidity(sudoku: PureSudoku): validityResult {
       solvedInBoxes.push(new Set<SudokuDigits>())
    }
 
+   // Every time an index is changed, typing is there so that `typeof i !== number`
    // Expanding `i++` into `i = i+1` so that the type assertion works
    for (let i: IndexToNine = 0; i < 9; i = i+1 as IndexToNine) {
       const solvedInRow = new Set<SudokuDigits>()
@@ -139,8 +140,8 @@ export default [
          solved.boxes.push(new Set<SudokuDigits>())
       }
 
-      for (let i = 0; i < 9; i = i+1 as IndexToNine) {
-         for (let j = 0; j < 9; j = j+1 as IndexToNine) {
+      for (let i: IndexToNine = 0; i < 9; i = i+1 as IndexToNine) {
+         for (let j: IndexToNine = 0; j < 9; j = j+1 as IndexToNine) {
             if (sudoku.data[i][j].length === 1) {
                const solvedCandidate = sudoku.data[i][j][0]
                solved.rows[i].add(solvedCandidate)
@@ -150,10 +151,10 @@ export default [
          }
       }
 
-      for (let i = 0; i < 9; i = i+1 as IndexToNine) {
-         for (let j = 0; j < 9; j = j+1 as IndexToNine) {
+      for (let i: IndexToNine = 0; i < 9; i = i+1 as IndexToNine) {
+         for (let j: IndexToNine = 0; j < 9; j = j+1 as IndexToNine) {
             const datacell = sudoku.data[i][j]
-            for (let k = 0; k < datacell.length; k = k+1 as IndexToNine) {
+            for (let k: IndexToNine = 0; k < datacell.length; k = k+1 as IndexToNine) {
                const candidate = sudoku[k]
                if (solved.rows[i].has(candidate) ||
                    solved.columns[j].has(candidate) ||

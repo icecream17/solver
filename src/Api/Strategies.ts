@@ -126,7 +126,7 @@ export default [
       }
    },
 
-   // O(n^3)
+   // O(n^5)
    function updateCandidates (sudoku, _solver) {
       let updated = 0
       let solved = {

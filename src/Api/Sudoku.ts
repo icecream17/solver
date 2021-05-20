@@ -1,8 +1,6 @@
 import Cell from "../Elems/MainElems/Cell"
-import { IndexToNine, SudokuDigits } from "../Types"
+import { IndexToNine, SudokuDigits, TwoDimensionalArray } from "../Types"
 import PureSudoku, { SudokuConstructorOptions } from "./PureSudoku"
-
-type TwoDimensionalArray<T> = Array<Array<T>>
 
 export default class Sudoku extends PureSudoku {
    cells: TwoDimensionalArray<Cell>

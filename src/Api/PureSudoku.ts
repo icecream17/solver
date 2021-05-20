@@ -1,5 +1,4 @@
 import { IndexToNine, SudokuDigits } from "../Types"
-import Sudoku from "./Sudoku"
 
 type TwoDimensionalArray<T> = Array<Array<T>>
 

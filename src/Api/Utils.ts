@@ -56,34 +56,28 @@ export function boxNameAt(row: IndexToNine, column: IndexToNine): SudokuDigits {
    return boxAt(row, column) + 1 as SudokuDigits
 }
 
-export function affectsRow (row: IndexToNine, column: IndexToNine): [IndexToNine, IndexToNine][] {
-   const results = [] as [IndexToNine, IndexToNine][]
+function _affectsRow (row: IndexToNine, column: IndexToNine) {
+   const results = [] as IndexTo81[]
    for (let i: IndexToNine = 0; i < 9; i = i+1 as IndexToNine) {
       if (i !== column) {
-         results.push([row, i])
+         results.push(indexOf(row, i))
       }
    }
    return results
 }
 
-export function affectsColumn (row: IndexToNine, column: IndexToNine): [IndexToNine, IndexToNine][] {
-   const results = [] as [IndexToNine, IndexToNine][]
+function _affectsColumn (row: IndexToNine, column: IndexToNine) {
+   const results = [] as IndexTo81[]
    for (let i: IndexToNine = 0; i < 9; i = i+1 as IndexToNine) {
       if (i !== row) {
-         results.push([i, column])
+         results.push(indexOf(i, column))
       }
    }
    return results
 }
 
-export function affectsBox (row: IndexToNine, column: IndexToNine): [IndexToNine, IndexToNine][] {
-   const results = [] as [IndexToNine, IndexToNine][]
-   for (const cell of boxesCells[boxAt(row, column)]) {
-      // If https://github.com/microsoft/TypeScript/issues/36554#issuecomment-845292965 is fixed
-      // then use `slice` which doesn't iterate
-      results.push([...indexToRowAndColumn[cell]])
-   }
-   return results
+function _affectsBox (row: IndexToNine, column: IndexToNine) {
+   return boxesCells[boxAt(row, column)]
 }
 
 
@@ -91,12 +85,11 @@ export function affectsBox (row: IndexToNine, column: IndexToNine): [IndexToNine
  * All cells a square affects, or
  * All cells that affect a square
  */
-export function affects (row: IndexToNine, column: IndexToNine): [IndexToNine, IndexToNine][] {
+export function affects (row: IndexToNine, column: IndexToNine): Array<Readonly<[IndexToNine, IndexToNine]>>  {
    // To remove duplicates
    const alreadyTaken = new Set<IndexTo81>()
-   const results = [] as [IndexToNine, IndexToNine][]
-   for (const [row2, column2] of affectsRow(row, column).concat(affectsColumn(row, column), affectsBox(row, column))) {
-      alreadyTaken.add(indexOf(row2, column2))
+   for (const boxCellIndex of _affectsRow(row, column).concat(_affectsColumn(row, column), _affectsBox(row, column))) {
+      alreadyTaken.add(boxCellIndex)
    }
    return Array.from(alreadyTaken).map(index => indexToRowAndColumn[index])
 }

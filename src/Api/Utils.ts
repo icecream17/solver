@@ -1,9 +1,9 @@
-import { IndexToNine } from "../Types";
+import { COLUMN_NAMES, IndexToNine, ROW_NAMES, SudokuDigits } from "../Types";
 
 export function algebraic (row: IndexToNine, column: IndexToNine) {
    return (
-      "ABCDEFGHJ"[row] +
-      "123456789"[column]
+      ROW_NAMES[row] +
+      COLUMN_NAMES[column]
    ) as (
       "A1" | "A2" | "A3" | "A4" | "A5" | "A6" | "A7" | "A8" | "A9" |
       "B1" | "B2" | "B3" | "B4" | "B5" | "B6" | "B7" | "B8" | "B9" |
@@ -27,4 +27,8 @@ export function boxAt (row: IndexToNine, column: IndexToNine): IndexToNine {
    // 3 │ 3 4 5
    // 6 │ 6 7 8
    return boxRow[row] + boxColumn[column] as IndexToNine
+}
+
+export function boxNameAt(row: IndexToNine, column: IndexToNine): SudokuDigits {
+   return boxAt(row, column) + 1 as SudokuDigits
 }

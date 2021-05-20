@@ -1,7 +1,7 @@
-import { IndexToNine, MAX_CELL_INDEX, SudokuDigits } from "../Types";
+import { COLUMN_NAMES, IndexToNine, MAX_CELL_INDEX, ROW_NAMES, SudokuDigits } from "../Types";
 import PureSudoku from "./PureSudoku";
 import { Strategy, StrategyError } from "./Types";
-import { algebraic, boxAt } from "./Utils";
+import { algebraic, boxAt, boxNameAt } from "./Utils";
 
 type validityResult = {
    ok: true
@@ -41,7 +41,7 @@ export function checkValidity(sudoku: PureSudoku): validityResult {
             if (solvedInRow.has(solvedCandidate)) {
                return {
                   ok: false,
-                  message: `Two (or more) ${solvedCandidate}s in row ${i}!`
+                  message: `Two (or more) ${solvedCandidate}s in row ${ROW_NAMES[i]}!`
                }
             }
 
@@ -49,7 +49,7 @@ export function checkValidity(sudoku: PureSudoku): validityResult {
             if (solvedInColumns[j].has(solvedCandidate)) {
                return {
                   ok: false,
-                  message: `Two (or more) ${solvedCandidate}s in column ${j}!`
+                  message: `Two (or more) ${solvedCandidate}s in column ${COLUMN_NAMES[j]}!`
                }
             }
 
@@ -57,7 +57,7 @@ export function checkValidity(sudoku: PureSudoku): validityResult {
             if (solvedInBoxes[boxAt(i, j)].has(solvedCandidate)) {
                return {
                   ok: false,
-                  message: `Two (or more) ${solvedCandidate}s in box ${boxAt(i, j)}!`
+                  message: `Two (or more) ${solvedCandidate}s in box ${boxNameAt(i, j)}!`
                }
             }
 

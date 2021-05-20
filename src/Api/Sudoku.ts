@@ -21,7 +21,7 @@ export default class Sudoku extends PureSudoku {
       return {
          to: (...candidates: SudokuDigits[]) => {
             this.data[x][y] = candidates
-            this.cells[x][y].setState({ candidates })
+            this.cells[x][y].setCandidates(candidates)
          }
       }
    }

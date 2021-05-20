@@ -99,6 +99,14 @@ export default class Cell extends React.Component<CellProps, CellState> {
       return this.state.candidates.length
    }
 
+   setCandidates(candidates: SudokuDigits[]) {
+      if (1 < candidates.length && candidates.length < 9) {
+         this.setState({ candidates, showCandidates: true })
+      } else {
+         this.setState({ candidates })
+      }
+   }
+
    render() {
       let content = <></>;
 

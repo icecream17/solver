@@ -19,11 +19,11 @@ export function checkValidity(sudoku: PureSudoku): validityResult {
       solvedInBoxes.push(new Set<SudokuDigits>())
    }
 
-
-   for (let i: IndexToNine = 0; i < sudoku.data.length; i = i+1 as IndexToNine) {
+   // Expanding `i++` into `i = i+1` so that the type assertion works
+   for (let i: IndexToNine = 0; i < 9; i = i+1 as IndexToNine) {
       const solvedInRow = new Set<SudokuDigits>()
 
-      for (let j: IndexToNine = 0; j < sudoku.data[i].length; j = j+1 as IndexToNine) {
+      for (let j: IndexToNine = 0; j < 9; j = j+1 as IndexToNine) {
          const candidates = sudoku.data[i][j]
 
          // No possibilities
@@ -122,6 +122,73 @@ export default [
 
       return {
          success: false
+      }
+   },
+
+   function updateCandidates (sudoku, _solver) {
+      let updated = 0
+      let solved = {
+         rows: [] as Array<Set<sudokuDigits>>,
+         columns: [] as Array<Set<sudokuDigits>>,
+         boxes: [] as Array<Set<sudokuDigits>>
+      }
+
+      for (let i = 0; i < 9; i++) {
+         solved.rows.push(new Set<sudokuDigits>())
+         solved.columns.push(new Set<sudokuDigits>())
+         solved.boxes.push(new Set<sudokuDigits>())
+      }
+
+      for (let i = 0; i < 9; i = i+1 as IndexToNine) {
+         for (let j = 0; j < 9; j = j+1 as IndexToNine) {
+            if (sudoku.data[i][j].length === 1) {
+               const solvedCandidate = sudoku.data[i][j][0]
+               solved.rows[i].add(solvedCandidate)
+               solved.columns[i].add(solvedCandidate)
+               solved.boxes[boxAt(i, j)].add(solvedCandidate)
+            }
+         }
+      }
+
+      for (let i = 0; i < 9; i = i+1 as IndexToNine) {
+         for (let j = 0; j < 9; j = j+1 as IndexToNine) {
+            const datacell = sudoku.data[i][j]
+            for (let k = 0; k < datacell.length; k = k+1 as IndexToNine) {
+               const candidate = sudoku[k]
+               if (solved.rows[i].has(candidate) ||
+                   solved.columns[j].has(candidate) ||
+                   solved.boxes[boxAt(i, j)].has(candidate))
+               {
+                  updated++
+                  datacell.splice(k, 1) // Deletes the candidate
+
+                  // Now that the candidate is deleted,
+                  // the index already corresponds to the next candidate.
+                  // Since the for-loop automatically increments k, we decrement k
+                  //
+                  // But if the candidate index is the last index,
+                  // the for loop still keeps going since the condition is
+                  // checked before the increment, and k-1 < k (=== datacell.length)
+                  //
+                  // That's why there's an if statement checking if k === datacell.length
+                  if (k === datacell.length) {
+                     break;
+                  }
+                  k = k-1 as IndexToNine
+               }
+            }
+         }
+      }
+
+      if (updated > 0) {
+         return {
+            success: true,
+            successcount: updated
+         }
+      } else {
+         return {
+            success: false
+         }
       }
    }
 ] as Strategy[]

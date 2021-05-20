@@ -1,7 +1,7 @@
 import { COLUMN_NAMES, IndexToNine, MAX_CELL_INDEX, ROW_NAMES, SudokuDigits } from "../Types";
 import PureSudoku from "./PureSudoku";
 import { Strategy, StrategyError } from "./Types";
-import { algebraic, boxAt, boxNameAt } from "./Utils";
+import { algebraic, boxAt, boxNameAt, affects } from "./Utils";
 
 type validityResult = {
    ok: true
@@ -126,6 +126,7 @@ export default [
       }
    },
 
+   // O(n^3)
    function updateCandidates (sudoku, _solver) {
       let updated = 0
       let solved = {
@@ -144,40 +145,37 @@ export default [
          for (let j: IndexToNine = 0; j < 9; j = j+1 as IndexToNine) {
             if (sudoku.data[i][j].length === 1) {
                const solvedCandidate = sudoku.data[i][j][0]
+               for (const [row, column] of affects(i, j)) {
+                  const datacell = sudoku.data[row][column]
+                  for (let k: IndexToNine = 0; k < datacell.length; k = k+1 as IndexToNine) {
+                     const candidate = datacell[k]
+                     if (solved.rows[row].has(candidate) ||
+                         solved.columns[column].has(candidate) ||
+                         solved.boxes[boxAt(row, column)].has(candidate))
+                     {
+                        updated++
+                        datacell.splice(k, 1) // Deletes the candidate
+                        sudoku.set(row, column).to(...datacell) // Updates/renders the cell too
+
+                        // Now that the candidate is deleted,
+                        // the index already corresponds to the next candidate.
+                        // Since the for-loop automatically increments k, we decrement k
+                        //
+                        // But if the candidate index is the last index,
+                        // the for loop still keeps going since the condition is
+                        // checked before the increment, and k-1 < k (=== datacell.length)
+                        //
+                        // That's why there's an if statement checking if k === datacell.length
+                        if (k === datacell.length) {
+                           break;
+                        }
+                        k = k-1 as IndexToNine
+                     }
+                  }
+               }
                solved.rows[i].add(solvedCandidate)
                solved.columns[i].add(solvedCandidate)
                solved.boxes[boxAt(i, j)].add(solvedCandidate)
-            }
-         }
-      }
-
-      for (let i: IndexToNine = 0; i < 9; i = i+1 as IndexToNine) {
-         for (let j: IndexToNine = 0; j < 9; j = j+1 as IndexToNine) {
-            const datacell = sudoku.data[i][j]
-            for (let k: IndexToNine = 0; k < datacell.length; k = k+1 as IndexToNine) {
-               const candidate = datacell[k]
-               if (solved.rows[i].has(candidate) ||
-                   solved.columns[j].has(candidate) ||
-                   solved.boxes[boxAt(i, j)].has(candidate))
-               {
-                  updated++
-                  datacell.splice(k, 1) // Deletes the candidate
-                  sudoku.set(i, j).to(...datacell) // Updates/renders the cell too
-
-                  // Now that the candidate is deleted,
-                  // the index already corresponds to the next candidate.
-                  // Since the for-loop automatically increments k, we decrement k
-                  //
-                  // But if the candidate index is the last index,
-                  // the for loop still keeps going since the condition is
-                  // checked before the increment, and k-1 < k (=== datacell.length)
-                  //
-                  // That's why there's an if statement checking if k === datacell.length
-                  if (k === datacell.length) {
-                     break;
-                  }
-                  k = k-1 as IndexToNine
-               }
             }
          }
       }

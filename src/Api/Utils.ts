@@ -56,40 +56,47 @@ export function boxNameAt(row: IndexToNine, column: IndexToNine): SudokuDigits {
    return boxAt(row, column) + 1 as SudokuDigits
 }
 
-function _affectsRow (row: IndexToNine, column: IndexToNine) {
-   const results = [] as IndexTo81[]
-   for (let i: IndexToNine = 0; i < 9; i = i+1 as IndexToNine) {
-      if (i !== column) {
-         results.push(indexOf(row, i))
-      }
-   }
-   return results
-}
-
-function _affectsColumn (row: IndexToNine, column: IndexToNine) {
-   const results = [] as IndexTo81[]
-   for (let i: IndexToNine = 0; i < 9; i = i+1 as IndexToNine) {
-      if (i !== row) {
-         results.push(indexOf(i, column))
-      }
-   }
-   return results
-}
-
-function _affectsBox (row: IndexToNine, column: IndexToNine) {
-   return boxesCells[boxAt(row, column)]
-}
-
+const _affectsCache = new Map<IndexTo81, Readonly<Array<Readonly<[IndexToNine, IndexToNine]>>>>()
 
 /**
  * All cells a square affects, or
  * All cells that affect a square
  */
-export function affects (row: IndexToNine, column: IndexToNine): Array<Readonly<[IndexToNine, IndexToNine]>>  {
-   // To remove duplicates
-   const alreadyTaken = new Set<IndexTo81>()
-   for (const boxCellIndex of _affectsRow(row, column).concat(_affectsColumn(row, column), _affectsBox(row, column))) {
-      alreadyTaken.add(boxCellIndex)
+export function affects (row: IndexToNine, column: IndexToNine): Readonly<Array<Readonly<[IndexToNine, IndexToNine]>>>  {
+   const thisIndex = indexOf(row, column)
+   const results = [] as IndexTo81[] // I could optimize, but it's here for simplicity
+
+   if (_affectsCache.has(thisIndex)) {
+      // Seems like another typescript bug
+      return _affectsCache.get(thisIndex) as Readonly<Array<Readonly<[IndexToNine, IndexToNine]>>>
    }
-   return Array.from(alreadyTaken).map(index => indexToRowAndColumn[index])
+
+   // For each row / column
+   for (let i: IndexToNine = 0; i < 9; i = i+1 as IndexToNine) {
+      // Different column => affects [same row, different column]
+      if (i !== column) {
+         results.push(indexOf(row, i))
+      }
+
+      // Different row => affects [different row, same column]
+      if (i !== row) {
+         results.push(indexOf(i, column))
+      }
+   }
+
+   // this box
+   for (const boxCellIndex of boxesCells[boxAt(row, column)]) {
+      // different cell
+      if (boxCellIndex !== thisIndex) {
+         // prevents duplicates
+         // (there's no check for the row and column since they don't collide)
+         if (!results.includes(boxCellIndex)) {
+            results.push(boxCellIndex)
+         }
+      }
+   }
+
+   const result = results.map(index => indexToRowAndColumn[index]) // Formatting
+   _affectsCache.set(thisIndex, result) // Cache
+   return result
 }

@@ -79,7 +79,7 @@ export function affectsColumn (row: IndexToNine, column: IndexToNine): [IndexToN
 export function affectsBox (row: IndexToNine, column: IndexToNine): [IndexToNine, IndexToNine][] {
    const results = [] as [IndexToNine, IndexToNine][]
    for (const cell of boxesCells[boxAt(row, column)]) {
-      results.push(indexToRowAndColumn[cell])
+      results.push(indexToRowAndColumn[cell].slice())
    }
    return results
 }

@@ -17,7 +17,7 @@ type CoordLineProps = Readonly<{
 export default class CoordLine extends React.Component<CoordLineProps> {
    render() {
       return (
-         <div data-index={this.props.index} className={this.props?.className ?? "CoordLine"}>
+         <div data-index={this.props.index} className={this.props.className ?? "CoordLine"}>
             {this.props.value}
          </div>
       )

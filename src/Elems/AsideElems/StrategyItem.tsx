@@ -40,7 +40,7 @@ export default class StrategyItem extends React.Component<StrategyItemProps, Str
       super(props)
 
       this.id = 'strategy-' + this.props.name.replaceAll(' ', '-')
-      if (!this.props?.required) {
+      if (this.props.required === undefined) {
          this.togglerId = 'strategy-toggler-' + this.props.name.replaceAll(' ', '-')
       }
 

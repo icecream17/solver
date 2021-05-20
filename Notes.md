@@ -52,7 +52,7 @@ So an MDN page showed...
 <details>
 <summary>mdn innerText</summary>
 
-```
+```txt
 Skip to main content
 Skip to search
 Technologies
@@ -573,7 +573,7 @@ Cookies
 And my page shows (with 2 cells having their candidates shown)
 <details><summary>my page</summary>
 
-```
+```txt
 Sudoku solver
 v0.2.0
 
@@ -626,13 +626,32 @@ Another Example strategy
 
 </details>
 
-# css
+## css
 
 Ooh, `normalize.css` and `sanitize.css`.
 
 1. Many of the opinionated stuff... are opinionated. Maybe change some of them
 1. Currently the ones that kinda break the website are:
+
    ```css
    * {box-sizing: border-box;} /* strategy list height minusequal padding */
    input {margin: 0;} /* checkbox centering */
    ```
+
+## strategies
+
+I just thought of a strategy
+
+Take every candidate and take the web from assuming such candidate is ON
+
+Then look at each combination of candidates, like "all candidates in a cell have webs that do `x`", or "every 7 in box 3 eliminate `x`"
+
+I say `web` instead of `chain`.
+
+## typescript
+
+TIL
+
+You can use `this` in static class methods. (<https://discord.com/channels/508357248330760243/740274647899308052/844777609082568714>)
+
+Only declare an inherited property if you're overriding it. (<https://github.com/microsoft/TypeScript/issues/44178>)

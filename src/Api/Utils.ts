@@ -58,7 +58,7 @@ export function boxNameAt(row: IndexToNine, column: IndexToNine): SudokuDigits {
 
 export function affectsRow (row: IndexToNine, column: IndexToNine): [IndexToNine, IndexToNine][] {
    const results = [] as [IndexToNine, IndexToNine][]
-   for (let i = 0; i < 9; i++) {
+   for (let i: IndexToNine = 0; i < 9; i = i+1 as IndexToNine) {
       if (i !== column) {
          results.push([row, i])
       }
@@ -68,7 +68,7 @@ export function affectsRow (row: IndexToNine, column: IndexToNine): [IndexToNine
 
 export function affectsColumn (row: IndexToNine, column: IndexToNine): [IndexToNine, IndexToNine][] {
    const results = [] as [IndexToNine, IndexToNine][]
-   for (let i = 0; i < 9; i++) {
+   for (let i: IndexToNine = 0; i < 9; i = i+1 as IndexToNine) {
       if (i !== row) {
          results.push([i, column])
       }

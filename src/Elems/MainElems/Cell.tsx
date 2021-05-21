@@ -85,10 +85,10 @@ export default class Cell extends React.Component<CellProps, CellState> {
          active: false,
 
          /**
-          * How many keyboard actions happened in the current active period
+          * This boolean controls pretending.
           *
           * When an unbothered cell is focused, we pretend there are no candidates.
-          * This makes it easier to edit the sudoku.
+          * This makes it easier to fill in a sudoku
           *
           * Unbothered: showCandidates===false && numCandidates===9
           *
@@ -163,7 +163,7 @@ export default class Cell extends React.Component<CellProps, CellState> {
       )
    }
 
-   whenFocus(_event: React.FocusEvent) {
+   whenFocus(_event?: React.FocusEvent) {
       this.setState((state: CellState): CellState => {
          const newState = {
             active: true,
@@ -179,7 +179,7 @@ export default class Cell extends React.Component<CellProps, CellState> {
       })
    }
 
-   whenBlur(_event: React.FocusEvent) {
+   whenBlur(_event?: React.FocusEvent) {
       this.props.sudoku.data.data[this.props.row][this.props.column] = this.state.candidates
       this.setState((state: CellState): CellState => {
          const newState = {
@@ -192,6 +192,33 @@ export default class Cell extends React.Component<CellProps, CellState> {
             newState.showCandidates = true
          }
          return newState as CellState
+      })
+   }
+
+   toggleCandidate(candidate: SudokuDigits) {
+      this.setState((state: CellState) => {
+         const candidates = new Set(state.pretend ? [] : state.candidates)
+         const dataElement = document.getElementById('Data') as HTMLTextAreaElement
+
+         if (candidates.has(candidate)) {
+            candidates.delete(candidate)
+         } else {
+            candidates.add(candidate)
+         }
+
+         if (candidates.size === 0) {
+            dataElement.value = "empty!"
+            return {
+               candidates: [],
+               error: true
+            }
+         }
+
+         dataElement.value = [...candidates].join('')
+         return {
+            candidates: [...candidates],
+            error: false
+         }
       })
    }
 
@@ -213,31 +240,7 @@ export default class Cell extends React.Component<CellProps, CellState> {
       const target = event.target as HTMLTableDataCellElement
       if ('123456789'.includes(event.key)) {
          const candidate = Number(event.key) as SudokuDigits
-
-         this.setState((state: CellState) => {
-            const candidates = new Set(state.pretend ? [] : state.candidates)
-            const dataElement = document.getElementById('Data') as HTMLTextAreaElement
-
-            if (candidates.has(candidate)) {
-               candidates.delete(candidate)
-            } else {
-               candidates.add(candidate)
-            }
-
-            if (candidates.size === 0) {
-               dataElement.value = "empty!"
-               return {
-                  candidates: [],
-                  error: true
-               }
-            }
-
-            dataElement.value = [...candidates].join('')
-            return {
-               candidates: [...candidates],
-               error: false
-            }
-         })
+         this.toggleCandidate(candidate)
       } else if (['Backspace', 'Delete', 'Clear'].includes(event.key)) {
          const dataElement = document.getElementById('Data') as HTMLTextAreaElement
          if (event.shiftKey) {
@@ -255,6 +258,8 @@ export default class Cell extends React.Component<CellProps, CellState> {
             dataElement.value = 'Empty!'
          }
       } else if (event.key in keyboardMappings) {
+         // Keyboard controls
+         // TODO: Diagonal steps, use onkeyup and lift to Sudoku
          const step = keyboardMappings[(event.key as keyof typeof keyboardMappings)]
 
          // blur this and focus the other cell
@@ -270,7 +275,7 @@ export default class Cell extends React.Component<CellProps, CellState> {
          return;
       }
 
-      // Something happened, so stop pretending
+      // Something happened, (see "pretend" docs above)
       this.setState({ pretend: false })
    }
 }

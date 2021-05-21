@@ -94,7 +94,6 @@ export default class Solver {
             successcount: strategyResult.successcount ?? null
          } as const
 
-         console.debug(this.latestStrategyItem, newState)
          this.latestStrategyItem.setState(newState)
       }
 

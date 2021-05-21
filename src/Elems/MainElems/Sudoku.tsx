@@ -65,14 +65,30 @@ export default class Sudoku extends React.Component<PossibleConstructCallback> {
       )
    }
 
+   /**
+    * BUG: This focuses the element, but often the
+    */
    focusCell(row: IndexToNine, column: IndexToNine) {
       this.getCellElement(row, column).focus()
    }
 
-   /** Gets the cell _element_ at the row and column. */
+   getCellComponent(row: IndexToNine, column: IndexToNine): Cell {
+      return this.data.cells[row][column]
+   }
+
+   /**
+    * Gets the cell _element_ at the row and column.
+    * Nowadays, the cell is a <td> containing a <button> for a11y reasons.
+    * So this returns the <button> since that's what's actually important.
+    */
    getCellElement(row: IndexToNine, column: IndexToNine): HTMLElement {
+      const result = this.getTableCellElement(row, column).children[0] as HTMLElement
+      return result
+   }
+
+   /** Gets the cell _element_ at the row and column. */
+   getTableCellElement(row: IndexToNine, column: IndexToNine): HTMLElement {
       const result = this.getRowElement(row).children[column] as HTMLElement
-      console.debug(result)
       return result
    }
 

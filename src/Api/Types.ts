@@ -9,7 +9,8 @@ export type StrategyResult = Readonly<{
    message?: string
 }> | Readonly<{
    success: false,
-   successcount: number,
+   successcount?: number,
+   message?: string
 }>
 export type StrategyError = Readonly<{
    success: true,

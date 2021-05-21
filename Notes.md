@@ -17,6 +17,7 @@ inspired by <https://www.sudokuwiki.org>
 1. <https://developer.mozilla.org/en-US/docs/Web/API/Document/keydown_event> (keypress is deprecated - but it's a better name)
 1. <https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement/beforeinput_event>
 1. css variables in Main are used by child elements
+1. Maybe rename "element" to "react component"
 
 To use:
 

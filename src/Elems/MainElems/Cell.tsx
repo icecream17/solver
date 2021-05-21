@@ -44,11 +44,6 @@ type CellState = Readonly<{
  *
  * Requires a "row" and "column" property
  *
- * In state
- * - candidates
- * - showCandidates
- * - error
- *
  * @example
  * <Cell row={1} column={4} />
  *
@@ -132,16 +127,16 @@ export default class Cell extends React.Component<CellProps, CellState> {
    render() {
       let content = <></>;
 
-      // Using a span for the digits
+      // Using a span for single digits
       // so that I can force cells to always be [css height: 1/9th]
-      if (this.state.active) {
+      if (this.state.pretend) {
+         content = <Candidates data={this.state.candidates} /> // Nothing happens right now
+      } else if (this.state.active) {
          content = <Candidates data={this.state.candidates} />
       } else if (this.numCandidates === 0) {
          content = <span className="ugh tables"> 0 </span>
       } else if (this.numCandidates === 1) {
          content = <span className="ugh tables"> {this.state.candidates[0]} </span>
-      } else if (this.state.pretend) {
-         content = <span className="ugh tables"> {/* empty */} </span>
       } else if (this.state.showCandidates) {
          // numCandidates > 1
          content = <Candidates data={this.state.candidates} />

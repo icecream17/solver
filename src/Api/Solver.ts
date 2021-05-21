@@ -2,24 +2,51 @@ import SolverPart from "../Elems/AsideElems/SolverPart"
 import StrategyItem from "../Elems/AsideElems/StrategyItem"
 import Strategies from "./Strategies"
 import Sudoku from "./Sudoku"
+import { StrategyResult } from "./Types"
 
 export default class Solver {
    strategyIndex: number
    solved: number
    strategyItemElements: StrategyItem[]
-   lastStrategyItem: StrategyItem | null
+   latestStrategyItem: StrategyItem | null
    constructor (public sudoku: null | Sudoku, public solverElement: SolverPart) {
       this.strategyIndex = 0
       this.solved = 0
       this.strategyItemElements = []
-      this.lastStrategyItem = null
+      this.latestStrategyItem = null // Previously named "lastStrategyItem"
 
       this.Go = this.Go.bind(this)
       this.Step = this.Step.bind(this)
       this.Undo = this.Undo.bind(this)
    }
 
-   Step () {
+   /**
+    * Called after the last strategy is done,
+    * and just before the first strategy is done.
+    */
+   resetStrategies () {
+      for (const strategyElement of this.strategyItemElements) {
+         strategyElement.setState({
+            success: null,
+            successcount: null
+         })
+      }
+   }
+
+   updateCounters (success: boolean) {
+      // Go back to the start when a strategy succeeds
+      // (but not if you're already at the start)
+      if (success && this.strategyIndex > 0) {
+         this.strategyIndex = 0
+      } else {
+         this.strategyIndex++
+         if (this.strategyIndex === Strategies.length) {
+            this.strategyIndex = 0
+         }
+      }
+   }
+
+   Step(): StrategyResult {
       if (this.sudoku === null) {
          if (this.solverElement.props.sudoku === null) {
             throw ReferenceError('Uninitialized sudoku!')
@@ -28,34 +55,50 @@ export default class Solver {
          }
       }
 
-      const strategyResult = Strategies[this.strategyIndex](this.sudoku, this)
+      // See resetStrategies documentation
+      if (this.strategyIndex === 0) {
+         this.resetStrategies()
+      }
 
-      // strategyItem UI
-      if (this.lastStrategyItem !== null) {
-         this.lastStrategyItem.setState({ isCurrentStrategy: false })
+      // strategyItem UI - update lastStrategyItem
+      if (this.latestStrategyItem !== null) {
+         this.latestStrategyItem.setState({ isCurrentStrategy: false })
       }
 
       if (this.strategyIndex in this.strategyItemElements) {
-         this.lastStrategyItem = this.strategyItemElements[this.strategyIndex]
-         this.lastStrategyItem.setState({
-            success: strategyResult.success,
-            successcount: strategyResult.successcount as number,
+         this.latestStrategyItem = this.strategyItemElements[this.strategyIndex]
+
+         // Don't run strategy if it's disabled,
+         // instead move on to the next strategy
+         if (this.latestStrategyItem.state.disabled) {
+            this.updateCounters(false)
+            return this.Step()
+         }
+
+         // Not disabled, so update state
+         this.latestStrategyItem.setState({
             isCurrentStrategy: true
          })
       } else {
          console.warn(`undefined strategyItemElement @${this.strategyIndex}`)
-         this.lastStrategyItem = null
+         this.latestStrategyItem = null
       }
 
-      // Go back to the start (but not if you're already at the start)
-      if (strategyResult.success && this.strategyIndex > 0) {
-         this.strategyIndex = 0
-      } else {
-         this.strategyIndex++
-         if (this.strategyIndex === Strategies.length) {
-            this.strategyIndex = 0
-         }
+      // Run strategy
+      const strategyResult = Strategies[this.strategyIndex](this.sudoku, this)
+
+      // strategyItem UI - update lastStrategyItem state
+      if (this.latestStrategyItem !== null) {
+         const newState = {
+            success: strategyResult.success,
+            successcount: strategyResult.successcount ?? null
+         } as const
+
+         console.debug(this.latestStrategyItem, newState)
+         this.latestStrategyItem.setState(newState)
       }
+
+      this.updateCounters(strategyResult.success)
 
       return strategyResult
    }

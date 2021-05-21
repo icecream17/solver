@@ -160,9 +160,6 @@ const STRATEGIES = [
                         updated++
                         datacell.splice(k, 1) // Deletes the candidate
                         sudoku.set(row, column).to(...datacell) // Updates/renders the cell too
-                        console.debug({
-                           i, j, k, row, column, datacell, updated
-                        })
 
                         // Now that the candidate is deleted,
                         // the index already corresponds to the next candidate.

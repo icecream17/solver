@@ -35,8 +35,7 @@
 
 /* Is current */
 .StrategyItem.isCurrent {
-   border: 2px gray;
-   border-style: ridge;
+   border-right: 5px solid rgb(183, 193, 194);
 }
 
 /* Alternating colors - note that the markers are not in color*/

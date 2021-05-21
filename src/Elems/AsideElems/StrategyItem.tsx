@@ -6,13 +6,13 @@ import StrategyToggler from './StrategyToggler';
 import StrategyStatus, { StrategyStatusProps } from './StrategyStatus';
 import Solver from '../../Api/Solver';
 
-type StrategyItemProps = StrategyLabelProps & Readonly<{
+export type StrategyItemProps = StrategyLabelProps & Readonly<{
    solver: Solver,
    index: number
    required?: true | 'true'
 }>
 
-type StrategyItemState = StrategyStatusProps & Readonly<{
+export type StrategyItemState = StrategyStatusProps & Readonly<{
    disabled: boolean,
    isCurrentStrategy: boolean
 }>

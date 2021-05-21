@@ -1,6 +1,8 @@
 import { COLUMN_NAMES, IndexToNine, MAX_CELL_INDEX, ROW_NAMES, SudokuDigits } from "../Types";
 import PureSudoku from "./PureSudoku";
-import { Strategy, StrategyError } from "./Types";
+import Solver from "./Solver";
+import Sudoku from "./Sudoku";
+import { Strategy } from "./Types";
 import { algebraic, boxAt, boxNameAt, affects } from "./Utils";
 
 type validityResult = {
@@ -74,8 +76,8 @@ export function checkValidity(sudoku: PureSudoku): validityResult {
 }
 
 // See comments on `Strategy`
-export default [
-   function checkForSolved (sudoku, solver) {
+const STRATEGIES = [
+   function checkForSolved (sudoku: Sudoku, solver: Solver) {
       const validity = checkValidity(sudoku)
       if (!validity.ok) {
          alert(validity.message)
@@ -83,7 +85,7 @@ export default [
             success: true,
             message: validity.message,
             successcount: -1
-         } as StrategyError
+         } as const
       }
 
       // Should this be before checkValidity?
@@ -100,7 +102,7 @@ export default [
          return {
             success: true,
             successcount: MAX_CELL_INDEX
-         }
+         } as const
       }
 
       let totalSolved = 0
@@ -118,44 +120,49 @@ export default [
          return {
             success: true,
             successcount: difference
-         }
+         } as const
       }
 
       return {
          success: false
-      }
+      } as const
    },
 
    // O(n^5)
-   function updateCandidates (sudoku, _solver) {
+   function updateCandidates (sudoku: PureSudoku, _solver: Solver) {
       let updated = 0
-      let solved = {
-         rows: [] as Array<Set<SudokuDigits>>,
-         columns: [] as Array<Set<SudokuDigits>>,
-         boxes: [] as Array<Set<SudokuDigits>>
-      }
-
-      for (let i = 0; i < 9; i++) {
-         solved.rows.push(new Set<SudokuDigits>())
-         solved.columns.push(new Set<SudokuDigits>())
-         solved.boxes.push(new Set<SudokuDigits>())
-      }
 
       for (let i: IndexToNine = 0; i < 9; i = i+1 as IndexToNine) {
          for (let j: IndexToNine = 0; j < 9; j = j+1 as IndexToNine) {
+            // Cell
             if (sudoku.data[i][j].length === 1) {
+
+               // Cell > Candidate
                const solvedCandidate = sudoku.data[i][j][0]
+
+               // Cell > Affects
                for (const [row, column] of affects(i, j)) {
+
+                  // Cell > Affects > Cell
                   const datacell = sudoku.data[row][column]
                   for (let k: IndexToNine = 0; k < datacell.length; k = k+1 as IndexToNine) {
-                     const candidate = datacell[k]
-                     if (solved.rows[row].has(candidate) ||
-                         solved.columns[column].has(candidate) ||
-                         solved.boxes[boxAt(row, column)].has(candidate))
-                     {
+
+                     // Cell > Affects > Cell > Candidate
+                     if (datacell[k] === solvedCandidate) {
+                        if (datacell.length === 1) {
+                           return {
+                              success: true,
+                              successcount: -1,
+                              message: `Both ${algebraic(i, j)} and ${algebraic(row, column)} must be ${solvedCandidate}`
+                           }
+                        }
+
                         updated++
                         datacell.splice(k, 1) // Deletes the candidate
                         sudoku.set(row, column).to(...datacell) // Updates/renders the cell too
+                        console.debug({
+                           i, j, k, row, column, datacell, updated
+                        })
 
                         // Now that the candidate is deleted,
                         // the index already corresponds to the next candidate.
@@ -173,9 +180,6 @@ export default [
                      }
                   }
                }
-               solved.rows[i].add(solvedCandidate)
-               solved.columns[i].add(solvedCandidate)
-               solved.boxes[boxAt(i, j)].add(solvedCandidate)
             }
          }
       }
@@ -184,11 +188,13 @@ export default [
          return {
             success: true,
             successcount: updated
-         }
+         } as const
       } else {
          return {
             success: false
-         }
+         } as const
       }
    }
-] as Strategy[]
+] as const
+
+export default STRATEGIES as typeof STRATEGIES & Strategy[]

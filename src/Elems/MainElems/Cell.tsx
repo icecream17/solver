@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { HasWhenConstruct, IndexToNine, PossibleConstructCallback, SudokuDigits } from '../../Types';
+import { HasWhenConstruct, IndexToNine, Mutable, PossibleConstructCallback, SudokuDigits, ZeroToNine } from '../../Types';
 
 import Candidates from './Candidates';
 import Sudoku from './Sudoku';
@@ -27,8 +27,16 @@ type CellState = Readonly<{
    candidates: SudokuDigits[],
    showCandidates: boolean,
    error: boolean,
-   active: boolean
-}>
+}> & (
+   Readonly<{
+      active: false,
+      pretend: false
+   }> |
+   Readonly<{
+      active: true,
+      pretend: boolean
+   }>
+)
 
 
 /**
@@ -79,7 +87,19 @@ export default class Cell extends React.Component<CellProps, CellState> {
          error: false,
 
          /** If this is currently focused by the user - set by whenFocus and whenBlur */
-         active: false
+         active: false,
+
+         /**
+          * How many keyboard actions happened in the current active period
+          *
+          * When an unbothered cell is focused, we pretend there are no candidates.
+          * This makes it easier to edit the sudoku.
+          *
+          * Unbothered: showCandidates===false && numCandidates===9
+          *
+          * Very useful when you're just copying in a sudoku
+          */
+         pretend: false
       }
 
       /** See sudoku.js - this if statement is anticipating future code changes */
@@ -96,12 +116,14 @@ export default class Cell extends React.Component<CellProps, CellState> {
 
    /** How many candidates are left */
    get numCandidates() {
-      return this.state.candidates.length
+      return this.state.candidates.length as ZeroToNine
    }
 
    setCandidates(candidates: SudokuDigits[]) {
       if (1 < candidates.length && candidates.length < 9) {
          this.setState({ candidates, showCandidates: true })
+      } else if (candidates.length === 0) {
+         this.setState({ candidates, error: true })
       } else {
          this.setState({ candidates })
       }
@@ -118,6 +140,8 @@ export default class Cell extends React.Component<CellProps, CellState> {
          content = <span className="ugh tables"> 0 </span>
       } else if (this.numCandidates === 1) {
          content = <span className="ugh tables"> {this.state.candidates[0]} </span>
+      } else if (this.state.pretend) {
+         content = <span className="ugh tables"> {/* empty */} </span>
       } else if (this.state.showCandidates) {
          // numCandidates > 1
          content = <Candidates data={this.state.candidates} />
@@ -145,16 +169,34 @@ export default class Cell extends React.Component<CellProps, CellState> {
    }
 
    whenFocus(_event: React.FocusEvent) {
-      this.setState({ active: true, showCandidates: true })
+      this.setState((state: CellState): CellState => {
+         const newState = {
+            active: true,
+            activeActions: 0
+         } as Mutable<Partial<CellState>>
+
+         // See notes about state.pretend
+         if (state.showCandidates === false && this.numCandidates === 9) {
+            newState.pretend = true
+         }
+
+         return newState as CellState
+      })
    }
 
    whenBlur(_event: React.FocusEvent) {
       this.props.sudoku.data.data[this.props.row][this.props.column] = this.state.candidates
       this.setState((state: CellState): CellState => {
+         const newState = {
+            active: false,
+            activeActions: null,
+            pretend: false // See notes about state.pretend
+         } as Mutable<Partial<CellState>>
+
          if (1 < state.candidates.length && state.candidates.length < 9) {
-            return { active: false, showCandidates: true } as CellState
+            newState.showCandidates = true
          }
-         return { active: false } as CellState
+         return newState as CellState
       })
    }
 
@@ -165,10 +207,12 @@ export default class Cell extends React.Component<CellProps, CellState> {
     * When a digit is pressed: "123456789",
     * then it toggles that candidate.
     *
-    * Shift+Backspace resets the candidates
-    * Backspace deletes the candidates
+    * Shift+Backspace resets the candidates to [1, 2, 3, 4, 5, 6, 7, 8, 9]
+    * Backspace deletes the candidates (and so do `delete` and `clear`)
     *
-    * "Undocumented": The `delete` and `clear` keys also work
+    * Escape blurs the current cell
+    *
+    * TODO: Arrow key navigation
     */
    whenKeyDown(event: React.KeyboardEvent) {
       const target = event.target as HTMLTableDataCellElement
@@ -176,7 +220,7 @@ export default class Cell extends React.Component<CellProps, CellState> {
          const candidate = Number(event.key) as SudokuDigits
 
          this.setState((state: CellState) => {
-            const candidates = new Set(state.candidates)
+            const candidates = new Set(state.pretend ? [] : state.candidates)
             const dataElement = document.getElementById('Data') as HTMLTextAreaElement
 
             if (candidates.has(candidate)) {
@@ -226,6 +270,12 @@ export default class Cell extends React.Component<CellProps, CellState> {
          )
       } else if (event.key === 'Escape') {
          target.blur()
+      } else {
+         // If nothing happens, don't do anything
+         return;
       }
+
+      // Something happened, so stop pretending
+      this.setState({ pretend: false })
    }
 }

@@ -7,10 +7,12 @@ export default class Solver {
    strategyIndex: number
    solved: number
    strategyItemElements: StrategyItem[]
+   lastStrategyItem: StrategyItem | null
    constructor (public sudoku: null | Sudoku, public solverElement: SolverPart) {
       this.strategyIndex = 0
       this.solved = 0
       this.strategyItemElements = []
+      this.lastStrategyItem = null
 
       this.Go = this.Go.bind(this)
       this.Step = this.Step.bind(this)
@@ -27,16 +29,26 @@ export default class Solver {
       }
 
       const strategyResult = Strategies[this.strategyIndex](this.sudoku, this)
+
+      // strategyItem UI
+      if (this.lastStrategyItem !== null) {
+         this.lastStrategyItem.setState({ isCurrentStrategy: false })
+      }
+
       if (this.strategyIndex in this.strategyItemElements) {
-         this.strategyItemElements[this.strategyIndex].setState({
+         this.lastStrategyItem = this.strategyItemElements[this.strategyIndex]
+         this.lastStrategyItem.setState({
             success: strategyResult.success,
-            successcount: strategyResult.successcount
+            successcount: strategyResult.successcount as number,
+            isCurrentStrategy: true
          })
       } else {
          console.warn(`undefined strategyItemElement @${this.strategyIndex}`)
+         this.lastStrategyItem = null
       }
 
-      if (strategyResult.success) {
+      // Go back to the start (but not if you're already at the start)
+      if (strategyResult.success && this.strategyIndex > 0) {
          this.strategyIndex = 0
       } else {
          this.strategyIndex++

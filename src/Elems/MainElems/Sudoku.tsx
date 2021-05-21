@@ -71,7 +71,9 @@ export default class Sudoku extends React.Component<PossibleConstructCallback> {
 
    /** Gets the cell _element_ at the row and column. */
    getCellElement(row: IndexToNine, column: IndexToNine): HTMLElement {
-      return this.getRowElement(row).children[column] as HTMLElement
+      const result = this.getRowElement(row).children[column] as HTMLElement
+      console.debug(result)
+      return result
    }
 
    /** Gets the row _element_ at the index provided */

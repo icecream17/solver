@@ -33,6 +33,12 @@
    vertical-align: middle; */ /* centers checkbox */
 }
 
+/* Is current */
+.StrategyItem.isCurrent {
+   border: 2px gray;
+   border-style: ridge;
+}
+
 /* Alternating colors - note that the markers are not in color*/
 .StrategyItem:nth-child(odd) {
    background-color: #1f2329;

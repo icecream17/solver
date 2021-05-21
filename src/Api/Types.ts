@@ -1,3 +1,4 @@
+import PureSudoku from "./PureSudoku";
 import Solver from "./Solver";
 import Sudoku from "./Sudoku";
 
@@ -15,4 +16,7 @@ export type StrategyError = Readonly<{
    successcount: -1,
    message?: string
 }>
-export type Strategy = (arg: Sudoku, solver: Solver) => StrategyResult
+export type Strategy = (
+   ((arg: PureSudoku, solver: Solver) => StrategyResult) |
+   ((arg: Sudoku, solver: Solver) => StrategyResult)
+)

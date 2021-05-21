@@ -13,7 +13,8 @@ type StrategyItemProps = StrategyLabelProps & Readonly<{
 }>
 
 type StrategyItemState = StrategyStatusProps & Readonly<{
-   disabled: boolean
+   disabled: boolean,
+   isCurrentStrategy: boolean
 }>
 
 /**
@@ -48,7 +49,8 @@ export default class StrategyItem extends React.Component<StrategyItemProps, Str
          success: null,
          successcount: null,
 
-         disabled: false
+         disabled: false,
+         isCurrentStrategy: false
       }
    }
 
@@ -64,6 +66,9 @@ export default class StrategyItem extends React.Component<StrategyItemProps, Str
       let thisClass = 'StrategyItem'
       if (this.state.disabled) {
          thisClass += ' disabled'
+      }
+      if (this.state.isCurrentStrategy) {
+         thisClass += ' isCurrent'
       }
 
       if (this.props.required) {

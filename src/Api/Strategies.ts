@@ -1,4 +1,4 @@
-import { COLUMN_NAMES, IndexToNine, MAX_CELL_INDEX, ROW_NAMES, SudokuDigits } from "../Types";
+import { ALL_CANDIDATES, COLUMN_NAMES, IndexToNine, MAX_CELL_INDEX, ROW_NAMES, SudokuDigits } from "../Types";
 import PureSudoku from "./PureSudoku";
 import Solver from "./Solver";
 import Sudoku from "./Sudoku";
@@ -15,19 +15,28 @@ type validityResult = {
 export function checkValidity(sudoku: PureSudoku): validityResult {
    const solvedInColumns = [] as Array<Set<SudokuDigits>>
    const solvedInBoxes = [] as Array<Set<SudokuDigits>>
+   const candidatesInColumns = [] as Array<Set<SudokuDigits>>
+   const candidatesInBoxes = [] as Array<Set<SudokuDigits>>
 
    for (let i = 0; i < 9; i++) {
       solvedInColumns.push(new Set<SudokuDigits>())
       solvedInBoxes.push(new Set<SudokuDigits>())
+      candidatesInColumns.push(new Set<SudokuDigits>())
+      candidatesInBoxes.push(new Set<SudokuDigits>())
    }
 
    // Every time an index is changed, typing is there so that `typeof i !== number`
    // Expanding `i++` into `i = i+1` so that the type assertion works
-   for (let i: IndexToNine = 0; i < 9; i = i+1 as IndexToNine) {
+   for (let i: IndexToNine = 0; i < 9; i = i + 1 as IndexToNine) {
       const solvedInRow = new Set<SudokuDigits>()
+      const candidatesInRow = new Set<SudokuDigits>()
 
       for (let j: IndexToNine = 0; j < 9; j = j+1 as IndexToNine) {
          const candidates = sudoku.data[i][j]
+         const current = {
+            column: j,
+            box: boxAt(i, j)
+         } as const
 
          // No possibilities
          if (candidates.length === 0) {
@@ -49,7 +58,7 @@ export function checkValidity(sudoku: PureSudoku): validityResult {
             }
 
             // Same in column
-            if (solvedInColumns[j].has(solvedCandidate)) {
+            if (solvedInColumns[current.column].has(solvedCandidate)) {
                return {
                   ok: false,
                   message: `Two (or more) ${solvedCandidate}s in column ${COLUMN_NAMES[j]}!`
@@ -57,7 +66,7 @@ export function checkValidity(sudoku: PureSudoku): validityResult {
             }
 
             // Same in box
-            if (solvedInBoxes[boxAt(i, j)].has(solvedCandidate)) {
+            if (solvedInBoxes[current.box].has(solvedCandidate)) {
                return {
                   ok: false,
                   message: `Two (or more) ${solvedCandidate}s in box ${boxNameAt(i, j)}!`
@@ -65,11 +74,53 @@ export function checkValidity(sudoku: PureSudoku): validityResult {
             }
 
             solvedInRow.add(solvedCandidate)
-            solvedInColumns[j].add(solvedCandidate)
-            solvedInBoxes[boxAt(i, j)].add(solvedCandidate)
+            solvedInColumns[current.column].add(solvedCandidate)
+            solvedInBoxes[current.box].add(solvedCandidate)
+         }
+
+         for (const candidate of candidates) {
+            candidatesInRow.add(candidate)
+            candidatesInColumns[current.column].add(candidate)
+            candidatesInBoxes[current.box].add(candidate)
+         }
+      }
+
+      if (candidatesInRow.size !== 9) {
+         const missingCandidates = ALL_CANDIDATES.filter(
+            candidate => !candidatesInRow.has(candidate)
+         )
+
+         return {
+            ok: false,
+            message: `Row ${i} has 0 possibilities for ${missingCandidates}!!!`
          }
       }
    }
+
+   for (let i = 0; i < 9; i++) {
+      if (candidatesInColumns[i].size !== 9) {
+         const missingCandidates = ALL_CANDIDATES.filter(
+            candidate => !candidatesInColumns[i].has(candidate)
+         )
+
+         return {
+            ok: false,
+            message: `Column ${i} has 0 possibilities for ${missingCandidates}!!!`
+         }
+      }
+
+      if (candidatesInBoxes[i].size !== 9) {
+         const missingCandidates = ALL_CANDIDATES.filter(
+            candidate => !candidatesInBoxes[i].has(candidate)
+         )
+
+         return {
+            ok: false,
+            message: `Box ${i} has 0 possibilities for ${missingCandidates}!!!`
+         }
+      }
+   }
+
    return {
       ok: true
    }

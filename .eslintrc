@@ -1,4 +1,13 @@
 {
-  "extends": ["react-app", "plugin:jsx-a11y/recommended"],
-  "plugins": ["jsx-a11y"]
+  "extends": [
+    "react-app",
+    "plugin:jsx-a11y/recommended",
+    "plugin:jest-dom/recommended",
+    "plugin:testing-library/react"
+  ],
+  "plugins": [
+    "jsx-a11y",
+    "jest-dom",
+    "testing-library"
+  ]
 }

@@ -1,10 +1,10 @@
 import { render, screen } from '@testing-library/react';
 import App from './App';
 
-render(<App />);
+beforeEach(() => {
+   render(<App />);
+})
 
-describe('app', () => {
-   test('it renders', () => {
-      expect(true).toBe(true)
-   })
+test('it renders', () => {
+   expect(true).toBe(true)
 })

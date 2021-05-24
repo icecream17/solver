@@ -112,7 +112,8 @@ export default class PureSudoku {
 
    /**
     * Imports from an 81 character string representing a sudoku.
-    * 
+    *
+    * Any character that is not a digit is a blank cell.
     */
    import81(representation: string) {
       let totalIndex = 0
@@ -129,6 +130,22 @@ export default class PureSudoku {
             }
          }
       }
+   }
+
+   // Note: import is a keyword, but it doesn't cause a syntax error here
+   import(representation: string) {
+      representation = representation.trim().normalize()
+      if (representation.length === 81) {
+         this.import81(representation)
+         return {
+            success: true,
+            representationType: '81'
+         } as const
+      }
+
+      return {
+         success: false
+      } as const
    }
 
    set(x: IndexToNine, y: IndexToNine) {

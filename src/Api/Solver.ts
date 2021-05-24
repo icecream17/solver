@@ -5,16 +5,13 @@ import Sudoku from "./Sudoku"
 import { StrategyResult } from "./Types"
 
 export default class Solver {
-   strategyIndex: number
-   solved: number
-   strategyItemElements: StrategyItem[]
-   latestStrategyItem: StrategyItem | null
-   constructor (public sudoku: null | Sudoku, public solverElement: SolverPart) {
-      this.strategyIndex = 0
-      this.solved = 0
-      this.strategyItemElements = []
-      this.latestStrategyItem = null // Previously named "lastStrategyItem"
-
+   // Previously named "lastStrategyItem"
+   latestStrategyItem: null | StrategyItem = null
+   solved: number = 0
+   strategyIndex: number = 0
+   strategyItemElements: StrategyItem[] = []
+   sudoku: null | Sudoku = null
+   constructor (public solverElement: SolverPart) {
       this.Go = this.Go.bind(this)
       this.Step = this.Step.bind(this)
       this.Undo = this.Undo.bind(this)
@@ -46,7 +43,7 @@ export default class Solver {
       }
    }
 
-   Step(): StrategyResult {
+   sudokuNullCheck (): asserts this.sudoku is Sudoku {
       if (this.sudoku === null) {
          if (this.solverElement.props.sudoku === null) {
             throw ReferenceError('Uninitialized sudoku!')
@@ -54,6 +51,10 @@ export default class Solver {
             this.sudoku = this.solverElement.props.sudoku
          }
       }
+   }
+
+   Step(): StrategyResult {
+      this.sudokuNullCheck()
 
       // See resetStrategies documentation
       if (this.strategyIndex === 0) {
@@ -118,6 +119,8 @@ export default class Solver {
       if (result === null) {
          return; // Maybe do something else
       }
+
+      this.sudokuNullCheck()
       this.sudoku.import(result)
    }
 }

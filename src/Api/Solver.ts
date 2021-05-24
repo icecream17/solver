@@ -112,4 +112,8 @@ export default class Solver {
    Undo () {
       // TODO
    }
+
+   Import () {
+      this.sudoku.import(prompt("Enter data (todo: clarify)"))
+   }
 }

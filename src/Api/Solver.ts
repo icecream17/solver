@@ -114,6 +114,10 @@ export default class Solver {
    }
 
    Import () {
-      this.sudoku.import(prompt("Enter data (todo: clarify)"))
+      const result = prompt("Enter data (todo: clarify)")
+      if (result === null) {
+         return; // Maybe do something else
+      }
+      this.sudoku.import(result)
    }
 }

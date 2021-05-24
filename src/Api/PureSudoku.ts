@@ -117,8 +117,8 @@ export default class PureSudoku {
     */
    import81(representation: string) {
       let totalIndex = 0
-      for (let i = 0; i < 9; i++) {
-         for (let j = 0; j < 9; j++) {
+      for (let i: SudokuDigits = 0; i < 9; i = i+1 as SudokuDigits) {
+         for (let j: SudokuDigits = 0; j < 9; j = j+1 as SudokuDigits) {
             const char = representation[totalIndex]
             totalIndex++ // after char
 

@@ -22,12 +22,12 @@ test('getting the sudoku table', () => {
    expect(screen.getByRole('table', { name: 'Sudoku' })).toBeInTheDocument()
 })
 
-function getSudokuTableElement () {
-   return screen.getByRole('table', { name: 'Sudoku' })
-}
+// function getSudokuTableElement () {
+//    return screen.getByRole('table', { name: 'Sudoku' })
+// }
 
 function getTableCellElement (row: IndexToNine, column: IndexToNine) {
-   return screen.getByRole('gridcell', { name: Cell.labelAt(row, column) })
+   return getButtonCellElement(row, column).parentElement as HTMLElement
 }
 
 // The actual handler

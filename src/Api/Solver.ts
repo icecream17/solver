@@ -10,8 +10,7 @@ export default class Solver {
    solved: number = 0
    strategyIndex: number = 0
    strategyItemElements: StrategyItem[] = []
-   sudoku: null | Sudoku = null
-   constructor (public solverElement: SolverPart) {
+   constructor (public sudoku: null | Sudoku = null, public solverElement: SolverPart) {
       this.Go = this.Go.bind(this)
       this.Step = this.Step.bind(this)
       this.Undo = this.Undo.bind(this)

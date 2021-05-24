@@ -43,7 +43,7 @@ export default class Solver {
       }
    }
 
-   sudokuNullCheck (): asserts this.sudoku is Sudoku {
+   sudokuNullCheck (): asserts this is {sudoku: Sudoku} {
       if (this.sudoku === null) {
          if (this.solverElement.props.sudoku === null) {
             throw ReferenceError('Uninitialized sudoku!')

@@ -110,6 +110,26 @@ export default class PureSudoku {
       }) as InstanceType<T>
    }
 
+   /**
+    * Imports from an 81 character string representing a sudoku.
+    * 
+    */
+   import81(representation: string) {
+      let totalIndex = 0
+      for (let i = 0; i < 9; i++) {
+         for (let j = 0; j < 9; j++) {
+            const char = representation[totalIndex]
+            totalIndex++ // after char
+
+            // Using `this.set` for compatibility with `Sudoku`
+            if ("123456789".includes(char)) {
+               this.set(i, j).to(Number(char) as SudokuDigits)
+            } else {
+               this.set(i, j).to(1, 2, 3, 4, 5, 6, 7, 8, 9)
+            }
+         }
+      }
+   }
 
    set(x: IndexToNine, y: IndexToNine) {
       return {

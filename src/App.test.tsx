@@ -1,4 +1,5 @@
-import { render, screen } from '@testing-library/react';
+import { fireEvent, render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import App from './App';
 import Cell from './Elems/MainElems/Cell';
 import { IndexToNine } from './Types';
@@ -16,6 +17,9 @@ test('getting the main element', () => {
    expect(screen.getByRole('main')).toBeInTheDocument()
 })
 
+test('a header exists', () => {
+   expect(screen.getByRole('heading', { level: 1 })).toBeInTheDocument()
+})
 
 // The name === 'Sudoku' because aria-label === 'Sudoku'
 test('getting the sudoku table', () => {
@@ -52,3 +56,20 @@ test.each(cellTests)('getting the cell at row %i, column %i', (row, column) => {
    expect(getButtonCellElement(row, column)).toBeInTheDocument()
 })
 
+// If the way the buttonCell is highlighted is changed, update this test
+// Right now it's by data-active
+test("Focused buttonCells are highlighted", () => {
+   const buttonCell = getButtonCellElement(0, 0)
+   expect(buttonCell).not.toHaveAttribute('data-active')
+   userEvent.click(buttonCell)
+   expect(buttonCell).toHaveAttribute('data-active')
+   fireEvent.blur(buttonCell)
+   expect(buttonCell).not.toHaveAttribute('data-active')
+})
+
+test("Setting a cell to a digit", () => {
+   const buttonCell = getButtonCellElement(0, 0)
+   userEvent.click(buttonCell)
+   userEvent.keyboard('1')
+   expect(buttonCell).toHaveTextContent('1')
+})

@@ -112,7 +112,7 @@ test("Resetting the candidates", () => {
    expect(buttonCell).toHaveTextContent('456789')
 })
 
-test("Cell keyboard navigation", () => {
+test.skip("Cell keyboard navigation", () => {
    const cornerCell = getButtonCellElement(0, 7)
    userEvent.click(cornerCell)
 

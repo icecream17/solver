@@ -73,3 +73,60 @@ test("Setting a cell to a digit", () => {
    userEvent.keyboard('1')
    expect(buttonCell).toHaveTextContent('1')
 })
+
+test("Setting a cell to multiple candidates", () => {
+   const buttonCell = getButtonCellElement(0, 0)
+   userEvent.click(buttonCell)
+   userEvent.keyboard('1234567')
+   expect(buttonCell).toHaveTextContent('1234567')
+})
+
+test("Clearing all candidates of a cell", () => {
+   const buttonCell = getButtonCellElement(0, 0)
+   userEvent.click(buttonCell)
+   userEvent.keyboard('{Backspace}')
+   fireEvent.blur(buttonCell)
+
+   // Shows 0
+   expect(buttonCell).toHaveTextContent('0')
+
+   // Is error
+   expect(buttonCell).toHaveAttribute('data-error')
+})
+
+test("Resetting the candidates", () => {
+   const buttonCell = getButtonCellElement(0, 0)
+   userEvent.click(buttonCell)
+   userEvent.keyboard('{Backspace}123') // 123 to prevent false negatives if backspace doesn't work
+   userEvent.keyboard('{Shift>}{Backspace}{/Shift}')
+   fireEvent.blur(buttonCell)
+
+   // Is not error
+   expect(buttonCell).not.toHaveAttribute('data-error')
+
+   userEvent.click(buttonCell)
+   userEvent.keyboard('{Shift>}{Backspace}{/Shift}')
+   userEvent.keyboard('123')
+   fireEvent.blur(buttonCell)
+
+   expect(buttonCell).toHaveTextContent('456789')
+})
+
+test("Cell keyboard navigation", () => {
+   const cornerCell = getButtonCellElement(0, 7)
+   userEvent.click(cornerCell)
+
+   function tryKey(keyboard: string, row: IndexToNine, column: IndexToNine) {
+      userEvent.keyboard(keyboard)
+      expect(cornerCell).not.toHaveFocus()
+      expect(getButtonCellElement(row, column)).toHaveFocus()
+   }
+
+   tryKey('{Tab}', 1, 7)
+   tryKey('{ArrowLeft}', 0, 7)
+   tryKey('{ArrowLeft}', 7, 7)
+   tryKey('{ArrowDown}', 7, 0)
+   tryKey('{ArrowRight}', 0, 0)
+   tryKey('{ArrowUp}', 0, 7)
+   tryKey('{Tab}', 1, 7)
+})

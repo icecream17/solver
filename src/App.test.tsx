@@ -118,7 +118,6 @@ test("Cell keyboard navigation", () => {
 
    function tryKey(keyboard: string, row: IndexToNine, column: IndexToNine) {
       userEvent.keyboard(keyboard)
-      expect(cornerCell).not.toHaveFocus()
       expect(getButtonCellElement(row, column)).toHaveFocus()
    }
 

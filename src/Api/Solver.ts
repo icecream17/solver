@@ -136,7 +136,7 @@ export default class Solver {
 
    /** Does "Step" until it reaches the end or a strategy succeeds */
    async Go () {
-      const results = [] as StrategyResult
+      const results = [] as StrategyResult[]
       do {
          results.push(await this.Step())
       } while (this.strategyIndex !== 0)

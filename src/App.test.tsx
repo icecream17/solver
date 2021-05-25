@@ -151,9 +151,11 @@ function canSolve() {
       return getSudokuTableElement().textContent
    }
 
-   for (let previousText = getSudokuTextContent(); previousText !== getSudokuTextContent(); previousText = getSudokuTextContent()) {
+   let previousText;
+   do {
+      previousText = getSudokuTextContent()
       userEvent.click(screen.getByRole('button', { name: 'go' }))
-   }
+   } while (previousText !== getSudokuTextContent())
 
    const remainingText = getSudokuTextContent().replaceAll(/[^0-9]/g, '')
    if (remainingText.length === 81 && remainingText.includes('0') === false) {

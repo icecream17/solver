@@ -7,15 +7,17 @@
    max-width: initial;
 }
 
+/* Sidenote discovery: Google Chrome doesn't know that 0 is a valid <length> when using max() */
 .StrategyItem {
    --label-width: 20rem; /* For status */
    --status-width: 5rem; /* For status */
    --padding-left: 1.5rem;
-   --vertical-padding: 0.25rem;
+   --vertical-padding: 0;
+
    padding-left: var(--padding-left);
 
    /* But this is for list item positioning */
-   height: 1rem;
+   height: calc(1rem + 2 * var(--vertical-padding)); /* height includes vertical padding */
    padding-top: var(--vertical-padding);
    padding-bottom: var(--vertical-padding);
 

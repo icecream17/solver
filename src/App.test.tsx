@@ -159,6 +159,8 @@ function canSolve() {
    if (remainingText.length === 81 && remainingText.includes('0') === false) {
       return true // Possible false positive
    }
+
+   console.debug(remainingText)
    return false
 }
 

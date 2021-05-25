@@ -155,7 +155,7 @@ function canSolve() {
       userEvent.click(screen.getByRole('button', { name: 'go' }))
    }
 
-   const remainingText = getSudokuTextContent.replaceAll(/[^0-9]/g, '')
+   const remainingText = getSudokuTextContent().replaceAll(/[^0-9]/g, '')
    if (remainingText.length === 81 && remainingText.includes('0') === false) {
       return true // Possible false positive
    }

@@ -10,6 +10,7 @@ export default class Solver {
    solved: number = 0
    strategyIndex: number = 0
    strategyItemElements: StrategyItem[] = []
+   todo: Promise<any>[] = [] // Makes sure "Step" is always run in order.
    constructor (public sudoku: null | Sudoku = null, public solverElement: SolverPart) {
       this.Go = this.Go.bind(this)
       this.Step = this.Step.bind(this)
@@ -52,7 +53,8 @@ export default class Solver {
       }
    }
 
-   Step(): StrategyResult {
+   // This does the step.
+   async _Step(): Promise<StrategyResult> {
       this.sudokuNullCheck()
 
       // See resetStrategies documentation
@@ -65,6 +67,10 @@ export default class Solver {
          this.latestStrategyItem.setState({ isCurrentStrategy: false })
       }
 
+      // https://stackoverflow.com/questions/47019199/why-does-async-await-work-with-react-setstate
+      // Now the state is updated, necessary for "this.Step" below.
+      await undefined
+
       if (this.strategyIndex in this.strategyItemElements) {
          this.latestStrategyItem = this.strategyItemElements[this.strategyIndex]
 
@@ -72,7 +78,7 @@ export default class Solver {
          // instead move on to the next strategy
          if (this.latestStrategyItem.state.disabled) {
             this.updateCounters(false)
-            return this.Step()
+            return this._Step()
          }
 
          // Not disabled, so update state
@@ -99,14 +105,42 @@ export default class Solver {
 
       this.updateCounters(strategyResult.success)
 
+      // https://stackoverflow.com/questions/47019199/why-does-async-await-work-with-react-setstate
+      // Now the state is updated, necessary for "this.Go"
+      await undefined
+
       return strategyResult
    }
 
+   // Waits until `todo` is finished, then does _Step
+   async Step(): Promise<StrategyResult> {
+      // 1. Copy the old todo
+      const todoCopy = this.todo.slice()
+
+      // 2. Add this promise to the current todo ASAP
+      const promise = this._Step() // The old todo is still the same
+      this.todo.push(promise)
+
+      // 3. Wait for the old todo
+      await Promise.allSettled(todoCopy)
+
+      // 4. Now do this promise
+      const result = await promise
+
+      // 5. Remove this promise from todo
+      this.todo.splice(this.todo.indexOf(promise), 1)
+
+      // Finish
+      return result
+   }
+
    /** Does "Step" until it reaches the end or a strategy succeeds */
-   Go () {
+   async Go () {
+      const results = [] as StrategyResult
       do {
-         this.Step()
+         results.push(await this.Step())
       } while (this.strategyIndex !== 0)
+      return results
    }
 
    Undo () {

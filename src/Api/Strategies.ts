@@ -1,4 +1,4 @@
-import { ALL_CANDIDATES, COLUMN_NAMES, IndexToNine, MAX_CELL_INDEX, ROW_NAMES, SudokuDigits } from "../Types";
+import { ALL_CANDIDATES, BOX_NAMES, COLUMN_NAMES, IndexToNine, MAX_CELL_INDEX, ROW_NAMES, SudokuDigits } from "../Types";
 import PureSudoku from "./PureSudoku";
 import Solver from "./Solver";
 import Sudoku from "./Sudoku";
@@ -92,7 +92,7 @@ export function checkValidity(sudoku: PureSudoku): validityResult {
 
          return {
             ok: false,
-            message: `Row ${i} has 0 possibilities for ${missingCandidates}!!!`
+            message: `Row ${ROW_NAMES[i]} has 0 possibilities for ${missingCandidates}!!!`
          }
       }
    }
@@ -105,7 +105,7 @@ export function checkValidity(sudoku: PureSudoku): validityResult {
 
          return {
             ok: false,
-            message: `Column ${i} has 0 possibilities for ${missingCandidates}!!!`
+            message: `Column ${COLUMN_NAMES[i]} has 0 possibilities for ${missingCandidates}!!!`
          }
       }
 
@@ -116,7 +116,7 @@ export function checkValidity(sudoku: PureSudoku): validityResult {
 
          return {
             ok: false,
-            message: `Box ${i} has 0 possibilities for ${missingCandidates}!!!`
+            message: `Box ${BOX_NAMES[i]} has 0 possibilities for ${missingCandidates}!!!`
          }
       }
    }

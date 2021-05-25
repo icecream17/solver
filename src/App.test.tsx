@@ -26,9 +26,9 @@ test('getting the sudoku table', () => {
    expect(screen.getByRole('table', { name: 'Sudoku' })).toBeInTheDocument()
 })
 
-// function getSudokuTableElement () {
-//    return screen.getByRole('table', { name: 'Sudoku' })
-// }
+function getSudokuTableElement () {
+   return screen.getByRole('table', { name: 'Sudoku' })
+}
 
 function getTableCellElement (row: IndexToNine, column: IndexToNine) {
    return getButtonCellElement(row, column).parentElement as HTMLElement
@@ -128,4 +128,72 @@ test.skip("Cell keyboard navigation", () => {
    tryKey('{ArrowRight}', 0, 0)
    tryKey('{ArrowUp}', 0, 7)
    tryKey('{Tab}', 1, 7)
+})
+
+function setCell (x: IndexToNine, y: IndexToNine) {
+   return {
+      to(...candidates: SudokuDigits[]) {
+         const cell = getButtonCellElement(x, y)
+         userEvent.click(cell)
+         userEvent.keyboard(candidates.join(''))
+         fireEvent.blur(cell)
+      }
+   }
+}
+
+test("Strategy sections exist", () => {
+   expect(screen.getByRole('group', { name: 'strategies' })).toBeInTheDocument()
+   expect(screen.getByRole('group', { name: 'controls' })).toBeInTheDocument()
+})
+
+function canSolve() {
+   function getSudokuTextContent () {
+      return getSudokuTableElement().textContent
+   }
+
+   for (let previousText = getSudokuTextContent(); previousText !== getSudokuTextContent(); previousText = getSudokuTextContent()) {
+      userEvent.click(screen.getByRole('button', { name: 'go' }))
+   }
+
+   const remainingText = getSudokuTextContent.replaceAll(/[^0-9]/g, '')
+   if (remainingText.length === 81 && remainingText.includes('0') === false) {
+      return true // Possible false positive
+   }
+   return false
+}
+
+// Sudoku credits: https://www.google.com/search?surl=1&q=easy+sudoku&rlz=1CANEHU_enUS924&sxsrf=ALeKk03VgFfCwAzr0-mdFU4XivSXkJzEDw:1621949007815&source=lnms&tbm=isch&sa=X&ved=2ahUKEwiA_dDz9uTwAhWNuJ4KHWz2CYkQ_AUoAXoECAEQAw&safe=active&ssui=on#imgrc=7-hGALfWmhmFJM
+// Better link: https://images.app.goo.gl/WwGo8iVk84awRgnC9
+// Actual website: https://www.puzzles.ca/sudoku_puzzles/sudoku_easy_481.html
+//    (scroll down to #482)
+test("Can solve a very simple sudoku", () => {
+   setCell(0, 0).to(6)
+   setCell(0, 2).to(9)
+   setCell(0, 5).to(4)
+   setCell(0, 8).to(1)
+   setCell(1, 0).to(8)
+   setCell(1, 4).to(5)
+   setCell(2, 1).to(3)
+   setCell(2, 2).to(5)
+   setCell(2, 3).to(1)
+   setCell(2, 5).to(9)
+   setCell(2, 8).to(8) // 11
+
+   setCell(3, 2).to(8)
+   setCell(3, 8).to(4)
+   setCell(4, 1).to(5)
+   setCell(4, 7).to(7)
+   setCell(5, 0).to(4)
+   setCell(5, 4).to(7)
+   setCell(5, 7).to(5)
+   setCell(5, 8).to(2) // 19
+
+   setCell(6, 5).to(1)
+   setCell(7, 2).to(1)
+   setCell(7, 4).to(4)
+   setCell(8, 0).to(7)
+   setCell(8, 1).to(6)
+   setCell(8, 3).to(9)
+   setCell(8, 4).to(3) // 26
+   expect(canSolve()).toBe(true)
 })

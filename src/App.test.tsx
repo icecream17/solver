@@ -151,6 +151,7 @@ function canSolve() {
       return getSudokuTableElement().textContent
    }
 
+   window.alert = jest.fn(console.error)
    let previousText;
    do {
       previousText = getSudokuTextContent()
@@ -162,6 +163,7 @@ function canSolve() {
       return true // Possible false positive
    }
 
+   window.alert.mockRestore();
    console.debug(remainingText)
    return false
 }

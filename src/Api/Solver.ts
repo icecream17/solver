@@ -5,13 +5,13 @@ import Sudoku from "./Sudoku"
 import { StrategyResult } from "./Types"
 
 export default class Solver {
-   // Previously named "lastStrategyItem"
    latestStrategyItem: null | StrategyItem = null
+   isDoingStep: boolean = false
    solved: number = 0
+   stepsTodo: number = 0
    strategyIndex: number = 0
    strategyItemElements: StrategyItem[] = []
-   todo: Promise<any>[] = [] // Makes sure "Step" is always run in order.
-   constructor (public sudoku: null | Sudoku = null, public solverElement: SolverPart) {
+   constructor(public sudoku: null | Sudoku = null, public solverElement: SolverPart) {
       this.Go = this.Go.bind(this)
       this.Step = this.Step.bind(this)
       this.Undo = this.Undo.bind(this)
@@ -21,7 +21,7 @@ export default class Solver {
     * Called after the last strategy is done,
     * and just before the first strategy is done.
     */
-   resetStrategies () {
+   resetStrategies() {
       for (const strategyElement of this.strategyItemElements) {
          strategyElement.setState({
             success: null,
@@ -30,7 +30,7 @@ export default class Solver {
       }
    }
 
-   updateCounters (success: boolean) {
+   updateCounters(success: boolean) {
       // Go back to the start when a strategy succeeds
       // (but not if you're already at the start)
       if (success && this.strategyIndex > 0) {
@@ -43,7 +43,7 @@ export default class Solver {
       }
    }
 
-   sudokuNullCheck (): asserts this is {sudoku: Sudoku} {
+   sudokuNullCheck(): asserts this is { sudoku: Sudoku } {
       if (this.sudoku === null) {
          if (this.solverElement.props.sudoku === null) {
             throw ReferenceError('Uninitialized sudoku!')
@@ -53,8 +53,12 @@ export default class Solver {
       }
    }
 
-   // This does the step.
-   async _Step(): Promise<StrategyResult> {
+   Step(): StrategyResult {
+      if (this.isDoingStep) {
+         throw new Error("Aaaaaa - can't do two steps at the same time")
+      }
+
+      this.isDoingStep = true
       this.sudokuNullCheck()
 
       // See resetStrategies documentation
@@ -67,10 +71,6 @@ export default class Solver {
          this.latestStrategyItem.setState({ isCurrentStrategy: false })
       }
 
-      // https://stackoverflow.com/questions/47019199/why-does-async-await-work-with-react-setstate
-      // Now the state is updated, necessary for "this.Step" below.
-      await undefined
-
       if (this.strategyIndex in this.strategyItemElements) {
          this.latestStrategyItem = this.strategyItemElements[this.strategyIndex]
 
@@ -78,7 +78,7 @@ export default class Solver {
          // instead move on to the next strategy
          if (this.latestStrategyItem.state.disabled) {
             this.updateCounters(false)
-            return this._Step()
+            return this.Step()
          }
 
          // Not disabled, so update state
@@ -105,49 +105,27 @@ export default class Solver {
 
       this.updateCounters(strategyResult.success)
 
-      // https://stackoverflow.com/questions/47019199/why-does-async-await-work-with-react-setstate
-      // Now the state is updated, necessary for "this.Go"
-      await undefined
+      if (this.stepsTodo > 1) {
+         this.stepsTodo--
+         this.Step()
+      }
 
+      this.isDoingStep = false
       return strategyResult
    }
 
-   // Waits until `todo` is finished, then does _Step
-   async Step(): Promise<StrategyResult> {
-      // 1. Copy the old todo
-      const todoCopy = this.todo.slice()
-
-      // 2. Add this promise to the current todo ASAP
-      const promise = this._Step() // The old todo is still the same
-      this.todo.push(promise)
-
-      // 3. Wait for the old todo
-      await Promise.allSettled(todoCopy)
-
-      // 4. Now do this promise
-      const result = await promise
-
-      // 5. Remove this promise from todo
-      this.todo.splice(this.todo.indexOf(promise), 1)
-
-      // Finish
-      return result
-   }
-
    /** Does "Step" until it reaches the end or a strategy succeeds */
-   async Go () {
-      const results = [] as StrategyResult[]
+   Go() {
       do {
-         results.push(await this.Step())
+         this.Step()
       } while (this.strategyIndex !== 0)
-      return results
    }
 
-   Undo () {
+   Undo() {
       // TODO
    }
 
-   Import () {
+   Import() {
       const result = prompt("Enter data (todo: clarify)")
       if (result === null) {
          return; // Maybe do something else

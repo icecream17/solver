@@ -4,7 +4,6 @@
 
 module.exports = {
    webpack: (config, env) => {
-      console.log(config); exit()
       const rules = config.module.rules.find(rule => !!rule.oneOf).oneOf;
       const babelLoaderRule = rules.find(rule => rule.loader.includes('babel-loader'));
 

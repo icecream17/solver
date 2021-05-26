@@ -5,11 +5,11 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 
 // Delay popup interaction so that the user doesn't blow up
+// "confirm" is restricted so it's not included
 let interactionsLeft = 0
 function delayInteraction(originalFunction: typeof alert): typeof alert
 function delayInteraction(originalFunction: typeof prompt): typeof prompt
-function delayInteraction(originalFunction: typeof confirm): typeof confirm
-function delayInteraction(originalFunction: typeof alert | typeof prompt | typeof confirm): typeof originalFunction {
+function delayInteraction(originalFunction: typeof alert | typeof prompt): typeof originalFunction {
    return {
       [originalFunction.name](...args: Parameters<typeof originalFunction>) {
          interactionsLeft++
@@ -26,7 +26,6 @@ function delayInteraction(originalFunction: typeof alert | typeof prompt | typeo
 
 window.alert = delayInteraction(window.alert)
 window.prompt = delayInteraction(window.prompt)
-window.confirm = delayInteraction(window.confirm)
 
 
 // Render the app

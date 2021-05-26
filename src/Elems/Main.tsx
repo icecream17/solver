@@ -2,8 +2,9 @@ import './Main.css'
 import React from 'react'
 
 import Sudoku from './MainElems/Sudoku'
-import DataContainer from './MainElems/Data';
-import Coords from './MainElems/Coords';
+import DataContainer from './MainElems/Data'
+import Coords from './MainElems/Coords'
+import _expect from '../expectProps'
 
 type MainProps = Readonly<{
    whenSudokuConstructs (...args: any): any
@@ -17,11 +18,7 @@ type MainProps = Readonly<{
  */
 class Main extends React.Component<MainProps> {
    constructor(props: MainProps) {
-      for (const requiredProperty of ["whenSudokuConstructs"] as const) {
-         if (!(requiredProperty in props)) {
-            throw TypeError(`Sudoku: Required property "${requiredProperty}" is missing`)
-         }
-      }
+      _expect(Main, props).toHaveProperty("whenSudokuConstructs")
 
       super(props)
    }

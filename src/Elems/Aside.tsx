@@ -21,7 +21,7 @@ type AsideProps = Readonly<{
  */
 export default class Aside extends React.Component<AsideProps> {
    constructor(props: AsideProps) {
-      _expect(Aside, props).toHaveProperties("sudoku")
+      _expect(Aside, props).toHaveProperty("sudoku")
       super(props)
    }
 

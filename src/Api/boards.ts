@@ -13,7 +13,9 @@ export default {
 
    "Easiest sudoku":
    "123456789406789123789123456912345678345678912678912345234567891567891234891234567",
-   
+
+   // Sudoku image: https://images.app.goo.gl/WwGo8iVk84awRgnC9
+   // Actual website (scroll down to #482): https://www.puzzles.ca/sudoku_puzzles/sudoku_easy_481.html
    "Simple sudoku":
    "609004001800050000035109008008000004050000030400070052000001000001040000760930000",
 } as const

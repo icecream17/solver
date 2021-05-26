@@ -1,5 +1,6 @@
 
 import React from 'react';
+import _expect from '../../expectProps';
 
 type StrategyTogglerProps = Readonly<{
    callback: React.ChangeEventHandler
@@ -19,11 +20,7 @@ type StrategyTogglerState = Readonly<{
  */
 export default class StrategyToggler extends React.Component<StrategyTogglerProps, StrategyTogglerState> {
    constructor(props: StrategyTogglerProps) {
-      for (const requiredProperty of ["callback", "id"]) {
-         if (!(requiredProperty in props)) {
-            throw TypeError(`StrategyToggler: Required prop.state "${requiredProperty}" is missing`)
-         }
-      }
+      _expect(StrategyToggler, props).toHaveProperties("callback", "id")
 
       super(props)
 

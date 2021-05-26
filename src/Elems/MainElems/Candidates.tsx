@@ -1,5 +1,6 @@
 
 import React from 'react';
+import _expect from '../../expectProps';
 import Candidate from './Candidate';
 
 type CandidatesProps = Readonly<{
@@ -17,9 +18,7 @@ type CandidatesProps = Readonly<{
  */
 export default class Candidates extends React.Component<CandidatesProps> {
    constructor(props: CandidatesProps) {
-      if (!("data" in props)) {
-         throw TypeError('Candidates: Required property "data" is missing')
-      }
+      _expect(Candidates, props).toHaveProperty("data")
 
       if (!Array.isArray(props.data)) {
          throw TypeError('Candidates: "data" is not an array')

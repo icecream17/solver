@@ -9,6 +9,7 @@ import './Aside.css'
 import React from 'react'
 import SolverPart from './AsideElems/SolverPart'
 import Sudoku from './MainElems/Sudoku'
+import _expect from '../expectProps'
 
 type AsideProps = Readonly<{
    sudoku: null | typeof Sudoku.prototype.data
@@ -20,12 +21,7 @@ type AsideProps = Readonly<{
  */
 export default class Aside extends React.Component<AsideProps> {
    constructor(props: AsideProps) {
-      for (const requiredProperty of ["sudoku"] as const) {
-         if (!(requiredProperty in props)) {
-            throw TypeError(`Aside: Required property "${requiredProperty}" is missing`)
-         }
-      }
-
+      _expect(Aside, props).toHaveProperties("sudoku")
       super(props)
    }
 

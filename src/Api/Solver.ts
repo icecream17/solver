@@ -1,5 +1,6 @@
 import SolverPart from "../Elems/AsideElems/SolverPart"
 import StrategyItem from "../Elems/AsideElems/StrategyItem"
+import { IndexToNine } from "../Types"
 import Strategies from "./Strategies"
 import Sudoku from "./Sudoku"
 import { StrategyResult } from "./Types"
@@ -136,6 +137,7 @@ export default class Solver {
    }
 
    Clear() {
+      this.sudokuNullCheck()
       for (let i: IndexToNine = 0; i < 9; i = i+1 as IndexToNine) {
          for (let j: IndexToNine = 0; j < 9; j = j+1 as IndexToNine) {
             this.sudoku.set(i, j).to(1, 2, 3, 4, 5, 6, 7, 8, 9)

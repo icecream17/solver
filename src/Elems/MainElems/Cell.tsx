@@ -1,5 +1,6 @@
 
 import React from 'react';
+import _expect from '../../expectProps';
 import { HasWhenConstruct, IndexToNine, Mutable, PossibleConstructCallback, SudokuDigits, ZeroToNine } from '../../Types';
 
 import Candidates from './Candidates';
@@ -57,11 +58,7 @@ export default class Cell extends React.Component<CellProps, CellState> {
    }
 
    constructor(props: CellProps) {
-      for (const requiredProperty of ["row", "column", "sudoku"] as const) {
-         if (!(requiredProperty in props)) {
-            throw TypeError(`Cell: Required property "${requiredProperty}" is missing`)
-         }
-      }
+      _expect(Cell, props).toHaveProperties("row", "column", "sudoku")
 
       super(props)
 

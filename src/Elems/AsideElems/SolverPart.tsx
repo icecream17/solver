@@ -3,6 +3,7 @@ import React from 'react'
 import Solver from '../../Api/Solver'
 import Sudoku from '../../Api/Sudoku'
 import { StrategyResult } from '../../Api/Types'
+import _expect from '../../expectProps'
 import StrategyControls from './StrategyControls'
 import StrategyList from './StrategyList'
 
@@ -24,11 +25,7 @@ export default class SolverPart extends React.Component<SolverPartProps> {
    }
    strategyItemStates: StrategyResult[]
    constructor(props: SolverPartProps) {
-      for (const requiredProperty of ["sudoku"] as const) {
-         if (!(requiredProperty in props)) {
-            throw TypeError(`SolverPart: Required property "${requiredProperty}" is missing`)
-         }
-      }
+      _expect(SolverPart, props).toHaveProperties("sudoku")
 
       super(props)
 

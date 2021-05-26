@@ -1,6 +1,7 @@
 
 import React from 'react';
 import Solver from '../../Api/Solver';
+import _expect from '../../expectProps';
 import { GuaranteedConstructCallback } from '../../Types';
 import StrategyItem from './StrategyItem';
 
@@ -16,11 +17,7 @@ type StrategyListProps = {
  */
 export default class StrategyList extends React.Component<StrategyListProps> {
    constructor(props: StrategyListProps) {
-      for (const requiredProperty of ["solver"] as const) {
-         if (!(requiredProperty in props)) {
-            throw TypeError(`StrategyList: Required property "${requiredProperty}" is missing`)
-         }
-      }
+      _expect(StrategyList, props).toHaveProperties("solver")
 
       super(props)
    }

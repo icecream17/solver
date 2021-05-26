@@ -1,4 +1,5 @@
 import React from 'react';
+import _expect from '../../expectProps';
 
 type StrategyControlProps = Readonly<{
    onClick: React.MouseEventHandler,
@@ -16,12 +17,7 @@ type StrategyControlProps = Readonly<{
  */
 export default class StrategyControl extends React.Component<StrategyControlProps> {
    constructor(props: StrategyControlProps) {
-      for (const requiredProperty of ["onClick", "name"] as const) {
-         if (!(requiredProperty in props)) {
-            throw TypeError(
-               `StrategyControl: Required property "${requiredProperty}" is missing`)
-         }
-      }
+      _expect(StrategyControl, props).toHaveProperties("onClick", "name")
 
       super(props)
    }

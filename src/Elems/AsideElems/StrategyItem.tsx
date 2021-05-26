@@ -5,6 +5,7 @@ import StrategyLabel, { StrategyLabelProps } from './StrategyLabel';
 import StrategyToggler from './StrategyToggler';
 import StrategyStatus, { StrategyStatusProps } from './StrategyStatus';
 import Solver from '../../Api/Solver';
+import _expect from '../../expectProps';
 
 export type StrategyItemProps = StrategyLabelProps & Readonly<{
    solver: Solver,
@@ -32,11 +33,7 @@ export default class StrategyItem extends React.Component<StrategyItemProps, Str
    id: string;
    togglerId?: string;
    constructor(props: StrategyItemProps) {
-      for (const requiredProperty of ["name", "solver", "description", "index"] as const) {
-         if (!(requiredProperty in props)) {
-            throw TypeError(`StrategyItem: Required property "${requiredProperty}" is missing`)
-         }
-      }
+      _expect(StrategyItem, props).toHaveProperties("name", "solver", "description", "index")
 
       super(props)
 

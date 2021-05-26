@@ -1,5 +1,6 @@
 
 import React from 'react';
+import _expect from '../../expectProps';
 
 export type StrategyStatusProps = Readonly<{
    success: null,
@@ -18,11 +19,7 @@ export type StrategyStatusProps = Readonly<{
  */
 export default class StrategyStatus extends React.Component<StrategyStatusProps> {
    constructor(props: StrategyStatusProps) {
-      for (const requiredProperty of ["success", "successcount"] as const) {
-         if (!(requiredProperty in props)) {
-            throw TypeError(`StrategyLabel: Required prop.state "${requiredProperty}" is missing`)
-         }
-      }
+      _expect(StrategyStatus, props).toHaveProperties("success", "successcount")
 
       super(props)
    }

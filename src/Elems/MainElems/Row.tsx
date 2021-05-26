@@ -4,6 +4,7 @@ import Sudoku from './Sudoku';
 import { IndexToNine } from '../../Types';
 
 import Cell from './Cell';
+import _expect from '../../expectProps';
 
 type RowProps = Readonly<{
    index: IndexToNine,
@@ -23,12 +24,7 @@ type RowProps = Readonly<{
  */
 export default class Row extends React.Component<RowProps> {
    constructor(props: RowProps) {
-      for (const requiredProp of ['index', 'whenCellConstructs', 'parent'] as const) {
-         if (!(requiredProp in props)) {
-            throw TypeError(`Row: Required property ${requiredProp} is missing`)
-         }
-      }
-
+      _expect(Row, props).toHaveProperties('index', 'whenCellConstructs', 'parent')
       super(props)
    }
 

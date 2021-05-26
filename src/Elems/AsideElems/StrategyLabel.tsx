@@ -1,5 +1,6 @@
 
 import React from 'react';
+import _expect from '../../expectProps';
 
 export type StrategyLabelProps = Readonly<{
    name: string,
@@ -15,11 +16,7 @@ type StrategyLabelState = Readonly<{
  */
 export default class StrategyLabel extends React.Component<StrategyLabelProps, StrategyLabelState> {
    constructor(props: StrategyLabelProps) {
-      for (const requiredProperty of ["name", "description"] as const) {
-         if (!(requiredProperty in props)) {
-            throw TypeError(`StrategyLabel: Required property "${requiredProperty}" is missing`)
-         }
-      }
+      _expect(StrategyLabel, props).toHaveProperties("name", "description")
 
       super(props)
 

@@ -1,5 +1,6 @@
 import React from 'react';
 import Solver from '../../Api/Solver';
+import _expect from '../../expectProps';
 import { GuaranteedConstructCallback } from '../../Types';
 import StrategyControl from './StrategyControl';
 
@@ -15,11 +16,7 @@ type StrategyControlsProps = {
  */
 export default class StrategyControls extends React.Component<StrategyControlsProps> {
    constructor(props: StrategyControlsProps) {
-      for (const requiredProperty of ["solver"] as const) {
-         if (!(requiredProperty in props)) {
-            throw TypeError(`StrategyControls: Required property "${requiredProperty}" is missing`)
-         }
-      }
+      _expect(StrategyControls, props).toHaveProperties("solver")
 
       super(props)
       this.props.whenConstruct(this)

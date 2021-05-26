@@ -36,6 +36,6 @@ jobs:
         build_dir: build
       env:
         GITHUB_TOKEN: ${{ secrets.PERSONALACCESSTOKEN }}
-      if: github.event_name != "pull_request"
+      if: github.event_name != 'pull_request'
 
     - uses: codecov/codecov-action@v1

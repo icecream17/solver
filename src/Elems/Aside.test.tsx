@@ -38,7 +38,6 @@ test('the togglers toggle the strategy item', async () => {
 
    userEvent.click(someCheckbox)
    expect(someCheckbox).not.toBeChecked()
-   console.debug(listItem.classList)
    expect(listItem).toHaveClass('disabled')
 
    userEvent.click(someCheckbox)

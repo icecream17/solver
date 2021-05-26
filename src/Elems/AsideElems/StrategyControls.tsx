@@ -30,6 +30,7 @@ export default class StrategyControls extends React.Component<StrategyControlsPr
             <StrategyControl onClick={this.props.solver.Step} name="step" />
             <StrategyControl onClick={this.props.solver.Undo} name="undo (todo)" />
             <StrategyControl onClick={this.props.solver.Clear} name="clear" />
+            <StrategyControl onClick={this.props.solver.Import} name="import" />
          </fieldset>
       )
    }

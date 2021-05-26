@@ -148,6 +148,7 @@ export default class PureSudoku {
       } as const
    }
 
+   // WARNING: No checks are done on "candidates" expect for the static type checking
    set(x: IndexToNine, y: IndexToNine) {
       return {
          to: (...candidates: SudokuDigits[]) => {

@@ -13,9 +13,12 @@ export default class Solver {
    strategyIndex: number = 0
    strategyItemElements: StrategyItem[] = []
    constructor(public sudoku: null | Sudoku = null, public solverElement: SolverPart) {
+      // These capitalized methods are used as handlers in StrategyControls, so they need to be bound beforehand.
       this.Go = this.Go.bind(this)
       this.Step = this.Step.bind(this)
       this.Undo = this.Undo.bind(this)
+      this.Import = this.Import.bind(this)
+      this.Clear = this.Clear.bind(this)
    }
 
    /**

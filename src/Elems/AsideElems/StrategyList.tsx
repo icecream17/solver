@@ -1,13 +1,13 @@
 
 import React from 'react';
 import Solver from '../../Api/Solver';
-import _expect from '../../expectProps';
+import { _expect } from '../../utils';
 import { GuaranteedConstructCallback } from '../../Types';
 import StrategyItem from './StrategyItem';
 
-type StrategyListProps = {
+type StrategyListProps = Readonly<{
    solver: Solver
-} & GuaranteedConstructCallback
+}> & GuaranteedConstructCallback
 
 /**
  * A list of strategies

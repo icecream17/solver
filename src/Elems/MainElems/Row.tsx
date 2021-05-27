@@ -1,16 +1,16 @@
 
 import React from 'react';
 import Sudoku from './Sudoku';
-import { IndexToNine } from '../../Types';
+import { IndexToNine, _ReactProps } from '../../Types';
 
 import Cell from './Cell';
-import _expect from '../../expectProps';
+import { _expect } from '../../utils';
 
 type RowProps = Readonly<{
    index: IndexToNine,
    parent: Sudoku,
    whenCellConstructs(...args: any): any
-} & typeof React.Component.prototype.props>
+}> & _ReactProps
 
 /**
  * A row in a sudoku

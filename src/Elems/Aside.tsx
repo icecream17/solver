@@ -9,11 +9,12 @@ import './Aside.css'
 import React from 'react'
 import SolverPart from './AsideElems/SolverPart'
 import Sudoku from './MainElems/Sudoku'
-import _expect from '../expectProps'
+import { _expect } from '../utils'
+import { _ReactProps } from '../Types'
 
 type AsideProps = Readonly<{
    sudoku: null | typeof Sudoku.prototype.data
-} & typeof React.Component.prototype.props>
+}> & _ReactProps
 
 /**
  * @requiredProps

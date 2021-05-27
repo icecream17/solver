@@ -1,7 +1,6 @@
 import SolverPart from "../Elems/AsideElems/SolverPart"
 import StrategyItem from "../Elems/AsideElems/StrategyItem"
 import { IndexToNine } from "../Types"
-import { forComponentsToUpdate } from "../utils"
 import Strategies from "./Strategies"
 import Sudoku from "./Sudoku"
 import { StrategyResult } from "./Types"
@@ -58,8 +57,7 @@ export default class Solver {
       }
    }
 
-   async Step(): Promise<StrategyResult> {
-      await forComponentsToUpdate()
+   Step(): StrategyResult {
       if (this.isDoingStep) {
          throw new Error("Aaaaaa - can't do two steps at the same time")
       }
@@ -70,13 +68,11 @@ export default class Solver {
       // See resetStrategies documentation
       if (this.strategyIndex === 0) {
          this.resetStrategies()
-         await forComponentsToUpdate()
       }
 
       // strategyItem UI - update lastStrategyItem
       if (this.latestStrategyItem !== null) {
          this.latestStrategyItem.setState({ isCurrentStrategy: false })
-         await forComponentsToUpdate()
       }
 
       if (this.strategyIndex in this.strategyItemElements) {
@@ -86,7 +82,6 @@ export default class Solver {
          // instead move on to the next strategy
          if (this.latestStrategyItem.state.disabled) {
             this.updateCounters(false)
-            await forComponentsToUpdate()
             return this.Step()
          }
 
@@ -94,7 +89,6 @@ export default class Solver {
          this.latestStrategyItem.setState({
             isCurrentStrategy: true
          })
-         await forComponentsToUpdate()
       } else {
          console.warn(`undefined strategyItemElement @${this.strategyIndex}`)
          this.latestStrategyItem = null
@@ -111,11 +105,9 @@ export default class Solver {
          } as const
 
          this.latestStrategyItem.setState(newState)
-         await forComponentsToUpdate()
       }
 
       this.updateCounters(strategyResult.success)
-      await forComponentsToUpdate()
 
       if (this.stepsTodo > 1) {
          this.stepsTodo--
@@ -127,9 +119,9 @@ export default class Solver {
    }
 
    /** Does "Step" until it reaches the end or a strategy succeeds */
-   async Go() {
+   Go() {
       do {
-         await this.Step()
+         this.Step()
       } while (this.strategyIndex !== 0)
    }
 
@@ -149,11 +141,9 @@ export default class Solver {
 
    Clear() {
       this.sudokuNullCheck()
-
-      // Apparently "void" means "ignored promise"
       for (let i: IndexToNine = 0; i < 9; i = i+1 as IndexToNine) {
          for (let j: IndexToNine = 0; j < 9; j = j+1 as IndexToNine) {
-            void this.sudoku.set(i, j).to(1, 2, 3, 4, 5, 6, 7, 8, 9)
+            this.sudoku.set(i, j).to(1, 2, 3, 4, 5, 6, 7, 8, 9)
          }
       }
    }

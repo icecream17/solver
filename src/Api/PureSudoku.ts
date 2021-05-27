@@ -1,3 +1,4 @@
+// @flow
 import { IndexToNine, SudokuDigits } from "../Types"
 
 type TwoDimensionalArray<T> = Array<Array<T>>
@@ -16,7 +17,7 @@ export type SudokuConstructorOptions = {
    representation: string
 }
 
-function coalesceConstructorOptions (options: SudokuConstructorOptions) {
+function coalesceConstructorOptions (options: SudokuConstructorOptions): Readonly<SudokuConstructorOptions> {
    options.setup ??= true
    if (options.setup) {
       options.representation ??= null
@@ -26,7 +27,7 @@ function coalesceConstructorOptions (options: SudokuConstructorOptions) {
             setup: true,
             representationType: null,
             representation: null
-         }
+         } as const
       } else if (options.representation === null) {
          throw TypeError('PureSudoku: representationType provided but not representation')
       } else {
@@ -34,7 +35,7 @@ function coalesceConstructorOptions (options: SudokuConstructorOptions) {
             setup: true,
             representationType: options.representationType,
             representation: options.representation
-         }
+         } as const
       }
    } else {
       if (options.representation != null) {
@@ -44,10 +45,8 @@ function coalesceConstructorOptions (options: SudokuConstructorOptions) {
          console.warn('PureSudoku: Representation type given but setup === false')
       }
       return {
-         setup: false,
-         representationType: undefined,
-         representation: undefined
-      }
+         setup: false
+      } as const
    }
 }
 
@@ -115,7 +114,7 @@ export default class PureSudoku {
     *
     * Any character that is not a digit is a blank cell.
     */
-   import81(representation: string) {
+   import81(representation: string): void {
       let totalIndex = 0
       for (let i: IndexToNine = 0; i < 9; i = i+1 as IndexToNine) {
          for (let j: IndexToNine = 0; j < 9; j = j+1 as IndexToNine) {

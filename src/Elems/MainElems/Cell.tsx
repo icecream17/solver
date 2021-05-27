@@ -1,6 +1,6 @@
 
 import React from 'react';
-import _expect from '../../expectProps';
+import { _expect } from '../../utils';
 import { HasWhenConstruct, IndexToNine, Mutable, PossibleConstructCallback, SudokuDigits, ZeroToNine } from '../../Types';
 
 import Candidates from './Candidates';
@@ -115,13 +115,13 @@ export default class Cell extends React.Component<CellProps, CellState> {
       return this.state.candidates.length as ZeroToNine
    }
 
-   setCandidates(candidates: SudokuDigits[]) {
+   setCandidatesTo(candidates: SudokuDigits[], callback?: (...args: any) => any) {
       if (1 < candidates.length && candidates.length < 9) {
-         this.setState({ candidates, showCandidates: true })
+         this.setState({ candidates, showCandidates: true }, callback)
       } else if (candidates.length === 0) {
-         this.setState({ candidates, error: true })
+         this.setState({ candidates, error: true }, callback)
       } else {
-         this.setState({ candidates })
+         this.setState({ candidates }, callback)
       }
    }
 

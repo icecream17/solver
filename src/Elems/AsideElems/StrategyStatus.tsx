@@ -1,6 +1,7 @@
+// @flow
 
 import React from 'react';
-import _expect from '../../expectProps';
+import { _expect } from '../../utils';
 
 export type StrategyStatusProps = Readonly<{
    success: null,

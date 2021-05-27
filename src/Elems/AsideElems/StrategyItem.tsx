@@ -1,3 +1,4 @@
+// @flow
 
 import './StrategyList.css'
 import React from 'react';
@@ -5,7 +6,7 @@ import StrategyLabel, { StrategyLabelProps } from './StrategyLabel';
 import StrategyToggler from './StrategyToggler';
 import StrategyStatus, { StrategyStatusProps } from './StrategyStatus';
 import Solver from '../../Api/Solver';
-import _expect from '../../expectProps';
+import { _expect } from '../../utils';
 
 export type StrategyItemProps = StrategyLabelProps & Readonly<{
    solver: Solver,
@@ -79,7 +80,8 @@ export default class StrategyItem extends React.Component<StrategyItemProps, Str
 
       return (
          <li className={thisClass} id={this.id}>
-            <label htmlFor={this.togglerId}>
+            {/* eslint-disable-next-line jsx-a11y/label-has-for */}
+            <label htmlFor={this.togglerId as string}>
                <StrategyToggler callback={this.toggle.bind(this)} id={this.togglerId as string} />
                <StrategyLabel {...this.props} />
             </label>

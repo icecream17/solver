@@ -4,7 +4,7 @@ import React from 'react'
 import Sudoku from './MainElems/Sudoku'
 import DataContainer from './MainElems/Data'
 import Coords from './MainElems/Coords'
-import _expect from '../expectProps'
+import { _expect } from '../utils'
 
 type MainProps = Readonly<{
    whenSudokuConstructs (...args: any): any

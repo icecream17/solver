@@ -1,9 +1,10 @@
 import React from 'react';
-import _expect from '../../expectProps';
+import { _expect } from '../../utils';
+import { _ReactProps } from '../../Types';
 
 type StrategyControlProps = Readonly<{
    onClick: React.MouseEventHandler,
-   name: typeof React.Component.prototype.props.children
+   name: _ReactProps["children"]
 }>
 
 /**

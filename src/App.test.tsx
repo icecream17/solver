@@ -146,6 +146,21 @@ test("Strategy sections exist", () => {
    expect(screen.getByRole('group', { name: 'controls' })).toBeInTheDocument()
 })
 
+// This test fails with "SolverThatWorksButFailsTests.ts.txt"
+test.skip("Strategy controls don't crash", () => {
+   expect(() => {
+      userEvent.click(screen.getByRole('button', { name: 'go' }))
+      userEvent.click(screen.getByRole('button', { name: 'step' }))
+
+      setCell(7, 5).to(4)
+      userEvent.click(screen.getByRole('button', { name: 'step' }))
+      userEvent.click(screen.getByRole('button', { name: 'step' }))
+      userEvent.click(screen.getByRole('button', { name: 'step' }))
+      userEvent.click(screen.getByRole('button', { name: 'go' }))
+      userEvent.click(screen.getByRole('button', { name: 'clear' }))
+   }).not.toThrow()
+})
+
 function canSolve() {
    function getSudokuTextContent () {
       return getSudokuTableElement().textContent ?? ''

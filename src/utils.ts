@@ -1,6 +1,6 @@
 import React from "react"
 
-const _expect = (component: typeof React.Component, props: typeof React.Component.prototype.props) => {
+export const _expect = (component: typeof React.Component, props: typeof component.prototype.props) => {
    return {
       toHaveProperty(requiredProperty: keyof typeof props) {
          if (!(requiredProperty in props)) {
@@ -18,4 +18,19 @@ const _expect = (component: typeof React.Component, props: typeof React.Componen
    }
 }
 
-export default _expect
+// eslint-disable-next-line @typescript-eslint/require-await
+export async function forComponentsToUpdate () {
+   return undefined
+
+   // Event stack:
+   // setState()
+
+   // Then:
+   // await forComponentToUpdate
+
+   // Event stack:
+   // setState()
+   // Promise(undefined)
+
+   // Tada! Components are updated
+}

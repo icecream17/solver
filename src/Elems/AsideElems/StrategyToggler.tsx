@@ -1,6 +1,6 @@
 
 import React from 'react';
-import _expect from '../../expectProps';
+import { _expect } from '../../utils';
 
 type StrategyTogglerProps = Readonly<{
    callback: React.ChangeEventHandler

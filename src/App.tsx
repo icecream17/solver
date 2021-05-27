@@ -7,6 +7,7 @@ import Version from './Elems/Version'
 import Main from './Elems/Main'
 import Aside from './Elems/Aside'
 import Sudoku from './Elems/MainElems/Sudoku'
+import { _UnusedProps } from './Types'
 
 interface AppState {
    sudoku: null | typeof Sudoku.prototype.data,
@@ -20,8 +21,8 @@ interface AppState {
  * @example
  * <App />
  */
-class App extends React.Component<any, AppState> {
-   constructor (props: any) {
+class App extends React.Component<_UnusedProps, AppState> {
+   constructor (props: _UnusedProps) {
       super(props)
 
       this.state = {
@@ -45,7 +46,7 @@ class App extends React.Component<any, AppState> {
    }
 
    render() {
-      let classNames = ["App"]
+      const classNames = ["App"]
       if (this.state.error) {
          classNames.push("error")
       }

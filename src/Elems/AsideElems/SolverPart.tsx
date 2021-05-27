@@ -3,7 +3,7 @@ import React from 'react'
 import Solver from '../../Api/Solver'
 import Sudoku from '../../Api/Sudoku'
 import { StrategyResult } from '../../Api/Types'
-import _expect from '../../expectProps'
+import { _expect } from '../../utils'
 import StrategyControls from './StrategyControls'
 import StrategyList from './StrategyList'
 

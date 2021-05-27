@@ -1,11 +1,12 @@
 
 import React from 'react';
-import _expect from '../../expectProps';
+import { _expect } from '../../utils';
+import { SudokuDigits, _ReactProps } from '../../Types';
 import Candidate from './Candidate';
 
 type CandidatesProps = Readonly<{
-   data: number[]
-} & typeof React.Component.prototype.props>
+   data: SudokuDigits[]
+}> & _ReactProps
 
 /**
  * The candidates of a cell
@@ -35,14 +36,14 @@ export default class Candidates extends React.Component<CandidatesProps> {
       return this.props.data.length
    }
 
-   hasCandidate (number: number): boolean {
-      return this.props.data.includes(number)
+   hasCandidate (candidate: SudokuDigits): boolean {
+      return this.props.data.includes(candidate)
    }
 
    render() {
-      const content = (number: number) => {
-         if (this.hasCandidate(number)) {
-            return number
+      const content = (candidate: SudokuDigits) => {
+         if (this.hasCandidate(candidate)) {
+            return candidate
          } else {
             return <></>
          }
@@ -52,19 +53,19 @@ export default class Candidates extends React.Component<CandidatesProps> {
          <table className="Candidates">
             <tbody>
                <tr>
-                  <Candidate index={0} children={content(1)} />
-                  <Candidate index={1} children={content(2)} />
-                  <Candidate index={2} children={content(3)} />
+                  <Candidate index={0}>{content(1)}</Candidate>
+                  <Candidate index={1}>{content(2)}</Candidate>
+                  <Candidate index={2}>{content(3)}</Candidate>
                </tr>
                <tr>
-                  <Candidate index={3} children={content(4)} />
-                  <Candidate index={4} children={content(5)} />
-                  <Candidate index={5} children={content(6)} />
+                  <Candidate index={3}>{content(4)}</Candidate>
+                  <Candidate index={4}>{content(5)}</Candidate>
+                  <Candidate index={5}>{content(6)}</Candidate>
                </tr>
                <tr>
-                  <Candidate index={6} children={content(7)} />
-                  <Candidate index={7} children={content(8)} />
-                  <Candidate index={8} children={content(9)} />
+                  <Candidate index={6}>{content(7)}</Candidate>
+                  <Candidate index={7}>{content(8)}</Candidate>
+                  <Candidate index={8}>{content(9)}</Candidate>
                </tr>
             </tbody>
          </table>

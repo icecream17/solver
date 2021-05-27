@@ -92,7 +92,7 @@ export function checkValidity(sudoku: PureSudoku): validityResult {
 
          return {
             ok: false,
-            message: `Row ${ROW_NAMES[i]} has 0 possibilities for ${missingCandidates}!!!`
+            message: `Row ${ROW_NAMES[i]} has 0 possibilities for ${missingCandidates.join('... and ')}!!!`
          }
       }
    }
@@ -105,7 +105,7 @@ export function checkValidity(sudoku: PureSudoku): validityResult {
 
          return {
             ok: false,
-            message: `Column ${COLUMN_NAMES[i]} has 0 possibilities for ${missingCandidates}!!!`
+            message: `Column ${COLUMN_NAMES[i]} has 0 possibilities for ${missingCandidates.join('... and ')}!!!`
          }
       }
 
@@ -116,7 +116,7 @@ export function checkValidity(sudoku: PureSudoku): validityResult {
 
          return {
             ok: false,
-            message: `Box ${BOX_NAMES[i]} has 0 possibilities for ${missingCandidates}!!!`
+            message: `Box ${BOX_NAMES[i]} has 0 possibilities for ${missingCandidates.join('... and ')}!!!`
          }
       }
    }
@@ -141,7 +141,7 @@ const STRATEGIES = [
 
       // Should this be before checkValidity?
       if (typeof solver.solved !== "number") {
-         throw TypeError(`solver.solved is not a number - got ${solver.solved}`)
+         throw TypeError(`solver.solved is not a number - got ${String(solver.solved)}`)
       } else if (!Number.isInteger(solver.solved)) {
          throw TypeError(`solver.solved is not an integer - got ${solver.solved}`)
       } else if (0 > solver.solved || solver.solved > MAX_CELL_INDEX) {

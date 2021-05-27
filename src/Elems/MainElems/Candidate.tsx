@@ -1,11 +1,11 @@
 
 import React from 'react';
-import _expect from '../../expectProps';
-import { IndexToNine } from '../../Types';
+import { _expect } from '../../utils';
+import { IndexToNine, _ReactProps } from '../../Types';
 
 type CandidateProps = Readonly<{
    index: IndexToNine
-} & typeof React.Component.prototype.props>
+}> & _ReactProps
 
 /**
  * A cell candidate
@@ -16,7 +16,7 @@ type CandidateProps = Readonly<{
  */
 export default class Candidate extends React.Component<CandidateProps> {
    constructor(props: CandidateProps) {
-      _expect(Candidate, props).toHaveProperties("index", "children")
+      _expect(Candidate, props).toHaveProperty("index")
 
       if (typeof props.index !== "number") {
          throw TypeError('Candidate: "index" is not an number')

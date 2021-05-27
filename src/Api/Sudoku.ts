@@ -19,9 +19,11 @@ export default class Sudoku extends PureSudoku {
 
    set(x: IndexToNine, y: IndexToNine) {
       return {
-         to: (...candidates: SudokuDigits[]) => {
+         to: async (...candidates: SudokuDigits[]) => {
             this.data[x][y] = candidates
-            this.cells[x][y].setCandidates(candidates)
+            await new Promise(resolve => {
+               this.cells[x][y].setCandidatesTo(candidates, resolve)
+            })
          }
       }
    }

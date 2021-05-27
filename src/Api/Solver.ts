@@ -117,14 +117,14 @@ export default class Solver {
       this.updateCounters(strategyResult.success)
       await forComponentsToUpdate()
 
-      if (this.stepsTodo > 1) {
-         this.stepsTodo--
-         try {
-            this.Step()
-         } catch (error) {
-            console.error(error)
-         }
-      }
+      // if (this.stepsTodo > 1) {
+      //    this.stepsTodo--
+      //    try {
+      //       await this.Step()
+      //    } catch (error) {
+      //       console.error(error)
+      //    }
+      // }
 
       this.isDoingStep = false
       return strategyResult

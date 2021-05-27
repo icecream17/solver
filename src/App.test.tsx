@@ -3,6 +3,7 @@ import userEvent from '@testing-library/user-event';
 import App from './App';
 import Cell from './Elems/MainElems/Cell';
 import { IndexToNine, SudokuDigits } from './Types';
+import { forComponentsToUpdate } from './Utils';
 
 beforeEach(() => {
    render(<App />);
@@ -161,7 +162,7 @@ test.skip("Strategy controls don't crash", () => {
    }).not.toThrow()
 })
 
-function canSolve() {
+async function canSolve() {
    function getSudokuTextContent () {
       return getSudokuTableElement().textContent ?? ''
    }
@@ -172,6 +173,7 @@ function canSolve() {
    do {
       previousText = getSudokuTextContent()
       userEvent.click(screen.getByRole('button', { name: 'go' }))
+      await forComponentsToUpdate()
    } while (previousText !== getSudokuTextContent())
 
    const remainingText = getSudokuTextContent().replaceAll(/[^0-9]/g, '')
@@ -190,7 +192,7 @@ function canSolve() {
 //    (scroll down to #482)
 
 // BUG: #9 "Go" is different from clicking "Step" multiple times
-test.skip("Can solve a very simple sudoku", () => {
+test("Can solve a very simple sudoku", async () => {
    setCell(0, 0).to(6)
    setCell(0, 2).to(9)
    setCell(0, 5).to(4)
@@ -219,5 +221,5 @@ test.skip("Can solve a very simple sudoku", () => {
    setCell(8, 1).to(6)
    setCell(8, 3).to(9)
    setCell(8, 4).to(3) // 26
-   expect(canSolve()).toBe(true)
+   await expect(canSolve()).resolves.toBe(true)
 })

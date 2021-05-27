@@ -119,7 +119,11 @@ export default class Solver {
 
       if (this.stepsTodo > 1) {
          this.stepsTodo--
-         this.Step()
+         try {
+            this.Step()
+         } catch (error) {
+            console.error(error)
+         }
       }
 
       this.isDoingStep = false

@@ -147,19 +147,37 @@ test("Strategy sections exist", () => {
    expect(screen.getByRole('group', { name: 'controls' })).toBeInTheDocument()
 })
 
+// How much each strategy control updates
+enum StrategyControlUpdates {
+   go = 30, // For now there aren't many strategies
+   step = 20,
+   clear = 2,
+}
+
+async function clickStrategyControl(name: keyof typeof StrategyControlUpdates) {
+   userEvent.click(screen.getByRole('button', { name }))
+
+   // Makes sure components are updated when control returns back
+   for (let i = 0; i < StrategyControlUpdates[name]; i++) {
+      await forComponentsToUpdate()
+   }
+}
+
 // This test fails with "SolverThatWorksButFailsTests.ts.txt"
-test.skip("Strategy controls don't crash", () => {
-   expect(() => {
-      userEvent.click(screen.getByRole('button', { name: 'go' }))
-      userEvent.click(screen.getByRole('button', { name: 'step' }))
+test("Strategy controls don't crash", () => {
+   expect((async () => {
+      await clickStrategyControl('go')
+      await clickStrategyControl('step')
 
       setCell(7, 5).to(4)
-      userEvent.click(screen.getByRole('button', { name: 'step' }))
-      userEvent.click(screen.getByRole('button', { name: 'step' }))
-      userEvent.click(screen.getByRole('button', { name: 'step' }))
-      userEvent.click(screen.getByRole('button', { name: 'go' }))
-      userEvent.click(screen.getByRole('button', { name: 'clear' }))
-   }).not.toThrow()
+      await clickStrategyControl('step')
+      await clickStrategyControl('step')
+      await clickStrategyControl('step')
+      await clickStrategyControl('go')
+      await clickStrategyControl('clear')
+
+      return "success"
+   })()).resolves.toBe("success")
 })
 
 async function canSolve() {
@@ -174,8 +192,7 @@ async function canSolve() {
    let intervals = 0;
    do {
       previousText = getSudokuTextContent()
-      userEvent.click(screen.getByRole('button', { name: 'go' }))
-      await forComponentsToUpdate()
+      await clickStrategyControl('go')
       intervals++;
    } while (previousText !== getSudokuTextContent())
 

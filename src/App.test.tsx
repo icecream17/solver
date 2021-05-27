@@ -147,5 +147,12 @@ test("Strategy sections exist", () => {
    expect(screen.getByRole('group', { name: 'controls' })).toBeInTheDocument()
 })
 
+// Silly test
+test("Click everything", () => {
+   for (const element of document.querySelectorAll("*")) {
+      userEvent.click(element)
+   }
+})
+
 // BUG: #9 "Go" is different from clicking "Step" multiple times
 test.todo("Async strategy control handler testing is so hard")

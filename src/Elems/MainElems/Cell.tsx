@@ -137,7 +137,7 @@ export default class Cell extends React.Component<CellProps, CellState> {
       } else if (this.numCandidates === 0) {
          content = <span className="ugh tables"> 0 </span>
       } else if (this.numCandidates === 1) {
-         content = <span className="ugh tables"> {this.state.candidates[0]} </span>
+         content = <span className={`ugh tables digit-${this.state.candidates[0]}`}> {this.state.candidates[0]} </span>
       } else if (this.state.showCandidates) {
          // numCandidates > 1
          content = <Candidates data={this.state.candidates} />

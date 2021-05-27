@@ -28,7 +28,7 @@ export default class Candidate extends React.Component<CandidateProps> {
    render() {
       return (
          <td
-            className="Candidate"
+            className={`Candidate digit-${this.props.index}`}
             data-index={this.props.index}
          >{this.props.children}</td>
       )

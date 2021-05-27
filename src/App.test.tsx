@@ -148,7 +148,7 @@ test("Strategy sections exist", () => {
 })
 
 // Silly test
-test("Click everything", () => {
+test.skip("Click everything", () => {
    for (const element of document.querySelectorAll("*")) {
       userEvent.click(element)
    }

@@ -169,11 +169,14 @@ async function canSolve() {
 
    const oldAlert = window.alert
    window.alert = jest.fn(console.error)
+
    let previousText;
+   let intervals = 0;
    do {
       previousText = getSudokuTextContent()
       userEvent.click(screen.getByRole('button', { name: 'go' }))
       await forComponentsToUpdate()
+      intervals++;
    } while (previousText !== getSudokuTextContent())
 
    const remainingText = getSudokuTextContent().replaceAll(/[^0-9]/g, '')
@@ -182,7 +185,7 @@ async function canSolve() {
    }
 
    window.alert = oldAlert
-   console.debug(remainingText)
+   console.debug(intervals, remainingText)
    return false
 }
 

@@ -3,7 +3,7 @@ import userEvent from '@testing-library/user-event';
 import App from './App';
 import Cell from './Elems/MainElems/Cell';
 import { IndexToNine, SudokuDigits } from './Types';
-import { forComponentsToUpdate } from './Utils';
+import { forComponentsToUpdate } from './utils';
 
 beforeEach(() => {
    render(<App />);

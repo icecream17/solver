@@ -13,3 +13,7 @@ In particular, the dependency `react-scripts` depends on outdated versions of `p
 
 Sigh. Now for some reason the ci is failing, and I need to install `eslint-config-react-app` which depends on `eslint-plugin-testing-library@^3.9.0` even though this project supports `eslint-plugin-testing-library@^4.5.0` (with really corresponds to `4.17.21`).\
 And then later the build failed for some reason. When I deleted `eslint-plugin-testing-library` it worked. So now the supported version is implicitly `@^3.9.0`.
+
+## Slightly less silly dependency note
+
+__The typescript version is still 4.2.4__. See <https://github.com/facebook/create-react-app/issues/11022>

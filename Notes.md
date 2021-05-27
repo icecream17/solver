@@ -21,6 +21,8 @@ inspired by <https://www.sudokuwiki.org>
 1. `React.ComponentProps`
 1. Maybe rename "element" to "react component"
 1. Use beforeEach when rendering in every test!!!!
+1. Wait until https://github.com/facebook/create-react-app/issues/11022 is fixed to use override
+    1. This also means __The typescript version is still 4.2.4__
 1. Tests: Arrange Act Assert
 
 To use:

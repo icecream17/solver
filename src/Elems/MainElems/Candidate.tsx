@@ -28,7 +28,7 @@ export default class Candidate extends React.Component<CandidateProps> {
    render() {
       let thisClassName = "Candidate"
       if (typeof this.props.children === "string" || typeof this.props.children === "number") {
-         thisClassName += ` digit-${this.props.index}`
+         thisClassName += ` digit-${Number(this.props.index) + 1}`
       }
 
       return (

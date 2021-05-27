@@ -181,6 +181,7 @@ test("Strategy controls don't crash", () => {
 })
 
 async function canSolve() {
+   screen.debug()
    function getSudokuTextContent () {
       return getSudokuTableElement().textContent ?? ''
    }

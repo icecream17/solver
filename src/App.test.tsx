@@ -40,7 +40,7 @@ test("The alert system", () => {
    expect(closeButton).not.toBeInTheDocument()
 })
 
-test("The prompt system", async () => {
+test("The prompt system", () => {
    const testText = "42 tnhbtxlvp320ajq6lcpy" // random string
 
    // Cancel

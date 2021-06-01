@@ -152,7 +152,7 @@ const STRATEGIES = [
          window._custom.alert("Finished! :D")
          return {
             success: true,
-            successcount: MAX_CELL_INDEX
+            successcount: MAX_CELL_INDEX + 1
          } as const
       }
 

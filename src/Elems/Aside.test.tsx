@@ -24,7 +24,7 @@ test('has accessible role', () => {
    expect(true).toBe(true)
 })
 
-test('the togglers toggle the strategy item', async () => {
+test('the togglers toggle the strategy item', () => {
    // The listItem is the parent of a label.
    // Remember that the checkbox has a label.
    const someCheckbox = getTogglers()[0]

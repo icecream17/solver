@@ -44,5 +44,10 @@
   },
   "devDependencies": {
     "eslint-find-rules": "^3.6.1"
+  },
+  "jest": {
+    "setupFiles": [
+      "<rootDir>/src/setupTests.ts"
+    ]
   }
 }

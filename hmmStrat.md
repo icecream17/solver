@@ -1,0 +1,926 @@
+
+# hmmStrat
+
+<small>a11y note: To make it look more colorful, everything is syntax highlighted in other languages. They're all .txt files though. The files themselves are also mostly unimportant.</small>
+
+Sudoku can be represented as this huge node graph coloring problem\
+Every cell is connected to many other cells, and has a few possibilities (candidates)
+
+And here's even more abstraction:\
+Each candidate is either on or off. TRUE or FALSE
+
+So instead of "cells" (so unnecessary) why not just list all the candidates and their connections?
+
+Here's a basic partial list of all the candidates and their connections.
+
+First up, _A1: candidate 1_, aka __A1=1__
+
+```ruby
+A1=1
+   Part 1 (cell)
+   A1=2
+   A1=3
+   A1=4
+   A1=5
+   A1=6
+   A1=7
+   A1=8
+   A1=9
+
+   Part 2 (row)
+   A2=1
+   A3=1
+   A4=1
+   A5=1
+   A6=1
+   A7=1
+   A8=1
+   A9=1
+
+   Part 3 (column)
+   B1=1
+   C1=1
+   D1=1
+   E1=1
+   F1=1
+   G1=1
+   H1=1
+   J1=1
+
+   Part 4 (box)
+   A2=1
+   A3=1
+   B1=1
+   B2=1
+   B3=1
+   C1=1
+   C2=1
+   C3=1
+
+   Connections
+   any of (Part 1, Part 2, Part 3, Part 4) -> FALSE
+   none of (Part 1) -> TRUE
+   none of (Part 2) -> TRUE
+   none of (Part 3) -> TRUE
+   none of (Part 4) -> TRUE
+```
+
+Ok, that's the end of the partial list.
+
+Obviously that's way too long!\
+Unless you're a computer.
+
+Even if computers had the capacity to be bored, it would take 1 millisecond to process this list.\
+After all, it's not even 0.01 megabytes.
+The computers aren't gonna get bored.\
+And anyways, the list can be simplified as candidates are removed.
+
+Let's look at the Easter Monster sudoku
+
+```rust
+1.......2
+.9.4...5.
+..6...7..
+.5.9.3...
+....7....
+...85..4.
+7.....6..
+.3...9.8.
+..2.....1
+```
+
+After simple candidate removal we get:
+
+```rust
++----------------------+----------------------+----------------------+
+| 1      478    34578  | 3567   3689   5678   | 3489   369    2      |
+| 238    9      378    | 4      12368  12678  | 138    5      368    |
+| 23458  248    6      | 1235   12389  1258   | 7      139    3489   |
++----------------------+----------------------+----------------------+
+| 2468   5      1478   | 9      1246   3      | 128    1267   678    |
+| 234689 12468  13489  | 126    7      1246   | 123589 12369  35689  |
+| 2369   1267   1379   | 8      5      126    | 1239   4      3679   |
++----------------------+----------------------+----------------------+
+| 7      148    14589  | 1235   12348  12458  | 6      239    3459   |
+| 456    3      145    | 12567  1246   9      | 245    8      457    |
+| 45689  468    2      | 3567   3468   45678  | 3459   379    1      |
++----------------------+----------------------+----------------------+
+```
+
+The thing is, once we've already written down all the possibilities and connections;\
+after the simple candidate removal, we don't care about the solved cells anymore.
+
+Here are the candidates in the `Easter Monster`
+
+```rust
+A1=1: TRUE
+A1=2: FALSE
+A1=3: FALSE
+A1=4: FALSE
+A1=5: FALSE
+A1=6: FALSE
+A1=7: FALSE
+A1=8: FALSE
+A1=9: FALSE
+
+A2=1: FALSE
+A2=2:          $1
+A2=3:          $2
+A2=4: FALSE
+A2=5: FALSE
+A2=6: FALSE
+A2=7: FALSE
+A2=8:          $3
+A2=9: FALSE
+
+A3=1: FALSE
+A3=2:          $4
+A3=3:          $5
+A3=4:          $6
+A3=5:          $7
+A3=6: FALSE
+A3=7: FALSE
+A3=8:          $8
+A3=9: FALSE
+
+A4=1: FALSE
+A4=2:          $
+A4=3: FALSE
+A4=4:          $
+A4=5: FALSE
+A4=6:          $
+A4=7: FALSE
+A4=8:          $
+A4=9: FALSE
+
+A5=1: FALSE
+A5=2:          $
+A5=3:          $
+A5=4:          $
+A5=5: FALSE
+A5=6:          $
+A5=7: FALSE
+A5=8:          $
+A5=9:          $
+
+A6=1: FALSE
+A6=2:          $
+A6=3:          $
+A6=4: FALSE
+A6=5: FALSE
+A6=6:          $
+A6=7: FALSE
+A6=8: FALSE
+A6=9:          $
+
+A7=1: FALSE
+A7=2: FALSE
+A7=3: FALSE
+A7=4: FALSE
+A7=5: FALSE
+A7=6: FALSE
+A7=7: TRUE
+A7=8: FALSE
+A7=9: FALSE
+
+A8=1: FALSE
+A8=2: FALSE
+A8=3: FALSE
+A8=4:          $
+A8=5:          $
+A8=6:          $
+A8=7: FALSE
+A8=8: FALSE
+A8=9: FALSE
+
+A9=1: FALSE
+A9=2: FALSE
+A9=3: FALSE
+A9=4:          $
+A9=5:          $
+A9=6:          $
+A9=7: FALSE
+A9=8:          $
+A9=9:          $
+
+
+B1=1: FALSE
+B1=2: FALSE
+B1=3: FALSE
+B1=4:          $
+B1=5: FALSE
+B1=6: FALSE
+B1=7:          $
+B1=8:          $
+B1=9: FALSE
+
+B2=1: FALSE
+B2=2: FALSE
+B2=3: FALSE
+B2=4: FALSE
+B2=5: FALSE
+B2=6: FALSE
+B2=7: FALSE
+B2=8: FALSE
+B2=9: TRUE
+
+B3=1: FALSE
+B3=2:          $
+B3=3: FALSE
+B3=4:          $
+B3=5: FALSE
+B3=6: FALSE
+B3=7: FALSE
+B3=8:          $
+B3=9: FALSE
+
+B4=1: FALSE
+B4=2: FALSE
+B4=3: FALSE
+B4=4: FALSE
+B4=5: TRUE
+B4=6: FALSE
+B4=7: FALSE
+B4=8: FALSE
+B4=9: FALSE
+
+B5=1:          $
+B5=2:          $
+B5=3: FALSE
+B5=4:          $
+B5=5: FALSE
+B5=6:          $
+B5=7: FALSE
+B5=8:          $
+B5=9: FALSE
+
+B6=1:          $
+B6=2:          $
+B6=3: FALSE
+B6=4: FALSE
+B6=5: FALSE
+B6=6:          $
+B6=7:          $
+B6=8: FALSE
+B6=9: FALSE
+
+B7=1:          $
+B7=2: FALSE
+B7=3: FALSE
+B7=4:          $
+B7=5: FALSE
+B7=6: FALSE
+B7=7: FALSE
+B7=8:          $
+B7=9: FALSE
+
+B8=1: FALSE
+B8=2: FALSE
+B8=3: TRUE
+B8=4: FALSE
+B8=5: FALSE
+B8=6: FALSE
+B8=7: FALSE
+B8=8: FALSE
+B8=9: FALSE
+
+B9=1: FALSE
+B9=2: FALSE
+B9=3: FALSE
+B9=4:          $
+B9=5: FALSE
+B9=6:          $
+B9=7: FALSE
+B9=8:          $
+B9=9: FALSE
+
+C1=1: FALSE
+C1=2: FALSE
+C1=3: FALSE
+C1=4: FALSE
+C1=5: FALSE
+C1=6: FALSE
+C1=7: FALSE
+C1=8: FALSE
+C1=9: FALSE
+
+C2=1: FALSE
+C2=2: FALSE
+C2=3: FALSE
+C2=4: FALSE
+C2=5: FALSE
+C2=6: FALSE
+C2=7: FALSE
+C2=8: FALSE
+C2=9: FALSE
+
+C3=1: FALSE
+C3=2: FALSE
+C3=3: FALSE
+C3=4: FALSE
+C3=5: FALSE
+C3=6: FALSE
+C3=7: FALSE
+C3=8: FALSE
+C3=9: FALSE
+
+C4=1: FALSE
+C4=2: FALSE
+C4=3: FALSE
+C4=4: FALSE
+C4=5: FALSE
+C4=6: FALSE
+C4=7: FALSE
+C4=8: FALSE
+C4=9: FALSE
+
+C5=1: FALSE
+C5=2: FALSE
+C5=3: FALSE
+C5=4: FALSE
+C5=5: FALSE
+C5=6: FALSE
+C5=7: FALSE
+C5=8: FALSE
+C5=9: FALSE
+
+C6=1: FALSE
+C6=2: FALSE
+C6=3: FALSE
+C6=4: FALSE
+C6=5: FALSE
+C6=6: FALSE
+C6=7: FALSE
+C6=8: FALSE
+C6=9: FALSE
+
+C7=1: FALSE
+C7=2: FALSE
+C7=3: FALSE
+C7=4: FALSE
+C7=5: FALSE
+C7=6: FALSE
+C7=7: FALSE
+C7=8: FALSE
+C7=9: FALSE
+
+C8=1: FALSE
+C8=2: FALSE
+C8=3: FALSE
+C8=4: FALSE
+C8=5: FALSE
+C8=6: FALSE
+C8=7: FALSE
+C8=8: FALSE
+C8=9: FALSE
+
+C9=1: FALSE
+C9=2: FALSE
+C9=3: FALSE
+C9=4: FALSE
+C9=5: FALSE
+C9=6: FALSE
+C9=7: FALSE
+C9=8: FALSE
+C9=9: FALSE
+
+D1=1: FALSE
+D1=2: FALSE
+D1=3: FALSE
+D1=4: FALSE
+D1=5: FALSE
+D1=6: FALSE
+D1=7: FALSE
+D1=8: FALSE
+D1=9: FALSE
+
+D2=1: FALSE
+D2=2: FALSE
+D2=3: FALSE
+D2=4: FALSE
+D2=5: FALSE
+D2=6: FALSE
+D2=7: FALSE
+D2=8: FALSE
+D2=9: FALSE
+
+D3=1: FALSE
+D3=2: FALSE
+D3=3: FALSE
+D3=4: FALSE
+D3=5: FALSE
+D3=6: FALSE
+D3=7: FALSE
+D3=8: FALSE
+D3=9: FALSE
+
+D4=1: FALSE
+D4=2: FALSE
+D4=3: FALSE
+D4=4: FALSE
+D4=5: FALSE
+D4=6: FALSE
+D4=7: FALSE
+D4=8: FALSE
+D4=9: FALSE
+
+D5=1: FALSE
+D5=2: FALSE
+D5=3: FALSE
+D5=4: FALSE
+D5=5: FALSE
+D5=6: FALSE
+D5=7: FALSE
+D5=8: FALSE
+D5=9: FALSE
+
+D6=1: FALSE
+D6=2: FALSE
+D6=3: FALSE
+D6=4: FALSE
+D6=5: FALSE
+D6=6: FALSE
+D6=7: FALSE
+D6=8: FALSE
+D6=9: FALSE
+
+D7=1: FALSE
+D7=2: FALSE
+D7=3: FALSE
+D7=4: FALSE
+D7=5: FALSE
+D7=6: FALSE
+D7=7: FALSE
+D7=8: FALSE
+D7=9: FALSE
+
+D8=1: FALSE
+D8=2: FALSE
+D8=3: FALSE
+D8=4: FALSE
+D8=5: FALSE
+D8=6: FALSE
+D8=7: FALSE
+D8=8: FALSE
+D8=9: FALSE
+
+D9=1: FALSE
+D9=2: FALSE
+D9=3: FALSE
+D9=4: FALSE
+D9=5: FALSE
+D9=6: FALSE
+D9=7: FALSE
+D9=8: FALSE
+D9=9: FALSE
+
+E1=1: FALSE
+E1=2: FALSE
+E1=3: FALSE
+E1=4: FALSE
+E1=5: FALSE
+E1=6: FALSE
+E1=7: FALSE
+E1=8: FALSE
+E1=9: FALSE
+
+E2=1: FALSE
+E2=2: FALSE
+E2=3: FALSE
+E2=4: FALSE
+E2=5: FALSE
+E2=6: FALSE
+E2=7: FALSE
+E2=8: FALSE
+E2=9: FALSE
+
+E3=1: FALSE
+E3=2: FALSE
+E3=3: FALSE
+E3=4: FALSE
+E3=5: FALSE
+E3=6: FALSE
+E3=7: FALSE
+E3=8: FALSE
+E3=9: FALSE
+
+E4=1: FALSE
+E4=2: FALSE
+E4=3: FALSE
+E4=4: FALSE
+E4=5: FALSE
+E4=6: FALSE
+E4=7: FALSE
+E4=8: FALSE
+E4=9: FALSE
+
+E5=1: FALSE
+E5=2: FALSE
+E5=3: FALSE
+E5=4: FALSE
+E5=5: FALSE
+E5=6: FALSE
+E5=7: FALSE
+E5=8: FALSE
+E5=9: FALSE
+
+E6=1: FALSE
+E6=2: FALSE
+E6=3: FALSE
+E6=4: FALSE
+E6=5: FALSE
+E6=6: FALSE
+E6=7: FALSE
+E6=8: FALSE
+E6=9: FALSE
+
+E7=1: FALSE
+E7=2: FALSE
+E7=3: FALSE
+E7=4: FALSE
+E7=5: FALSE
+E7=6: FALSE
+E7=7: FALSE
+E7=8: FALSE
+E7=9: FALSE
+
+E8=1: FALSE
+E8=2: FALSE
+E8=3: FALSE
+E8=4: FALSE
+E8=5: FALSE
+E8=6: FALSE
+E8=7: FALSE
+E8=8: FALSE
+E8=9: FALSE
+
+E9=1: FALSE
+E9=2: FALSE
+E9=3: FALSE
+E9=4: FALSE
+E9=5: FALSE
+E9=6: FALSE
+E9=7: FALSE
+E9=8: FALSE
+E9=9: FALSE
+
+F1=1: FALSE
+F1=2: FALSE
+F1=3: FALSE
+F1=4: FALSE
+F1=5: FALSE
+F1=6: FALSE
+F1=7: FALSE
+F1=8: FALSE
+F1=9: FALSE
+
+F2=1: FALSE
+F2=2: FALSE
+F2=3: FALSE
+F2=4: FALSE
+F2=5: FALSE
+F2=6: FALSE
+F2=7: FALSE
+F2=8: FALSE
+F2=9: FALSE
+
+F3=1: FALSE
+F3=2: FALSE
+F3=3: FALSE
+F3=4: FALSE
+F3=5: FALSE
+F3=6: FALSE
+F3=7: FALSE
+F3=8: FALSE
+F3=9: FALSE
+
+F4=1: FALSE
+F4=2: FALSE
+F4=3: FALSE
+F4=4: FALSE
+F4=5: FALSE
+F4=6: FALSE
+F4=7: FALSE
+F4=8: FALSE
+F4=9: FALSE
+
+F5=1: FALSE
+F5=2: FALSE
+F5=3: FALSE
+F5=4: FALSE
+F5=5: FALSE
+F5=6: FALSE
+F5=7: FALSE
+F5=8: FALSE
+F5=9: FALSE
+
+F6=1: FALSE
+F6=2: FALSE
+F6=3: FALSE
+F6=4: FALSE
+F6=5: FALSE
+F6=6: FALSE
+F6=7: FALSE
+F6=8: FALSE
+F6=9: FALSE
+
+F7=1: FALSE
+F7=2: FALSE
+F7=3: FALSE
+F7=4: FALSE
+F7=5: FALSE
+F7=6: FALSE
+F7=7: FALSE
+F7=8: FALSE
+F7=9: FALSE
+
+F8=1: FALSE
+F8=2: FALSE
+F8=3: FALSE
+F8=4: FALSE
+F8=5: FALSE
+F8=6: FALSE
+F8=7: FALSE
+F8=8: FALSE
+F8=9: FALSE
+
+F9=1: FALSE
+F9=2: FALSE
+F9=3: FALSE
+F9=4: FALSE
+F9=5: FALSE
+F9=6: FALSE
+F9=7: FALSE
+F9=8: FALSE
+F9=9: FALSE
+
+G1=1: FALSE
+G1=2: FALSE
+G1=3: FALSE
+G1=4: FALSE
+G1=5: FALSE
+G1=6: FALSE
+G1=7: FALSE
+G1=8: FALSE
+G1=9: FALSE
+
+G2=1: FALSE
+G2=2: FALSE
+G2=3: FALSE
+G2=4: FALSE
+G2=5: FALSE
+G2=6: FALSE
+G2=7: FALSE
+G2=8: FALSE
+G2=9: FALSE
+
+G3=1: FALSE
+G3=2: FALSE
+G3=3: FALSE
+G3=4: FALSE
+G3=5: FALSE
+G3=6: FALSE
+G3=7: FALSE
+G3=8: FALSE
+G3=9: FALSE
+
+G4=1: FALSE
+G4=2: FALSE
+G4=3: FALSE
+G4=4: FALSE
+G4=5: FALSE
+G4=6: FALSE
+G4=7: FALSE
+G4=8: FALSE
+G4=9: FALSE
+
+G5=1: FALSE
+G5=2: FALSE
+G5=3: FALSE
+G5=4: FALSE
+G5=5: FALSE
+G5=6: FALSE
+G5=7: FALSE
+G5=8: FALSE
+G5=9: FALSE
+
+G6=1: FALSE
+G6=2: FALSE
+G6=3: FALSE
+G6=4: FALSE
+G6=5: FALSE
+G6=6: FALSE
+G6=7: FALSE
+G6=8: FALSE
+G6=9: FALSE
+
+G7=1: FALSE
+G7=2: FALSE
+G7=3: FALSE
+G7=4: FALSE
+G7=5: FALSE
+G7=6: FALSE
+G7=7: FALSE
+G7=8: FALSE
+G7=9: FALSE
+
+G8=1: FALSE
+G8=2: FALSE
+G8=3: FALSE
+G8=4: FALSE
+G8=5: FALSE
+G8=6: FALSE
+G8=7: FALSE
+G8=8: FALSE
+G8=9: FALSE
+
+G9=1: FALSE
+G9=2: FALSE
+G9=3: FALSE
+G9=4: FALSE
+G9=5: FALSE
+G9=6: FALSE
+G9=7: FALSE
+G9=8: FALSE
+G9=9: FALSE
+
+H1=1: FALSE
+H1=2: FALSE
+H1=3: FALSE
+H1=4: FALSE
+H1=5: FALSE
+H1=6: FALSE
+H1=7: FALSE
+H1=8: FALSE
+H1=9: FALSE
+
+H2=1: FALSE
+H2=2: FALSE
+H2=3: FALSE
+H2=4: FALSE
+H2=5: FALSE
+H2=6: FALSE
+H2=7: FALSE
+H2=8: FALSE
+H2=9: FALSE
+
+H3=1: FALSE
+H3=2: FALSE
+H3=3: FALSE
+H3=4: FALSE
+H3=5: FALSE
+H3=6: FALSE
+H3=7: FALSE
+H3=8: FALSE
+H3=9: FALSE
+
+H4=1: FALSE
+H4=2: FALSE
+H4=3: FALSE
+H4=4: FALSE
+H4=5: FALSE
+H4=6: FALSE
+H4=7: FALSE
+H4=8: FALSE
+H4=9: FALSE
+
+H5=1: FALSE
+H5=2: FALSE
+H5=3: FALSE
+H5=4: FALSE
+H5=5: FALSE
+H5=6: FALSE
+H5=7: FALSE
+H5=8: FALSE
+H5=9: FALSE
+
+H6=1: FALSE
+H6=2: FALSE
+H6=3: FALSE
+H6=4: FALSE
+H6=5: FALSE
+H6=6: FALSE
+H6=7: FALSE
+H6=8: FALSE
+H6=9: FALSE
+
+H7=1: FALSE
+H7=2: FALSE
+H7=3: FALSE
+H7=4: FALSE
+H7=5: FALSE
+H7=6: FALSE
+H7=7: FALSE
+H7=8: FALSE
+H7=9: FALSE
+
+H8=1: FALSE
+H8=2: FALSE
+H8=3: FALSE
+H8=4: FALSE
+H8=5: FALSE
+H8=6: FALSE
+H8=7: FALSE
+H8=8: FALSE
+H8=9: FALSE
+
+H9=1: FALSE
+H9=2: FALSE
+H9=3: FALSE
+H9=4: FALSE
+H9=5: FALSE
+H9=6: FALSE
+H9=7: FALSE
+H9=8: FALSE
+H9=9: FALSE
+
+J1=1: FALSE
+J1=2: FALSE
+J1=3: FALSE
+J1=4: FALSE
+J1=5: FALSE
+J1=6: FALSE
+J1=7: FALSE
+J1=8: FALSE
+J1=9: FALSE
+
+J2=1: FALSE
+J2=2: FALSE
+J2=3: FALSE
+J2=4: FALSE
+J2=5: FALSE
+J2=6: FALSE
+J2=7: FALSE
+J2=8: FALSE
+J2=9: FALSE
+
+J3=1: FALSE
+J3=2: FALSE
+J3=3: FALSE
+J3=4: FALSE
+J3=5: FALSE
+J3=6: FALSE
+J3=7: FALSE
+J3=8: FALSE
+J3=9: FALSE
+
+J4=1: FALSE
+J4=2: FALSE
+J4=3: FALSE
+J4=4: FALSE
+J4=5: FALSE
+J4=6: FALSE
+J4=7: FALSE
+J4=8: FALSE
+J4=9: FALSE
+
+J5=1: FALSE
+J5=2: FALSE
+J5=3: FALSE
+J5=4: FALSE
+J5=5: FALSE
+J5=6: FALSE
+J5=7: FALSE
+J5=8: FALSE
+J5=9: FALSE
+
+J6=1: FALSE
+J6=2: FALSE
+J6=3: FALSE
+J6=4: FALSE
+J6=5: FALSE
+J6=6: FALSE
+J6=7: FALSE
+J6=8: FALSE
+J6=9: FALSE
+
+J7=1: FALSE
+J7=2: FALSE
+J7=3: FALSE
+J7=4: FALSE
+J7=5: FALSE
+J7=6: FALSE
+J7=7: FALSE
+J7=8: FALSE
+J7=9: FALSE
+
+J8=1: FALSE
+J8=2: FALSE
+J8=3: FALSE
+J8=4: FALSE
+J8=5: FALSE
+J8=6: FALSE
+J8=7: FALSE
+J8=8: FALSE
+J8=9: FALSE
+
+J9=1: FALSE
+J9=2: FALSE
+J9=3: FALSE
+J9=4: FALSE
+J9=5: FALSE
+J9=6: FALSE
+J9=7: FALSE
+J9=8: FALSE
+J9=9: FALSE
+```

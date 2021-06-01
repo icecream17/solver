@@ -9,10 +9,12 @@
    --sudokucell-length: calc(4rem * var(--scaling-factor));
    --cell-fontsize: calc(2.5rem * var(--scaling-factor));
    --candidate-fontsize: calc(0.9rem * var(--scaling-factor));
+
+   --background-color: #282c34;
 }
 
 .App {
-   background-color: #282c34;
+   background-color: var(--background-color);
    min-height: 100vh;
    min-width: 100vw;
    width: fit-content;

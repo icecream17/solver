@@ -131,7 +131,7 @@ const STRATEGIES = [
    function checkForSolved (sudoku: Sudoku, solver: Solver) {
       const validity = checkValidity(sudoku)
       if (!validity.ok) {
-         alert(validity.message)
+         window._custom.alert(validity.message)
          return {
             success: true,
             message: validity.message,
@@ -149,7 +149,7 @@ const STRATEGIES = [
       }
 
       if (solver.solved === MAX_CELL_INDEX) {
-         alert("Finished! :D")
+         window._custom.alert("Finished! :D")
          return {
             success: true,
             successcount: MAX_CELL_INDEX

@@ -1,7 +1,7 @@
-import { AlgebraicName, COLUMN_NAMES, IndexTo81, IndexToNine, ROW_NAMES, SudokuDigits } from "../Types";
+import { AlgebraicName, BoxName, BOX_NAMES, COLUMN_NAMES, IndexTo81, IndexToNine, ROW_NAMES, SudokuDigits, TwoDimensionalArray, _Function } from "../Types";
 
 export function algebraic (row: IndexToNine, column: IndexToNine): AlgebraicName {
-   return ROW_NAMES[row] + COLUMN_NAMES[column] as AlgebraicName
+   return `${ROW_NAMES[row]}${COLUMN_NAMES[column]}` as const
 }
 
 /** What index a cell is at */
@@ -39,8 +39,8 @@ export function boxAt (row: IndexToNine, column: IndexToNine): IndexToNine {
    return boxRow[row] + boxColumn[column] as IndexToNine
 }
 
-export function boxNameAt(row: IndexToNine, column: IndexToNine): SudokuDigits {
-   return boxAt(row, column) + 1 as SudokuDigits
+export function boxNameAt(row: IndexToNine, column: IndexToNine): BoxName {
+   return BOX_NAMES[boxAt(row, column)]
 }
 
 const _affectsCache = new Map<IndexTo81, Readonly<Array<Readonly<[IndexToNine, IndexToNine]>>>>()
@@ -86,4 +86,22 @@ export function affects (row: IndexToNine, column: IndexToNine): Readonly<Array<
    const result = results.map(index => indexToRowAndColumn[index]) // Formatting
    _affectsCache.set(thisIndex, result) // Cache
    return result
+}
+
+
+// Turns an 81 length thing to a 9x9 thing
+export function to9by9<T>(thing: T[]): [T[], T[], T[], T[], T[], T[], T[], T[], T[]]
+export function to9by9<T>(thing: string): [string, string, string, string, string, string, string, string, string]
+export function to9by9<T>(thing: T[] | string) {
+   return [
+      thing.slice(0, 9),
+      thing.slice(9, 18),
+      thing.slice(18, 27),
+      thing.slice(27, 36),
+      thing.slice(36, 45),
+      thing.slice(45, 54),
+      thing.slice(54, 63),
+      thing.slice(63, 72),
+      thing.slice(72),
+   ] as const
 }

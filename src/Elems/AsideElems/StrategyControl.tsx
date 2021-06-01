@@ -1,6 +1,7 @@
 import React from 'react';
 import { _expect } from '../../utils';
 import { _ReactProps } from '../../Types';
+import Control from '../Control';
 
 type StrategyControlProps = Readonly<{
    onClick: React.MouseEventHandler,
@@ -25,11 +26,10 @@ export default class StrategyControl extends React.Component<StrategyControlProp
 
    render() {
       return (
-         <button
+         <Control
             className='StrategyControl'
-            type='button'
             onClick={this.props.onClick}
-         >{this.props.name}</button>
+         >{this.props.name}</Control>
       )
    }
 }

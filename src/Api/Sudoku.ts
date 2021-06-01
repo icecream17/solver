@@ -22,7 +22,7 @@ export default class Sudoku extends PureSudoku {
          to: async (...candidates: SudokuDigits[]) => {
             this.data[x][y] = candidates
             await new Promise(resolve => {
-               this.cells[x][y].setCandidatesTo(candidates, resolve)
+               this.cells[x][y].setCandidatesTo(candidates, () => resolve(undefined))
             })
          }
       }

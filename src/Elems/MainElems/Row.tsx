@@ -1,7 +1,7 @@
 
 import React from 'react';
 import Sudoku from './Sudoku';
-import { IndexToNine, _ReactProps } from '../../Types';
+import { IndexToNine, _Function, _ReactProps } from '../../Types';
 
 import Cell from './Cell';
 import { _expect } from '../../utils';
@@ -9,7 +9,7 @@ import { _expect } from '../../utils';
 type RowProps = Readonly<{
    index: IndexToNine,
    parent: Sudoku,
-   whenCellConstructs(...args: any): any
+   whenCellConstructs: _Function
 }> & _ReactProps
 
 /**

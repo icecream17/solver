@@ -8,10 +8,10 @@ body {
 }
 
 code {
-   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-      monospace;
+   font-family: var(--monospace);
 }
 
 :root {
    font-size: calc(0.5em + 1vmin);
+   --monospace: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace
 }

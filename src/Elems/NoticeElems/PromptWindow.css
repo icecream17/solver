@@ -1,0 +1,42 @@
+
+.PromptWindow {
+   position: absolute;
+   width: 100vw;
+   height: 100vh;
+   background-color: #7777;
+   display: flex;
+}
+
+.PromptNotice {
+   position: relative;
+   height: fit-content;
+   width: fit-content;
+
+   background-color: var(--background-color);
+   z-index: 4;
+
+   /* Everything here is just for centering */
+   display: inline flex;
+   margin: 0 auto;
+   padding: 1rem;
+   flex-direction: column;
+   text-align: center;
+   align-self: center;
+   align-content: center;
+   justify-content: center;
+}
+
+.PromptNotice > label {
+   font-size: 1.5rem;
+   margin-bottom: 2rem;
+}
+
+.PromptNotice > button {
+   font-size: 1.5rem;
+}
+
+.PromptNotice > label > p {
+   margin: 0;
+}
+
+

@@ -1,10 +1,10 @@
+import asyncPrompt from "../asyncPrompt"
 import SolverPart from "../Elems/AsideElems/SolverPart"
 import StrategyItem from "../Elems/AsideElems/StrategyItem"
 import { IndexToNine } from "../Types"
 import { forComponentsToUpdate } from "../utils"
 import Strategies from "./Strategies"
 import Sudoku from "./Sudoku"
-import { StrategyResult } from "./Types"
 
 export default class Solver {
    latestStrategyItem: null | StrategyItem = null
@@ -58,10 +58,11 @@ export default class Solver {
       }
    }
 
-   async Step(): Promise<StrategyResult> {
+   async Step(): Promise<undefined> {
       await forComponentsToUpdate()
       if (this.isDoingStep) {
-         throw new Error("Aaaaaa - can't do two steps at the same time")
+         this.stepsTodo++
+         return;
       }
 
       this.isDoingStep = true
@@ -86,7 +87,7 @@ export default class Solver {
          // instead move on to the next strategy
          if (this.latestStrategyItem.state.disabled) {
             this.updateCounters(false)
-            await forComponentsToUpdate()
+            await forComponentsToUpdate() // currently unneccessary
             return this.Step()
          }
 
@@ -117,17 +118,17 @@ export default class Solver {
       this.updateCounters(strategyResult.success)
       await forComponentsToUpdate()
 
-      // if (this.stepsTodo > 1) {
-      //    this.stepsTodo--
-      //    try {
-      //       await this.Step()
-      //    } catch (error) {
-      //       console.error(error)
-      //    }
-      // }
+      if (this.stepsTodo > 0) {
+         this.stepsTodo--
+         try {
+            await this.Step()
+         } catch (error) {
+            console.error(error)
+         }
+      }
 
       this.isDoingStep = false
-      return strategyResult
+      return undefined;
    }
 
    /** Does "Step" until it reaches the end or a strategy succeeds */
@@ -141,9 +142,9 @@ export default class Solver {
       // TODO
    }
 
-   Import() {
-      const result = prompt("Enter data (todo: clarify)")
-      if (result === null) {
+   async Import() {
+      const result = await asyncPrompt("Enter data (todo: clarify)")
+      if (result === null || result === "") {
          return; // Maybe do something else
       }
 

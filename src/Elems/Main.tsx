@@ -5,9 +5,10 @@ import Sudoku from './MainElems/Sudoku'
 import DataContainer from './MainElems/Data'
 import Coords from './MainElems/Coords'
 import { _expect } from '../utils'
+import { _Function } from '../Types'
 
 type MainProps = Readonly<{
-   whenSudokuConstructs (...args: any): any
+   whenSudokuConstructs: _Function
 }>
 
 /**

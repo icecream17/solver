@@ -7,11 +7,23 @@ import Version from './Elems/Version'
 import Main from './Elems/Main'
 import Aside from './Elems/Aside'
 import Sudoku from './Elems/MainElems/Sudoku'
-import { _UnusedProps } from './Types'
+import { NoticeInfo, NoticeType, PromptCallback, _UnusedProps } from './Types'
+import NoticeWindow from './Elems/NoticeElems/NoticeWindow'
 
-interface AppState {
+declare global {
+   interface Window {
+      _custom: {
+         alert: typeof App.prototype.alert
+         prompt: typeof App.prototype.prompt
+      }
+   }
+}
+
+
+type AppState = {
    sudoku: null | typeof Sudoku.prototype.data,
-   error: boolean
+   error: boolean,
+   notices: NoticeInfo[]
 }
 
 /**
@@ -35,10 +47,16 @@ class App extends React.Component<_UnusedProps, AppState> {
           * @default {null}
           */
          sudoku: null,
-         error: false
+         error: false,
+         notices: []
       }
 
       this.whenSudokuConstructs = this.whenSudokuConstructs.bind(this)
+      this.finishNotice = this.finishNotice.bind(this)
+      window._custom = {
+         alert: this.alert.bind(this),
+         prompt: this.prompt.bind(this)
+      }
    }
 
    componentDidCatch(_error: Error, _errorInfo: React.ErrorInfo) {
@@ -59,6 +77,7 @@ class App extends React.Component<_UnusedProps, AppState> {
             </header>
             <Main whenSudokuConstructs={this.whenSudokuConstructs} />
             <Aside sudoku={this.state.sudoku} />
+            <NoticeWindow todo={this.state.notices} finish={this.finishNotice} />
          </div>
       );
    }
@@ -66,6 +85,46 @@ class App extends React.Component<_UnusedProps, AppState> {
    whenSudokuConstructs(sudoku: Sudoku) {
       // Only have to set once, since Arrays are "reference like". Lol
       this.setState({ sudoku: sudoku.data })
+   }
+
+
+   // These methods serve 2 purposes:
+   // 1. User isn't absolutely blcked
+   // 2. No more `not implemented` errors in tests
+
+   alert(message: string) {
+      console.debug(message)
+      this.setState(state => {
+         const notices = state.notices.slice()
+         notices.push({
+            type: NoticeType.ALERT,
+            message
+         })
+
+         return { notices }
+      })
+   }
+
+   prompt(message = "", defaultResponse = "undefined", callback?: PromptCallback) {
+      this.setState(state => {
+         const notices = state.notices.slice()
+         notices.push({
+            type: NoticeType.PROMPT,
+            message,
+            defaultResponse,
+            callback
+         })
+
+         return { notices }
+      })
+   }
+
+   finishNotice() {
+      this.setState(state => {
+         const notices = state.notices.slice()
+         notices.shift()
+         return { notices }
+      })
    }
 }
 

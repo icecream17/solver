@@ -1,0 +1,29 @@
+
+.AlertNotice {
+   position: absolute;
+   bottom: 2vh;
+   right: 2vw;
+   height: fit-content;
+   width: fit-content;
+
+   background-color: #444;
+   z-index: 4;
+
+   display: flex;
+   padding: 0 1rem 1rem 1rem;
+   justify-content: space-between;
+   flex-direction: column;
+}
+
+.AlertNotice > p {
+   height: fit-content;
+   font-size: 1rem;
+}
+
+.AlertNotice > button {
+   font-size: 2rem;
+}
+
+.AlertNotice > * {
+   position: sticky;
+}

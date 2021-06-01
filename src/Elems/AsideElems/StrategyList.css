@@ -29,6 +29,7 @@
 .StrategyToggler {
    position: absolute;
    left: -1rem;
+   height: 1rem;
 
    /* sanitize.css (doesn't work)
    margin: 0;

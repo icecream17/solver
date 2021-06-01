@@ -3,30 +3,10 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+import deprecate from './deprecate';
 
-// Delay popup interaction so that the user doesn't blow up
-// "confirm" is restricted so it's not included
-let interactionsLeft = 0
-function delayInteraction(originalFunction: typeof alert): typeof alert
-function delayInteraction(originalFunction: typeof prompt): typeof prompt
-function delayInteraction(originalFunction: typeof alert | typeof prompt): typeof originalFunction {
-   return {
-      [originalFunction.name](...args: Parameters<typeof originalFunction>) {
-         interactionsLeft++
-         if (interactionsLeft > 5) {
-            throw new Error("Too much interaction!")
-         }
-
-         const result = originalFunction(...args)
-         interactionsLeft--
-         return result
-      }
-   }[originalFunction.name]
-}
-
-window.alert = delayInteraction(window.alert)
-window.prompt = delayInteraction(window.prompt)
-
+window.alert = deprecate(window.alert, "Use window._custom.alert instead")
+window.prompt = deprecate(window.prompt, "Use window._custom.prompt instead")
 
 // Render the app
 ReactDOM.render(

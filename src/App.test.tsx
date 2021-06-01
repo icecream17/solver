@@ -113,22 +113,27 @@ test("Resetting the candidates", () => {
    expect(buttonCell).toHaveTextContent('456789')
 })
 
-test.skip("Cell keyboard navigation", () => {
-   const cornerCell = getButtonCellElement(0, 7)
+test("Cell keyboard navigation", () => {
+   const cornerCell = getButtonCellElement(0, 8)
    userEvent.click(cornerCell)
+
+   // Tab !== Right
+   // In this case, in goes into the next row
+   userEvent.tab()
+   expect(getButtonCellElement(1, 0)).toHaveFocus()
 
    function tryKey(keyboard: string, row: IndexToNine, column: IndexToNine) {
       userEvent.keyboard(keyboard)
       expect(getButtonCellElement(row, column)).toHaveFocus()
    }
 
-   tryKey('{Tab}', 1, 7)
-   tryKey('{ArrowLeft}', 0, 7)
-   tryKey('{ArrowLeft}', 7, 7)
-   tryKey('{ArrowDown}', 7, 0)
-   tryKey('{ArrowRight}', 0, 0)
+   tryKey('{ArrowLeft}', 1, 8)
+   tryKey('{ArrowLeft}', 1, 7)
    tryKey('{ArrowUp}', 0, 7)
-   tryKey('{Tab}', 1, 7)
+   tryKey('{ArrowUp}', 8, 7)
+   tryKey('{ArrowDown}', 0, 7)
+   tryKey('{ArrowRight}', 0, 8)
+   tryKey('{ArrowRight}', 0, 0)
 })
 
 function setCell (x: IndexToNine, y: IndexToNine) {
@@ -148,11 +153,10 @@ test("Strategy sections exist", () => {
 })
 
 // Silly test
-test.skip("Click everything", () => {
+test("Click everything", () => {
    for (const element of document.querySelectorAll("*")) {
       userEvent.click(element)
    }
 })
 
-// BUG: #9 "Go" is different from clicking "Step" multiple times
-test.todo("Async strategy control handler testing is so hard")
+test.todo("Strategy control testing")

@@ -4,6 +4,8 @@ import testBoards from "./boards"
 import Solver from "./Solver";
 import Sudoku from "./Sudoku";
 import { IndexToNine, MAX_CELL_INDEX } from "../Types";
+import { render } from "@testing-library/react";
+import App from "../App";
 
 describe('checkValidity', () => {
    let testSudoku: PureSudoku;
@@ -99,16 +101,17 @@ describe('strategies', () => {
       })
 
       test('succeeds when sudoku is finished', () => {
-         window.alert = jest.fn()
+         render(<App />)
+         window._custom.alert = jest.fn()
 
          solver.solved = MAX_CELL_INDEX
          const testSudoku = Sudoku.from81(testBoards["Solved board"])
          expect(checkForSolved(testSudoku, solver).success).toBe(true)
 
-         expect(window.alert).toHaveBeenCalled()
+         expect(window._custom.alert).toHaveBeenCalled()
 
          // @ts-ignore
-         window.alert.mockClear()
+         window._custom.alert.mockClear()
       })
 
       test('succeeds when the sudoku has new solved cells', () => {

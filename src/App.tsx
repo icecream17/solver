@@ -105,7 +105,7 @@ class App extends React.Component<_UnusedProps, AppState> {
       })
    }
 
-   prompt(message = "", defaultResponse = "undefined", callback?: PromptCallback) {
+   prompt(message = "default message (shouldn't appear)", defaultResponse = "", callback?: PromptCallback) {
       this.setState(state => {
          const notices = state.notices.slice()
          notices.push({

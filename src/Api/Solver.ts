@@ -35,14 +35,15 @@ export default class Solver {
       }
    }
 
-   updateCounters(success: boolean) {
+   updateCounters(success: boolean, isFinished: boolean) {
       // Go back to the start when a strategy succeeds
-      // (but not if you're already at the start)
+      // (exception: if you're at the start go to 1 anyways)
+      // (exception exception: if the sudoku is finished don't go to 1)
       if (success && this.strategyIndex > 0) {
          this.strategyIndex = 0
       } else {
          this.strategyIndex++
-         if (this.strategyIndex === Strategies.length) {
+         if (this.strategyIndex === Strategies.length || isFinished) {
             this.strategyIndex = 0
          }
       }
@@ -86,7 +87,7 @@ export default class Solver {
          // Don't run strategy if it's disabled,
          // instead move on to the next strategy
          if (this.latestStrategyItem.state.disabled) {
-            this.updateCounters(false)
+            this.updateCounters(false, false)
             await forComponentsToUpdate() // currently unneccessary
             return this.Step()
          }
@@ -115,7 +116,7 @@ export default class Solver {
          await forComponentsToUpdate()
       }
 
-      this.updateCounters(strategyResult.success)
+      this.updateCounters(strategyResult.success, strategyResult.successcount === 81)
       await forComponentsToUpdate()
 
       if (this.stepsTodo > 0) {

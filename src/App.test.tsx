@@ -1,16 +1,11 @@
-import { fireEvent, render, screen } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import App from './App';
-import Cell from './Elems/MainElems/Cell';
-import { IndexToNine, SudokuDigits } from './Types';
+import asyncPrompt from './asyncPrompt';
 import { forComponentsToUpdate } from './utils';
 
 beforeEach(() => {
-   render(<App />);
-})
-
-test('it renders', () => {
-   expect(true).toBe(true)
+   render(<App />); // Implicit "it renders" check
 })
 
 // Explicit implicit checks //
@@ -32,6 +27,38 @@ test("Click everything", () => {
    for (const element of document.querySelectorAll("*")) {
       userEvent.click(element)
    }
+})
+
+test("The alert system", () => {
+   const testText = "42 tnhbtxlvp320ajq6lcpy" // random string
+   window._custom.alert(testText)
+   expect(screen.getByText(testText)).toBeInTheDocument()
+
+   const closeButton = screen.getByRole('button', { name: 'Ok' })
+   expect(closeButton).toBeInTheDocument()
+   userEvent.click(closeButton)
+   expect(closeButton).not.toBeInTheDocument()
+})
+
+test("The prompt system", async () => {
+   const testText = "42 tnhbtxlvp320ajq6lcpy" // random string
+
+   // Cancel
+   const promptPromise = asyncPrompt(testText)
+   expect(screen.getByText(testText)).toBeInTheDocument()
+   const closeButton = screen.getByRole('button', { name: 'Cancel' })
+   expect(closeButton).toBeInTheDocument()
+   userEvent.click(closeButton)
+   expect(closeButton).not.toBeInTheDocument()
+   expect(promptPromise).resolves.toBeNull()
+
+   // Submit
+   const promptPromise2 = asyncPrompt(testText)
+   const inputElement = screen.getByRole('textbox', { name: testText })
+   const submitButton = screen.getByRole('button', { name: 'Submit' })
+   userEvent.type(inputElement, testText)
+   userEvent.click(submitButton)
+   expect(promptPromise2).resolves.toBe(testText)
 })
 
 test.todo("Strategy control testing")

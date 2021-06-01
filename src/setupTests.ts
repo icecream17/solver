@@ -10,3 +10,5 @@ process.on('unhandledRejection', (reason: Error, _promise) => {
   console.dir(reason.stack)
   throw reason
 });
+
+console.debug("Tests are setup")

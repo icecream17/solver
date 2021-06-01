@@ -1,4 +1,4 @@
-import { AlgebraicName, BoxName, BOX_NAMES, COLUMN_NAMES, IndexTo81, IndexToNine, ROW_NAMES, SudokuDigits, TwoDimensionalArray, _Function } from "../Types";
+import { AlgebraicName, BoxName, BOX_NAMES, COLUMN_NAMES, IndexTo81, IndexToNine, ROW_NAMES } from "../Types";
 
 export function algebraic (row: IndexToNine, column: IndexToNine): AlgebraicName {
    return `${ROW_NAMES[row]}${COLUMN_NAMES[column]}` as const
@@ -91,7 +91,7 @@ export function affects (row: IndexToNine, column: IndexToNine): Readonly<Array<
 
 // Turns an 81 length thing to a 9x9 thing
 export function to9by9<T>(thing: T[]): [T[], T[], T[], T[], T[], T[], T[], T[], T[]]
-export function to9by9<T>(thing: string): [string, string, string, string, string, string, string, string, string]
+export function to9by9(thing: string): [string, string, string, string, string, string, string, string, string]
 export function to9by9<T>(thing: T[] | string) {
    return [
       thing.slice(0, 9),

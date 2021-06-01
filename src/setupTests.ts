@@ -5,6 +5,8 @@
 import '@testing-library/jest-dom';
 
 // Better async stack traces
-process.on('unhandledRejection', (reason, _promise) => {
+process.on('unhandledRejection', (reason: Error, _promise) => {
+  console.log(reason)
+  console.dir(reason.stack)
   throw reason
 });

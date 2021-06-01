@@ -10,7 +10,7 @@ type PromptWindowProps = {
    finish: typeof App.prototype.finishNotice,
 
    message: string,
-   defaultResponse: string, // unused functionality - maybe expand into "any"
+   defaultResponse: string,
    callback?: PromptCallback,
 }
 
@@ -28,7 +28,7 @@ export default class PromptWindow extends React.Component<PromptWindowProps> {
             <div className="PromptNotice">
                <label htmlFor="PromptMessage">
                   <p>{this.props.message}</p>
-                  <input id="PromptMessage" ref={(element) => this.inputElement = element}></input>
+                  <input id="PromptMessage" ref={(element) => this.inputElement = element}>{this.props.defaultResponse}</input>
                </label>
                <Control className="PromptCancel" onClick={this.cancel}>Cancel</Control>
                <Control className="PromptSubmit" onClick={this.submit}>Submit</Control>
@@ -51,7 +51,7 @@ export default class PromptWindow extends React.Component<PromptWindowProps> {
          if (this.inputElement !== null) {
             this.props.callback(this.inputElement.value.trim().normalize())
          } else {
-            this.props.callback(this.props.defaultResponse)
+            throw new ReferenceError("Cannot submit property `value` of `null` (aka this.inputElement)")
          }
       }
       this.props.finish()

@@ -17,7 +17,7 @@ window.Promise = class ConsoleErrorCatchPromise<T> extends Promise<T> {
     constructor (...args: PromiseConstructorParams<T>) {
         super(...args)
         this.catch(reason => {
-           console.error(reason)
+           setTimeout(console.error, 0, reason)
            oldPromise.prototype.catch.apply(this, reason)
         })
     }

@@ -17,3 +17,7 @@ And then later the build failed for some reason. When I deleted `eslint-plugin-t
 ## Slightly less silly dependency note
 
 __The typescript version is still 4.2.4__. See <https://github.com/facebook/create-react-app/issues/11022>
+
+## Also
+
+This uses `String.prototype.replaceAll`, so your node version must be `>=15.0.0`. In gitpod do `nvm install 16` on each new terminal.

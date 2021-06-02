@@ -38,10 +38,10 @@ function coalesceConstructorOptions (options: SudokuConstructorOptions): Readonl
       }
    } else {
       if (options.representation != null) {
-         console.warn('PureSudoku: Representation given but setup === false')
+         console.warn('PureSudoku: Representation given but setup === false. Ignoring representation.')
       }
       if (options.representationType != null) {
-         console.warn('PureSudoku: Representation type given but setup === false')
+         console.warn('PureSudoku: Representation type given but setup === false. Ignoring representation type.')
       }
       return {
          setup: false

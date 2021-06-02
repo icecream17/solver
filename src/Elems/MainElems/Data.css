@@ -3,12 +3,14 @@
    background-color: #373A40;
    color: whitesmoke;
    border: var(--regular-border) solid whitesmoke;
+   padding: 0.2rem 0.7rem;
+
    display: flex;
    align-items: center;
 }
 
 .DataLabelText {
-   padding-right: inherit;
+   padding-right: inherit; /* The container has the padding-left */
    min-width: fit-content;
 }
 

@@ -12,7 +12,9 @@ export default class Solver {
    solved = 0
    stepsTodo = 0
    strategyIndex = 0
-   strategyItemElements: StrategyItem[] = []
+   /** When a strategy item is about to unmount, the strategy item element is deleted. */
+   strategyItemElements: Array<StrategyItem | undefined> = []
+
    constructor(public sudoku: null | Sudoku = null, public solverElement: SolverPart) {
       // These capitalized methods are used as handlers in StrategyControls, so they need to be bound beforehand.
       this.Go = this.Go.bind(this)
@@ -28,6 +30,11 @@ export default class Solver {
     */
    resetStrategies() {
       for (const strategyElement of this.strategyItemElements) {
+         if (strategyElement === undefined) {
+            console.warn(`undefined strategyItemElement @resetStrategies`)
+            continue;
+         }
+
          strategyElement.setState({
             success: null,
             successcount: null
@@ -81,8 +88,11 @@ export default class Solver {
          await forComponentsToUpdate()
       }
 
-      if (this.strategyIndex in this.strategyItemElements) {
-         this.latestStrategyItem = this.strategyItemElements[this.strategyIndex]
+      if (this.strategyItemElements[this.strategyIndex] === undefined) {
+         console.warn(`undefined strategyItemElement @${this.strategyIndex}`)
+         this.latestStrategyItem = null
+      } else {
+         this.latestStrategyItem = this.strategyItemElements[this.strategyIndex] as StrategyItem
 
          // Don't run strategy if it's disabled,
          // instead move on to the next strategy
@@ -97,9 +107,6 @@ export default class Solver {
             isCurrentStrategy: true
          })
          await forComponentsToUpdate()
-      } else {
-         console.warn(`undefined strategyItemElement @${this.strategyIndex}`)
-         this.latestStrategyItem = null
       }
 
       // Run strategy

@@ -40,11 +40,12 @@ test("The alert system", () => {
    expect(closeButton).not.toBeInTheDocument()
 })
 
-test("The prompt system", () => {
+test("The prompt system", async () => {
    const testText = "42 tnhbtxlvp320ajq6lcpy" // random string
 
    // Cancel
    const promptPromise = asyncPrompt(testText)
+   await forComponentsToUpdate()
    expect(screen.getByText(testText)).toBeInTheDocument()
    const closeButton = screen.getByRole('button', { name: 'Cancel' })
    expect(closeButton).toBeInTheDocument()
@@ -54,11 +55,23 @@ test("The prompt system", () => {
 
    // Submit
    const promptPromise2 = asyncPrompt(testText)
-   const inputElement = screen.getByRole('textbox', { name: testText })
+   await forComponentsToUpdate()
+   const inputElement = screen.getByRole('textbox', { name: testText }) as HTMLInputElement
    const submitButton = screen.getByRole('button', { name: 'Submit' })
-   userEvent.type(inputElement, testText)
+   userEvent.type(inputElement, testText) // Make sure the input isn't disabled or readonly or something.
+   expect(inputElement.value).toBe(testText)
    userEvent.click(submitButton)
    expect(promptPromise2).resolves.toBe(testText)
+
+   // Submit with default result
+   const promptPromise3 = asyncPrompt(testText, testText)
+   await forComponentsToUpdate()
+   const inputElementAgain = screen.getByRole('textbox', { name: testText }) as HTMLInputElement
+   const submitButtonAgain = screen.getByRole('button', { name: 'Submit' })
+   expect(inputElementAgain.value).toBe(testText)
+   userEvent.click(submitButtonAgain)
+   expect(promptPromise3).resolves.toBe(testText)
+
 })
 
 test.todo("Strategy control testing")

@@ -93,7 +93,6 @@ class App extends React.Component<_UnusedProps, AppState> {
    // 2. No more `not implemented` errors in tests
 
    alert(message: string) {
-      console.debug(message)
       this.setState(state => {
          const notices = state.notices.slice()
          notices.push({

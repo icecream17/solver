@@ -47,6 +47,5 @@
 
 .DataContainer {
    margin-top: 1.5rem;
-   padding: 0.2rem 0.4rem;
    grid-area: data;
 }

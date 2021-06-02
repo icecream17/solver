@@ -7,9 +7,8 @@ import '@testing-library/jest-dom';
 // Better async stack traces
 const oldError = Error
 window.Error = function LogError (message) {
-    const error = oldError(message)
-    console.debug(error.stack)
-    return error
+   const error = new oldError(message)
+   console.debug(error.message)
+   console.debug(error.stack)
+   return error
 } as ErrorConstructor
-
-console.debug("Tests are setup")

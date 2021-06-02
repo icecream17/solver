@@ -3,8 +3,8 @@ import { fireEvent, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import App from '../../App';
 import Cell from './Cell';
-import { IndexToNine, SudokuDigits } from './Types';
-import { forComponentsToUpdate } from './utils';
+import { IndexToNine, SudokuDigits } from '../../Types';
+import { forComponentsToUpdate } from '../../utils';
 
 beforeEach(() => {
    render(<App />);

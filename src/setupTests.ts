@@ -5,10 +5,12 @@
 import '@testing-library/jest-dom';
 
 // Better async stack traces
-process.on('unhandledRejection', (reason: Error, _promise) => {
-  console.log(reason)
-  console.dir(reason.stack)
-  throw reason
-});
+const oldPromise = Promise;
+window.Promise = class <T> extends Promise<T> {
+   constructor (...args: ConstructorParameters<typeof Promise>) {
+      super(() => {}) // To appeal the compiler
+      return new Promise(...args).catch(console.error) as Promise<T>
+   }
+}
 
 console.debug("Tests are setup")

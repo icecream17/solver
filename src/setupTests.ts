@@ -5,22 +5,11 @@
 import '@testing-library/jest-dom';
 
 // Better async stack traces
-type PromiseConstructorParams<T> = [
-    executor: (
-        resolve: (value: T | PromiseLike<T>) => void,
-        reject: (reason?: any) => void
-    ) => void
-]
-
-const oldPromise = Promise;
-window.Promise = class ConsoleErrorCatchPromise<T> extends Promise<T> {
-    constructor (...args: PromiseConstructorParams<T>) {
-        super(...args)
-        this.catch(reason => {
-           setTimeout(console.error, 0, reason)
-           oldPromise.prototype.catch.apply(this, reason)
-        })
-    }
-}
+const oldError = Error
+window.Error = function LogError (message) {
+    const error = oldError(message)
+    console.debug(error.stack)
+    return error
+} as ErrorConstructor
 
 console.debug("Tests are setup")

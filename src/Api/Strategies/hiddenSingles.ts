@@ -31,20 +31,10 @@ export default function hiddenSingles(sudoku: PureSudoku, _solver: Solver) {
       return false
    }
 
-   // true = 0 found
-   // (location) = 1 found
-   // false = 2 found
    const possible = {
-      rows: [] as PossibleGroups,
-      columns: [] as PossibleGroups,
-      boxes: [] as PossibleGroups,
-   }
-
-   // 9 rows, 9 candidates
-   for (let i = 0; i < 9; i++) {
-      possible.rows.push([null, true, true, true, true, true, true, true, true, true])
-      possible.columns.push([null, true, true, true, true, true, true, true, true, true])
-      possible.boxes.push([null, true, true, true, true, true, true, true, true, true])
+      rows: [[null, true, true, true, true, true, true, true, true, true], [null, true, true, true, true, true, true, true, true, true], [null, true, true, true, true, true, true, true, true, true], [null, true, true, true, true, true, true, true, true, true], [null, true, true, true, true, true, true, true, true, true], [null, true, true, true, true, true, true, true, true, true], [null, true, true, true, true, true, true, true, true, true], [null, true, true, true, true, true, true, true, true, true], [null, true, true, true, true, true, true, true, true, true]] as PossibleGroups,
+      columns: [[null, true, true, true, true, true, true, true, true, true], [null, true, true, true, true, true, true, true, true, true], [null, true, true, true, true, true, true, true, true, true], [null, true, true, true, true, true, true, true, true, true], [null, true, true, true, true, true, true, true, true, true], [null, true, true, true, true, true, true, true, true, true], [null, true, true, true, true, true, true, true, true, true], [null, true, true, true, true, true, true, true, true, true], [null, true, true, true, true, true, true, true, true, true]] as PossibleGroups,
+      boxes: [[null, true, true, true, true, true, true, true, true, true], [null, true, true, true, true, true, true, true, true, true], [null, true, true, true, true, true, true, true, true, true], [null, true, true, true, true, true, true, true, true, true], [null, true, true, true, true, true, true, true, true, true], [null, true, true, true, true, true, true, true, true, true], [null, true, true, true, true, true, true, true, true, true], [null, true, true, true, true, true, true, true, true, true], [null, true, true, true, true, true, true, true, true, true]] as PossibleGroups,
    }
 
    for (let row: IndexToNine = 0; row < 9; row = row + 1 as IndexToNine) {

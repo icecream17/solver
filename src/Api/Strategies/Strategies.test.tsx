@@ -93,6 +93,17 @@ describe('strategies', () => {
          testSudoku.set(7, 8).to(2)
          updateCandidates(testSudoku, solver)
          expect(hiddenSingles(testSudoku, solver).success).toBe(true)
+
+         // Make sure it doesn't change anything
+         expect(testSudoku.data[2][7]).toStrictEqual([5])
+      })
+
+      test("Doesn't false positive with just regular singles", () => {
+         const testSudoku = new PureSudoku({ setup: true })
+         testSudoku.set(2, 7).to(5)
+         testSudoku.set(7, 8).to(2)
+         updateCandidates(testSudoku, solver)
+         expect(updateCandidates(testSudoku, solver).success).toBe(false)
       })
    })
 })

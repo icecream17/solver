@@ -53,6 +53,15 @@ export default function hiddenSingles(sudoku: PureSudoku, _solver: Solver) {
 
    for (let row: IndexToNine = 0; row < 9; row = row + 1 as IndexToNine) {
       for (let column: IndexToNine = 0; column < 9; column = column + 1 as IndexToNine) {
+         // Prevent hidden single when already solved
+         if (sudoku.data[row][column].length === 1) {
+            const candidate = sudoku.data[row][column][0]
+            possible.rows[row][candidate] = false
+            possible.columns[column][candidate] = false
+            possible.boxes[boxAt(row, column)][candidate] = false
+            continue;
+         }
+
          for (const candidate of sudoku.data[row][column]) {
             possible.rows[row][candidate] = nextState(possible.rows[row][candidate], row, column)
             possible.columns[column][candidate] = nextState(possible.columns[column][candidate], row, column)

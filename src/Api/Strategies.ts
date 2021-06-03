@@ -248,7 +248,7 @@ const STRATEGIES = [
       type PossibleState = boolean | [IndexToNine, IndexToNine]
       function nextState (currentState: PossibleState, row: IndexToNine, column: IndexToNine) {
          if (currentState === true) {
-            return [row, column]
+            return [row, column] as const
          }
 
          return false

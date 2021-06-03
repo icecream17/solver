@@ -99,6 +99,26 @@ export default class PureSudoku {
    }
 
    /**
+    * Currently for debugging
+    */
+   _to81() {
+      let str = ""
+      for (const row of this.data) {
+         for (const cell of row) {
+            if (cell.length === 1) {
+               str += cell[0]
+            } else if (cell.length === 0) {
+               str += "0"
+            } else {
+               str += "."
+            }
+         }
+         str += "\n"
+      }
+      return str
+   }
+
+   /**
     * Imports from an 81 character string representing a sudoku.
     *
     * Any character that is not a digit is a blank cell.

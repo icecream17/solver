@@ -1,10 +1,28 @@
-import { IndexToNine, TwoDimensionalArray, SudokuDigits } from "../../Types"
+import { IndexToNine, SudokuDigits } from "../../Types"
 import PureSudoku from "../PureSudoku"
 import Solver from "../Solver"
 import { boxAt } from "../Utils"
 
 export default function hiddenSingles(sudoku: PureSudoku, _solver: Solver) {
+   /**
+    * The state for a candidate in a group
+    * true = 0 found, hidden single still possible
+    * [...] = 1 found, position of hidden single
+    * false = 2+ found, hidden single not possible anymore
+    */
    type PossibleState = boolean | [IndexToNine, IndexToNine]
+
+   /**
+    * For each group (row, column, or box) there are 9 candidates.
+    * Digits go from 1 to 9
+    *
+    * So each group tracks the possibilities of each digit.
+    */
+   type PossibleGroup = [null, PossibleState, PossibleState, PossibleState, PossibleState, PossibleState, PossibleState, PossibleState, PossibleState, PossibleState]
+
+   /** A group of rows or columns or boxes. */
+   type PossibleGroups = [PossibleGroup, PossibleGroup, PossibleGroup, PossibleGroup, PossibleGroup, PossibleGroup, PossibleGroup, PossibleGroup, PossibleGroup]
+
    function nextState(currentState: PossibleState, row: IndexToNine, column: IndexToNine) {
       if (currentState === true) {
          return [row, column] as [IndexToNine, IndexToNine]
@@ -17,16 +35,16 @@ export default function hiddenSingles(sudoku: PureSudoku, _solver: Solver) {
    // (location) = 1 found
    // false = 2 found
    const possible = {
-      rows: [] as TwoDimensionalArray<PossibleState>,
-      columns: [] as TwoDimensionalArray<PossibleState>,
-      boxes: [] as TwoDimensionalArray<PossibleState>,
+      rows: [] as PossibleGroups,
+      columns: [] as PossibleGroups,
+      boxes: [] as PossibleGroups,
    }
 
    // 9 rows, 9 candidates
    for (let i = 0; i < 9; i++) {
-      possible.rows.push([true, true, true, true, true, true, true, true, true])
-      possible.columns.push([true, true, true, true, true, true, true, true, true])
-      possible.boxes.push([true, true, true, true, true, true, true, true, true])
+      possible.rows.push([null, true, true, true, true, true, true, true, true, true])
+      possible.columns.push([null, true, true, true, true, true, true, true, true, true])
+      possible.boxes.push([null, true, true, true, true, true, true, true, true, true])
    }
 
    for (let row: IndexToNine = 0; row < 9; row = row + 1 as IndexToNine) {
@@ -40,7 +58,7 @@ export default function hiddenSingles(sudoku: PureSudoku, _solver: Solver) {
    }
 
    let successcount = 0
-   for (let candidate: IndexToNine = 0; candidate < 9; candidate = candidate + 1 as IndexToNine) {
+   for (let candidate: SudokuDigits = 1; candidate <= 9; candidate = candidate + 1 as SudokuDigits) {
       for (let i = 0; i < 9; i++) {
          const currentPossible = {
             row: possible.rows[i][candidate],
@@ -49,15 +67,15 @@ export default function hiddenSingles(sudoku: PureSudoku, _solver: Solver) {
          }
          if (typeof currentPossible.row !== "boolean") {
             successcount++
-            sudoku.set(...currentPossible.row).to(candidate + 1 as SudokuDigits)
+            sudoku.set(...currentPossible.row).to(candidate)
          }
          if (typeof currentPossible.column !== "boolean") {
             successcount++
-            sudoku.set(...currentPossible.column).to(candidate + 1 as SudokuDigits)
+            sudoku.set(...currentPossible.column).to(candidate)
          }
          if (typeof currentPossible.box !== "boolean") {
             successcount++
-            sudoku.set(...currentPossible.box).to(candidate + 1 as SudokuDigits)
+            sudoku.set(...currentPossible.box).to(candidate)
          }
       }
    }

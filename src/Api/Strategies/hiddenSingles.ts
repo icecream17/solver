@@ -62,8 +62,6 @@ export default function hiddenSingles(sudoku: PureSudoku, _solver: Solver) {
       }
    }
 
-   console.debug(possible.boxes[8][5])
-
    if (successcount !== 0) {
       return {
          success: true,

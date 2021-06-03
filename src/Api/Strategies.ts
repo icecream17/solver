@@ -244,7 +244,7 @@ const STRATEGIES = [
       }
    },
 
-   function hiddenSingles(sudoku: PureSudoku, _solver: Solver): validityResult {
+   function hiddenSingles(sudoku: PureSudoku, _solver: Solver) {
       type PossibleState = boolean | [IndexToNine, IndexToNine]
       function nextState (currentState: PossibleState, row: IndexToNine, column: IndexToNine) {
          if (currentState === true) {

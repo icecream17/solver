@@ -1,0 +1,62 @@
+
+.github-corner {
+   color: white;
+   position: absolute;
+   top: 0;
+   border: 0;
+   right: 0;
+}
+
+.github-corner > svg {
+   fill: #151513;
+}
+
+.octo-arm {
+   transform-origin: 130px 106px;
+}
+
+@keyframes octocat-wave {
+   0%, 100% {
+      transform: rotate(0deg);
+   }
+
+   20%, 60% {
+      transform: rotate(-25deg);
+   }
+
+   40%, 80% {
+      transform: rotate(10deg);
+   }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+   .github-corner:hover .octo-arm {
+      animation: octocat-wave 560ms ease-in-out;
+   }
+
+   @media (max-width: 500px) {
+      .github-corner:hover .octo-arm {
+         animation: none;
+      }
+
+      .github-corner .octo-arm {
+         animation: octocat-wave 560ms ease-in-out;
+      }
+   }
+}
+
+@media (prefers-reduced-motion: reduced) {
+   .github-corner:hover .octo-arm {
+      animation: octocat-wave 7s ease-in-out;
+   }
+
+   @media (max-width: 500px) {
+      .github-corner:hover .octo-arm {
+         animation: none;
+      }
+
+      .github-corner .octo-arm {
+         animation: octocat-wave 7s ease-in-out;
+      }
+   }
+}

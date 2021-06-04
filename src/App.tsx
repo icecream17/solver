@@ -9,6 +9,7 @@ import Aside from './Elems/Aside'
 import Sudoku from './Elems/MainElems/Sudoku'
 import { NoticeInfo, NoticeType, PromptCallback, _UnusedProps } from './Types'
 import NoticeWindow from './Elems/NoticeElems/NoticeWindow'
+import GithubCorner from './Elems/GithubCorner'
 
 declare global {
    interface Window {
@@ -77,6 +78,8 @@ class App extends React.Component<_UnusedProps, AppState> {
             </header>
             <Main whenSudokuConstructs={this.whenSudokuConstructs} />
             <Aside sudoku={this.state.sudoku} />
+
+            <GithubCorner />
             <NoticeWindow todo={this.state.notices} finish={this.finishNotice} />
          </div>
       );

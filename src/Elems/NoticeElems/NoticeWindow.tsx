@@ -29,7 +29,7 @@ export default class Notice extends React.Component<NoticeProps> {
       const nextTodo = this.props.todo[0]
       switch (nextTodo.type) {
          case NoticeType.ALERT:
-            return <AlertNotice message={nextTodo.message} finish={this.props.finish} />
+            return <AlertNotice type={nextTodo.alertType} message={nextTodo.message} finish={this.props.finish} />
          case NoticeType.PROMPT:
             return <PromptWindow {...nextTodo} finish={this.props.finish} />
          default:

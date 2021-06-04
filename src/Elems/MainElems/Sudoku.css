@@ -87,7 +87,7 @@ div.Cell > span.ugh.tables {
 }
 
 div.Cell[data-error="true"] {
-   background-color: rgb(139, 0, 0);
+   background-color: var(--maroon);
 }
 
 div.Cell[data-active="true"] {
@@ -116,7 +116,7 @@ td.Candidate {
    width: var(--candidate-height);
    font-size: var(--candidate-fontsize);
    text-align: center;
-   color: white;
+   color: var(--text-color);
 
    /* [ref 1] */
    overflow: hidden;

@@ -11,6 +11,16 @@
    --candidate-fontsize: calc(0.9rem * var(--scaling-factor));
 
    --background-color: #282c34;
+   --link-color: #61dafb;
+   --text-color: whitesmoke;
+   --maroon: maroon; /* rgb(139, 0, 0)? */
+   --red: #ec3e31;
+   --orange: orange;
+   --blue-gray: #8cadf3;
+   --lighter-green: #8ea;
+   --light-green: #0c0;
+   --green: green;
+   --purple: rebeccapurple;
 }
 
 .App {
@@ -18,7 +28,7 @@
    min-height: 100vh;
    min-width: 100vw;
    width: fit-content;
-   color: white;
+   color: var(--text-color);
 
    display: grid;
    /* default moved to min-width media querys */
@@ -95,12 +105,12 @@
 
 /* TODO: Fix layout when error */
 .App.error {
-   border: 0.5rem solid red;
+   border: 0.5rem solid var(--red);
 }
 
 .App.error > .App-header::before {
    content: "Error! ";
-   color: red;
+   color: var(--red);
 }
 
 .App-header {
@@ -119,7 +129,7 @@
 }
 
 .App-link {
-   color: #61dafb;
+   color: var(--link-color);
 }
 
 .App-aside { grid-area: Aside; }

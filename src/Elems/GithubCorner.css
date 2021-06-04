@@ -1,6 +1,6 @@
 
 .github-corner {
-   color: white;
+   color: var(--text-color);
    position: absolute;
    top: 0;
    border: 0;

@@ -136,13 +136,13 @@
 }
 
 .StrategyResult.success {
-   color: #0c0;
+   color: var(--light-green);
 }
 
 .StrategyResult.fail {
-   color: orange;
+   color: var(--orange);
 }
 
 .StrategyResult.error {
-   color: red;
+   color: var(--red);
 }

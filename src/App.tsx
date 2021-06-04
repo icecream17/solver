@@ -7,7 +7,7 @@ import Version from './Elems/Version'
 import Main from './Elems/Main'
 import Aside from './Elems/Aside'
 import Sudoku from './Elems/MainElems/Sudoku'
-import { NoticeInfo, NoticeType, PromptCallback, _UnusedProps } from './Types'
+import { AlertType, NoticeInfo, NoticeType, PromptCallback, _UnusedProps } from './Types'
 import NoticeWindow from './Elems/NoticeElems/NoticeWindow'
 import GithubCorner from './Elems/GithubCorner'
 
@@ -95,11 +95,12 @@ class App extends React.Component<_UnusedProps, AppState> {
    // 1. User isn't absolutely blcked
    // 2. No more `not implemented` errors in tests
 
-   alert(message: string) {
+   alert(message: string, alertType = AlertType.INFO) {
       this.setState(state => {
          const notices = state.notices.slice()
          notices.push({
             type: NoticeType.ALERT,
+            alertType,
             message
          })
 

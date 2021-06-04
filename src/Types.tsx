@@ -28,15 +28,24 @@ export enum NoticeType {
    PROMPT
 }
 
+
+export enum AlertType {
+   INFO = "info",
+   WARN = "warning",
+   ERROR = "error",
+   SUCCESS = "success"
+}
+
 export type PromptCallback = (message: string | null) => void
 
 export type NoticeInfo = {
-   type: NoticeType.ALERT,
+   type: NoticeType.ALERT
+   alertType: AlertType
    message: string
 } | {
-   type: NoticeType.PROMPT,
-   message: string,
-   defaultResponse: string,
+   type: NoticeType.PROMPT
+   message: string
+   defaultResponse: string
    callback?: PromptCallback
 }
 

@@ -1,4 +1,4 @@
-import { NUMBER_OF_CELLS } from "../../Types"
+import { AlertType, NUMBER_OF_CELLS } from "../../Types"
 import Solver from "../Solver"
 import Sudoku from "../Sudoku"
 import checkValidity from "./checkValidity"
@@ -6,7 +6,7 @@ import checkValidity from "./checkValidity"
 export default function checkForSolved(sudoku: Sudoku, solver: Solver) {
    const validity = checkValidity(sudoku)
    if (!validity.ok) {
-      window._custom.alert(validity.message)
+      window._custom.alert(validity.message, AlertType.ERROR)
       return {
          success: true,
          message: validity.message,
@@ -24,7 +24,7 @@ export default function checkForSolved(sudoku: Sudoku, solver: Solver) {
    }
 
    if (solver.solved === NUMBER_OF_CELLS) {
-      window._custom.alert("Finished! :D")
+      window._custom.alert("Finished! :D", AlertType.SUCCESS)
       return {
          success: true,
          successcount: NUMBER_OF_CELLS

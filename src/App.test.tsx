@@ -2,6 +2,7 @@ import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import App from './App';
 import asyncPrompt from './asyncPrompt';
+import { AlertType } from './Types';
 import { forComponentsToUpdate } from './utils';
 
 beforeEach(() => {
@@ -51,6 +52,12 @@ test("The alert system", () => {
    expect(closeButton).toBeInTheDocument()
    userEvent.click(closeButton)
    expect(closeButton).not.toBeInTheDocument()
+
+   // Alert type
+   window._custom.alert(testText, AlertType.ERROR)
+   const closeButton2 = screen.getByRole('button', { name: 'Ok' })
+   expect(closeButton2.parentElement).toHaveClass(AlertType.ERROR)
+   userEvent.click(closeButton2)
 })
 
 test("The prompt system", async () => {

@@ -1,8 +1,8 @@
 
 .DataContainer {
    background-color: #373A40;
-   color: whitesmoke;
-   border: var(--regular-border) solid whitesmoke;
+   color: var(--text-color);
+   border: var(--regular-border) solid var(--text-color);
    padding: 0.2rem 0.7rem;
 
    display: flex;
@@ -19,9 +19,9 @@
    width: 100%; /* remaining width */
    height: 100%;
    background-color: #373A40;
-   color: whitesmoke;
+   color: var(--text-color);
    border: none;
-   border-left: var(--regular-border) solid whitesmoke;
+   border-left: var(--regular-border) solid var(--text-color);
    padding-left: inherit;
    font-size: 1rem;
    font-family: var(--monospace);

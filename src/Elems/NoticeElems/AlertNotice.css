@@ -13,8 +13,12 @@
    padding: 0 1rem 1rem 1rem;
    justify-content: space-between;
    flex-direction: column;
+
+   border-width: var(--regular-border);
+   border-style: solid;
 }
 
+/** Positioning */
 .AlertNotice > p {
    height: fit-content;
    font-size: 1rem;
@@ -26,4 +30,18 @@
 
 .AlertNotice > * {
    position: sticky;
+}
+
+
+/** Types of alert notices */
+.AlertNotice.info {
+   border-color: var(--blue-gray);
+}
+
+.AlertNotice.warning {
+   border-color: var(--orange);
+}
+
+.AlertNotice.error {
+   border-color: var(--red);
 }

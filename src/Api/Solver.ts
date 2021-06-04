@@ -162,8 +162,6 @@ export default class Solver {
 
    Clear() {
       this.sudokuNullCheck()
-
-      // Apparently "void" means "ignored promise"
-      void this.sudoku.clear()
+      this.sudoku.clear()
    }
 }

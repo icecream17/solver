@@ -164,10 +164,6 @@ export default class Solver {
       this.sudokuNullCheck()
 
       // Apparently "void" means "ignored promise"
-      for (let i: IndexToNine = 0; i < 9; i = i+1 as IndexToNine) {
-         for (let j: IndexToNine = 0; j < 9; j = j+1 as IndexToNine) {
-            void this.sudoku.set(i, j).to(1, 2, 3, 4, 5, 6, 7, 8, 9)
-         }
-      }
+      void this.sudoku.clear()
    }
 }

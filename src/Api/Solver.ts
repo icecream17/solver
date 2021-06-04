@@ -1,7 +1,6 @@
 import asyncPrompt from "../asyncPrompt"
 import SolverPart from "../Elems/AsideElems/SolverPart"
 import StrategyItem from "../Elems/AsideElems/StrategyItem"
-import { IndexToNine } from "../Types"
 import { forComponentsToUpdate } from "../utils"
 import Strategies from "./Strategies/Strategies"
 import Sudoku from "./Sudoku"

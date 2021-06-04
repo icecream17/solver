@@ -1,6 +1,5 @@
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { finished } from 'stream';
 import App from './App';
 import asyncPrompt from './asyncPrompt';
 import { forComponentsToUpdate } from './utils';

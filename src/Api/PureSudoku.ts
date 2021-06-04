@@ -226,5 +226,17 @@ export default class PureSudoku {
          }
       }
    }
+
+   clearCell(x: IndexToNine, y: IndexToNine) {
+      this.set(x, y).to(1, 2, 3, 4, 5, 6, 7, 8, 9)
+   }
+
+   clear() {
+      for (let i: IndexToNine = 0; i < 9; i = i+1 as IndexToNine) {
+         for (let j: IndexToNine = 0; j < 9; j = j+1 as IndexToNine) {
+            this.clearCell(i, j)
+         }
+      }
+   }
 }
 

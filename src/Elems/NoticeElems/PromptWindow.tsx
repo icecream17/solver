@@ -15,7 +15,7 @@ type PromptWindowProps = {
 }
 
 export default class PromptWindow extends React.Component<PromptWindowProps> {
-   inputElement: HTMLInputElement | null = null
+   inputElement: HTMLTextAreaElement | null = null
    constructor (props: PromptWindowProps) {
       super(props)
       this.cancel = this.cancel.bind(this)
@@ -28,7 +28,7 @@ export default class PromptWindow extends React.Component<PromptWindowProps> {
             <div className="PromptNotice">
                <label htmlFor="PromptMessage">
                   <p>{this.props.message}</p>
-                  <input id="PromptMessage" ref={(element) => this.inputElement = element} defaultValue={this.props.defaultResponse} />
+                  <textarea id="PromptMessage" ref={(element) => this.inputElement = element} defaultValue={this.props.defaultResponse} />
                </label>
                <Control className="PromptCancel" onClick={this.cancel}>Cancel</Control>
                <Control className="PromptSubmit" onClick={this.submit}>Submit</Control>

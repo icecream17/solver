@@ -25,7 +25,7 @@ export default class DataContainer extends React.Component<_UnusedProps, DataSta
          value: ''
       }
 
-      this.handleChange.bind(this)
+      this.handleChange = this.handleChange.bind(this)
    }
 
    render() {

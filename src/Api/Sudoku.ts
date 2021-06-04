@@ -32,4 +32,9 @@ export default class Sudoku extends PureSudoku {
       this.cells[cell.props.row][cell.props.column] = cell
       this.data[cell.props.row][cell.props.column] = cell.state.candidates
    }
+
+   clearCell(x: IndexToNine, y: IndexToNine) {
+      this.data[x][y] = [1, 2, 3, 4, 5, 6, 7, 8, 9]
+      this.cells[x][y].clearCandidates()
+   }
 }

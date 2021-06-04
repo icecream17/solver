@@ -1,5 +1,6 @@
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { finished } from 'stream';
 import App from './App';
 import asyncPrompt from './asyncPrompt';
 import { forComponentsToUpdate } from './utils';
@@ -23,10 +24,23 @@ test("Strategy sections exist", () => {
 })
 
 // Silly test
-test("Click everything", () => {
+test.skip("Click everything", () => {
+   let elementsClicked = 0
+
    for (const element of document.querySelectorAll("*")) {
       userEvent.click(element)
+
+      elementsClicked++
+      if (elementsClicked > 1000) {
+         console.debug(element)
+         throw ReferenceError("Too many elements clicked")
+      }
    }
+
+   console.info(elementsClicked)
+
+   // No errors!
+   expect(true).toBe(true)
 })
 
 test("The alert system", () => {
@@ -71,7 +85,6 @@ test("The prompt system", async () => {
    expect(inputElementAgain.value).toBe(testText)
    userEvent.click(submitButtonAgain)
    expect(promptPromise3).resolves.toBe(testText)
-
 })
 
 test.todo("Strategy control testing")

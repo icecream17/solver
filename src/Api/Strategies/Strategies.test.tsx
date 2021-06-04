@@ -2,7 +2,7 @@ import PureSudoku from "../PureSudoku"
 import testBoards from "../boards"
 import Solver from "../Solver";
 import Sudoku from "../Sudoku";
-import { MAX_CELL_INDEX } from "../../Types";
+import { NUMBER_OF_CELLS } from "../../Types";
 import { render } from "@testing-library/react";
 import App from "../../App";
 import checkForSolved from "./checkForSolved";
@@ -41,7 +41,7 @@ describe('strategies', () => {
          render(<App />)
          window._custom.alert = jest.fn()
 
-         solver.solved = MAX_CELL_INDEX
+         solver.solved = NUMBER_OF_CELLS
          const testSudoku = Sudoku.from81(testBoards["Solved board"])
          expect(checkForSolved(testSudoku, solver).success).toBe(true)
 

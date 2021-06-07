@@ -182,7 +182,6 @@ while success:
                 if identifier in fails:
                     continue
 
-                print(row, col)
                 if grid[row][col] != 0:
                     # Remember its cell value in case we need to put it back
                     backup = grid[row][col]
@@ -201,10 +200,10 @@ while success:
                     result = solutionCount(copyGrid)
                     if result == 1:
                         successes.append([row, col])
-                        print(row, col, "SUCCESS")
+                        print(numLeft, row, col, "SUCCESS")
                     else:
                         fails.append(identifier)
-                        print(row, col, "FAIL", result)
+                        print(numLeft, row, col, "FAIL", result)
 
 
     if len(successes) == 0:

@@ -165,10 +165,18 @@ export default class Solver {
 
       this.sudokuNullCheck()
       this.sudoku.import(result)
+      this.erroring = false
+      this.solved = 0
+      this.stepsTodo = 0
+      this.strategyIndex = 0
    }
 
    Clear() {
       this.sudokuNullCheck()
       this.sudoku.clear()
+      this.erroring = false
+      this.solved = 0
+      this.stepsTodo = 0
+      this.strategyIndex = 0
    }
 }

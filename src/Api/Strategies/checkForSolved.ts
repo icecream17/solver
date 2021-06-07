@@ -23,14 +23,6 @@ export default function checkForSolved(sudoku: Sudoku, solver: Solver) {
       throw TypeError(`impossible amount of solver.solved - got ${solver.solved}`)
    }
 
-   if (solver.solved === NUMBER_OF_CELLS) {
-      window._custom.alert("Finished! :D", AlertType.SUCCESS)
-      return {
-         success: true,
-         successcount: NUMBER_OF_CELLS
-      } as const
-   }
-
    let totalSolved = 0
    for (const row of sudoku.data) {
       for (const cellCandidates of row) {
@@ -40,9 +32,18 @@ export default function checkForSolved(sudoku: Sudoku, solver: Solver) {
       }
    }
 
-   if (totalSolved > solver.solved) {
+   if (totalSolved !== solver.solved) {
       const difference = totalSolved - solver.solved
       solver.solved = totalSolved
+
+      if (totalSolved === NUMBER_OF_CELLS) {
+         window._custom.alert("Finished! :D", AlertType.SUCCESS)
+         return {
+            success: true,
+            successcount: NUMBER_OF_CELLS
+         } as const
+      }
+
       return {
          success: true,
          successcount: difference

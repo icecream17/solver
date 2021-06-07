@@ -8,6 +8,7 @@ import Sudoku from "./Sudoku"
 export default class Solver {
    latestStrategyItem: null | StrategyItem = null
    isDoingStep = false
+   erroring = false
    solved = 0
    stepsTodo = 0
    strategyIndex = 0
@@ -45,7 +46,8 @@ export default class Solver {
       // Go back to the start when a strategy succeeds
       // (exception: if you're at the start go to 1 anyways)
       // (exception exception: if the sudoku is finished don't go to 1)
-      if (success && this.strategyIndex > 0) {
+      // (another exception: always be at the start if erroring)
+      if ((success && this.strategyIndex > 0) || this.erroring) {
          this.strategyIndex = 0
       } else {
          this.strategyIndex++
@@ -67,6 +69,9 @@ export default class Solver {
 
    async Step(): Promise<undefined> {
       await forComponentsToUpdate()
+
+      this.erroring = false
+
       if (this.isDoingStep) {
          this.stepsTodo++
          return;
@@ -118,6 +123,9 @@ export default class Solver {
             successcount: strategyResult.successcount ?? null
          } as const
 
+         if (newState.successcount === -1) {
+            this.erroring = true
+         }
          this.latestStrategyItem.setState(newState)
          await forComponentsToUpdate()
       }

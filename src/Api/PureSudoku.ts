@@ -175,21 +175,26 @@ export default class PureSudoku {
    // Note: import is a keyword, but it doesn't cause a syntax error here
    import(representation: string) {
       representation = representation.trim().normalize()
-      if (representation.length === 81) {
-         this.import81(representation)
-         return {
-            success: true,
-            representationType: '81'
-         } as const
+      const representationWithoutWhitespace = representation.replaceAll(/\s/g, "")
+
+      for (const testRepresentation of [representation, representationWithoutWhitespace] as const) {
+         if (testRepresentation.length === 81) {
+            this.import81(testRepresentation)
+            return {
+               success: true,
+               representationType: '81'
+            } as const
+         }
+
+         if (testRepresentation.length === 729) {
+            this.import729(testRepresentation)
+            return {
+               success: true,
+               representationType: '729'
+            } as const
+         }
       }
 
-      if (representation.length === 729) {
-         this.import729(representation)
-         return {
-            success: true,
-            representationType: '729'
-         } as const
-      }
 
       const gridRepresentation = representation
          .split('')

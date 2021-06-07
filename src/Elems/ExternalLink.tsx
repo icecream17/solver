@@ -13,7 +13,8 @@ const exampleUsage = `
 
 type ExternalLinkProps = Readonly<{
    children?: React.ReactNode
-   href: any
+   className?: string
+   href?: string
 }>
 
 /**
@@ -44,7 +45,7 @@ export default class ExternalLink extends React.Component<ExternalLinkProps> {
    render() {
       return (
          <a
-            className="App-link"
+            className={this.props.className ?? "App-link"}
             href={this.props.href}
             target="_blank"
             rel="noopener noreferrer"

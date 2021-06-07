@@ -201,7 +201,7 @@ export default class PureSudoku {
          .filter(char => "123456789 ".includes(char))
          .join('')
          .trim()
-         .split(/\s+/g)
+         .split(/\s+/g) // Could change `\s` to ` `
 
       if (gridRepresentation.length === 81) {
          this.importGrid(

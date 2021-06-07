@@ -1,7 +1,7 @@
 # Credits to www.101computing.net/sudoku-generator-algorithm/
 # Modified
 
-import turtle
+# import turtle
 import random
 from random import randint, shuffle
 from time import sleep
@@ -14,50 +14,50 @@ grid = []
 for _ in range(9):
     grid.append([0, 0, 0, 0, 0, 0, 0, 0, 0])
 
-myPen = turtle.Turtle()
-turtle.tracer(0)
-myPen.speed(0)
-myPen.color("#000000")
-myPen.hideturtle()
+# myPen = turtle.Turtle()
+# turtle.tracer(0)
+# myPen.speed(0)
+# myPen.color("#000000")
+# myPen.hideturtle()
 
-# Drawing variables
-topLeft_x = -150
-topLeft_y = 150
-intDim = 35
+# # Drawing variables
+# topLeft_x = -150
+# topLeft_y = 150
+# intDim = 35
 
 
-def text(message, x, y, size):
-    FONT = ('Arial', size, 'normal')
-    myPen.penup()
-    myPen.goto(x, y)
-    myPen.write(message, align="left", font=FONT)
+# def text(message, x, y, size):
+#     FONT = ('Arial', size, 'normal')
+#     myPen.penup()
+#     myPen.goto(x, y)
+#     myPen.write(message, align="left", font=FONT)
 
-# A procedure to draw the grid on screen using Python Turtle
-def drawGrid(grid):
-    for row in digitIndices:
-        if (row % 3) == 0:
-            myPen.pensize(3)
-        else:
-            myPen.pensize(1)
-            myPen.penup()
-            myPen.goto(topLeft_x, topLeft_y-row*intDim)
-            myPen.pendown()
-            myPen.goto(topLeft_x+9*intDim, topLeft_y-row*intDim)
-    for col in digitIndices:
-        if (col % 3) == 0:
-            myPen.pensize(3)
-        else:
-            myPen.pensize(1)
-            myPen.penup()
-            myPen.goto(topLeft_x+col*intDim, topLeft_y)
-            myPen.pendown()
-            myPen.goto(topLeft_x+col*intDim, topLeft_y-9*intDim)
+# # A procedure to draw the grid on screen using Python Turtle
+# def drawGrid(grid):
+#     for row in digitIndices:
+#         if (row % 3) == 0:
+#             myPen.pensize(3)
+#         else:
+#             myPen.pensize(1)
+#             myPen.penup()
+#             myPen.goto(topLeft_x, topLeft_y-row*intDim)
+#             myPen.pendown()
+#             myPen.goto(topLeft_x+9*intDim, topLeft_y-row*intDim)
+#     for col in digitIndices:
+#         if (col % 3) == 0:
+#             myPen.pensize(3)
+#         else:
+#             myPen.pensize(1)
+#             myPen.penup()
+#             myPen.goto(topLeft_x+col*intDim, topLeft_y)
+#             myPen.pendown()
+#             myPen.goto(topLeft_x+col*intDim, topLeft_y-9*intDim)
 
-    for row in digitIndices:
-        for col in digitIndices:
-            if grid[row][col] != 0:
-                text(grid[row][col], topLeft_x+col*intDim +
-                    9, topLeft_y-row*intDim-intDim+8, 18)
+#     for row in digitIndices:
+#         for col in digitIndices:
+#             if grid[row][col] != 0:
+#                 text(grid[row][col], topLeft_x+col*intDim +
+#                     9, topLeft_y-row*intDim-intDim+8, 18)
 
 
 # A function to check if the grid is full
@@ -159,15 +159,16 @@ def fillGrid(grid, start=0):
 
 #Generate a Fully Solved Grid
 fillGrid(grid)
-drawGrid(grid)
-myPen.getscreen().update()
-sleep(2)
+# drawGrid(grid)
+# myPen.getscreen().update()
+sleep(1)
 
 
 # Start Removing Numbers one by one
 
 success = True
 numLeft = 81
+fails = []
 while success:
     successes = []
 
@@ -176,6 +177,11 @@ while success:
         # Loop over all digits and find the ones that can be taken off
         for row in digitIndices:
             for col in digitIndices:
+                # Optimization: If already failed skip it
+                identifier = str(row) + " " + str(col)
+                if identifier in fails:
+                    continue
+
                 print(row, col)
                 if grid[row][col] != 0:
                     # Remember its cell value in case we need to put it back
@@ -197,6 +203,7 @@ while success:
                         successes.append([row, col])
                         print(row, col, "SUCCESS")
                     else:
+                        fails.append(identifier)
                         print(row, col, "FAIL", result)
 
 
@@ -207,9 +214,9 @@ while success:
         grid[row][col] = 0
         numLeft -= 1
 
-    myPen.clear()
-    drawGrid(grid)
-    myPen.getscreen().update()
+    # myPen.clear()
+    # drawGrid(grid)
+    # myPen.getscreen().update()
 
 print("\n".join([
     str(row[0]) + str(row[1]) + str(row[2]) + str(row[3]) + str(row[4]) +

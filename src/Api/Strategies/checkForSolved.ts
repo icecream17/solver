@@ -36,17 +36,17 @@ export default function checkForSolved(sudoku: Sudoku, solver: Solver) {
       const difference = totalSolved - solver.solved
       solver.solved = totalSolved
 
-      if (totalSolved === NUMBER_OF_CELLS) {
-         window._custom.alert("Finished! :D", AlertType.SUCCESS)
-         return {
-            success: true,
-            successcount: NUMBER_OF_CELLS
-         } as const
-      }
-
       return {
          success: true,
          successcount: difference
+      } as const
+   }
+
+   if (totalSolved === NUMBER_OF_CELLS) {
+      window._custom.alert("Finished! :D", AlertType.SUCCESS)
+      return {
+         success: true,
+         successcount: NUMBER_OF_CELLS
       } as const
    }
 

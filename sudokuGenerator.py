@@ -1,10 +1,38 @@
+# This is a sudoku generator, which generates a unique sudoku randomly
+# But unrandomly the sudoku it generates won't have any extraneous digits
+
+# Since it's so random the sudoku aren't necessarily good
+# Often half of the grid is filled by singles
+# In fact the following sudoku is super easy, except for this one WXYZ wing at the end.
+# 240100000
+# 007800600
+# 010003900
+# 000701000
+# 000004200
+# 000900870
+# 060020000
+# 005030004
+# 070000050
+
+# So far it seems to take anywhere from a to b seconds:
+# 5.320441s
+# 39.9760412s
+
+# It takes so long since it checks a sudoku's validity by bruteforce
+# So the longer it takes, the harder it is to bruteforce the solution.
+# And generally those hard to bruteforce sudokus are ... hard.
+# Although disappointingly, some 40 second sudoku was destroyed by simple strategies.
+
 # Credits to www.101computing.net/sudoku-generator-algorithm/
 # Modified
 
 # import turtle
 import random
-from random import randint, shuffle
+from random import shuffle
+import time
 from time import sleep
+
+starttime = time.time_ns()
 
 digits = [1, 2, 3, 4, 5, 6, 7, 8, 9]
 digitIndices = [digit - 1 for digit in digits]
@@ -220,4 +248,8 @@ while success:
 print("\n".join([
     str(row[0]) + str(row[1]) + str(row[2]) + str(row[3]) + str(row[4]) +
     str(row[5]) + str(row[6]) + str(row[7]) + str(row[8]) for row in grid]))
+
+finishtime = time.time_ns()
+timetaken = finishtime - starttime
+print(f"{timetaken / 1_000_000_000}s")
 input("Sudoku Grid Ready. Press enter to finish")

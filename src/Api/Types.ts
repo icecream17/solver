@@ -1,8 +1,10 @@
+// @flow
+
 import PureSudoku from "./PureSudoku";
 import Solver from "./Solver";
 import Sudoku from "./Sudoku";
 
-// error = success: true, successcount: -1
+export const SuccessError = -1
 export type StrategyResult = Readonly<{
    success: true,
    successcount: number,
@@ -13,8 +15,8 @@ export type StrategyResult = Readonly<{
    message?: string
 }>
 export type StrategyError = Readonly<{
-   success: true,
-   successcount: -1,
+   success: false,
+   successcount: typeof SuccessError,
    message?: string
 }>
 export type Strategy = (

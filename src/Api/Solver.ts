@@ -4,6 +4,7 @@ import StrategyItem from "../Elems/AsideElems/StrategyItem"
 import { forComponentsToUpdate } from "../utils"
 import Strategies from "./Strategies/Strategies"
 import Sudoku from "./Sudoku"
+import { SuccessError } from "./Types"
 
 export default class Solver {
    latestStrategyItem: null | StrategyItem = null
@@ -123,7 +124,7 @@ export default class Solver {
             successcount: strategyResult.successcount ?? null
          } as const
 
-         if (newState.successcount === -1) {
+         if (newState.successcount === SuccessError) {
             this.erroring = true
          }
          this.latestStrategyItem.setState(newState)

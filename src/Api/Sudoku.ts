@@ -1,11 +1,11 @@
 import Cell from "../Elems/MainElems/Cell"
 import { IndexToNine, SudokuDigits, TwoDimensionalArray } from "../Types"
-import PureSudoku, { SudokuConstructorOptions } from "./PureSudoku"
+import PureSudoku from "./PureSudoku"
 
 export default class Sudoku extends PureSudoku {
    cells: TwoDimensionalArray<Cell>
-   constructor (options: SudokuConstructorOptions = {}) {
-      super(options)
+   constructor (...args: ConstructorParameters<typeof PureSudoku>) {
+      super(...args)
       if (this.data === undefined) {
          throw TypeError('Super constructor PureSudoku didnt initialize this.data')
       }
@@ -21,9 +21,13 @@ export default class Sudoku extends PureSudoku {
       return {
          to: async (...candidates: SudokuDigits[]) => {
             this.data[x][y] = candidates
-            await new Promise(resolve => {
-               this.cells[x][y].setCandidatesTo(candidates, () => resolve(undefined))
-            })
+
+            // super calls set() before this.cells is set
+            if (this.cells !== undefined) {
+               await new Promise(resolve => {
+                  this.cells[x][y].setCandidatesTo(candidates, () => resolve(undefined))
+               })
+            }
          }
       }
    }

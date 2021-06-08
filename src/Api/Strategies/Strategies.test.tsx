@@ -21,7 +21,7 @@ describe('strategies', () => {
 
    describe('check for solved', () => {
       test('error if solver.solved is invalid', () => {
-         const testSudoku = Sudoku.from81(testBoards["Solved board"])
+         const testSudoku = PureSudoku.fromRepresentation(testBoards["Solved board"])
 
          // @ts-expect-error
          solver.solved = undefined
@@ -42,7 +42,7 @@ describe('strategies', () => {
          window._custom.alert = jest.fn()
 
          solver.solved = NUMBER_OF_CELLS
-         const testSudoku = Sudoku.from81(testBoards["Solved board"])
+         const testSudoku = Sudoku.fromRepresentation(testBoards["Solved board"])
          expect(checkForSolved(testSudoku, solver).success).toBe(true)
 
          expect(window._custom.alert).toHaveBeenCalled()
@@ -52,12 +52,12 @@ describe('strategies', () => {
       })
 
       test('succeeds when the sudoku has new solved cells', () => {
-         const testSudoku = Sudoku.from81(testBoards["Solved board"])
+         const testSudoku = Sudoku.fromRepresentation(testBoards["Solved board"])
          expect(checkForSolved(testSudoku, solver).success).toBe(true)
       })
 
       test('fails when the sudoku doesnt have any new solved cells', () => {
-         const testSudoku = new Sudoku({ setup: true })
+         const testSudoku = new Sudoku()
          expect(checkForSolved(testSudoku, solver).success).toBe(false)
       })
    })
@@ -65,7 +65,7 @@ describe('strategies', () => {
    describe('update candidates', () => {
       test('Actually updates', () => {
          // Just one candidate
-         let testSudoku = new PureSudoku({ setup: true })
+         let testSudoku = new PureSudoku()
          testSudoku.set(7, 7).to(4)
          expect(updateCandidates(testSudoku, solver).success).toBe(true)
 
@@ -79,14 +79,14 @@ describe('strategies', () => {
       })
 
       test("Doesn't update when there's nothing to update", () => {
-         const testSudoku = new Sudoku({ setup: true })
+         const testSudoku = new Sudoku()
          expect(updateCandidates(testSudoku, solver).success).toBe(false)
       })
    })
 
    describe('hiddenSingles', () => {
       test("It works", () => {
-         const testSudoku = new PureSudoku({ setup: true })
+         const testSudoku = new PureSudoku()
          testSudoku.set(2, 7).to(5)
          testSudoku.set(3, 6).to(5)
          testSudoku.set(6, 8).to(1)
@@ -99,7 +99,7 @@ describe('strategies', () => {
       })
 
       test("Doesn't false positive with just regular singles", () => {
-         const testSudoku = new PureSudoku({ setup: true })
+         const testSudoku = new PureSudoku()
          testSudoku.set(2, 7).to(5)
          testSudoku.set(7, 8).to(2)
          updateCandidates(testSudoku, solver)

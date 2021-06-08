@@ -2,100 +2,28 @@
 import { IndexToNine, SudokuDigits, ThreeDimensionalArray } from "../Types"
 import { to9by9 } from "./Utils"
 
-export type SudokuConstructorOptions = {
-   setup: false
-   representationType?: never
-   representation?: never
-} | {
-   setup?: true
-   representationType?: null
-   representation?: null
-} | {
-   setup?: true
-   representationType: string
-   representation: string
-}
-
-function coalesceConstructorOptions (options: SudokuConstructorOptions): Readonly<SudokuConstructorOptions> {
-   options.setup ??= true
-   if (options.setup) {
-      options.representation ??= null
-      options.representationType ??= null
-      if (options.representationType === null) {
-         return {
-            setup: true,
-            representationType: null,
-            representation: null
-         } as const
-      } else if (options.representation === null) {
-         throw TypeError('PureSudoku: representationType provided but not representation')
-      } else {
-         return {
-            setup: true,
-            representationType: options.representationType,
-            representation: options.representation
-         } as const
-      }
-   } else {
-      if (options.representation != null) {
-         console.warn('PureSudoku: Representation given but setup === false. Ignoring representation.')
-      }
-      if (options.representationType != null) {
-         console.warn('PureSudoku: Representation type given but setup === false. Ignoring representation type.')
-      }
-      return {
-         setup: false
-      } as const
-   }
-}
-
 export default class PureSudoku {
    data: ThreeDimensionalArray<SudokuDigits>
-   constructor(options: SudokuConstructorOptions = {}) {
-      const checkedOptions = coalesceConstructorOptions(options)
+   constructor(representation?: string) {
       this.data = [
          [], [], [],
          [], [], [],
          [], [], [],
       ]
 
-      if (checkedOptions.setup) {
-         if (checkedOptions.representationType === '81') {
-            let totalIndex = 0
-            for (let i = 0; i < 9; i++) {
-               for (let j = 0; j < 9; j++) {
-                  const char = checkedOptions.representation[totalIndex]
-                  totalIndex++ // After char
+      for (let i = 0; i < 9; i++) {
+         for (let j = 0; j < 9; j++) {
+            this.data[i][j] = [1, 2, 3, 4, 5, 6, 7, 8, 9]
+         }
+      }
 
-                  if ("123456789".includes(char)) {
-                     this.data[i][j] = [Number(char) as SudokuDigits]
-                  } else {
-                     this.data[i][j] = [1, 2, 3, 4, 5, 6, 7, 8, 9]
-                  }
-               }
-            }
-         } else {
-            for (let i = 0; i < 9; i++) {
-               for (let j = 0; j < 9; j++) {
-                  this.data[i][j] = [1, 2, 3, 4, 5, 6, 7, 8, 9]
-               }
-            }
-         }
-      } else {
-         for (let i = 0; i < 9; i++) {
-            for (let j = 0; j < 9; j++) {
-               this.data[i][j] = []
-            }
-         }
+      if (typeof representation === "string") {
+         this.import(representation)
       }
    }
 
-   static from81<T extends typeof PureSudoku>(this: T, representation: string): InstanceType<T> {
-      return new this({
-         setup: true,
-         representationType: '81',
-         representation
-      }) as InstanceType<T>
+   static fromRepresentation<T extends typeof PureSudoku>(this: T, representation: string): InstanceType<T> {
+      return new this(representation) as InstanceType<T>
    }
 
    /**
@@ -242,6 +170,16 @@ export default class PureSudoku {
             this.clearCell(i, j)
          }
       }
+   }
+
+   getColumn(index: IndexToNine) {
+      return this.data.map(row => row[index])
+   }
+
+   getBox(index: IndexToNine) {
+      const boxColumn = index % 3
+      const boxRow = (index - boxColumn) / 3
+      return this.data.slice(boxRow, boxRow + 3).flatMap(row => row.slice(boxColumn, boxColumn + 3))
    }
 }
 

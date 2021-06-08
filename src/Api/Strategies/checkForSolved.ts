@@ -1,16 +1,17 @@
 import { AlertType, NUMBER_OF_CELLS } from "../../Types"
+import PureSudoku from "../PureSudoku"
 import Solver from "../Solver"
-import Sudoku from "../Sudoku"
+import { SuccessError } from "../Types"
 import checkValidity from "./checkValidity"
 
-export default function checkForSolved(sudoku: Sudoku, solver: Solver) {
+export default function checkForSolved(sudoku: PureSudoku, solver: Solver) {
    const validity = checkValidity(sudoku)
    if (!validity.ok) {
       window._custom.alert(validity.message, AlertType.ERROR)
       return {
-         success: true,
+         success: false,
          message: validity.message,
-         successcount: -1
+         successcount: SuccessError,
       } as const
    }
 

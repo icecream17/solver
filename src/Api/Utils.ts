@@ -105,3 +105,15 @@ export function to9by9<T>(thing: T[] | string) {
       thing.slice(72),
    ] as const
 }
+
+export const indexTo3x3 = [
+   [0, 0], [0, 1], [0, 2],
+   [1, 0], [1, 1], [1, 2],
+   [2, 0], [2, 1], [2, 2],
+] as const
+
+export function getPositionFromIndexWithinBox(indexOfBox: IndexToNine, indexInBox: IndexToNine) {
+   const [boxRow, boxColumn] = indexTo3x3[indexOfBox]
+   const [withinRow, withinColumn] = indexTo3x3[indexInBox]
+   return [boxRow * 3 + withinRow as IndexToNine, boxColumn * 3 + withinColumn as IndexToNine] as [IndexToNine, IndexToNine]
+}

@@ -1,6 +1,7 @@
 import { IndexToNine } from "../../Types"
 import PureSudoku from "../PureSudoku"
 import Solver from "../Solver"
+import { SuccessError } from "../Types"
 import { affects, algebraic } from "../Utils"
 
 // O(n^5)
@@ -26,8 +27,8 @@ export default function updateCandidates(sudoku: PureSudoku, _solver: Solver) {
                   if (datacell[k] === solvedCandidate) {
                      if (datacell.length === 1) {
                         return {
-                           success: true,
-                           successcount: -1,
+                           success: false,
+                           successcount: SuccessError,
                            message: `Both ${algebraic(i, j)} and ${algebraic(row, column)} must be ${solvedCandidate}`
                         }
                      }

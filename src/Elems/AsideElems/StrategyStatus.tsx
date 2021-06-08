@@ -1,6 +1,7 @@
 // @flow
 
 import React from 'react';
+import { SuccessError } from '../../Api/Types';
 import { _expect } from '../../utils';
 
 export type StrategyStatusProps = Readonly<{
@@ -26,28 +27,28 @@ export default class StrategyStatus extends React.Component<StrategyStatusProps>
    }
 
    render() {
-      const resultText = (
+      const resultText =
          this.props.success === null
             ? '-'
             : this.props.success
                ? this.props.successcount === 1
                   ? 'Yes'
-                  : this.props.successcount > 1
-                     ? this.props.successcount
-                     : 'Error!'
-               : 'No'
-      )
+                  : this.props.successcount
+               : this.props.successcount === SuccessError
+                  ? 'Error!'
+                  : 'No';
 
-      const cssClass = (
+      const cssClass =
          this.props.success === null
             ? 'null'
             : this.props.success
                ? 'success'
-               : 'fail'
-      )
+               : 'fail';
 
       return (
-         <span className={`StrategyResult ${cssClass} ${resultText === 'Error!' ? 'error' : ''}`}>
+         <span
+            className={`StrategyResult ${cssClass} ${resultText === 'Error!' ? 'error' : ''}`}
+            data-successcount={this.props.successcount}>
             {resultText}
          </span>
       )

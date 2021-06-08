@@ -50,7 +50,12 @@ export default class StrategyList extends React.Component<StrategyListProps> {
             />
             <StrategyItem
                name='Hidden singles'
-               description=''
+               description='Checks if a digit only appears once in a group'
+               {...getRepeatedProps()}
+            />
+            <StrategyItem
+               name='Pairs, triples, quads (bugged)'
+               description="[needs explanation] It only success when there's a cell with all the candidates"
                {...getRepeatedProps()}
             />
             <StrategyItem

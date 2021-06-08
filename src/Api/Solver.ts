@@ -103,6 +103,7 @@ export default class Solver {
          // instead move on to the next strategy
          if (this.latestStrategyItem.state.disabled) {
             this.updateCounters(false, false)
+            this.isDoingStep = false // Set back in the next step
             await forComponentsToUpdate() // currently unneccessary
             return this.Step()
          }

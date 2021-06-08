@@ -29,10 +29,10 @@ function getCandidatesOfConjugate(conjugate: _cellInfoList) {
 // Say these are the cells
 // 2378 <
 // 2589
-// 248
+// 2468
 // 278 <
 // 178
-// 2587
+// 2467
 // 189
 // 28 <
 // 378 <
@@ -57,7 +57,7 @@ function findConjugatesOfGroup(
 
 
    // 1. Filter the possible cells
-   // Each possible cell must have 2-maxSize candidates
+   // Each possible cell must have 2 to maxSize candidates
    const possibleCells = [] as _cellInfoList
 
    for (let index: IndexToNine = 0; index < 9; index = index + 1 as IndexToNine) {
@@ -84,23 +84,26 @@ function findConjugatesOfGroup(
          someCell.candidates.every(candidate => cell.candidates.includes(candidate))
       )
 
+      const conjugate = [cell, ...otherCells]
+
       // Too many cells, for example 3 cells needing `1 2`, are invalid.
-      if (otherCells.length > cell.candidates.length) {
-         const invalidGroup = [cell, ...otherCells]
-         const invalidGroupNames = invalidGroup.map(
+      // Add 1 to include this cell
+      if (otherCells.length + 1 > cell.candidates.length) {
+         const invalidGroupNames = conjugate.map(
             someCell => algebraic(...someCell.position)
          ).join(", and ")
-         const invalidGroupCandidates = getCandidatesOfConjugate(invalidGroup).join(', and ')
+         const invalidGroupCandidates = getCandidatesOfConjugate(conjugate)
+         const invalidCandidateString = invalidGroupCandidates.join(', and ')
 
-         if (invalidGroup.length === 1) {
+         if (conjugate.length === 1) {
             window._custom.alert(`The cell ${invalidGroupNames} has 0 possibilities!`, AlertType.ERROR)
          } else if (invalidGroupCandidates.length === 1) {
-            window._custom.alert(`${invalidGroupNames}: These ${invalidGroup.length} cells cannot share 1 candidate (${invalidGroupCandidates})!!!`, AlertType.ERROR)
+            window._custom.alert(`${invalidGroupNames}: These ${conjugate.length} cells cannot share 1 candidate (${invalidCandidateString})!!!`, AlertType.ERROR)
          } else {
-            window._custom.alert(`${invalidGroupNames}: These ${invalidGroup.length} cells cannot share ${invalidGroupCandidates.length} candidates (${invalidGroupCandidates})!!!`, AlertType.ERROR)
+            window._custom.alert(`${invalidGroupNames}: These ${conjugate.length} cells cannot share ${invalidGroupCandidates.length} candidates (${invalidCandidateString})!!!`, AlertType.ERROR)
          }
          return "ERROR!!!" as const
-      } else if (otherCells.length === cell.candidates.length) {
+      } else if (otherCells.length + 1 === cell.candidates.length) {
          // Found a conjugate!!!!!
          // Remove all conjugates that are a subset of this conjugate
          //    (Sets are subsets of themselves)
@@ -114,7 +117,7 @@ function findConjugatesOfGroup(
             }
          }
 
-         conjugates.push(otherCells)
+         conjugates.push(conjugate)
       }
    }
 
@@ -132,8 +135,8 @@ function findConjugatesOfSudoku(sudoku: PureSudoku, maxSize = 4 as 2 | 3 | 4) {
    const resultColumns = [] as Array<Exclude<ReturnType<typeof findConjugatesOfGroup>, "ERROR!!!">>
    const resultBoxes = [] as Array<Exclude<ReturnType<typeof findConjugatesOfGroup>, "ERROR!!!">>
    for (let i: IndexToNine = 0; i < 9; i = i + 1 as IndexToNine) {
-      const resultRow = findConjugatesOfGroup(sudoku.data[i], index => [index, i], maxSize)
-      const resultColumn = findConjugatesOfGroup(sudoku.getColumn(i), index => [i, index], maxSize)
+      const resultRow = findConjugatesOfGroup(sudoku.data[i], index => [i, index], maxSize)
+      const resultColumn = findConjugatesOfGroup(sudoku.getColumn(i), index => [index, i], maxSize)
       const resultBox = findConjugatesOfGroup(sudoku.getBox(i), index => getPositionFromIndexWithinBox(i, index), maxSize)
 
       if (resultRow === "ERROR!!!" || resultColumn === "ERROR!!!" || resultBox === "ERROR!!!") {
@@ -159,7 +162,6 @@ export default function pairsTriplesAndQuads(sudoku: PureSudoku, _solver: Solver
    }
 
    let successcount = 0;
-   console.debug(conjugateGroups)
    const [resultRows, resultColumns, resultBoxes] = conjugateGroups
 
    for (const conjugateList of resultRows) {

@@ -8,6 +8,7 @@ import App from "../../App";
 import checkForSolved from "./checkForSolved";
 import hiddenSingles from "./hiddenSingles";
 import updateCandidates from "./updateCandidates";
+import pairsTriplesAndQuads from "./pairsTriplesAndQuads";
 
 describe('strategies', () => {
    let solver: Solver;
@@ -104,6 +105,39 @@ describe('strategies', () => {
          testSudoku.set(7, 8).to(2)
          updateCandidates(testSudoku, solver)
          expect(updateCandidates(testSudoku, solver).success).toBe(false)
+      })
+   })
+
+   describe('Pairs triples and quads', () => {
+      test('Pairs', () => {
+         const testSudoku = new PureSudoku()
+         testSudoku.set(0, 0).to(1, 2)
+         testSudoku.set(0, 1).to(1, 2)
+         expect(pairsTriplesAndQuads(testSudoku, solver).success).toBe(true)
+
+      })
+
+      test('Quads', () => {
+         const testSudoku = new PureSudoku()
+         testSudoku.set(3, 3).to(2, 3, 7, 8) // < the quad
+         testSudoku.set(3, 4).to(2, 3, 5, 8, 9)
+         testSudoku.set(3, 5).to(2, 4, 6, 8)
+         testSudoku.set(4, 3).to(2, 7, 8) // <
+         testSudoku.set(4, 4).to(1, 7, 8)
+         testSudoku.set(4, 5).to(2, 3, 5, 6, 8)
+         testSudoku.set(5, 3).to(1, 6, 8, 9)
+         testSudoku.set(5, 4).to(2, 8) // <
+         testSudoku.set(5, 5).to(3, 7, 8) // <
+         expect(pairsTriplesAndQuads(testSudoku, solver).success).toBe(true)
+      })
+
+      test.skip('No cell contains all candidates', () => {
+         const testSudoku = new PureSudoku()
+         testSudoku.clear()
+         testSudoku.set(0, 0).to(1, 2)
+         testSudoku.set(0, 1).to(2, 3)
+         testSudoku.set(0, 2).to(3, 1)
+         expect(pairsTriplesAndQuads(testSudoku, solver).success).toBe(true)
       })
    })
 })

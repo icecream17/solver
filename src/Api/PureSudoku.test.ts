@@ -36,3 +36,32 @@ test('clear', () => {
    testSudoku.clear()
    expect(testSudoku.data[3][1]).toStrictEqual([1, 2, 3, 4, 5, 6, 7, 8, 9])
 })
+
+test('getColumn', () => {
+   const testSudoku = new PureSudoku()
+   testSudoku.set(7, 4).to(1, 2, 3)
+   expect(testSudoku.getColumn(4)[7]).toStrictEqual([1, 2, 3])
+   testSudoku.set(7, 0).to(1, 2, 3)
+   expect(testSudoku.getColumn(0)[7]).toStrictEqual([1, 2, 3])
+})
+
+test('getBox', () => {
+   const testSudoku = new PureSudoku()
+   testSudoku.set(7, 4).to(1, 2, 3)
+   expect(testSudoku.getBox(7)[4]).toStrictEqual([1, 2, 3])
+   testSudoku.set(7, 0).to(1, 2, 3)
+   expect(testSudoku.getBox(6)[3]).toStrictEqual([1, 2, 3])
+   testSudoku.set(0, 8).to(1, 2, 3)
+   expect(testSudoku.getBox(2)[2]).toStrictEqual([1, 2, 3])
+})
+
+test('_to81', () => {
+   const testSudoku = new PureSudoku()
+   testSudoku.set(1, 2).to(3, 4, 5)
+   testSudoku.set(4, 5).to(6, 7, 8)
+   const toSudoku = new PureSudoku()
+   expect(toSudoku.import(testSudoku._to81())).toStrictEqual({
+      success: true,
+      representationType: '81'
+   })
+})

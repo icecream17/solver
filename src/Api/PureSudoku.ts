@@ -177,9 +177,10 @@ export default class PureSudoku {
    }
 
    getBox(index: IndexToNine) {
-      const boxColumn = index % 3
-      const boxRow = (index - boxColumn) / 3
-      return this.data.slice(boxRow, boxRow + 3).flatMap(row => row.slice(boxColumn, boxColumn + 3))
+      // 0 1 2 -> 0 3 6
+      const startRow = index - (index % 3) // / 3 * 3
+      const startColumn = (index % 3) * 3
+      return this.data.slice(startRow, startRow + 3).flatMap(row => row.slice(startColumn, startColumn + 3))
    }
 }
 

@@ -10,7 +10,7 @@ const STRATEGIES = [
    checkForSolved,
    updateCandidates,
    hiddenSingles,
-   // pairsTriplesAndQuads,
+   pairsTriplesAndQuads,
 ] as const
 
 export default STRATEGIES as typeof STRATEGIES & Strategy[]

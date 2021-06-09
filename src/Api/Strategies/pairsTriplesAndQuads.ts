@@ -5,6 +5,37 @@ import Solver from "../Solver";
 import { SuccessError } from "../Types";
 import { algebraic, boxAt, getPositionFromIndexWithinBox } from "../Utils";
 
+/**
+ * Gets the unique combinations of an array
+ *
+ * @param {number} min - The minimum size of a combination
+ * @param {number} max - The maximum size of a combination
+ */
+export function combinations<T>(array: T[], min: number, max: number, currentCount = 1) {
+   const _combinations: T[][] = []
+   const _arrayCopy = array.slice()
+   while (_arrayCopy.length) {
+      const element = _arrayCopy.pop() as T
+
+      // For combinations shorter than max size, but also includes max size
+      if (currentCount >= min) {
+         _combinations.push([element])
+      }
+
+      // After the check
+      if (currentCount === max) {
+         continue
+      }
+
+      for (const combination of combinations(_arrayCopy, min, max, currentCount + 1)) {
+         _combinations.push([element, ...combination])
+      }
+   }
+
+   return _combinations
+}
+
+
 type _cellInfoList = Array<{
    position: [IndexToNine, IndexToNine], // ReturnType<typeof indexToPosition>
    candidates: SudokuDigits[]
@@ -74,21 +105,13 @@ function findConjugatesOfGroup(
    // 2. Now that the cells are filtered actually find the conjugates
    const conjugates = [] as _cellInfoList[]
 
-   // For each cell, try to find conjugates
-   CellLoop: // Just a label
-   for (const cell of possibleCells) {
-      // Get all valid *other* cells
-      // Every candidate of the other cells must fit in this cell
-      const otherCells = possibleCells.filter(someCell =>
-         someCell !== cell &&
-         someCell.candidates.every(candidate => cell.candidates.includes(candidate))
-      )
-
-      const conjugate = [cell, ...otherCells]
+   CellLoop:
+   for (const conjugate of combinations(possibleCells, 2, maxSize)) {
+      const candidatesOfConjugate = getCandidatesOfConjugate(conjugate)
 
       // Too many cells, for example 3 cells needing `1 2`, are invalid.
       // Add 1 to include this cell
-      if (otherCells.length + 1 > cell.candidates.length) {
+      if (conjugate.length > candidatesOfConjugate.length) {
          const invalidGroupNames = conjugate.map(
             someCell => algebraic(...someCell.position)
          ).join(", and ")
@@ -103,16 +126,16 @@ function findConjugatesOfGroup(
             window._custom.alert(`${invalidGroupNames}: These ${conjugate.length} cells cannot share ${invalidGroupCandidates.length} candidates (${invalidCandidateString})!!!`, AlertType.ERROR)
          }
          return "ERROR!!!" as const
-      } else if (otherCells.length + 1 === cell.candidates.length) {
+      } else if (conjugate.length === candidatesOfConjugate.length) {
          // Found a conjugate!!!!!
          // Remove all conjugates that are a subset of this conjugate
          //    (Sets are subsets of themselves)
          // But exit it this conjugate is itself a subset (after the check)
          for (let index = 0; index < conjugates.length; index++) {
-            if (aIsSubconjugateOfB(conjugates[index], otherCells)) {
+            if (aIsSubconjugateOfB(conjugates[index], conjugate)) {
                conjugates.splice(index, 1)
                index--;
-            } else if (aIsSubconjugateOfB(otherCells, conjugates[index])) {
+            } else if (aIsSubconjugateOfB(conjugate, conjugates[index])) {
                continue CellLoop;
             }
          }

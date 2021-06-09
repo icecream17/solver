@@ -5,7 +5,7 @@ import checkValidity from "./checkValidity";
 let testSudoku: PureSudoku;
 
 beforeEach(() => {
-   testSudoku = new PureSudoku({ setup: true })
+   testSudoku = new PureSudoku()
 })
 
 test('a blank sudoku is valid (subject to change)', () => {

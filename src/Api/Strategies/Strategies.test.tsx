@@ -131,7 +131,7 @@ describe('strategies', () => {
          expect(pairsTriplesAndQuads(testSudoku, solver).success).toBe(true)
       })
 
-      test.skip('No cell contains all candidates', () => {
+      test('No cell contains all candidates', () => {
          const testSudoku = new PureSudoku()
          testSudoku.clear()
          testSudoku.set(0, 0).to(1, 2)

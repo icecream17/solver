@@ -54,8 +54,8 @@ export default class StrategyList extends React.Component<StrategyListProps> {
                {...getRepeatedProps()}
             />
             <StrategyItem
-               name='Pairs, triples, quads (bugged)'
-               description="[needs explanation] It only success when there's a cell with all the candidates"
+               name='Pairs, triples, quads'
+               description="[needs explanation]"
                {...getRepeatedProps()}
             />
             <StrategyItem

@@ -89,7 +89,10 @@ export function affects (row: IndexToNine, column: IndexToNine): Readonly<Array<
 }
 
 
-// Turns an 81 length thing to a 9x9 thing
+/**
+ * Turns something with length 81
+ * to an array of 9 things, each with length 9
+ */
 export function to9by9<T>(thing: T[]): [T[], T[], T[], T[], T[], T[], T[], T[], T[]]
 export function to9by9(thing: string): [string, string, string, string, string, string, string, string, string]
 export function to9by9<T>(thing: T[] | string) {
@@ -112,6 +115,11 @@ export const indexTo3x3 = [
    [2, 0], [2, 1], [2, 2],
 ] as const
 
+/**
+ * Takes a box and the index of a cell in that box
+ *
+ * Then returns the position of the cell (in the whole sudoku)
+ */
 export function getPositionFromIndexWithinBox(indexOfBox: IndexToNine, indexInBox: IndexToNine) {
    const [boxRow, boxColumn] = indexTo3x3[indexOfBox]
    const [withinRow, withinColumn] = indexTo3x3[indexInBox]

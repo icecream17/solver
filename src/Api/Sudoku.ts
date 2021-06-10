@@ -32,6 +32,10 @@ export default class Sudoku extends PureSudoku {
       }
    }
 
+   /**
+    * This is currently used for initialization, but could also be used for updating
+    * That's pretty complicated
+    */
    updateFromCell(cell: Cell) {
       this.cells[cell.props.row][cell.props.column] = cell
       this.data[cell.props.row][cell.props.column] = cell.state.candidates

@@ -2,7 +2,7 @@
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import App from "../App";
-import { forComponentsToUpdate } from "../utils";
+import { forComponentsToStopUpdating, forComponentsToUpdate } from "../utils";
 import BOARDS from "./boards";
 
 beforeEach(() => {
@@ -24,7 +24,7 @@ export function visuallyCurrentStrategy() {
 export function currentStrategyIndex() {
    const currentStrategy = visuallyCurrentStrategy()
    if (currentStrategy === undefined) {
-      return -1
+      return -2
    }
 
    const parentChildren = currentStrategy.parentElement?.children
@@ -34,8 +34,9 @@ export function currentStrategyIndex() {
    return Array.prototype.indexOf.call(parentChildren, currentStrategy)
 }
 
-test.skip("Stays at first strategy when board is invalid", async () => {
+test("Stays at first strategy when board is invalid", async () => {
    await importBoard(BOARDS["Invalid board"])
    userEvent.click(screen.getByRole("button", { name: "go" }))
+   await forComponentsToStopUpdating()
    expect(currentStrategyIndex()).toBe(0)
 })

@@ -48,11 +48,11 @@ export default class Solver {
       // (exception: if you're at the start go to 1 anyways)
       // (exception exception: if the sudoku is finished don't go to 1)
       // (another exception: always be at the start if erroring)
-      if ((success && this.strategyIndex > 0) || this.erroring) {
+      if ((success && this.strategyIndex > 0) || this.erroring || isFinished) {
          this.strategyIndex = 0
       } else {
          this.strategyIndex++
-         if (this.strategyIndex === Strategies.length || isFinished) {
+         if (this.strategyIndex === Strategies.length) {
             this.strategyIndex = 0
          }
       }

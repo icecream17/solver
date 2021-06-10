@@ -34,3 +34,26 @@ export async function forComponentsToUpdate () {
 
    // Tada! Components are updated
 }
+
+/**
+ * Unlike the function "forComponentsToUpdate",
+ * you await for the components to stop making any updates.
+ */
+export async function forComponentsToStopUpdating () {
+   let domChanged = false
+
+   const domChangeHandler = new MutationObserver(() => domChanged = true)
+   const rootNode = document.documentElement
+   domChangeHandler.observe(rootNode, {
+      subtree: true,
+      childList: true,
+      attributes: true,
+      characterData: true
+   })
+
+   do {
+      domChanged = false
+      await forComponentsToUpdate()
+   } while (domChanged)
+}
+

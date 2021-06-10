@@ -44,9 +44,19 @@ describe('strategies', () => {
 
          solver.solved = NUMBER_OF_CELLS
          const testSudoku = Sudoku.fromRepresentation(testBoards["Solved board"])
-         expect(checkForSolved(testSudoku, solver).success).toBe(true)
+         expect(checkForSolved(testSudoku, solver)).toStrictEqual({
+            success: true,
+            successcount: NUMBER_OF_CELLS
+         })
 
-         expect(window._custom.alert).toHaveBeenCalled()
+         // Also check when the sudoku was just updated
+         solver.solved = 0
+         expect(checkForSolved(testSudoku, solver)).toStrictEqual({
+            success: true,
+            successcount: NUMBER_OF_CELLS
+         })
+
+         expect(window._custom.alert).toHaveBeenCalledTimes(2)
 
          // @ts-ignore
          window._custom.alert.mockClear()

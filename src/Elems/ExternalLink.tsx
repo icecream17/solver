@@ -26,9 +26,9 @@ type ExternalLinkProps = Readonly<{
  * @example
  * <ExternalLink href="https://reactjs.org" content="Learn react"/>
  * @example
- * <ExternalLink href="https://www.youtube.com/watch?v=dQw4w9WgXcQ" content={
+ * <ExternalLink href="https://www.youtube.com/watch?v=dQw4w9WgXcQ">
  *    What does <code>this</code> do?
- * }/>
+ * /></ExternalLink>
  */
 export default class ExternalLink extends React.Component<ExternalLinkProps> {
    constructor (props: ExternalLinkProps) {

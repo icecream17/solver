@@ -33,6 +33,15 @@ export default function checkForSolved(sudoku: PureSudoku, solver: Solver) {
       }
    }
 
+   if (totalSolved === NUMBER_OF_CELLS) {
+      window._custom.alert("Finished! :D", AlertType.SUCCESS)
+      solver.solved = NUMBER_OF_CELLS
+      return {
+         success: true,
+         successcount: NUMBER_OF_CELLS
+      } as const
+   }
+
    if (totalSolved !== solver.solved) {
       const difference = totalSolved - solver.solved
       solver.solved = totalSolved
@@ -40,14 +49,6 @@ export default function checkForSolved(sudoku: PureSudoku, solver: Solver) {
       return {
          success: true,
          successcount: difference
-      } as const
-   }
-
-   if (totalSolved === NUMBER_OF_CELLS) {
-      window._custom.alert("Finished! :D", AlertType.SUCCESS)
-      return {
-         success: true,
-         successcount: NUMBER_OF_CELLS
       } as const
    }
 

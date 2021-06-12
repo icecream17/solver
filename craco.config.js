@@ -4,7 +4,11 @@
 
 module.exports = {
    babel: {
+      parserOpts: {
+         strictMode: true,
+      },
       plugins: [
+         'const-enum',
          '@babel/plugin-proposal-logical-assignment-operators'
       ]
    }

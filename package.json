@@ -1,6 +1,6 @@
 {
   "name": "solver",
-  "version": "0.8.2",
+  "version": "0.8.3",
   "private": true,
   "homepage": "https://icecream17.github.io/solver",
   "dependencies": {
@@ -13,6 +13,7 @@
     "@types/node": "^15.12.2",
     "@types/react": "^17.0.11",
     "@types/react-dom": "^17.0.7",
+    "babel-plugin-const-enum": "^1.0.1",
     "eslint-config-react-app": "^6.0.0",
     "eslint-plugin-jest-dom": "^3.9.0",
     "react": "^17.0.2",

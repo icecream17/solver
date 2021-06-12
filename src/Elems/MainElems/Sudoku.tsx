@@ -22,13 +22,13 @@ export default class Sudoku extends React.Component<PossibleConstructCallback> {
       super(props)
 
       /**
-       * Cells are added as they are processed
+       * Cells are added to the sudokudata as they are mounted
        * ```js
        * // In cell setup
        * callback()
        *
        * // Sudoku callback
-       * this.data.cells[cell.row][cell.column] = cell
+       * this.data.updateFromCell(cell)
        * ```
        *
        * @name Sudoku.data

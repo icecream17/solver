@@ -23,17 +23,17 @@ export const BOX_NAMES = ["1", "2", "3", "4", "5", "6", "7", "8", "9"] as const
 ////////////
 // Notice types
 
-export enum NoticeType {
-   ALERT,
-   PROMPT
+export const enum NoticeType {
+   ALERT = "alert",
+   PROMPT = "prompt",
 }
 
 
-export enum AlertType {
+export const enum AlertType {
    INFO = "info",
    WARN = "warning",
    ERROR = "error",
-   SUCCESS = "success"
+   SUCCESS = "success",
 }
 
 export type PromptCallback = (message: string | null) => void

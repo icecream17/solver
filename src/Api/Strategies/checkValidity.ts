@@ -1,4 +1,5 @@
 import { SudokuDigits, IndexToNine, ROW_NAMES, COLUMN_NAMES, ALL_CANDIDATES, BOX_NAMES } from "../../Types"
+import { convertArrayToEnglishList } from "../../utils"
 import PureSudoku from "../PureSudoku"
 import { boxAt, algebraic, boxNameAt } from "../Utils"
 
@@ -89,7 +90,7 @@ export default function checkValidity(sudoku: PureSudoku): validityResult {
 
          return {
             ok: false,
-            message: `Row ${ROW_NAMES[i]} has 0 possibilities for ${missingCandidates.join('... and ')}!!!`
+            message: `Row ${ROW_NAMES[i]} has 0 possibilities for ${convertArrayToEnglishList(missingCandidates)}!!!`
          }
       }
    }
@@ -102,7 +103,7 @@ export default function checkValidity(sudoku: PureSudoku): validityResult {
 
          return {
             ok: false,
-            message: `Column ${COLUMN_NAMES[i]} has 0 possibilities for ${missingCandidates.join('... and ')}!!!`
+            message: `Column ${COLUMN_NAMES[i]} has 0 possibilities for ${convertArrayToEnglishList(missingCandidates)}!!!`
          }
       }
 
@@ -113,7 +114,7 @@ export default function checkValidity(sudoku: PureSudoku): validityResult {
 
          return {
             ok: false,
-            message: `Box ${BOX_NAMES[i]} has 0 possibilities for ${missingCandidates.join('... and ')}!!!`
+            message: `Box ${BOX_NAMES[i]} has 0 possibilities for ${convertArrayToEnglishList(missingCandidates)}!!!`
          }
       }
    }

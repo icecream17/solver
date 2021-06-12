@@ -18,21 +18,27 @@ export const _expect = (component: typeof React.Component, props: typeof compone
    }
 }
 
+/**
+ * This function is used to wait for the components to update
+ *
+ * This function simply returns `Promise<undefined>`.
+ * When you await for that promise, the promise is added to the event stack:
+ *
+ * 1. `setState` handlers
+ * 2. `Promise<undefined>`
+ *
+ * So by the time the promise has been awaited,
+ * the components have been updated.
+ *
+ * Thanks to https://stackoverflow.com/q/47019199/12174015
+ * and the answer at https://stackoverflow.com/a/47022453/12174015
+ *
+ * @example
+ * await forComponentsToUpdate()
+ */
 // eslint-disable-next-line @typescript-eslint/require-await
-export async function forComponentsToUpdate () {
+export async function forComponentsToUpdate (): Promise<undefined> {
    return undefined
-
-   // Event stack:
-   // setState()
-
-   // Then:
-   // await forComponentToUpdate
-
-   // Event stack:
-   // setState()
-   // Promise(undefined)
-
-   // Tada! Components are updated
 }
 
 /**
@@ -55,5 +61,19 @@ export async function forComponentsToStopUpdating () {
       domChanged = false
       await forComponentsToUpdate()
    } while (domChanged)
+
+   // cleanup
+   domChangeHandler.disconnect()
 }
 
+export function convertArrayToEnglishList<T extends string | number>(array: T[]) {
+   if (array.length === 0) {
+      throw TypeError("Array is empty!")
+   } else if (array.length === 1) {
+      return String(array[0])
+   } else if (array.length === 2) {
+      return `${array[0]} and ${array[1]}` as const
+   }
+
+   return `${array.slice(0, -1).join(', ')}, and ${array[array.length - 1]}` as const
+}

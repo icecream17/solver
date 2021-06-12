@@ -1,5 +1,6 @@
 
 import { AlertType, IndexToNine, SudokuDigits, TwoDimensionalArray } from "../../Types";
+import { convertArrayToEnglishList } from "../../utils";
 import PureSudoku from "../PureSudoku";
 import Solver from "../Solver";
 import { SuccessError } from "../Types";
@@ -112,18 +113,18 @@ function findConjugatesOfGroup(
       // Too many cells, for example 3 cells needing `1 2`, are invalid.
       // Add 1 to include this cell
       if (conjugate.length > candidatesOfConjugate.length) {
-         const invalidGroupNames = conjugate.map(
-            someCell => algebraic(...someCell.position)
-         ).join(", and ")
+         const invalidGroupNames = convertArrayToEnglishList(
+            conjugate.map(someCell => algebraic(...someCell.position))
+         )
          const invalidGroupCandidates = getCandidatesOfConjugate(conjugate)
-         const invalidCandidateString = invalidGroupCandidates.join(', and ')
+         const invalidCandidateString = convertArrayToEnglishList(invalidGroupCandidates)
 
          if (conjugate.length === 1) {
             window._custom.alert(`The cell ${invalidGroupNames} has 0 possibilities!`, AlertType.ERROR)
          } else if (invalidGroupCandidates.length === 1) {
-            window._custom.alert(`${invalidGroupNames}: These ${conjugate.length} cells cannot share 1 candidate (${invalidCandidateString})!!!`, AlertType.ERROR)
+            window._custom.alert(`${invalidGroupNames}: ${conjugate.length} cells cannot share 1 candidate (${invalidCandidateString})!!!`, AlertType.ERROR)
          } else {
-            window._custom.alert(`${invalidGroupNames}: These ${conjugate.length} cells cannot share ${invalidGroupCandidates.length} candidates (${invalidCandidateString})!!!`, AlertType.ERROR)
+            window._custom.alert(`${invalidGroupNames}: ${conjugate.length} cells cannot share ${invalidGroupCandidates.length} candidates (${invalidCandidateString})!!!`, AlertType.ERROR)
          }
          return "ERROR!!!" as const
       } else if (conjugate.length === candidatesOfConjugate.length) {

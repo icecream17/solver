@@ -9,6 +9,7 @@ import checkForSolved from "./checkForSolved";
 import hiddenSingles from "./hiddenSingles";
 import updateCandidates from "./updateCandidates";
 import pairsTriplesAndQuads from "./pairsTriplesAndQuads";
+import { SuccessError } from "../Types";
 
 describe('strategies', () => {
    let solver: Solver;
@@ -42,29 +43,38 @@ describe('strategies', () => {
          render(<App />)
          window._custom.alert = jest.fn()
 
-         solver.solved = NUMBER_OF_CELLS
          const testSudoku = Sudoku.fromRepresentation(testBoards["Solved board"])
-         expect(checkForSolved(testSudoku, solver)).toStrictEqual({
-            success: true,
-            successcount: NUMBER_OF_CELLS
-         })
+
+         {
+            solver.solved = NUMBER_OF_CELLS
+            expect(checkForSolved(testSudoku, solver)).toStrictEqual({
+               success: true,
+               successcount: NUMBER_OF_CELLS
+            })
+            expect(solver.solved).toBe(NUMBER_OF_CELLS)
+         }
 
          // Also check when the sudoku was just updated
-         solver.solved = 0
-         expect(checkForSolved(testSudoku, solver)).toStrictEqual({
-            success: true,
-            successcount: NUMBER_OF_CELLS
-         })
+         {
+            solver.solved = 0
+            expect(checkForSolved(testSudoku, solver)).toStrictEqual({
+               success: true,
+               successcount: NUMBER_OF_CELLS
+            })
+            expect(solver.solved).toBe(NUMBER_OF_CELLS)
+         }
 
          expect(window._custom.alert).toHaveBeenCalledTimes(2)
 
-         // @ts-ignore
+         // @ts-expect-error
          window._custom.alert.mockClear()
       })
 
       test('succeeds when the sudoku has new solved cells', () => {
-         const testSudoku = Sudoku.fromRepresentation(testBoards["Solved board"])
+         solver.solved = 0
+         const testSudoku = Sudoku.fromRepresentation(testBoards["Simple sudoku"])
          expect(checkForSolved(testSudoku, solver).success).toBe(true)
+         expect(solver.solved).not.toBe(0)
       })
 
       test('fails when the sudoku doesnt have any new solved cells', () => {
@@ -87,6 +97,12 @@ describe('strategies', () => {
          // The first candidate
          testSudoku.set(0, 0).to(1)
          expect(updateCandidates(testSudoku, solver).success).toBe(true)
+
+         // The other cells candidates have changed
+         expect(testSudoku.data[0][7]).not.toContain(1)
+         expect(testSudoku.data[0][7]).not.toContain(4)
+         expect(testSudoku.data[6][7]).not.toContain(4)
+         expect(testSudoku.data[6][7]).not.toContain(9)
       })
 
       test("Doesn't update when there's nothing to update", () => {
@@ -148,6 +164,35 @@ describe('strategies', () => {
          testSudoku.set(0, 1).to(2, 3)
          testSudoku.set(0, 2).to(3, 1)
          expect(pairsTriplesAndQuads(testSudoku, solver).success).toBe(true)
+      })
+
+      test('Fails', () => {
+         render(<App />)
+         window._custom.alert = jest.fn()
+
+         const testSudoku = new PureSudoku()
+         testSudoku.import(`
+            123456...
+            456123...
+            .........
+            .........
+            .........
+            .........
+            .........
+            .........
+            .........
+         `)
+         updateCandidates(testSudoku, solver)
+
+         expect(pairsTriplesAndQuads(testSudoku, solver)).toStrictEqual({
+            success: false,
+            successcount: SuccessError
+         })
+
+         expect(window._custom.alert).toHaveBeenCalled()
+
+         // @ts-expect-error
+         window._custom.alert.mockClear()
       })
    })
 })

@@ -70,22 +70,12 @@ function getCandidatesOfConjugate(conjugate: _cellInfoList) {
 // 378 <
 
 // The quad is 2378
-// O(n^4)
+// O(n^3)
 function findConjugatesOfGroup(
    group: TwoDimensionalArray<SudokuDigits>,
    indexToPosition: (index: IndexToNine) => [IndexToNine, IndexToNine],
    maxSize = 4 as 2 | 3 | 4
 ) {
-   // O(n^2)
-   // This just checks the cell's position, and assumes similarity
-   function aIsSubconjugateOfB(a: _cellInfoList, b: _cellInfoList) {
-      for (const cell of a) {
-         if (!b.find(someCell => cell.position === someCell.position)) {
-            return false
-         }
-      }
-      return true
-   }
 
 
    // 1. Filter the possible cells
@@ -105,8 +95,6 @@ function findConjugatesOfGroup(
 
    // 2. Now that the cells are filtered actually find the conjugates
    const conjugates = [] as _cellInfoList[]
-
-   CellLoop:
    for (const conjugate of combinations(possibleCells, 2, maxSize)) {
       const candidatesOfConjugate = getCandidatesOfConjugate(conjugate)
 
@@ -129,18 +117,6 @@ function findConjugatesOfGroup(
          return "ERROR!!!" as const
       } else if (conjugate.length === candidatesOfConjugate.length) {
          // Found a conjugate!!!!!
-         // Remove all conjugates that are a subset of this conjugate
-         //    (Sets are subsets of themselves)
-         // But exit it this conjugate is itself a subset (after the check)
-         for (let index = 0; index < conjugates.length; index++) {
-            if (aIsSubconjugateOfB(conjugates[index], conjugate)) {
-               conjugates.splice(index, 1)
-               index--;
-            } else if (aIsSubconjugateOfB(conjugate, conjugates[index])) {
-               continue CellLoop;
-            }
-         }
-
          conjugates.push(conjugate)
       }
    }

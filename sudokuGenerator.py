@@ -16,12 +16,25 @@
 
 # So far it seems to take anywhere from a to b seconds:
 # 5.320441s
-# 39.9760412s
+# 154.7025141s (wow!)
 
 # It takes so long since it checks a sudoku's validity by bruteforce
 # So the longer it takes, the harder it is to bruteforce the solution.
 # And generally those hard to bruteforce sudokus are ... hard.
 # Although disappointingly, some 40 second sudoku was destroyed by simple strategies.
+
+# Here's the 154 second sudoku
+"""
+000020003
+007001000
+000008600
+000900000
+030000005
+810005006
+480000790
+009460000
+000080100
+"""
 
 # Credits to www.101computing.net/sudoku-generator-algorithm/
 # Modified
@@ -224,7 +237,6 @@ while success:
 
                     grid[row][col] = backup
 
-                    # Count the number of solutions that this grid has (using a backtracking approach implemented in the solveGrid() function)
                     result = solutionCount(copyGrid)
                     if result == 1:
                         successes.append([row, col])

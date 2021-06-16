@@ -18,6 +18,7 @@ test('it imports', () => {
          console.debug(board)
       }
       expect(testSudoku.import(board).success).toBe(true)
+      expect(testSudoku._to81()).toBe(new PureSudoku(board)._to81())
    }
 })
 
@@ -27,13 +28,17 @@ test('setting a candidate', () => {
    expect(testSudoku.data[3][1]).toStrictEqual([4, 1, 5, 9, 2, 6])
 })
 
-test('clear', () => {
+test('set/clear', () => {
    const testSudoku = new PureSudoku()
    testSudoku.set(3, 1).to(4, 1, 5, 9, 2, 6)
+   expect(testSudoku.data[3][1]).toStrictEqual([4, 1, 5, 9, 2, 6])
    testSudoku.clear()
    expect(testSudoku.data[3][1]).toStrictEqual([1, 2, 3, 4, 5, 6, 7, 8, 9])
    testSudoku.import(BOARDS["Solved board"])
    testSudoku.clear()
+   expect(testSudoku.data[3][1]).toStrictEqual([1, 2, 3, 4, 5, 6, 7, 8, 9])
+   testSudoku.set(3, 1).to(4, 1, 5, 9, 2, 6)
+   testSudoku.clearCell(3, 1)
    expect(testSudoku.data[3][1]).toStrictEqual([1, 2, 3, 4, 5, 6, 7, 8, 9])
 })
 

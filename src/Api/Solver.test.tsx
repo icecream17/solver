@@ -34,7 +34,7 @@ export function currentStrategyIndex() {
    return Array.prototype.indexOf.call(parentChildren, currentStrategy)
 }
 
-test("Stays at first strategy when board is invalid", async () => {
+test.skip("Stays at first strategy when board is invalid", async () => {
    await importBoard(BOARDS["Invalid board"])
    userEvent.click(screen.getByRole("button", { name: "go" }))
    await forComponentsToStopUpdating()

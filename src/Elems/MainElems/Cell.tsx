@@ -173,8 +173,7 @@ export default class Cell extends React.Component<CellProps, CellState> {
    whenFocus(_event?: React.FocusEvent) {
       this.setState((state: CellState): CellState => {
          const newState = {
-            active: true,
-            activeActions: 0
+            active: true
          } as Mutable<Partial<CellState>>
 
          // See notes about state.pretend
@@ -191,7 +190,6 @@ export default class Cell extends React.Component<CellProps, CellState> {
       this.setState((state: CellState): CellState => {
          const newState = {
             active: false,
-            activeActions: null,
             pretend: false // See notes about state.pretend
          } as Mutable<Partial<CellState>>
 

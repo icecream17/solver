@@ -40,3 +40,39 @@ test.skip("Stays at first strategy when board is invalid", async () => {
    await forComponentsToStopUpdating()
    expect(currentStrategyIndex()).toBe(0)
 })
+
+test.skip("Strategy index can increase", async () => {
+   await importBoard(BOARDS["Simple sudoku"])
+   userEvent.click(screen.getByRole("button", { name: "step" }))
+   await forComponentsToStopUpdating()
+   expect(currentStrategyIndex()).toBe(1)
+})
+
+test.skip("No matter how fast the button is clicked, strategies will be done", async () => {
+   await importBoard(BOARDS["Very disconnected digits"])
+   userEvent.click(screen.getByRole("button", { name: "step" }))
+   userEvent.click(screen.getByRole("button", { name: "step" }))
+   await forComponentsToStopUpdating()
+   screen.debug(screen.getByRole("table"))
+   expect(currentStrategyIndex()).toBe(2)
+})
+
+test.skip("After a strategy success, the index is 0 again", async () => {
+   await importBoard(BOARDS["Simple sudoku"])
+
+   // Success!
+   userEvent.click(screen.getByRole("button", { name: "step" }))
+   await forComponentsToStopUpdating()
+   screen.debug((visuallyCurrentStrategy() as HTMLElement).parentElement as HTMLElement)
+   expect(currentStrategyIndex()).toBe(1)
+
+   userEvent.click(screen.getByRole("button", { name: "step" }))
+   await forComponentsToStopUpdating()
+   screen.debug((visuallyCurrentStrategy() as HTMLElement).parentElement as HTMLElement)
+   expect(currentStrategyIndex()).toBe(2)
+
+   // Goes back to 0
+   userEvent.click(screen.getByRole("button", { name: "step" }))
+   await forComponentsToStopUpdating()
+   expect(currentStrategyIndex()).toBe(0)
+})

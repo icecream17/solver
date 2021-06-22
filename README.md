@@ -9,7 +9,9 @@ A simple sudoku solver I made. This is inspired by <https://sudokuwiki.org/>
 
 This projects uses the latest versions of its dependencies, but those dependencies themselves aren't updated.
 
-In particular, the dependency `react-scripts` depends on outdated versions of `postcss` in 84 different ways. The only reason I know about this is because of `npm audit` which shows security vulnerabilities. This probably doesn't affect anything. There's also 5 low security vulnerabilities because of prototype pollution in `yargs-parser`, which is required by the chain `yargs < os-locale < eslint-find-rules`. This also probably doesn't affect anything.
+Current status: `104 vulnerabilities (5 low, 87 moderate, 12 high)`
+
+Specifically, `browserslist`, `css-what`, `glob-parent`, `mem`,  `normalize-url`, `postcss`, `ws`, AND `yargs-parser` are all outdated. More details if you try `npm install` then `npm audit`.
 
 Sigh. Now for some reason the ci is failing, and I need to install `eslint-config-react-app` which depends on `eslint-plugin-testing-library@^3.9.0` even though this project supports `eslint-plugin-testing-library@^4.5.0` (with really corresponds to `4.17.21`).\
 And then later the build failed for some reason. When I deleted `eslint-plugin-testing-library` it worked. So now the supported version is implicitly `@^3.9.0`.
@@ -36,8 +38,8 @@ node_modules/react-dev-utils/node_modules/browserslist
     Depends on vulnerable versions of @svgr/webpack
     Depends on vulnerable versions of css-loader
     Depends on vulnerable versions of mini-css-extract-plugin
+    Depends on vulnerable versions of optimize-css-assets-webpack-plugin
     Depends on vulnerable versions of react-dev-utils
-    Depends on vulnerable versions of resolve-url-loader
     Depends on vulnerable versions of webpack-dev-server
     node_modules/react-scripts
       @craco/craco  <=2.2.3 || >=6.0.0
@@ -70,8 +72,8 @@ node_modules/css-what
           Depends on vulnerable versions of @svgr/webpack
           Depends on vulnerable versions of css-loader
           Depends on vulnerable versions of mini-css-extract-plugin
+          Depends on vulnerable versions of optimize-css-assets-webpack-plugin
           Depends on vulnerable versions of react-dev-utils
-          Depends on vulnerable versions of resolve-url-loader
           Depends on vulnerable versions of webpack-dev-server
           node_modules/react-scripts
             @craco/craco  <=2.2.3 || >=6.0.0
@@ -113,8 +115,8 @@ node_modules/webpack-dev-server/node_modules/glob-parent
         Depends on vulnerable versions of @svgr/webpack
         Depends on vulnerable versions of css-loader
         Depends on vulnerable versions of mini-css-extract-plugin
+        Depends on vulnerable versions of optimize-css-assets-webpack-plugin
         Depends on vulnerable versions of react-dev-utils
-        Depends on vulnerable versions of resolve-url-loader
         Depends on vulnerable versions of webpack-dev-server
         node_modules/react-scripts
           @craco/craco  <=2.2.3 || >=6.0.0
@@ -151,8 +153,8 @@ node_modules/postcss-normalize-url/node_modules/normalize-url
     Depends on vulnerable versions of @svgr/webpack
     Depends on vulnerable versions of css-loader
     Depends on vulnerable versions of mini-css-extract-plugin
+    Depends on vulnerable versions of optimize-css-assets-webpack-plugin
     Depends on vulnerable versions of react-dev-utils
-    Depends on vulnerable versions of resolve-url-loader
     Depends on vulnerable versions of webpack-dev-server
     node_modules/react-scripts
       @craco/craco  <=2.2.3 || >=6.0.0
@@ -169,7 +171,7 @@ node_modules/postcss-normalize-url/node_modules/normalize-url
     Depends on vulnerable versions of postcss-normalize-url
     node_modules/cssnano-preset-default
 
-postcss  7.0.0 - 8.2.9
+postcss  7.0.0 - 7.0.35 || 8.0.0 - 8.2.9
 Severity: moderate
 Regular Expression Denial of Service - https://npmjs.com/advisories/1693
 fix available via `npm audit fix --force`
@@ -209,8 +211,8 @@ node_modules/resolve-url-loader/node_modules/postcss
     Depends on vulnerable versions of @svgr/webpack
     Depends on vulnerable versions of css-loader
     Depends on vulnerable versions of mini-css-extract-plugin
+    Depends on vulnerable versions of optimize-css-assets-webpack-plugin
     Depends on vulnerable versions of react-dev-utils
-    Depends on vulnerable versions of resolve-url-loader
     Depends on vulnerable versions of webpack-dev-server
     node_modules/react-scripts
       @craco/craco  <=2.2.3 || >=6.0.0
@@ -428,14 +430,14 @@ node_modules/resolve-url-loader/node_modules/postcss
   postcss-unique-selectors  4.0.0-nightly.2020.1.9 - 4.0.0-rc.2 || 4.0.1
   Depends on vulnerable versions of postcss
   node_modules/postcss-unique-selectors
-  resolve-url-loader  3.0.0-alpha.1 - 4.0.0
+  resolve-url-loader  3.0.0-alpha.1 - 3.1.3 || 4.0.0-alpha.1 - 4.0.0
   Depends on vulnerable versions of postcss
   node_modules/resolve-url-loader
   stylehacks  4.0.0-nightly.2020.1.9 - 4.0.0-rc.2 || 4.0.1 - 4.0.3
   Depends on vulnerable versions of postcss
   node_modules/stylehacks
 
-ws  5.0.0 - 6.2.1 || 7.0.0 - 7.4.5
+ws  5.0.0 - 5.2.2 || 6.0.0 - 6.2.1 || 7.0.0 - 7.4.5
 Severity: moderate
 Regular Expression Denial of Service - https://npmjs.com/advisories/1748
 fix available via `npm audit fix`

@@ -12,6 +12,11 @@ code {
 }
 
 :root {
+   --monospace: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
+
+   /* Make font-size relative to screen size */
    font-size: calc(0.5em + 1vmin);
-   --monospace: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace
+
+   /* Only supports dark-mode for now */
+   color-scheme: dark;
 }

@@ -3,7 +3,9 @@ import React from 'react';
 import CoordCol from './CoordCol';
 
 /**
- * Group of Sudoku Columns
+ * Labels the rows of the sudoku
+ *
+ * Group of CoordCol
  *
  * @example
  * <CoordCols />

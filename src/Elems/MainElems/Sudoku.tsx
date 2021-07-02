@@ -66,14 +66,10 @@ export default class Sudoku extends React.Component<PossibleConstructCallback> {
    }
 
    /**
-    * BUG: This focuses the element, but often the
+    * INCOMPLETELY DOCUMENTED BUG: This focuses the element, but often the
     */
    focusCell(row: IndexToNine, column: IndexToNine) {
       this.getCellElement(row, column).focus()
-   }
-
-   getCellComponent(row: IndexToNine, column: IndexToNine): Cell {
-      return this.data.cells[row][column]
    }
 
    /**
@@ -100,13 +96,6 @@ export default class Sudoku extends React.Component<PossibleConstructCallback> {
 
       // this.element > tbody > row
       return this.tbodyElement.children[index]
-   }
-
-   /** Gets the cell _instance_ at the row and column. */
-   getCell(row: IndexToNine, column: IndexToNine) {
-      if (this.data.cells[row][column] !== undefined) {
-         return this.data.cells[row][column]
-      }
    }
 
    updateInnerData(cell: Cell) {

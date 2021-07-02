@@ -3,8 +3,7 @@ import { fireEvent, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import App from '../../App';
 import Cell from './Cell';
-import { IndexToNine, SudokuDigits } from '../../Types';
-import { forComponentsToUpdate } from '../../utils';
+import { IndexToNine } from '../../Types';
 
 beforeEach(() => {
    render(<App />);
@@ -14,10 +13,6 @@ beforeEach(() => {
 test('getting the sudoku table', () => {
    expect(screen.getByRole('table', { name: 'Sudoku' })).toBeInTheDocument()
 })
-
-function getSudokuTableElement () {
-   return screen.getByRole('table', { name: 'Sudoku' })
-}
 
 function getTableCellElement (row: IndexToNine, column: IndexToNine) {
    return getButtonCellElement(row, column).parentElement as HTMLElement
@@ -71,16 +66,21 @@ test("Setting a cell to multiple candidates", () => {
 })
 
 test("Clearing all candidates of a cell", () => {
-   const buttonCell = getButtonCellElement(0, 0)
-   userEvent.click(buttonCell)
+   const buttonCell1 = getButtonCellElement(0, 0)
+   const buttonCell2 = getButtonCellElement(0, 1)
+
+   userEvent.click(buttonCell1)
    userEvent.keyboard('{Backspace}')
-   fireEvent.blur(buttonCell)
+   userEvent.click(buttonCell2)
+   userEvent.keyboard('123456789')
 
    // Shows 0
-   expect(buttonCell).toHaveTextContent('0')
+   expect(buttonCell1).toHaveTextContent('0')
+   expect(buttonCell2).toHaveTextContent('0')
 
    // Is error
-   expect(buttonCell).toHaveAttribute('data-error')
+   expect(buttonCell1).toHaveAttribute('data-error')
+   expect(buttonCell2).toHaveAttribute('data-error')
 })
 
 test("Resetting the candidates", () => {
@@ -124,13 +124,3 @@ test("Cell keyboard navigation", () => {
    tryKey('{ArrowRight}', 0, 0)
 })
 
-function setCell (x: IndexToNine, y: IndexToNine) {
-   return {
-      to(...candidates: SudokuDigits[]) {
-         const cell = getButtonCellElement(x, y)
-         userEvent.click(cell)
-         userEvent.keyboard(candidates.join(''))
-         fireEvent.blur(cell)
-      }
-   }
-}

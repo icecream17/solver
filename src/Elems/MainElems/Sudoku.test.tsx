@@ -65,6 +65,7 @@ test("Setting a cell to multiple candidates", () => {
    expect(buttonCell).toHaveTextContent('1234567')
 })
 
+// Cell has 0 candidates
 test("Clearing all candidates of a cell", () => {
    const buttonCell1 = getButtonCellElement(0, 0)
    const buttonCell2 = getButtonCellElement(0, 1)
@@ -74,6 +75,7 @@ test("Clearing all candidates of a cell", () => {
    userEvent.click(buttonCell2)
    userEvent.keyboard('12345') // Now the cell has "12345"
    userEvent.keyboard('12345') // Now the cell has ""
+   fireEvent.blur(buttonCell2)
 
    // Shows 0
    expect(buttonCell1).toHaveTextContent('0')

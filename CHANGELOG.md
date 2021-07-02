@@ -2,6 +2,10 @@
 
 Note: Many earlier versions are not specified, that's too much work.
 
+## v0.10.2
+
+- (tests) `Sudoku.test.tsx` Fix that v0.10.0 test *again*
+
 ## v0.10.1
 
 - (layout + a11y) Darken the gray used for active cells

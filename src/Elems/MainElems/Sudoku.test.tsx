@@ -72,7 +72,8 @@ test("Clearing all candidates of a cell", () => {
    userEvent.click(buttonCell1)
    userEvent.keyboard('{Backspace}')
    userEvent.click(buttonCell2)
-   userEvent.keyboard('123456789')
+   userEvent.keyboard('12345') // Now the cell has "12345"
+   userEvent.keyboard('12345') // Now the cell has ""
 
    // Shows 0
    expect(buttonCell1).toHaveTextContent('0')
@@ -81,6 +82,18 @@ test("Clearing all candidates of a cell", () => {
    // Is error
    expect(buttonCell1).toHaveAttribute('data-error')
    expect(buttonCell2).toHaveAttribute('data-error')
+})
+
+// The following two tests describe the same thing,
+// but are done in different ways
+test("Toggling every candidate", () => {
+   const buttonCell = getButtonCellElement(0, 0)
+   userEvent.click(buttonCell)
+   userEvent.keyboard('123456789')
+   expect(buttonCell).toHaveTextContent('123456789') // Focused = showCandidates
+
+   fireEvent.blur(buttonCell)
+   expect(buttonCell).toHaveTextContent('') // Not focused + full = nothing shown
 })
 
 test("Resetting the candidates", () => {
@@ -92,6 +105,9 @@ test("Resetting the candidates", () => {
 
    // Is not error
    expect(buttonCell).not.toHaveAttribute('data-error')
+
+   // Since the cell has all candidates, and is blurred, textcontent = ''
+   expect(buttonCell).toHaveTextContent('')
 
    userEvent.click(buttonCell)
    userEvent.keyboard('{Shift>}{Backspace}{/Shift}')

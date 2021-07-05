@@ -2,6 +2,16 @@
 
 Note: Many earlier versions are not specified, that's too much work.
 
+## v0.10.3
+
+- (deps) Bump @craco/craco from 6.1.2 to 6.2.0
+- (deps) Bump babel-plugin-const-enum from 1.0.1 to 1.1.0
+- (deps) Bump @types/node tfrom 15.14.0 to 16.0.0
+- (docs) Explain `findConjugatesOfGroup` better
+- (types) Change `Solver#Step` return type
+from `Promise<undefined>` to `Promise<void>`
+- (lint) More `.eslintrc` checks
+
 ## v0.10.2
 
 - (tests) `Sudoku.test.tsx` Fix that v0.10.0 test *again*

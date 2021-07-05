@@ -145,8 +145,7 @@ export default class Cell extends React.Component<CellProps, CellState> {
       } else if (this.numCandidates === 1) {
          content = <span className={`ugh tables digit-${this.state.candidates[0]}`}> {this.state.candidates[0]} </span>
       } else if (this.state.showCandidates) {
-         // numCandidates > 1
-         content = <Candidates data={this.state.candidates} />
+         content = <Candidates data={this.state.candidates} /> // Now numCandidates > 1
       }
 
       // 1. inner div to separate aria roles

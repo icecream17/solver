@@ -57,20 +57,22 @@ function getCandidatesOfConjugate(conjugate: _cellInfoList) {
    ).sort()
 }
 
-
-// Say these are the cells
-// 2378 <
-// 2589
-// 2468
-// 278 <
-// 178
-// 2467
-// 189
-// 28 <
-// 378 <
-
-// The quad is 2378
-// O(n^3)
+/**
+ * Here, a "group" is a row, column, or box, but can be any group.
+ *
+ * Within that group, we're trying to find subgroups, aka conjugates
+ * where such subgroup has n cells and n candidates.
+ *
+ * In Andrew Stuart's solver, this is equivalent to finding
+ * naked pairs, triples, and quads.
+ *
+ * @param group - A group of cells. Generally a row, column, or box
+ * @param indexToPosition - Takes the index of a cell within `group` and returns
+ * the actual position of that cell. Used when displaying the invalid error.
+ * @param maxSize - The maximum size of the conjugate. Default is 4.
+ * (Not looking for conjugates of size 5 or more, since then there would be a
+ * size 4 with the other cells by default. TODO better explanation)
+ */
 function findConjugatesOfGroup(
    group: TwoDimensionalArray<SudokuDigits>,
    indexToPosition: (index: IndexToNine) => [IndexToNine, IndexToNine],
@@ -98,8 +100,7 @@ function findConjugatesOfGroup(
    for (const conjugate of combinations(possibleCells, 2, maxSize)) {
       const candidatesOfConjugate = getCandidatesOfConjugate(conjugate)
 
-      // Too many cells, for example 3 cells needing `1 2`, are invalid.
-      // Add 1 to include this cell
+      // For example 3 cells needing 2 candidates = invalid.
       if (conjugate.length > candidatesOfConjugate.length) {
          const invalidGroupNames = convertArrayToEnglishList(
             conjugate.map(someCell => algebraic(...someCell.position))

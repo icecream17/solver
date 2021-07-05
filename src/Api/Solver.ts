@@ -68,7 +68,8 @@ export default class Solver {
       }
    }
 
-   async Step(): Promise<undefined> {
+   // Originally Promise<undefined>
+   async Step(): Promise<void> {
       await forComponentsToUpdate()
 
       this.erroring = false
@@ -145,7 +146,7 @@ export default class Solver {
       }
 
       this.isDoingStep = false
-      return undefined;
+      return;
    }
 
    /** Does "Step" until it reaches the end or a strategy succeeds */

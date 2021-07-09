@@ -27,14 +27,17 @@ export type StrategyItemState = StrategyStatusProps & Readonly<{
  * @requiredProps
  * - name
  * - solver
- * - description
  * - index
+ *
+ * @optionalProps
+ * - href
+ * - required
  */
 export default class StrategyItem extends React.Component<StrategyItemProps, StrategyItemState> {
    id: string;
    togglerId?: string;
    constructor(props: StrategyItemProps) {
-      _expect(StrategyItem, props).toHaveProperties("name", "solver", "description", "index")
+      _expect(StrategyItem, props).toHaveProperties("name", "solver", "index")
 
       super(props)
 

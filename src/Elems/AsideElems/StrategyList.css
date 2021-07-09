@@ -41,7 +41,7 @@
    border-right: 5px solid rgb(183, 193, 194);
 }
 
-/* Alternating colors - note that the markers are not in color*/
+/* Alternating colors - note that the markers are not in color */
 .StrategyItem:nth-child(odd) {
    background-color: #1f2329;
 }
@@ -50,7 +50,7 @@
    background-color: #31353f;
 }
 
-/* Checkbox - disabled list items */
+/* Disabled strategy item */
 .StrategyItem.disabled {
    color: rgb(170, 170, 170);
 }
@@ -70,64 +70,22 @@
 
 /* Label structure: Name+Tooltip Status */
 .StrategyLabel {
-   height: 0;
    width: var(--label-width);
+   display: inline grid; /* Still inline but behaves like a block element */
 
-   align-content: center;
-   /* text-overflow: ellipsis; */ /* currently has no effect */
+   /*
+      Right now this doesn't do anything, (besides display)
+      since the StrategyLabel doesn't contain a tooltip anymore.
 
-   display: inline-grid;
-   grid-template-columns: 3fr 1fr;
-   grid-template-areas:
-      'name status';
-}
+      This would make more sense in a parent "StrategyItemContent" span
+      As of right now, the "StrategyStatus" are aligned by the constant width.
 
-.StrategyLabelName {
-   grid-area: name;
-   text-decoration: underline dotted;
-   height: 0;
-   width: max-content;
-}
-
-.StrategyLabelTooltip {
-   visibility: hidden;
-   text-decoration: none; /* unneccessary but explicit */
-
-   /* tooltip visuals */
-   background-color: rgb(15, 29, 78);
-   border: var(--regular-border) solid rgb(190, 158, 120);
-   border-radius: 0.5rem;
-   padding: 0.5rem;
-   text-overflow: ellipsis;
-
-   /* tooltip positioning */
-   min-width: 100%;
-   width: max-content;
-   position: relative;
-   bottom: calc(50% - 0.5rem - var(--regular-border));
-   margin-left: calc(100% - var(--my-width));
-   margin-right: 1rem;
-}
-
-.StrategyLabel:hover > .StrategyLabelTooltip,
-.StrategyLabel:focus > .StrategyLabelTooltip {
-   visibility: visible;
-   text-decoration: none;
-}
-
-/* z-index */
-.StrategyLabelName {
-   z-index: 3;
-}
-
-.StrategyLabel:hover > .StrategyLabelName,
-.StrategyLabel:focus > .StrategyLabelName {
-   z-index: 1
-}
-
-.StrategyLabel:hover > .StrategyLabelTooltip,
-.StrategyLabel:focus > .StrategyLabelTooltip {
-   z-index: 2
+      align-content: center;
+      display: inline-grid;
+      grid-template-columns: 3fr 1fr;
+      grid-template-areas:
+        'name status';
+    */
 }
 
 /* Result */

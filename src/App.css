@@ -12,6 +12,8 @@
 
    --background-color: #282c34;
    --link-color: #61dafb;
+   --link-visited-color: #d7a1e8;
+   --link-active-color: tomato;
    --text-color: whitesmoke;
    --maroon: maroon; /* rgb(139, 0, 0)? */
    --red: #ec3e31;
@@ -130,6 +132,14 @@
 
 .App-link {
    color: var(--link-color);
+}
+
+.App-link:visited {
+   color: var(--link-visited-color);
+}
+
+.App-link:active {
+   color: var(--link-active-color);
 }
 
 .App-aside { grid-area: Aside; }

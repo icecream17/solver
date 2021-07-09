@@ -1,5 +1,9 @@
 import React from "react"
 
+/**
+ * Used internally inside React Components to require that some props exist.
+ * Might not be neccesary nowadays due to typing
+ */
 export const _expect = (component: typeof React.Component, props: typeof component.prototype.props) => {
    return {
       toHaveProperty(requiredProperty: keyof typeof props) {
@@ -66,6 +70,30 @@ export async function forComponentsToStopUpdating () {
    domChangeHandler.disconnect()
 }
 
+/**
+ * @example
+ * // "1 apple pie"
+ * convertArrayToEnglishList(["1 apple pie"])
+ *
+ * // "1 apple pie and 12 blueberry pies"
+ * convertArrayToEnglishList(["1 apple pie", "12 blueberry pies"])
+ *
+ * // "1 apple pie, 12 blueberry pies, and null"
+ * convertArrayToEnglishList(["1 apple pie", "12 blueberry pies", null])
+ *
+ * // "A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T, U, V, W, X, Y, and Z"
+ * convertArrayToEnglishList("ABCDEFGHIJKLMNOPQRSTUVWXYZ".split(""))
+ *
+ * @description
+ * This only expects a `string | number`, so this won't happen anyways.
+ *
+ * @example
+ * // "2 and undefined"
+ * convertArrayToEnglishList([2, undefined])
+ *
+ * // "1, , and 3"
+ * convertArrayToEnglishList(["1", undefined, "3"])
+ */
 export function convertArrayToEnglishList<T extends string | number>(array: T[]) {
    if (array.length === 0) {
       throw TypeError("Array is empty!")

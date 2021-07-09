@@ -28,7 +28,6 @@ export const enum NoticeType {
    PROMPT = "prompt",
 }
 
-
 export const enum AlertType {
    INFO = "info",
    WARN = "warning",

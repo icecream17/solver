@@ -39,28 +39,25 @@ export default class StrategyList extends React.Component<StrategyListProps> {
          <ol className='StrategyList' id='StrategyList'>
             <StrategyItem
                name='Check for solved'
-               description='Checks if a cell has only 1 possibility left'
                required='true'
                {...getRepeatedProps()}
             />
             <StrategyItem
                name='Update candidates'
-               description=''
                {...getRepeatedProps()}
             />
             <StrategyItem
                name='Hidden singles'
-               description='Checks if a digit only appears once in a group'
+               href='https://www.sudokuwiki.org/Getting_Started'
                {...getRepeatedProps()}
             />
             <StrategyItem
                name='Pairs, triples, quads'
-               description="[needs explanation]"
+               href='https://www.sudokuwiki.org/Naked_Candidates'
                {...getRepeatedProps()}
             />
             <StrategyItem
                name='Another Example strategy'
-               description='[todo]'
                {...getRepeatedProps()}
             />
          </ol>

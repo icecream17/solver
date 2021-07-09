@@ -2,22 +2,26 @@
 
 import React from 'react';
 import { _expect } from '../../utils';
+import ExternalLink from '../ExternalLink';
 
 export type StrategyLabelProps = Readonly<{
-   name: string,
-   description: string
+   name: string
+   href?: string
 }>
 
 type StrategyLabelState = Readonly<{
-   bold: boolean
+   bold: boolean // This isn't actually used
 }>
 
 /**
- * The text labelling a strategy
+ * The text "labelling" or really naming, a strategy
+ *
+ * Really it's just the text inside the StrategyItem,
+ * besides StrategyResult
  */
 export default class StrategyLabel extends React.Component<StrategyLabelProps, StrategyLabelState> {
    constructor(props: StrategyLabelProps) {
-      _expect(StrategyLabel, props).toHaveProperties("name", "description")
+      _expect(StrategyLabel, props).toHaveProperties("name")
 
       super(props)
 
@@ -27,28 +31,22 @@ export default class StrategyLabel extends React.Component<StrategyLabelProps, S
    }
 
    render() {
-      if (this.state.bold) {
-         return (
-            <span className="StrategyLabel">
-               <span className="StrategyLabelName">
-                  {this.props.name}
-               </span>
-               <span className="StrategyLabelTooltip">
-                  <em>{this.props.description}</em>
-               </span>
-            </span>
+      let content = <span className="StrategyLabel">{this.props.name}</span>
+      if (this.props.href) {
+         content = (
+            <ExternalLink className="StrategyLabel" href={this.props.href}>
+               {this.props.name}
+            </ExternalLink>
          )
       }
 
-      return (
-         <span className="StrategyLabel">
-            <span className="StrategyLabelName">
-               {this.props.name}
-            </span>
-            <span className="StrategyLabelTooltip">
-               {this.props.description}
-            </span>
-         </span>
-      )
+      // Should I use <b> or <strong>?
+      // <strong> = Strong importance
+      // <b> = Draw attention to text without indicating it's more important
+      if (this.state.bold) {
+         return <strong>{content}</strong>
+      }
+
+      return content
    }
 }

@@ -43,9 +43,16 @@ export default class ExternalLink extends React.Component<ExternalLinkProps> {
    }
 
    render() {
+      let className = (this.props.className ?? "").trim()
+      if (className === "") {
+         className = "App-link"
+      } else {
+         className += " App-link"
+      }
+
       return (
          <a
-            className={this.props.className ?? "App-link"}
+            className={className}
             href={this.props.href}
             target="_blank"
             rel="noopener noreferrer"

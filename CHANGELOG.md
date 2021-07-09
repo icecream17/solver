@@ -2,11 +2,34 @@
 
 Note: Many earlier versions are not specified, that's too much work.
 
+## v0.11.0
+
+Major changes:
+
+- (layout + use) **Use links instead of tooltips**
+  - (code) Replace `description` with `href`, now optional.
+  - (layout) If href is not provided, the text will just be a `span`
+- (a11y + use) **Different colors** when
+  - clicking on a link
+  - a link has been visited
+- (BUG) The github octobat is a link. And when you've visited it, it turns purple.
+- (code) The ExternalLink class is now always added to the existing class,
+rather than being just the default class
+
+Minor changes:
+
+- (deps) Bump @types/jest from 26.0.23 to 26.0.24
+- (deps) Bump @types/node from 16.0.0 to 16.3.0
+- (deps) Bump @types/react from 17.0.13 to 17.0.14
+- (deps) Bump @types/react-dom from 17.0.8 to 17.0.9
+- (docs) Add docs for the remaining functions in `utils.ts`
+- (tests) Test passing `string[]` to `convertArrayToEnglishList`
+
 ## v0.10.3
 
 - (deps) Bump @craco/craco from 6.1.2 to 6.2.0
 - (deps) Bump babel-plugin-const-enum from 1.0.1 to 1.1.0
-- (deps) Bump @types/node tfrom 15.14.0 to 16.0.0
+- (deps) Bump @types/node from 15.14.0 to 16.0.0
 - (docs) Explain `findConjugatesOfGroup` better
 - (types) Change `Solver#Step` return type
 from `Promise<undefined>` to `Promise<void>`

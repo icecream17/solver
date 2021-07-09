@@ -2,6 +2,14 @@
 
 inspired by <https://www.sudokuwiki.org>
 
+## things that aren't great
+
+Tabbing into a StrategyLabel shows a border that's way too big.
+
+I would like to have an outline around the github-corner to fix that purple problem.
+
+## stuff
+
 1. `setState` updates asynchronously
     1. If you need the _latest_ state, use a callback instead of an object
     1. Or for setting state based on previous state

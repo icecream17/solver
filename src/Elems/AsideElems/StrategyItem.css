@@ -1,0 +1,78 @@
+
+ /* Checkbox positioning */
+.StrategyList {
+   /*
+   These variables were moved from .StrategyItem
+
+   The checkbox needs to be --item-height
+   This impacts the strategy list, since the padding-left must account for the checkbox
+   */
+   --item-height: 1rem;
+
+   position: relative;
+   max-width: initial;
+   padding-left: calc(2rem + var(--item-height));
+}
+
+/* Sidenote discovery: Google Chrome doesn't know that 0 is a valid <length> when using max() */
+.StrategyItem {
+   --label-width: 20rem; /* For status */
+   --status-width: 5rem; /* For status */
+   --padding-left: 1.5rem;
+
+   padding-left: var(--padding-left);
+
+   /* But this is for list item positioning */
+   /* height: var(--item-height); */
+
+   /* Making room for status */
+   min-width: calc(var(--label-width) + var(--status-width));
+   max-width: calc(100% - var(--padding-left));
+}
+
+.StrategyToggler {
+   position: absolute;
+   left: -1rem;
+   height: var(--item-height);
+
+   /* sanitize.css (doesn't work)
+   margin: 0;
+   vertical-align: middle; */ /* centers checkbox */
+}
+
+/* Label structure: Name+Tooltip Status */
+.StrategyLabel {
+   width: var(--label-width);
+   display: inline grid; /* Still inline but behaves like a block element */
+
+   /*
+      Right now this doesn't do anything, (besides display)
+      since the StrategyLabel doesn't contain a tooltip anymore.
+
+      This would make more sense in a parent "StrategyItemContent" span
+      As of right now, the "StrategyStatus" are aligned by the constant width.
+
+      align-content: center;
+      display: inline-grid;
+      grid-template-columns: 3fr 1fr;
+      grid-template-areas:
+        'name status';
+    */
+}
+
+/* Result */
+.StrategyResult {
+   grid-area: status;
+}
+
+.StrategyResult.success {
+   color: var(--light-green);
+}
+
+.StrategyResult.fail {
+   color: var(--orange);
+}
+
+.StrategyResult.error {
+   color: var(--red);
+}

@@ -1,42 +1,10 @@
 
- /* Checkbox positioning */
+/* Overflow */
 .StrategyList {
-   position: relative;
-   padding-left: 2rem;
-   min-width: fit-content; /* Not checkbox, just for overflow */
-   max-width: initial;
+   min-width: fit-content;
 }
 
-/* Sidenote discovery: Google Chrome doesn't know that 0 is a valid <length> when using max() */
-.StrategyItem {
-   --label-width: 20rem; /* For status */
-   --status-width: 5rem; /* For status */
-   --padding-left: 1.5rem;
-   --vertical-padding: 0;
-
-   padding-left: var(--padding-left);
-
-   /* But this is for list item positioning */
-   height: calc(1rem + 2 * var(--vertical-padding)); /* height includes vertical padding */
-   padding-top: var(--vertical-padding);
-   padding-bottom: var(--vertical-padding);
-
-   /* Making room for status */
-   min-width: calc(var(--label-width) + var(--status-width));
-   max-width: calc(100% - var(--padding-left));
-}
-
-.StrategyToggler {
-   position: absolute;
-   left: -1rem;
-   height: 1rem;
-
-   /* sanitize.css (doesn't work)
-   margin: 0;
-   vertical-align: middle; */ /* centers checkbox */
-}
-
-/* Is current */
+/* The current strategy item */
 .StrategyItem.isCurrent {
    border-right: 5px solid rgb(183, 193, 194);
 }
@@ -66,41 +34,4 @@
 .StrategyItem.disabled > .StrategyLabel > .StrategyLabelTooltip {
    background-color: rgb(42, 42, 46);
    border: var(--regular-border) solid rgb(177, 156, 130);
-}
-
-/* Label structure: Name+Tooltip Status */
-.StrategyLabel {
-   width: var(--label-width);
-   display: inline grid; /* Still inline but behaves like a block element */
-
-   /*
-      Right now this doesn't do anything, (besides display)
-      since the StrategyLabel doesn't contain a tooltip anymore.
-
-      This would make more sense in a parent "StrategyItemContent" span
-      As of right now, the "StrategyStatus" are aligned by the constant width.
-
-      align-content: center;
-      display: inline-grid;
-      grid-template-columns: 3fr 1fr;
-      grid-template-areas:
-        'name status';
-    */
-}
-
-/* Result */
-.StrategyResult {
-   grid-area: status;
-}
-
-.StrategyResult.success {
-   color: var(--light-green);
-}
-
-.StrategyResult.fail {
-   color: var(--orange);
-}
-
-.StrategyResult.error {
-   color: var(--red);
 }

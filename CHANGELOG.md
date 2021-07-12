@@ -2,6 +2,23 @@
 
 Note: Many earlier versions are not specified, that's too much work.
 
+## v0.12.0
+
+Major changes:
+
+- (layout) Reduce top margin in one column layout
+- (layout) The checkbox/StrategyToggler's height is `--item-height`
+- (layout) The StrategyList uses `--item-height` `in padding-left`
+- (layout) Remove the `height` css property in `StrategyItem`
+
+Minor changes:
+
+- (docs) Explain `--cell-fontsize`
+- (code) Extract `--item-height`
+- (code) Remove the css variables `scaling-factor` and `vertical-padding`
+- (code) Move `toggleCandidate` above `render` in `Cell.tsx`
+- (code) Move stuff from `StrategyList.css` into `StrategyItem.css`
+
 ## v0.11.0
 
 Major changes:

@@ -93,7 +93,7 @@ export default class Cell extends React.Component<CellProps, CellState> {
           *
           * Unbothered: showCandidates===false && numCandidates===9
           *
-          * Very useful when you're just copying in a sudoku
+          * Very useful when you're just filling in digits
           */
          pretend: false
       }
@@ -129,6 +129,33 @@ export default class Cell extends React.Component<CellProps, CellState> {
       } else {
          this.setState({ candidates }, callback)
       }
+   }
+
+   toggleCandidate(candidate: SudokuDigits) {
+      this.setState((state: CellState) => {
+         const candidates = new Set(state.pretend ? [] : state.candidates)
+         const dataElement = document.getElementById('Data') as HTMLTextAreaElement
+
+         if (candidates.has(candidate)) {
+            candidates.delete(candidate)
+         } else {
+            candidates.add(candidate)
+         }
+
+         if (candidates.size === 0) {
+            dataElement.value = "empty!"
+            return {
+               candidates: [],
+               error: true
+            }
+         }
+
+         dataElement.value = [...candidates].join('')
+         return {
+            candidates: [...candidates],
+            error: false
+         }
+      })
    }
 
    render() {
@@ -196,33 +223,6 @@ export default class Cell extends React.Component<CellProps, CellState> {
             newState.showCandidates = true
          }
          return newState as CellState
-      })
-   }
-
-   toggleCandidate(candidate: SudokuDigits) {
-      this.setState((state: CellState) => {
-         const candidates = new Set(state.pretend ? [] : state.candidates)
-         const dataElement = document.getElementById('Data') as HTMLTextAreaElement
-
-         if (candidates.has(candidate)) {
-            candidates.delete(candidate)
-         } else {
-            candidates.add(candidate)
-         }
-
-         if (candidates.size === 0) {
-            dataElement.value = "empty!"
-            return {
-               candidates: [],
-               error: true
-            }
-         }
-
-         dataElement.value = [...candidates].join('')
-         return {
-            candidates: [...candidates],
-            error: false
-         }
       })
    }
 

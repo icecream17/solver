@@ -15,7 +15,7 @@
 # 070000050
 
 # So far it seems to take anywhere from a to b seconds:
-# 5.320441s
+# 4.8813327s
 # 191.2783888s (wow!)
 
 # It takes so long since it checks a sudoku's validity by bruteforce

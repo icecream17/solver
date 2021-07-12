@@ -1,6 +1,6 @@
 // @flow
 
-import './StrategyList.css'
+import './StrategyItem.css'
 import React from 'react';
 import StrategyLabel, { StrategyLabelProps } from './StrategyLabel';
 import StrategyToggler from './StrategyToggler';

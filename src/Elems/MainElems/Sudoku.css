@@ -15,15 +15,14 @@ table.Sudoku {
    border-spacing: 0;
 
    text-align: center;
-   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-      monospace;
+   font-family: var(--monospace);
 
-   /* [ref 1] */
+   /* [ref 1] - height and width are set in Main.css */
    table-layout: fixed;
-   width: 100%;
 
-   /* Also the width */
+   /* Also --cell-width */
    --cell-height: calc(100% / 9);
+
    /* The following variables are inherited by :root
    --cell-fontsize: 2.5rem;
    --candidate-fontsize: 0.9rem;

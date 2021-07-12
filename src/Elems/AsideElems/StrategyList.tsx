@@ -1,4 +1,5 @@
 
+import './StrategyList.css'
 import React from 'react';
 import Solver from '../../Api/Solver';
 import { _expect } from '../../utils';

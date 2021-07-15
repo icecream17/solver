@@ -1,6 +1,7 @@
 import asyncPrompt from "../asyncPrompt"
 import SolverPart from "../Elems/AsideElems/SolverPart"
 import StrategyItem from "../Elems/AsideElems/StrategyItem"
+import { AlertType } from "../Types"
 import { forComponentsToUpdate } from "../utils"
 import Strategies from "./Strategies/Strategies"
 import Sudoku from "./Sudoku"
@@ -29,7 +30,7 @@ export default class Solver {
     * Called after the last strategy is done,
     * and just before the first strategy is done.
     */
-   resetStrategies() {
+   async resetStrategies() {
       for (const strategyElement of this.strategyItemElements) {
          if (strategyElement === undefined) {
             console.warn(`undefined strategyItemElement @resetStrategies`)
@@ -41,6 +42,8 @@ export default class Solver {
             successcount: null
          })
       }
+
+      await forComponentsToUpdate()
    }
 
    updateCounters(success: boolean, isFinished: boolean) {
@@ -68,6 +71,36 @@ export default class Solver {
       }
    }
 
+   async setupCells() {
+      this.sudokuNullCheck()
+      for (const row of this.sudoku.cells) {
+         for (const cell of row) {
+            cell.setState({ explaining: true })
+         }
+      }
+      await forComponentsToUpdate()
+   }
+
+   /**
+    * Kind of a misnomer really.
+    *
+    * For each cell, setState:
+    *    explaining: false
+    *    previousCandidates: null
+    */
+   async resetCells() {
+      this.sudokuNullCheck()
+      for (const row of this.sudoku.cells) {
+         for (const cell of row) {
+            cell.setState({ explaining: false, previousCandidates: null })
+         }
+      }
+      await forComponentsToUpdate()
+   }
+
+   // This is a big function.
+   // Each comment labels a group of code that does something
+
    // Originally Promise<undefined>
    async Step(): Promise<void> {
       await forComponentsToUpdate()
@@ -84,8 +117,8 @@ export default class Solver {
 
       // See resetStrategies documentation
       if (this.strategyIndex === 0) {
-         this.resetStrategies()
-         await forComponentsToUpdate()
+         await this.resetStrategies()
+         await this.resetCells()
       }
 
       // strategyItem UI - update lastStrategyItem
@@ -96,6 +129,9 @@ export default class Solver {
 
       if (this.strategyItemElements[this.strategyIndex] === undefined) {
          console.warn(`undefined strategyItemElement @${this.strategyIndex}`)
+         window._custom.alert(
+            "The code somehow can't find the Strategy Item", AlertType.ERROR
+         )
          this.latestStrategyItem = null
       } else {
          this.latestStrategyItem = this.strategyItemElements[this.strategyIndex] as StrategyItem
@@ -116,8 +152,16 @@ export default class Solver {
          await forComponentsToUpdate()
       }
 
+      // Set cells to strategy mode
+      await this.setupCells()
+
       // Run strategy
       const strategyResult = Strategies[this.strategyIndex](this.sudoku, this)
+
+      // Set cells to non-strategy mode if failed
+      if (strategyResult.success === false) {
+         await this.resetCells()
+      }
 
       // strategyItem UI - update lastStrategyItem state
       if (this.latestStrategyItem !== null) {
@@ -156,8 +200,17 @@ export default class Solver {
       } while (this.strategyIndex !== 0)
    }
 
-   Undo() {
-      // TODO
+   async Undo() {
+      if (this.sudoku === null) return;
+      for (const row of this.sudoku.cells) {
+         for (const cell of row) {
+            if (cell !== undefined) {
+               cell.undo()
+               cell.setState({ explaining: false, previousCandidates: null })
+            }
+         }
+      }
+      await forComponentsToUpdate()
    }
 
    async Import() {
@@ -166,6 +219,7 @@ export default class Solver {
          return; // Maybe do something else
       }
 
+      await this.resetCells()
       this.sudokuNullCheck()
       this.sudoku.import(result)
       this.erroring = false

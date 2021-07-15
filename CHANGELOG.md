@@ -2,6 +2,21 @@
 
 Note: Many earlier versions are not specified, that's too much work.
 
+## v0.13.0
+
+Major changes:
+
+- (use) Undo is implemented!
+- (use / layout) Add css class for eliminated/added candidates when explaining a strategy
+- (code) Add `Cell#state.explaining` and `Cell#state.previousCandidates`
+- (code) Add `CandidatesDiff`
+- (code) Add `Cell#undo`
+
+Minor changes:
+
+- (docs) Update `Candidates`
+- (code) `Cell#updateCandidates` looks worse
+
 ## v0.12.0
 
 Major changes:
@@ -13,6 +28,7 @@ Major changes:
 
 Minor changes:
 
+- (deps) Bump @types/node from 16.3.0 to 16.3.1
 - (docs) Explain `--cell-fontsize`
 - (code) Extract `--item-height`
 - (code) Remove the css variables `scaling-factor` and `vertical-padding`

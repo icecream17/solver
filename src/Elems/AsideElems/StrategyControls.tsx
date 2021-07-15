@@ -28,7 +28,7 @@ export default class StrategyControls extends React.Component<StrategyControlsPr
             <legend>controls</legend>
             <StrategyControl onClick={this.props.solver.Go} name="go" />
             <StrategyControl onClick={this.props.solver.Step} name="step" />
-            <StrategyControl onClick={this.props.solver.Undo} name="undo (todo)" />
+            <StrategyControl onClick={this.props.solver.Undo} name="undo" />
             <StrategyControl onClick={this.props.solver.Clear} name="clear" />
             <StrategyControl onClick={this.props.solver.Import} name="import" />
          </fieldset>

@@ -12,10 +12,10 @@ type CandidatesProps = Readonly<{
  * The candidates of a cell
  * Candidates are the possible digits of a cell.
  *
- * Be sure to update SetCandidates as well!
+ * Be sure to update CandidatesDiff as well!
  *
  * @requiredProps
- * - data: Array<any>
+ * - data
  */
 export default class Candidates extends React.Component<CandidatesProps> {
    constructor(props: CandidatesProps) {

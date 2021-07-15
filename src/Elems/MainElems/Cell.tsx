@@ -5,6 +5,7 @@ import { HasWhenConstruct, IndexToNine, Mutable, PossibleConstructCallback, Sudo
 
 import Candidates from './Candidates';
 import Sudoku from './Sudoku';
+import CandidatesDiff from './CandidatesDiff';
 
 // Maps keys to coords
 const keyboardMappings = {
@@ -24,20 +25,31 @@ type CellProps = PossibleConstructCallback & Readonly<{
    sudoku: Sudoku
 }>
 
-type CellState = Readonly<{
-   candidates: SudokuDigits[],
-   showCandidates: boolean,
-   error: boolean,
-}> & (
-   Readonly<{
-      active: false,
-      pretend: false
-   }> |
-   Readonly<{
-      active: true,
-      pretend: boolean
-   }>
-)
+type CellState = Readonly<(
+   {
+      candidates: SudokuDigits[],
+      showCandidates: boolean,
+      error: boolean,
+   } & (
+      {
+         active: false,
+         pretend: false
+      } |
+      {
+         active: true,
+         pretend: boolean
+      }
+   ) & (
+      {
+         explaining: true,
+         previousCandidates: null | SudokuDigits[]
+      } |
+      {
+         explaining: false,
+         previousCandidates: null
+      }
+   )
+)>
 
 
 /**
@@ -63,6 +75,17 @@ export default class Cell extends React.Component<CellProps, CellState> {
       super(props)
 
       this.state = {
+         /**
+          * `explaining` is turned to true at the beginning of each strategy Step
+          */
+         explaining: false,
+
+         /**
+          * When `explaining` is true, the user can undo
+          * This stores the previousCandidates, if changed
+          */
+         previousCandidates: null,
+
          /** An array of possible candidates.
            * Starts at [1, 2, 3, 4, 5, 6, 7, 8, 9] and updates in `whenKeyDown`
            */
@@ -122,12 +145,40 @@ export default class Cell extends React.Component<CellProps, CellState> {
    }
 
    setCandidatesTo(candidates: SudokuDigits[], callback?: () => void) {
-      if (1 < candidates.length && candidates.length < 9) {
-         this.setState({ candidates, showCandidates: true }, callback)
-      } else if (candidates.length === 0) {
-         this.setState({ candidates, error: true }, callback)
-      } else {
-         this.setState({ candidates }, callback)
+      this.setState((prevState: CellState) => {
+         // Same candidates
+         if (prevState.candidates.sort().join('') === candidates.sort().join('')) {
+            return prevState
+         }
+
+         const newState = { candidates } as Mutable<CellState>
+
+         // Don't change previousCandidates if they already exist
+         if (prevState.explaining) {
+            if (prevState.previousCandidates === null) {
+               newState.previousCandidates = prevState.candidates
+            }
+         }
+
+         if (candidates.length === 0) {
+            newState.error = true
+         } else if (1 < candidates.length && candidates.length < 9) {
+            newState.showCandidates = true
+            newState.error = false
+         } else {
+            newState.error = false
+         }
+
+         return newState
+      }, callback)
+   }
+
+   // BUG? Not using a callback for `setCandidatesTo`
+   undo() {
+      this.setState({ explaining: false })
+
+      if (this.state.previousCandidates !== null) {
+         this.setCandidatesTo(this.state.previousCandidates)
       }
    }
 
@@ -167,6 +218,8 @@ export default class Cell extends React.Component<CellProps, CellState> {
          content = <Candidates data={this.state.candidates} /> // Nothing happens right now
       } else if (this.state.active) {
          content = <Candidates data={this.state.candidates} />
+      } else if (this.state.explaining && this.state.previousCandidates !== null) {
+         content = <CandidatesDiff previous={this.state.previousCandidates} current={this.state.candidates} />
       } else if (this.numCandidates === 0) {
          content = <span className="ugh tables"> 0 </span>
       } else if (this.numCandidates === 1) {

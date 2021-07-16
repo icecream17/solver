@@ -2,6 +2,11 @@
 
 Note: Many earlier versions are not specified, that's too much work.
 
+## v0.13.2
+
+- (tests) Found a bug in the hiddenSingles false positive test
+- (tests) Add tests for empty boards
+
 ## v0.13.1
 
 - (tests) The "Click everything" test now works!

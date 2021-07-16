@@ -106,7 +106,7 @@ describe('strategies', () => {
       })
 
       test("Doesn't update when there's nothing to update", () => {
-         const testSudoku = new Sudoku()
+         const testSudoku = new PureSudoku()
          expect(updateCandidates(testSudoku, solver).success).toBe(false)
       })
    })
@@ -130,11 +130,21 @@ describe('strategies', () => {
          testSudoku.set(2, 7).to(5)
          testSudoku.set(7, 8).to(2)
          updateCandidates(testSudoku, solver)
-         expect(updateCandidates(testSudoku, solver).success).toBe(false)
+         expect(hiddenSingles(testSudoku, solver).success).toBe(false)
+      })
+
+      test("Empty sudoku = fail", () => {
+         const testSudoku = new PureSudoku()
+         expect(hiddenSingles(testSudoku, solver).success).toBe(false)
       })
    })
 
    describe('Pairs triples and quads', () => {
+      test("Empty sudoku = fail", () => {
+         const testSudoku = new PureSudoku()
+         expect(pairsTriplesAndQuads(testSudoku, solver).success).toBe(false)
+      })
+
       test('Pairs', () => {
          const testSudoku = new PureSudoku()
          testSudoku.set(0, 0).to(1, 2)

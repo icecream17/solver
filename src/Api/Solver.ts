@@ -75,7 +75,7 @@ export default class Solver {
       this.sudokuNullCheck()
       for (const row of this.sudoku.cells) {
          for (const cell of row) {
-            cell.setState({ explaining: true })
+            cell?.setState({ explaining: true })
          }
       }
       await forComponentsToUpdate()
@@ -92,7 +92,7 @@ export default class Solver {
       this.sudokuNullCheck()
       for (const row of this.sudoku.cells) {
          for (const cell of row) {
-            cell.setState({ explaining: false, previousCandidates: null })
+            cell?.setState({ explaining: false, previousCandidates: null })
          }
       }
       await forComponentsToUpdate()
@@ -204,10 +204,8 @@ export default class Solver {
       if (this.sudoku === null) return;
       for (const row of this.sudoku.cells) {
          for (const cell of row) {
-            if (cell !== undefined) {
-               cell.undo()
-               cell.setState({ explaining: false, previousCandidates: null })
-            }
+            cell?.undo()
+            cell?.setState({ explaining: false, previousCandidates: null })
          }
       }
       await forComponentsToUpdate()

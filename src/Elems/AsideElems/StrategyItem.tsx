@@ -60,6 +60,9 @@ export default class StrategyItem extends React.Component<StrategyItemProps, Str
    }
 
    componentWillUnmount() {
+      if (this.props.solver.latestStrategyItem === this) {
+         this.props.solver.latestStrategyItem = null
+      }
       delete this.props.solver.strategyItemElements[this.props.index]
    }
 

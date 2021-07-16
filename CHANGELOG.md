@@ -2,6 +2,19 @@
 
 Note: Many earlier versions are not specified, that's too much work.
 
+## v0.13.1
+
+- (tests) The "Click everything" test now works!
+- (docs) Updated method names
+  - (code) `whenCellMounts` and `whenCellUnmounts` instead of `updateFromCell`
+  - (code) `addCell` and `removeCell` instead of `updateFromCell`
+- (code) Handle unmounting properly
+  - (code) StrategyItem also checks `solver.latestStrategyItem`
+  - What happens when you exit out the tab isn't too important.
+  - But ok, fine.
+- (code) Solver cells can now be undefined or null
+- (code) Is again slightly more complicated
+
 ## v0.13.0
 
 Major changes:

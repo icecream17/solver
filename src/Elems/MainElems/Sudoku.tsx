@@ -35,7 +35,8 @@ export default class Sudoku extends React.Component<PossibleConstructCallback> {
        */
       this.data = new SudokuData();
 
-      this.updateInnerData = this.updateInnerData.bind(this)
+      this.whenCellMounts = this.whenCellMounts.bind(this)
+      this.whenCellUnmounts = this.whenCellUnmounts.bind(this)
 
       /** See App.js - this if statement is anticipating future code changes */
       if (HasWhenConstruct(this.props)) {
@@ -48,18 +49,28 @@ export default class Sudoku extends React.Component<PossibleConstructCallback> {
    }
 
    render() {
+      let index: IndexToNine = 0
+      const getRepeatedProps = () => {
+         return {
+            index: index++ as IndexToNine,
+            whenCellMounts: this.whenCellMounts,
+            whenCellUnmounts: this.whenCellUnmounts,
+            parent: this
+         } as const
+      }
+
       return (
          <table className='Sudoku' id='Sudoku' title='Sudoku' aria-label='Sudoku'>
             <tbody ref={elem => this.tbodyElement = elem}>
-               <Row index={0} whenCellConstructs={this.updateInnerData} parent={this} />
-               <Row index={1} whenCellConstructs={this.updateInnerData} parent={this} />
-               <Row index={2} whenCellConstructs={this.updateInnerData} parent={this} />
-               <Row index={3} whenCellConstructs={this.updateInnerData} parent={this} />
-               <Row index={4} whenCellConstructs={this.updateInnerData} parent={this} />
-               <Row index={5} whenCellConstructs={this.updateInnerData} parent={this} />
-               <Row index={6} whenCellConstructs={this.updateInnerData} parent={this} />
-               <Row index={7} whenCellConstructs={this.updateInnerData} parent={this} />
-               <Row index={8} whenCellConstructs={this.updateInnerData} parent={this} />
+               <Row {...getRepeatedProps()} />
+               <Row {...getRepeatedProps()} />
+               <Row {...getRepeatedProps()} />
+               <Row {...getRepeatedProps()} />
+               <Row {...getRepeatedProps()} />
+               <Row {...getRepeatedProps()} />
+               <Row {...getRepeatedProps()} />
+               <Row {...getRepeatedProps()} />
+               <Row {...getRepeatedProps()} />
             </tbody>
          </table>
       )
@@ -98,7 +109,11 @@ export default class Sudoku extends React.Component<PossibleConstructCallback> {
       return this.tbodyElement.children[index]
    }
 
-   updateInnerData(cell: Cell) {
-      this.data.updateFromCell(cell)
+   whenCellMounts(cell: Cell) {
+      this.data.addCell(cell)
+   }
+
+   whenCellUnmounts(cell: Cell) {
+      this.data.removeCell(cell)
    }
 }

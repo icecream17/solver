@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { _expect } from '../../utils';
-import { HasWhenConstruct, IndexToNine, Mutable, PossibleConstructCallback, SudokuDigits, ZeroToNine } from '../../Types';
+import { IndexToNine, Mutable, PossibleConstructCallback, SudokuDigits, ZeroToNine, _Function } from '../../Types';
 
 import Candidates from './Candidates';
 import Sudoku from './Sudoku';
@@ -23,6 +23,9 @@ type CellProps = PossibleConstructCallback & Readonly<{
    row: IndexToNine,
    column: IndexToNine,
    sudoku: Sudoku
+
+   whenCellMounts: _Function
+   whenCellUnmounts: _Function
 }>
 
 type CellState = Readonly<(
@@ -54,8 +57,9 @@ type CellState = Readonly<(
 
 /**
  * A cell in a sudoku
+ * Handles Candidates, UserUse, and StrategyCode
  *
- * Requires a "row" and "column" property
+ * Ugh
  *
  * @example
  * <Cell row={1} column={4} />
@@ -63,6 +67,9 @@ type CellState = Readonly<(
  * @requiredProps
  * - row
  * - column
+ * - sudoku
+ * - whenCellMounts
+ * - whenCellUnmounts
  */
 export default class Cell extends React.Component<CellProps, CellState> {
    static labelAt(row: IndexToNine, column: IndexToNine) {
@@ -70,7 +77,7 @@ export default class Cell extends React.Component<CellProps, CellState> {
    }
 
    constructor(props: CellProps) {
-      _expect(Cell, props).toHaveProperties("row", "column", "sudoku")
+      _expect(Cell, props).toHaveProperties("row", "column", "sudoku", "whenCellMounts", "whenCellUnmounts")
 
       super(props)
 
@@ -121,16 +128,17 @@ export default class Cell extends React.Component<CellProps, CellState> {
          pretend: false
       }
 
-      /** See sudoku.js - this if statement is anticipating future code changes */
-      if (HasWhenConstruct(this.props)) {
-         this.props.whenConstruct(this)
-      } else {
-         console.warn("Remove useless code in Cell.js")
-      }
-
       this.whenFocus = this.whenFocus.bind(this)
       this.whenBlur = this.whenBlur.bind(this)
       this.whenKeyDown = this.whenKeyDown.bind(this)
+   }
+
+   componentDidMount() {
+      this.props.whenCellMounts(this)
+   }
+
+   componentWillUnmount() {
+      this.props.whenCellUnmounts(this)
    }
 
    /** How many candidates are left */

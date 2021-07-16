@@ -7,9 +7,10 @@ import Cell from './Cell';
 import { _expect } from '../../utils';
 
 type RowProps = Readonly<{
-   index: IndexToNine,
-   parent: Sudoku,
-   whenCellConstructs: _Function
+   index: IndexToNine
+   parent: Sudoku
+   whenCellMounts: _Function
+   whenCellUnmounts: _Function
 }> & _ReactProps
 
 /**
@@ -20,11 +21,12 @@ type RowProps = Readonly<{
  *
  * @requiredProps
  * - index
- * - whenCellConstructs
+ * - whenCellMounts
+ * - whenCellUnmounts
  */
 export default class Row extends React.Component<RowProps> {
    constructor(props: RowProps) {
-      _expect(Row, props).toHaveProperties('index', 'whenCellConstructs', 'parent')
+      _expect(Row, props).toHaveProperties('index', 'whenCellMounts', 'whenCellUnmounts', 'parent')
       super(props)
    }
 
@@ -32,7 +34,8 @@ export default class Row extends React.Component<RowProps> {
       const propsPassedDown = {
          row: this.props.index,
          sudoku: this.props.parent,
-         whenConstruct: this.props.whenCellConstructs
+         whenCellMounts: this.props.whenCellMounts,
+         whenCellUnmounts: this.props.whenCellUnmounts,
       } as const
 
       return (

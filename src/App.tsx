@@ -60,6 +60,11 @@ class App extends React.Component<_UnusedProps, AppState> {
       }
    }
 
+   componentWillUnmount() {
+      window._custom.alert = () => undefined;
+      window._custom.prompt = () => undefined;
+   }
+
    componentDidCatch(_error: Error, _errorInfo: React.ErrorInfo) {
       this.setState({ error: true })
    }

@@ -24,14 +24,14 @@ test("Strategy sections exist", () => {
 })
 
 // Silly test
-test.skip("Click everything", () => {
+test("Click everything", () => {
    let elementsClicked = 0
 
    for (const element of document.querySelectorAll("*")) {
       userEvent.click(element)
 
       elementsClicked++
-      if (elementsClicked > 1000) {
+      if (elementsClicked > 10000) {
          console.debug(element)
          throw ReferenceError("Too many elements clicked")
       }

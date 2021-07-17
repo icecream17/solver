@@ -45,30 +45,30 @@ export async function forComponentsToUpdate (): Promise<undefined> {
    return undefined
 }
 
-/**
- * Unlike the function "forComponentsToUpdate",
- * you await for the components to stop making any updates.
- */
-export async function forComponentsToStopUpdating () {
-   let domChanged = false
+// /**
+//  * Unlike the function "forComponentsToUpdate",
+//  * you await for the components to stop making any updates.
+//  */
+// export async function forComponentsToStopUpdating () {
+//    let domChanged = false
 
-   const domChangeHandler = new MutationObserver(() => domChanged = true)
-   const rootNode = document.documentElement
-   domChangeHandler.observe(rootNode, {
-      subtree: true,
-      childList: true,
-      attributes: true,
-      characterData: true
-   })
+//    const domChangeHandler = new MutationObserver(() => domChanged = true)
+//    const rootNode = document.documentElement
+//    domChangeHandler.observe(rootNode, {
+//       subtree: true,
+//       childList: true,
+//       attributes: true,
+//       characterData: true
+//    })
 
-   do {
-      domChanged = false
-      await forComponentsToUpdate()
-   } while (domChanged)
+//    do {
+//       domChanged = false
+//       await forComponentsToUpdate()
+//    } while (domChanged)
 
-   // cleanup
-   domChangeHandler.disconnect()
-}
+//    // cleanup
+//    domChangeHandler.disconnect()
+// }
 
 /**
  * @example

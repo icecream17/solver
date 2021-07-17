@@ -2,6 +2,11 @@
 
 Note: Many earlier versions are not specified, that's too much work.
 
+## v0.14.1
+
+- (code) Comment out unused function `forComponentsToStopUpdating`
+- (tests) Check that `_expect` throws
+
 ## v0.14.0
 
 Big changes:

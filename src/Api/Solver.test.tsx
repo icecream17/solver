@@ -2,7 +2,7 @@
 import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import App from "../App";
-import { forComponentsToStopUpdating, forComponentsToUpdate } from "../utils";
+import { forComponentsToUpdate } from "../utils";
 import BOARDS from "./boards";
 
 beforeEach(() => {

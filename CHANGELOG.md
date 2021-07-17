@@ -2,6 +2,19 @@
 
 Note: Many earlier versions are not specified, that's too much work.
 
+## v0.14.0
+
+Big changes:
+
+- (layout + use) Add *hidden* pairs, triples, and quads
+- (layout) Add the word `and` to "Pairs, triples, and quads"
+- (layout + bugfix) When clearing, explaining = false
+
+Medium changes:
+
+- (docs) More docs for pairs, triples, and quads
+- (code) Extract `eliminateUsingConjugateGroups` and pairs, triples, and quads
+
 ## v0.13.2
 
 - (tests) Found a bug in the hiddenSingles false positive test

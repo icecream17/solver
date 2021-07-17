@@ -1,3 +1,4 @@
+// @flow
 
 import { AlertType, IndexToNine, SudokuDigits, TwoDimensionalArray } from "../../Types";
 import { convertArrayToEnglishList } from "../../utils";
@@ -8,6 +9,11 @@ import { algebraic, boxAt, getPositionFromIndexWithinBox } from "../Utils";
 
 /**
  * Gets the unique combinations of an array
+ * All elements are unmodified and assumed different
+ *
+ * "combinations" is in the mathematical sense:
+ * if you give 7 elements, with min = 2 and max = 4,
+ * you get (7 choose 2) + (7 choose 3) + (7 choose 4) elements.
  *
  * @param {number} min - The minimum size of a combination
  * @param {number} max - The maximum size of a combination
@@ -36,12 +42,18 @@ export function combinations<T>(array: T[], min: number, max: number, currentCou
    return _combinations
 }
 
-
-type _cellInfoList = Array<{
+/**
+ * Really just a conjugate
+ * A conjugate is just a bunch of "cells"
+ */
+export type _cellInfoList = Array<{
    position: [IndexToNine, IndexToNine], // ReturnType<typeof indexToPosition>
    candidates: SudokuDigits[]
 }>
 
+/**
+ * Returns a sorted array of unique candidates in a conjugate
+ */
 function getCandidatesOfConjugate(conjugate: _cellInfoList) {
    // Array from the values of a set
    // The set is the accumulated candidates
@@ -151,17 +163,8 @@ function findConjugatesOfSudoku(sudoku: PureSudoku, maxSize = 4 as 2 | 3 | 4) {
    return [resultRows, resultColumns, resultBoxes] as const
 }
 
-// Math.max(O(n^5), O(n^5))
-export default function pairsTriplesAndQuads(sudoku: PureSudoku, _solver: Solver) {
-   const conjugateGroups = findConjugatesOfSudoku(sudoku)
 
-   if (conjugateGroups === "ERROR!!!") {
-      return {
-         success: false,
-         successcount: SuccessError
-      } as const
-   }
-
+function eliminateUsingConjugateGroups(sudoku: PureSudoku, conjugateGroups: readonly [_cellInfoList[][], _cellInfoList[][], _cellInfoList[][]]) {
    let successcount = 0;
    const [resultRows, resultColumns, resultBoxes] = conjugateGroups
 
@@ -254,7 +257,22 @@ export default function pairsTriplesAndQuads(sudoku: PureSudoku, _solver: Solver
       }
    }
 
-   // End of dry code
+   return successcount
+}
+
+// Math.max(O(n^5), O(n^5))
+export default function pairsTriplesAndQuads(sudoku: PureSudoku, _solver: Solver) {
+   const conjugateGroups = findConjugatesOfSudoku(sudoku)
+
+   if (conjugateGroups === "ERROR!!!") {
+      return {
+         success: false,
+         successcount: SuccessError
+      } as const
+   }
+
+   const successcount = eliminateUsingConjugateGroups(sudoku, conjugateGroups)
+
    if (successcount === 0) {
       return {
          success: false

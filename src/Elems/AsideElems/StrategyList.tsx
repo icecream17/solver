@@ -53,8 +53,13 @@ export default class StrategyList extends React.Component<StrategyListProps> {
                {...getRepeatedProps()}
             />
             <StrategyItem
-               name='Pairs, triples, quads'
+               name='Pairs, triples, and quads'
                href='https://www.sudokuwiki.org/Naked_Candidates'
+               {...getRepeatedProps()}
+            />
+            <StrategyItem
+               name='Hidden pairs, triples, and quads'
+               href='https://www.sudokuwiki.org/Hidden_Candidates'
                {...getRepeatedProps()}
             />
             <StrategyItem

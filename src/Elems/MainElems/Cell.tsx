@@ -149,7 +149,12 @@ export default class Cell extends React.Component<CellProps, CellState> {
    clearCandidates() {
       // In the future I could add `showCandidates: false`
       // Right now it's a bug / feature
-      this.setState({ candidates: [1, 2, 3, 4, 5, 6, 7, 8, 9], showCandidates: false, error: false })
+      this.setState({
+         candidates: [1, 2, 3, 4, 5, 6, 7, 8, 9],
+         showCandidates: false,
+         error: false,
+         explaining: false
+      })
    }
 
    setCandidatesTo(candidates: SudokuDigits[], callback?: () => void) {

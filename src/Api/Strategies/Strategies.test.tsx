@@ -10,6 +10,7 @@ import hiddenSingles from "./hiddenSingles";
 import updateCandidates from "./updateCandidates";
 import pairsTriplesAndQuads from "./pairsTriplesAndQuads";
 import { SuccessError } from "../Types";
+import hiddenPairsTriplesAndQuads from "./hiddenPairsTriplesAndQuads";
 
 describe('strategies', () => {
    let solver: Solver;
@@ -240,4 +241,113 @@ describe('strategies', () => {
          expect(testSudoku.data[2][0]).not.toContain(8)
       })
    })
+
+   describe('Hidden pairs, triples, and quads', () => {
+      test('Empty sudoku = fail', () => {
+         const testSudoku = new PureSudoku()
+         expect(hiddenPairsTriplesAndQuads(testSudoku, solver).success).toBe(false)
+      })
+
+      test('Example 1', () => {
+         const testSudoku = new PureSudoku()
+         testSudoku.import(`
+            .........
+            ...78....
+            78.......
+            ......7..
+            ......8..
+            .........
+            .........
+            .........
+            .........
+         `)
+         updateCandidates(testSudoku, solver)
+         expect(hiddenPairsTriplesAndQuads(testSudoku, solver).success).toBe(true)
+         expect(testSudoku.data[0][8]).toStrictEqual([7, 8])
+         expect(testSudoku.data[8][8]).not.toStrictEqual([7, 8])
+      })
+
+      test('Example 2', () => {
+         const testSudoku = new PureSudoku()
+         testSudoku.import(`
+            .......3.
+            ........7
+            4........
+            81.73....
+            ...851...
+            ...2.4...
+            2.......3
+            .........
+            .......7.
+         `)
+         updateCandidates(testSudoku, solver)
+         expect(hiddenPairsTriplesAndQuads(testSudoku, solver).success).toBe(true)
+         expect(testSudoku.data[4][6]).toStrictEqual([3, 7])
+         expect(testSudoku.data[5][0]).not.toStrictEqual([3, 7])
+      })
+
+      test('Example 3', () => {
+         const testSudoku = new PureSudoku()
+         testSudoku.import(`
+            .....1.3.
+            2........
+            .65......
+            6.8.243..
+            ....5...6
+            ......7..
+            ....6.57.
+            ..6...84.
+            .........
+         `)
+         updateCandidates(testSudoku, solver)
+         expect(hiddenPairsTriplesAndQuads(testSudoku, solver).success).toBe(true)
+         expect(hiddenPairsTriplesAndQuads(testSudoku, solver).success).toBe(true)
+         expect(hiddenPairsTriplesAndQuads(testSudoku, solver).success).toBe(false)
+      })
+
+      // The only time no bug was discovered
+      test('Example 4', () => {
+         const testSudoku = new PureSudoku()
+         testSudoku.import(`
+            ...1234..
+            .........
+            .........
+            ..1......
+            ..2......
+            ..3......
+            ..4......
+            .........
+            .........
+         `)
+         updateCandidates(testSudoku, solver)
+         expect(hiddenPairsTriplesAndQuads(testSudoku, solver).success).toBe(true)
+      })
+
+      // Unreal. Somehow every candidate in column 7 appears 2-4 times
+      // The early eliminations do nothing
+      test('Example 5', () => {
+         const testSudoku = new PureSudoku()
+         testSudoku.import(`
+            +-----------------+--------------+---------------+
+            | 6    5    139   | 13  8   7    | 19   2   4    |
+            | 278  28   1378  | 6   4   9    | 18   5   37   |
+            | 89   4    378   | 13  2   5    | 168  37  69   |
+            +-----------------+--------------+---------------+
+            | 5    7    29    | 4   3   8    | 29   6   1    |
+            | 2489 2689 468   | 5   67  1    | 347  347 29   |
+            | 3    1    46    | 9   67  2    | 47   8   5    |
+            +-----------------+--------------+---------------+
+            | 247  26   457   | 8   9   46   | 357  1   237  |
+            | 4789 689  578   | 2   1   3    | 4567 47  67   |
+            | 1    3    246   | 7   5   46   | 26   9   8    |
+            +-----------------+--------------+---------------+
+         `)
+         updateCandidates(testSudoku, solver)
+         expect(hiddenPairsTriplesAndQuads(testSudoku, solver)).toStrictEqual({
+            success: true,
+            successcount: 1
+         })
+      })
+   });
+
 })

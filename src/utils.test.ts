@@ -15,6 +15,6 @@ test("_expect", () => {
 
    expect(() => _expect(SomeComponent, { apple: 7 }).toHaveProperty("apple")).not.toThrow()
    expect(() => _expect(SomeComponent, { apple: 7, jump: 5 }).toHaveProperties("apple", "jump")).not.toThrow()
-   expect(() => _expect(SomeComponent, { jump: 5 }).toHaveProperties("apple")).toThrow()
+   expect(() => _expect(SomeComponent, { jump: 5 }).toHaveProperty("apple")).toThrow()
    expect(() => _expect(SomeComponent, { apple: 7 }).toHaveProperties("apple", "jump")).toThrow()
 })

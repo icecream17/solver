@@ -14,6 +14,7 @@ export default class Solver {
    solved = 0
    stepsTodo = 0
    strategyIndex = 0
+   strategyIndexWasPreviouslyOne = 0 as 0 | 1 | 2
    /** When a strategy item is about to unmount, the strategy item element is deleted. */
    strategyItemElements: Array<StrategyItem | undefined> = []
 
@@ -51,8 +52,22 @@ export default class Solver {
       // (exception: if you're at the start go to 1 anyways)
       // (exception exception: if the sudoku is finished don't go to 1)
       // (another exception: always be at the start if erroring)
+      // (exception 4:
+      //    After "update candidates" succeeds and "check for solved" doesn't,
+      //    skip "update candidates"
+      // )
+      if (this.strategyIndex === 1) {
+         this.strategyIndexWasPreviouslyOne = 1
+      } else if (this.strategyIndexWasPreviouslyOne === 1) {
+         this.strategyIndexWasPreviouslyOne = 2
+      } else if (this.strategyIndexWasPreviouslyOne === 2) {
+         this.strategyIndexWasPreviouslyOne = 0
+      }
+
       if ((success && this.strategyIndex > 0) || this.erroring || isFinished) {
          this.strategyIndex = 0
+      } else if (this.strategyIndexWasPreviouslyOne === 2 && this.strategyIndex === 0 && success === false) {
+         this.strategyIndex = 2
       } else {
          this.strategyIndex++
          if (this.strategyIndex === Strategies.length) {

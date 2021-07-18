@@ -2,6 +2,8 @@
 
 inspired by <https://www.sudokuwiki.org>
 
+woah <https://www.sudokuwiki.org/jigsaw.htm?shape=6&bd=400000000000000000000000700000008010600070000050000000200000003000000020000000001>
+
 ## things that aren't great
 
 Tabbing into a StrategyLabel shows a border that's way too big.

@@ -1,7 +1,9 @@
-import { IndexToNine, SudokuDigits, TwoDimensionalArray } from "../../Types";
+import { AlertType, BOX_NAMES, COLUMN_NAMES, IndexToNine, ROW_NAMES, SudokuDigits, TwoDimensionalArray } from "../../Types";
+import { convertArrayToEnglishList } from "../../utils";
 import PureSudoku from "../PureSudoku";
 import Solver from "../Solver";
-import { getPositionFromIndexWithinBox } from "../Utils";
+import { SuccessError } from "../Types";
+import { algebraic, getPositionFromIndexWithinBox } from "../Utils";
 import { combinations, _cellInfoList } from "./pairsTriplesAndQuads";
 
 /**
@@ -86,13 +88,14 @@ function findHiddenConjugatesOfGroup(
    }
 
    // 2. Do the regular pairsTriplesAndQuads function
-   // a. Filter out cells that have too few or too many candidates
+   //     a. Filter out cells that have too few candidates
+   //        (No limit on max candidates)
    const possibleCells = [] as _cellInfoList
 
    for (let index: IndexToNine = 0; index < 9; index = index + 1 as IndexToNine) {
       const candidates = groupCopy[index]
 
-      if (1 < candidates.length && candidates.length <= maxSize) {
+      if (1 < candidates.length) {
          possibleCells.push({
             position: indexToPosition(index),
             candidates
@@ -113,7 +116,27 @@ function findHiddenConjugatesOfGroup(
    for (const candidatesOfConjugate of combinations(Array.from(possibleCandidates), 2, maxSize)) {
       const conjugate = getConjugateFromCandidates(possibleCells, candidatesOfConjugate)
 
-      if (conjugate.length === candidatesOfConjugate.length) {
+      // e.g.: 3 candidates must be in 2 cells
+      if (conjugate.length < candidatesOfConjugate.length) {
+         const invalidCandidateString = convertArrayToEnglishList(candidatesOfConjugate)
+
+         // To prevent errors in convertArrayToEnglishList
+         if (conjugate.length === 0) {
+            // A previous elimination must've caused this!
+            return ` has 0 possibilities for ${invalidCandidateString}!!!\n`
+         }
+         const invalidGroupNames = convertArrayToEnglishList(
+            conjugate.map(someCell => algebraic(...someCell.position))
+         )
+
+         if (candidatesOfConjugate.length === 1) {
+            return ` has 0 possibilities for ${invalidCandidateString}!!!`
+         } else if (conjugate.length === 1) {
+            return `: ${candidatesOfConjugate.length} candidates (${invalidCandidateString}) all want to be in ${invalidGroupNames} which is impossible!!!`
+         } else {
+            return `: ${candidatesOfConjugate.length} candidates (${invalidCandidateString}) all want to be in ${conjugate.length} cells (${invalidGroupNames}) which is impossible!!!`
+         }
+      } else if (conjugate.length === candidatesOfConjugate.length) {
          conjugates.push(conjugate)
 
          // Remove extra candidates - a conjugate was found!
@@ -133,8 +156,20 @@ function findHiddenConjugatesOfSudoku(sudoku: PureSudoku, maxSize = 4 as 2 | 3 |
    const conjugates = [] as _cellInfoList[]
    for (let i: IndexToNine = 0; i < 9; i = i + 1 as IndexToNine) {
       const resultRow = findHiddenConjugatesOfGroup(sudoku.data[i], index => [i, index], maxSize)
+      if (typeof resultRow === "string") {
+         return `Row ${ROW_NAMES[i]}${resultRow}`
+      }
+
       const resultColumn = findHiddenConjugatesOfGroup(sudoku.getColumn(i), index => [index, i], maxSize)
+      if (typeof resultColumn === "string") {
+         return `Column ${COLUMN_NAMES[i]}${resultColumn}`
+      }
+
       const resultBox = findHiddenConjugatesOfGroup(sudoku.getBox(i), index => getPositionFromIndexWithinBox(i, index), maxSize)
+      if (typeof resultBox === "string") {
+         return `Box ${BOX_NAMES[i]}${resultBox}`
+      }
+
       conjugates.push(...resultRow, ...resultColumn, ...resultBox)
    }
 
@@ -186,7 +221,17 @@ function findHiddenConjugatesOfSudoku(sudoku: PureSudoku, maxSize = 4 as 2 | 3 |
  */
 export default function hiddenPairsTriplesAndQuads(sudoku: PureSudoku, _solver: Solver) {
    let successcount = 0
-   for (const conjugate of findHiddenConjugatesOfSudoku(sudoku)) {
+
+   const result = findHiddenConjugatesOfSudoku(sudoku)
+   if (typeof result === "string") {
+      window._custom.alert(result, AlertType.ERROR)
+      return {
+         success: false,
+         successcount: SuccessError
+      }
+   }
+
+   for (const conjugate of result) {
       let success = false
 
       for (const conjugateCell of conjugate) {
@@ -216,16 +261,3 @@ export default function hiddenPairsTriplesAndQuads(sudoku: PureSudoku, _solver: 
       successcount
    } as const
 }
-
-/*
-
-24
-28
-28
-48
-
-
-
-
-
-*/

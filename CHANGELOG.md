@@ -2,6 +2,14 @@
 
 Note: Many earlier versions are not specified, that's too much work.
 
+## v0.15.0
+
+- (use) After "Check for solved" fails, skip "Update candidates"
+- (use) If n candidates must appear in \<n cells, ERROR
+  - (bug) The current error system is really bad
+- (use) Fix bug in hiddenParisTriplesAndQuads
+- (tests) Test cases where there's an error
+
 ## v0.14.1
 
 - (code) Comment out unused function `forComponentsToStopUpdating`

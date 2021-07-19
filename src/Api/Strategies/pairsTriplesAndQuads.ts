@@ -121,8 +121,10 @@ function findConjugatesOfGroup(
          const invalidCandidateString = convertArrayToEnglishList(invalidGroupCandidates)
 
          if (conjugate.length === 1) {
+            // Never happens since cells are filtered away
             window._custom.alert(`The cell ${invalidGroupNames} has 0 possibilities!`, AlertType.ERROR)
          } else if (invalidGroupCandidates.length === 1) {
+            // Never happens
             window._custom.alert(`${invalidGroupNames}: ${conjugate.length} cells cannot share 1 candidate (${invalidCandidateString})!!!`, AlertType.ERROR)
          } else {
             window._custom.alert(`${invalidGroupNames}: ${conjugate.length} cells cannot share ${invalidGroupCandidates.length} candidates (${invalidCandidateString})!!!`, AlertType.ERROR)

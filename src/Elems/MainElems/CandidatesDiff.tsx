@@ -32,7 +32,7 @@ export default class CandidatesDiff extends React.Component<CandidatesDiffProps>
 
       super(props)
 
-      this.hasCandidate = this.hasCandidate.bind(this)
+      this.hadCandidate = this.hadCandidate.bind(this)
       this.hasCandidate = this.hasCandidate.bind(this)
    }
 

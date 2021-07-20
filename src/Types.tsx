@@ -15,7 +15,12 @@ export type BoxName = "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9"
 export type AlgebraicName = `${RowName}${ColumnName}`
 export const MAX_CELL_INDEX = 80
 export const NUMBER_OF_CELLS = 81
+
+// Used in for loops
+export const INDICES_TO_NINE = [0, 1, 2, 3, 4, 5, 6, 7, 8] as const
 export const ALL_CANDIDATES = [1, 2, 3, 4, 5, 6, 7, 8, 9] as const
+
+// Used to humanize indices
 export const ROW_NAMES = ["A", "B", "C", "D", "E", "F", "G", "H", "J"] as const
 export const COLUMN_NAMES = ["1", "2", "3", "4", "5", "6", "7", "8", "9"] as const
 export const BOX_NAMES = ["1", "2", "3", "4", "5", "6", "7", "8", "9"] as const

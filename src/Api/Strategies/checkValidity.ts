@@ -1,4 +1,4 @@
-import { SudokuDigits, IndexToNine, ROW_NAMES, COLUMN_NAMES, ALL_CANDIDATES, BOX_NAMES } from "../../Types"
+import { SudokuDigits, IndexToNine, ROW_NAMES, COLUMN_NAMES, ALL_CANDIDATES, BOX_NAMES, INDICES_TO_NINE } from "../../Types"
 import { convertArrayToEnglishList } from "../../utils"
 import PureSudoku from "../PureSudoku"
 import { boxAt, algebraic, boxNameAt } from "../Utils"
@@ -23,13 +23,11 @@ export default function checkValidity(sudoku: PureSudoku): validityResult {
       candidatesInBoxes.push(new Set<SudokuDigits>())
    }
 
-   // Every time an index is changed, typing is there so that `typeof i !== number`
-   // Expanding `i++` into `i = i+1` so that the type assertion works
-   for (let i: IndexToNine = 0; i < 9; i = i + 1 as IndexToNine) {
+   for (const i of INDICES_TO_NINE) {
       const solvedInRow = new Set<SudokuDigits>()
       const candidatesInRow = new Set<SudokuDigits>()
 
-      for (let j: IndexToNine = 0; j < 9; j = j + 1 as IndexToNine) {
+      for (const j of INDICES_TO_NINE) {
          const candidates = sudoku.data[i][j]
          const current = {
             column: j,

@@ -1,4 +1,4 @@
-import { IndexToNine, SudokuDigits } from "../../Types"
+import { ALL_CANDIDATES, IndexToNine, INDICES_TO_NINE, SudokuDigits } from "../../Types"
 import PureSudoku from "../PureSudoku"
 import Solver from "../Solver"
 import { boxAt } from "../Utils"
@@ -51,8 +51,8 @@ export default function hiddenSingles(sudoku: PureSudoku, _solver: Solver) {
       boxes: _CreateArrayOf9Groups(),
    }
 
-   for (let row: IndexToNine = 0; row < 9; row = row + 1 as IndexToNine) {
-      for (let column: IndexToNine = 0; column < 9; column = column + 1 as IndexToNine) {
+   for (const row of INDICES_TO_NINE) {
+      for (const column of INDICES_TO_NINE) {
          // Prevent hidden single when already solved
          if (sudoku.data[row][column].length === 1) {
             const candidate = sudoku.data[row][column][0]
@@ -71,7 +71,7 @@ export default function hiddenSingles(sudoku: PureSudoku, _solver: Solver) {
    }
 
    let successcount = 0
-   for (let candidate: SudokuDigits = 1; candidate <= 9; candidate = candidate + 1 as SudokuDigits) {
+   for (const candidate of ALL_CANDIDATES) {
       for (let i = 0; i < 9; i++) {
          const currentPossible = {
             row: possible.rows[i][candidate],

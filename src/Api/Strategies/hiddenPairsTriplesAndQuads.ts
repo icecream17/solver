@@ -1,4 +1,4 @@
-import { AlertType, BOX_NAMES, COLUMN_NAMES, IndexToNine, ROW_NAMES, SudokuDigits, TwoDimensionalArray } from "../../Types";
+import { AlertType, BOX_NAMES, COLUMN_NAMES, IndexToNine, INDICES_TO_NINE, ROW_NAMES, SudokuDigits, TwoDimensionalArray } from "../../Types";
 import { convertArrayToEnglishList } from "../../utils";
 import PureSudoku from "../PureSudoku";
 import Solver from "../Solver";
@@ -154,7 +154,7 @@ function findHiddenConjugatesOfGroup(
 
 function findHiddenConjugatesOfSudoku(sudoku: PureSudoku, maxSize = 4 as 2 | 3 | 4) {
    const conjugates = [] as _cellInfoList[]
-   for (let i: IndexToNine = 0; i < 9; i = i + 1 as IndexToNine) {
+   for (const i of INDICES_TO_NINE) {
       const resultRow = findHiddenConjugatesOfGroup(sudoku.data[i], index => [i, index], maxSize)
       if (typeof resultRow === "string") {
          return `Row ${ROW_NAMES[i]}${resultRow}`

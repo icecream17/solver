@@ -1,5 +1,5 @@
 // @flow
-import { IndexToNine, SudokuDigits, ThreeDimensionalArray } from "../Types"
+import { IndexToNine, INDICES_TO_NINE, SudokuDigits, ThreeDimensionalArray } from "../Types"
 import { to9by9 } from "./Utils"
 
 export default class PureSudoku {
@@ -53,8 +53,8 @@ export default class PureSudoku {
     */
    import81(representation: string): void {
       let totalIndex = 0
-      for (let i: IndexToNine = 0; i < 9; i = i+1 as IndexToNine) {
-         for (let j: IndexToNine = 0; j < 9; j = j+1 as IndexToNine) {
+      for (const i of INDICES_TO_NINE) {
+         for (const j of INDICES_TO_NINE) {
             const char = representation[totalIndex]
             totalIndex++ // after char
 
@@ -74,8 +74,8 @@ export default class PureSudoku {
     */
    import729(representation: string): void {
       let totalIndex = 0
-      for (let i: IndexToNine = 0; i < 9; i = i + 1 as IndexToNine) {
-         for (let j: IndexToNine = 0; j < 9; j = j + 1 as IndexToNine) {
+      for (const i of INDICES_TO_NINE) {
+         for (const j of INDICES_TO_NINE) {
             const candidateData = (
                representation.slice(totalIndex * 9, totalIndex * 9 + 9)
                   .split('')
@@ -93,8 +93,8 @@ export default class PureSudoku {
    }
 
    importGrid(gridRepresentation: ThreeDimensionalArray<SudokuDigits>) {
-      for (let i: IndexToNine = 0; i < 9; i = i + 1 as IndexToNine) {
-         for (let j: IndexToNine = 0; j < 9; j = j + 1 as IndexToNine) {
+      for (const i of INDICES_TO_NINE) {
+         for (const j of INDICES_TO_NINE) {
             this.set(i, j).to(...gridRepresentation[i][j])
          }
       }
@@ -165,8 +165,8 @@ export default class PureSudoku {
    }
 
    clear() {
-      for (let i: IndexToNine = 0; i < 9; i = i+1 as IndexToNine) {
-         for (let j: IndexToNine = 0; j < 9; j = j+1 as IndexToNine) {
+      for (const i of INDICES_TO_NINE) {
+         for (const j of INDICES_TO_NINE) {
             this.clearCell(i, j)
          }
       }

@@ -1,4 +1,4 @@
-import { IndexToNine } from "../../Types";
+import { IndexToNine, INDICES_TO_NINE } from "../../Types";
 import PureSudoku from "../PureSudoku";
 import checkValidity from "./checkValidity";
 
@@ -37,14 +37,14 @@ test('a digit cannot appear twice in a box', () => {
 })
 
 test('it must be possible for each digit to be in a row', () => {
-   for (let i: IndexToNine = 0; i < 9; i = i + 1 as IndexToNine) {
+   for (const i of INDICES_TO_NINE) {
       testSudoku.set(0, i).to(1, 2, 3, 4, 5, 6, 7, 8)
    }
    expect(checkValidity(testSudoku).ok).toBe(false)
 })
 
 test('it must be possible for each digit to be in a column', () => {
-   for (let i: IndexToNine = 0; i < 9; i = i + 1 as IndexToNine) {
+   for (const i of INDICES_TO_NINE) {
       testSudoku.set(i, 0).to(1, 2, 3, 4, 5, 6, 7, 8)
    }
    expect(checkValidity(testSudoku).ok).toBe(false)

@@ -1,4 +1,4 @@
-import { AlgebraicName, BoxName, BOX_NAMES, COLUMN_NAMES, IndexTo81, IndexToNine, ROW_NAMES } from "../Types";
+import { AlgebraicName, BoxName, BOX_NAMES, COLUMN_NAMES, IndexTo81, IndexToNine, INDICES_TO_NINE, ROW_NAMES } from "../Types";
 
 export function algebraic (row: IndexToNine, column: IndexToNine): AlgebraicName {
    return `${ROW_NAMES[row]}${COLUMN_NAMES[column]}` as const
@@ -59,7 +59,7 @@ export function affects (row: IndexToNine, column: IndexToNine): Readonly<Array<
    }
 
    // For each row / column
-   for (let i: IndexToNine = 0; i < 9; i = i+1 as IndexToNine) {
+   for (const i of INDICES_TO_NINE) {
       // Different column => affects [same row, different column]
       if (i !== column) {
          results.push(indexOf(row, i))

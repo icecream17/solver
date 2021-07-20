@@ -1,4 +1,4 @@
-import { IndexToNine } from "../../Types"
+import { IndexToNine, INDICES_TO_NINE } from "../../Types"
 import PureSudoku from "../PureSudoku"
 import Solver from "../Solver"
 import { SuccessError } from "../Types"
@@ -8,8 +8,8 @@ import { affects, algebraic } from "../Utils"
 export default function updateCandidates(sudoku: PureSudoku, _solver: Solver) {
    let updated = 0
 
-   for (let i: IndexToNine = 0; i < 9; i = i + 1 as IndexToNine) {
-      for (let j: IndexToNine = 0; j < 9; j = j + 1 as IndexToNine) {
+   for (const i of INDICES_TO_NINE) {
+      for (const j of INDICES_TO_NINE) {
          // Cell
          if (sudoku.data[i][j].length === 1) {
 

@@ -1,6 +1,6 @@
 // @flow
 
-import { AlertType, IndexToNine, SudokuDigits, TwoDimensionalArray } from "../../Types";
+import { AlertType, IndexToNine, INDICES_TO_NINE, SudokuDigits, TwoDimensionalArray } from "../../Types";
 import { convertArrayToEnglishList } from "../../utils";
 import PureSudoku from "../PureSudoku";
 import Solver from "../Solver";
@@ -96,7 +96,7 @@ function findConjugatesOfGroup(
    // Each possible cell must have 2 to maxSize candidates
    const possibleCells = [] as _cellInfoList
 
-   for (let index: IndexToNine = 0; index < 9; index = index + 1 as IndexToNine) {
+   for (const index of INDICES_TO_NINE) {
       const candidates = group[index]
 
       if (1 < candidates.length && candidates.length <= maxSize) {
@@ -149,7 +149,7 @@ function findConjugatesOfSudoku(sudoku: PureSudoku, maxSize = 4 as 2 | 3 | 4) {
    const resultRows = [] as Array<Exclude<ReturnType<typeof findConjugatesOfGroup>, "ERROR!!!">>
    const resultColumns = [] as Array<Exclude<ReturnType<typeof findConjugatesOfGroup>, "ERROR!!!">>
    const resultBoxes = [] as Array<Exclude<ReturnType<typeof findConjugatesOfGroup>, "ERROR!!!">>
-   for (let i: IndexToNine = 0; i < 9; i = i + 1 as IndexToNine) {
+   for (const i of INDICES_TO_NINE) {
       const resultRow = findConjugatesOfGroup(sudoku.data[i], index => [i, index], maxSize)
       const resultColumn = findConjugatesOfGroup(sudoku.getColumn(i), index => [index, i], maxSize)
       const resultBox = findConjugatesOfGroup(sudoku.getBox(i), index => getPositionFromIndexWithinBox(i, index), maxSize)
@@ -183,7 +183,7 @@ function eliminateUsingConjugateGroups(sudoku: PureSudoku, conjugateGroups: read
          let success = false
          const conjugateCandidates = getCandidatesOfConjugate(conjugate)
 
-         for (let column: IndexToNine = 0; column < 9; column = column + 1 as IndexToNine) {
+         for (const column of INDICES_TO_NINE) {
             // Make sure the cell is not in the conjugate
             if (!conjugate.find(cell => cell.position[1] === column)) {
                // The cell now cannot have any of the candidates in the conjugate
@@ -214,7 +214,7 @@ function eliminateUsingConjugateGroups(sudoku: PureSudoku, conjugateGroups: read
          let success = false
          const conjugateCandidates = getCandidatesOfConjugate(conjugate)
 
-         for (let row: IndexToNine = 0; row < 9; row = row + 1 as IndexToNine) {
+         for (const row of INDICES_TO_NINE) {
             if (!conjugate.find(cell => cell.position[0] === row)) {
                if (column[row].find(candidate => conjugateCandidates.includes(candidate))) {
                   success = true
@@ -242,7 +242,7 @@ function eliminateUsingConjugateGroups(sudoku: PureSudoku, conjugateGroups: read
          let success = false
          const conjugateCandidates = getCandidatesOfConjugate(conjugate)
 
-         for (let indexInBox: IndexToNine = 0; indexInBox < 9; indexInBox = indexInBox + 1 as IndexToNine) {
+         for (const indexInBox of INDICES_TO_NINE) {
             const thisPosition = getPositionFromIndexWithinBox(boxIndex, indexInBox)
             if (!conjugate.find(cell => cell.position[0] === thisPosition[0] && cell.position[1] === thisPosition[1])) {
                if (box[indexInBox].find(candidate => conjugateCandidates.includes(candidate))) {

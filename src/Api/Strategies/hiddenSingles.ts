@@ -1,4 +1,4 @@
-import { ALL_CANDIDATES, IndexToNine, INDICES_TO_NINE, SudokuDigits } from "../../Types"
+import { ALL_CANDIDATES, IndexToNine, INDICES_TO_NINE } from "../../Types"
 import PureSudoku from "../PureSudoku"
 import Solver from "../Solver"
 import { boxAt } from "../Utils"

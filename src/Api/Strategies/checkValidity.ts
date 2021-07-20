@@ -1,4 +1,4 @@
-import { SudokuDigits, IndexToNine, ROW_NAMES, COLUMN_NAMES, ALL_CANDIDATES, BOX_NAMES, INDICES_TO_NINE } from "../../Types"
+import { SudokuDigits, ROW_NAMES, COLUMN_NAMES, ALL_CANDIDATES, BOX_NAMES, INDICES_TO_NINE } from "../../Types"
 import { convertArrayToEnglishList } from "../../utils"
 import PureSudoku from "../PureSudoku"
 import { boxAt, algebraic, boxNameAt } from "../Utils"

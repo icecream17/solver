@@ -73,7 +73,7 @@ type CellState = Readonly<(
  */
 export default class Cell extends React.Component<CellProps, CellState> {
    static labelAt(row: IndexToNine, column: IndexToNine) {
-      return `Cell at row ${row}, column ${column}`
+      return `Cell at row ${row + 1}, column ${column + 1}` as const
    }
 
    constructor(props: CellProps) {

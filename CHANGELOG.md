@@ -2,6 +2,12 @@
 
 Note: Many earlier versions are not specified, that's too much work.
 
+## v0.15.1
+
+- (css + use) Fix invalid css (typo).
+  - `prefers-reduced-motion` in github corner is `reduce` not `reduced`
+- (code) Apply second simplification in Notes.md - `INDICES_TO_NINE`
+
 ## v0.15.0
 
 - (use) After "Check for solved" fails, skip "Update candidates"

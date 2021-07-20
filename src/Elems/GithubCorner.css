@@ -45,7 +45,7 @@
    }
 }
 
-@media (prefers-reduced-motion: reduced) {
+@media (prefers-reduced-motion: reduce) {
    .github-corner:hover .octo-arm {
       animation: octocat-wave 7s ease-in-out;
    }

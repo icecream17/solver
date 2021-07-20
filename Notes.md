@@ -4,6 +4,83 @@ inspired by <https://www.sudokuwiki.org>
 
 woah <https://www.sudokuwiki.org/jigsaw.htm?shape=6&bd=400000000000000000000000700000008010600070000050000000200000003000000020000000001>
 
+## conversation in typescript community discord
+
+**icecream17**:
+
+Is there a better way to write this for loop?
+
+```ts
+for (let boxIndex: IndexToNine = 0; boxIndex < 9; boxIndex = boxIndex + 1 as IndexToNine) {}
+
+// For context
+type IndexToNine = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8
+```
+
+`boxIndex++ as IndexToNine` doesn't work because boxIndex becomes `number`
+
+**1**:
+
+why do you want to constrain the type. What does it achieve
+
+**icecream17**:
+
+I'm writing a sudoku solver \<useless detail>
+
+**1**:
+
+Right, ok that makes more sense
+
+A 'better' way would be to not bother with it in loops
+
+You would have to cast every number before and after every math operation
+
+**2**:
+
+```ts
+const indices = [0, 1, 2, 3, 4, 5, 6, 7, 8] as const
+
+for (const boxIndex of indices) {
+  boxIndex
+}
+```
+
+!ts boxIndex
+
+**TypeScript** \[BOT]
+
+```ts
+const boxIndex: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 /* 3:11, 4:3 */
+```
+
+**2**:
+
+But constraining the type of numbers to 0-8 is unnecessary & misleading, unless you're actually checking it at runtime
+
+**1**:
+
+That's an interesting solution
+
+> I actually think the "avoid loops" solution is the most interesting\
+> It would be quite nice if I could rewrite some stuff
+
+**2**:
+
+```ts
+function indexToNine(x: number){
+  if(typeof x !== "number" || x !== (x | 0) || x < 0 || x > 8) throw new Error("Invalid index " + x);
+  return x as IndexToNine
+}
+
+let foo = indexToNine(a + b)
+```
+
+> In between the above and the below is:
+> Useless detail by me
+> Reply to useless detail
+
+I wouldn't recommend `let foo = (a + b) as IndexToNine`, though; in that case I would use that `indexToNine` function to check it at runtime
+
 ## things that aren't great
 
 Tabbing into a StrategyLabel shows a border that's way too big.

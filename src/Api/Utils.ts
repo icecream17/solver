@@ -119,6 +119,8 @@ export const indexTo3x3 = [
  * Takes a box and the index of a cell in that box
  *
  * Then returns the position of the cell (in the whole sudoku)
+ *
+ * Position format: [row, column]
  */
 export function getPositionFromIndexWithinBox(indexOfBox: IndexToNine, indexInBox: IndexToNine) {
    const [boxRow, boxColumn] = indexTo3x3[indexOfBox]

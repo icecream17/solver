@@ -9,7 +9,7 @@ export type StrategyResult = Readonly<{
    success: true,
    successcount: number,
    message?: string
-}> | Readonly<{
+} | {
    success: false,
    successcount?: number,
    message?: string

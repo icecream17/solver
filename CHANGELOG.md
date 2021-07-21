@@ -2,6 +2,14 @@
 
 Note: Many earlier versions are not specified, that's too much work.
 
+## v0.16.0
+
+- (use) Intersection Removal strategy
+  - It was easier than doing pointing pairs and box/line reduction separately
+- (bugh) showCandidates if some are eliminated, even if `Cell#state.showCandidates` is false
+
+- (deps) Bump @types/node from 16.3.3 to 16.4.0
+
 ## v0.15.1
 
 - (css + use) Fix invalid css (typo).

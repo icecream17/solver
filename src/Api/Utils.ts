@@ -1,7 +1,21 @@
-import { AlgebraicName, BoxName, BOX_NAMES, COLUMN_NAMES, IndexTo81, IndexToNine, INDICES_TO_NINE, ROW_NAMES } from "../Types";
+// @flow
+
+import { AlgebraicName, BoxName, BOX_NAMES, COLUMN_NAMES, IndexTo81, IndexToNine, INDICES_TO_NINE, ROW_NAMES, TwoDimensionalArray } from "../Types";
 
 export function algebraic (row: IndexToNine, column: IndexToNine): AlgebraicName {
    return `${ROW_NAMES[row]}${COLUMN_NAMES[column]}` as const
+}
+
+export type CellID = Readonly<{
+   row: IndexToNine
+   column: IndexToNine
+}>
+
+const IDs = [] as TwoDimensionalArray<CellID>
+export function id (row: IndexToNine, column: IndexToNine) {
+   IDs[row] ??= []
+   IDs[row][column] ??= { row, column } as const
+   return IDs[row][column]
 }
 
 /** What index a cell is at */

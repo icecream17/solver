@@ -76,7 +76,7 @@ export default {
       009047000
    `,
 
-   "Surprisingly difficult": `
+   "Chokepoint": `
       000508000
       000000070
       041093000
@@ -86,5 +86,17 @@ export default {
       005087004
       000005980
       002400000
+   `,
+
+   "Solved with easy + Simple Coloring": `
+      000001200
+      000350800
+      000800001
+      407006009
+      008009005
+      096010700
+      200000037
+      080003000
+      640000510
    `
 } as const

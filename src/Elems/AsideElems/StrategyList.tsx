@@ -63,6 +63,11 @@ export default class StrategyList extends React.Component<StrategyListProps> {
                {...getRepeatedProps()}
             />
             <StrategyItem
+               name='Intersection removal'
+               href='https://www.sudokuwiki.org/Intersection_Removal'
+               {...getRepeatedProps()}
+            />
+            <StrategyItem
                name='Another Example strategy'
                {...getRepeatedProps()}
             />

@@ -7,10 +7,16 @@ import Strategies from "./Strategies/Strategies"
 import Sudoku from "./Sudoku"
 import { SuccessError } from "./Types"
 
+/**
+ * A strategy is skippable if
+ * 1. It failed
+ * 2. It's retried with no changes
+ */
 export default class Solver {
    latestStrategyItem: null | StrategyItem = null
    isDoingStep = false
    erroring = false
+   skippable = [] as boolean[]
    solved = 0
    stepsTodo = 0
    strategyIndex = 0
@@ -48,19 +54,40 @@ export default class Solver {
 
    updateCounters(success: boolean, isFinished: boolean) {
       // Go back to the start when a strategy succeeds
-      // (exception: if you're at the start go to 1 anyways)
-      // (exception exception: if the sudoku is finished don't go to 1)
-      // (another exception: always be at the start if erroring)
-      // (exception 4:
+      // (exception 1: if you're at the start go to 1 anyways)
+      // (exception 1a: if the sudoku is finished don't go to 1)
+      // (exceotion 1b: always be at the start if erroring)
+      // (exception 2:
       //    After "check for solved" fails,
       //    skip "update candidates"
       // )
+      // (expection 3:
+      //    If a strategy is skippable skip it
+      // )
+      if (success) {
+         for (let i = 0; i < this.skippable.length; i++) {
+            this.skippable[i] = false
+         }
+      } else {
+         this.skippable[this.strategyIndex] = true
+      }
 
+      // if exception (not 1) / 1a / 1b
+      // else if 2
+      // else <normal condition>
       if ((success && this.strategyIndex > 0) || this.erroring || isFinished) {
          this.strategyIndex = 0
       } else if (this.strategyIndex === 0 && success === false) {
          this.strategyIndex = 2
       } else {
+         this.strategyIndex++
+         if (this.strategyIndex === Strategies.length) {
+            this.strategyIndex = 0
+         }
+      }
+
+      // Exception 3
+      while (this.skippable[this.strategyIndex] && this.strategyIndex !== 0) {
          this.strategyIndex++
          if (this.strategyIndex === Strategies.length) {
             this.strategyIndex = 0

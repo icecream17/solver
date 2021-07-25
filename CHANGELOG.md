@@ -14,7 +14,7 @@ When a `@types` dependency updates, they almost always don't affect anything.
 
 - (use) Intersection Removal strategy
   - It was easier than doing pointing pairs and box/line reduction separately
-- (bugh) showCandidates if some are eliminated, even if `Cell#state.showCandidates` is false
+- (failsafe) showCandidates if some are eliminated, even if `Cell#state.showCandidates` is false
 
 - (deps) Bump @types/node from 16.3.3 to 16.4.0
 

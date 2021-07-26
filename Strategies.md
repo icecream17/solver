@@ -67,6 +67,16 @@ But theoretically, a strategy could include conjugates where N cells require N+1
 
 EDIT: This strategy is called Sue-De-Coq
 
+Thanks to PixelPlucker from discord:
+
+```md
+r1c1 and r1c2 can contain at most one digit from the 123 triple and at most one digit from the 456 triple, completing them both. So {123} can be removed from the rest of the box, and {456} from the rest of the row
+```
+
+```md
+No need to credit, I’m definitely not the first person to describe SDCs this way :laughing:
+```
+
 ## Hidden pairs, triples, and quads
 
 Instead of N cells needing N candidates, N candidates must be in N cells.

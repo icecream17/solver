@@ -4,6 +4,10 @@ Note: Many earlier versions are not specified, that's too much work.
 
 When a `@types` dependency updates, they almost always don't affect anything.
 
+## v0.16.2
+
+Dependency bumps
+
 ## v0.16.1
 
 - (use) Expand times when strategies are skippable

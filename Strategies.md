@@ -65,6 +65,27 @@ But theoretically, a strategy could include conjugates where N cells require N+1
 // 4 cells to only have 123.
 ```
 
+EDIT: This strategy is called Sue-De-Coq
+
+## Hidden pairs, triples, and quads
+
+Instead of N cells needing N candidates, N candidates must be in N cells.
+So the rest of the candidates in those cells are eliminated.
+
+```rust
+123456789 ...456789 ...456789
+123456789 ...456789 ...456789
+123456789 ...456789 ...456789
+```
+
+1, 2, and 3 have to be in the 3 leftmost cells... so
+
+```rust
+123...... ...456789 ...456789
+123...... ...456789 ...456789
+123...... ...456789 ...456789
+```
+
 ## Ideas
 
 ### EstablishLink

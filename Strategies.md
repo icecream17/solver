@@ -31,9 +31,7 @@ That isn't necessarily the case, like in this example:
 // (4 can be removed from A4 [row 1 column 4])
 ```
 
-The reason why it's called "Pairs, triples, and quads" is because this strategy specifically searches for N cells having N candidates, and then eliminates the corresponding candidates.
-
-This results in 2 cells requiring 2 candidates, or 3 cells requiring 3 candidates, etc.\
+The reason why it's called "Pairs, triples, and quads" is because this strategy specifically searches for N cells having N candidates, e.g. 2 cells requiring 2 candidates, or 3 cells requiring 3 candidates, etc.\
 So pairs, triples, and quads.
 
 ```rust
@@ -42,7 +40,7 @@ So pairs, triples, and quads.
 12 23 34 41 // Quad, of 1234
 ```
 
-But theoretically, a strategy could include conjugates where N cells require N+1 candidates. Or even N+2, but let's show N+1 since that's easier.
+But theoretically, a strategy could include conjugates where N cells require N+1 or even N+2 candidates.
 
 ```rust
 12345 12345 ..... | 45... 456..

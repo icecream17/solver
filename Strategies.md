@@ -31,7 +31,7 @@ That isn't necessarily the case, like in this example:
 // (4 can be removed from A4 [row 1 column 4])
 ```
 
-The reason why it's called "Pairs, triples, and quads" is because this strategy spefically searches for N cells having N candidates, and then eliminates the corresponding candidates.
+The reason why it's called "Pairs, triples, and quads" is because this strategy specifically searches for N cells having N candidates, and then eliminates the corresponding candidates.
 
 This results in 2 cells requiring 2 candidates, or 3 cells requiring 3 candidates, etc.\
 So pairs, triples, and quads.

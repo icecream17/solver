@@ -30,6 +30,7 @@ export default class StrategyToggler extends React.Component<StrategyTogglerProp
    }
 
    render() {
+      // Apparently there shouldn't be an aria-checked
       return (
          <input
             className="StrategyToggler"
@@ -38,7 +39,6 @@ export default class StrategyToggler extends React.Component<StrategyTogglerProp
             aria-label="toggle strategy"
             role="switch"
             onChange={this.callback.bind(this)}
-            aria-checked={this.state.checked}
             checked={this.state.checked}
          />
       )

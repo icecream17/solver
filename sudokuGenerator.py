@@ -236,7 +236,8 @@ while success:
 
                     grid[row][col] = backup
 
-                    result = solutionCount(copyGrid)
+                    # Optimization: Don't check solutionCount for first three
+                    result = solutionCount(copyGrid) if numLeft < 78 else 1
                     if result == 1:
                         successes.append([row, col])
                         print(numLeft, row, col, "SUCCESS")

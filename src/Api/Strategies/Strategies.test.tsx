@@ -13,6 +13,7 @@ import hiddenPairsTriplesAndQuads from "./hiddenPairsTriplesAndQuads";
 import intersectionRemoval from "./intersectionRemoval";
 import STRATEGIES from "./Strategies";
 import xWing from "./xWing";
+import checkValidity from "./checkValidity";
 
 describe('strategies', () => {
    let solver: Solver;
@@ -479,6 +480,28 @@ describe('strategies', () => {
          expect(xWing(testSudoku, solver).success).toBe(true)
          expect(testSudoku.data[5][2]).toStrictEqual([1])
          expect(testSudoku.data[7][5]).toStrictEqual([2, 3, 4, 5, 6, 7, 8, 9])
+      })
+
+      test('2', () => {
+         const testSudoku = new PureSudoku()
+         testSudoku.import(`
+            +----------------+--------------+--------------+
+            | 2589 1   258   | 69  3   7    | 58  4   56   |
+            | 4789 38  478   | 69  2   5    | 378 1   67   |
+            | 6    35  57    | 4   1   8    | 357 2   9    |
+            +----------------+--------------+--------------+
+            | 25   7   3     | 1   4   9    | 6   8   25   |
+            | 1    256 245   | 8   7   26   | 245 9   3    |
+            | 248  268 9     | 3   5   26   | 124 7   14   |
+            +----------------+--------------+--------------+
+            | 3    9   17    | 2   6   4    | 17  5   8    |
+            | 27   4   6     | 5   8   1    | 9   3   27   |
+            | 258  258 1258  | 7   9   3    | 124 6   14   |
+            +----------------+--------------+--------------+
+         `)
+         updateCandidates(testSudoku, solver)
+         expect(xWing(testSudoku, solver).success).toBe(true)
+         expect(checkValidity(testSudoku)).toStrictEqual({ ok: true as true })
       })
    })
 })

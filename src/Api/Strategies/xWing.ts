@@ -72,7 +72,7 @@ export default function xWing (sudoku: PureSudoku, _solver: Solver) {
                      patternColumns.add(cell.column)
                   }
 
-                  if (patternColumns.size < 3) {
+                  if (patternRows.size < 3) {
                      // Pattern finally identified!
                      let success = false
                      for (const eliminationRow of patternRows) {

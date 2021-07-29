@@ -2,7 +2,6 @@
 
 import PureSudoku from "./PureSudoku";
 import Solver from "./Solver";
-import Sudoku from "./Sudoku";
 
 export const SuccessError = -1
 export type StrategyResult = Readonly<{
@@ -19,7 +18,4 @@ export type StrategyError = Readonly<{
    successcount: typeof SuccessError,
    message?: string
 }>
-export type Strategy = (
-   ((arg: PureSudoku, solver: Solver) => StrategyResult) |
-   ((arg: Sudoku, solver: Solver) => StrategyResult)
-)
+export type Strategy = (arg: PureSudoku, solver: Solver) => StrategyResult

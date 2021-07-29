@@ -1,7 +1,7 @@
 import { ALL_CANDIDATES, INDICES_TO_NINE, SudokuDigits } from "../../Types";
 import PureSudoku from "../PureSudoku";
 import Solver from "../Solver";
-import { boxAt, CellID, id } from "../Utils";
+import { boxAt, CellID } from "../Utils";
 
 /**
  * If all candidate N in group G attacks range R,
@@ -56,31 +56,7 @@ export default function intersectionRemoval(sudoku: PureSudoku, _solver: Solver)
 
 
    let successcount = 0
-   const candidateLocations = [] as Array<{
-      rows: Set<CellID>[]
-      columns: Set<CellID>[]
-      boxes: Set<CellID>[]
-   }>
-
-   for (const candidate of ALL_CANDIDATES) {
-      candidateLocations[candidate] ??= {
-         rows: [new Set<CellID>(), new Set<CellID>(), new Set<CellID>(), new Set<CellID>(), new Set<CellID>(), new Set<CellID>(), new Set<CellID>(), new Set<CellID>(), new Set<CellID>()],
-         columns: [new Set<CellID>(), new Set<CellID>(), new Set<CellID>(), new Set<CellID>(), new Set<CellID>(), new Set<CellID>(), new Set<CellID>(), new Set<CellID>(), new Set<CellID>()],
-         boxes: [new Set<CellID>(), new Set<CellID>(), new Set<CellID>(), new Set<CellID>(), new Set<CellID>(), new Set<CellID>(), new Set<CellID>(), new Set<CellID>(), new Set<CellID>()]
-      }
-   }
-
-   for (const row of INDICES_TO_NINE) {
-      for (const column of INDICES_TO_NINE) {
-         const cellID = id(row, column)
-         for (const candidate of sudoku.data[row][column]) {
-            candidateLocations[candidate].rows[row].add(cellID)
-            candidateLocations[candidate].columns[column].add(cellID)
-            candidateLocations[candidate].boxes[boxAt(row, column)].add(cellID)
-         }
-      }
-   }
-
+   const candidateLocations = sudoku.getCandidateLocations()
    for (const candidate of ALL_CANDIDATES) {
       // Boxes vs Rows (and) Boxes vs Columns
       for (const box of INDICES_TO_NINE) {

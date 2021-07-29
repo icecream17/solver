@@ -1,7 +1,6 @@
 import PureSudoku from "../PureSudoku"
 import testBoards from "../boards"
 import Solver from "../Solver";
-import Sudoku from "../Sudoku";
 import { NUMBER_OF_CELLS } from "../../Types";
 import { render } from "@testing-library/react";
 import App from "../../App";
@@ -12,6 +11,8 @@ import pairsTriplesAndQuads from "./pairsTriplesAndQuads";
 import { SuccessError } from "../Types";
 import hiddenPairsTriplesAndQuads from "./hiddenPairsTriplesAndQuads";
 import intersectionRemoval from "./intersectionRemoval";
+import STRATEGIES from "./Strategies";
+import xWing from "./xWing";
 
 describe('strategies', () => {
    let solver: Solver;
@@ -21,6 +22,11 @@ describe('strategies', () => {
       solver.strategyIndex = 0
       solver.solved = 0
       solver.strategyItemElements = []
+   })
+
+   test.each(STRATEGIES)('$variable.name fails on an empty sudoku', (strategy) => {
+      const testSudoku = new PureSudoku()
+      expect(strategy(testSudoku, solver).success).toBe(false)
    })
 
    describe('check for solved', () => {
@@ -45,7 +51,7 @@ describe('strategies', () => {
          render(<App />)
          window._custom.alert = jest.fn()
 
-         const testSudoku = Sudoku.fromRepresentation(testBoards["Solved board"])
+         const testSudoku = PureSudoku.fromRepresentation(testBoards["Solved board"])
 
          {
             solver.solved = NUMBER_OF_CELLS
@@ -72,15 +78,16 @@ describe('strategies', () => {
          window._custom.alert.mockClear()
       })
 
+      // solver.solved is set in the beforeEach
       test('succeeds when the sudoku has new solved cells', () => {
-         solver.solved = 0
-         const testSudoku = Sudoku.fromRepresentation(testBoards["Simple sudoku"])
+         const testSudoku = PureSudoku.fromRepresentation(testBoards["Simple sudoku"])
          expect(checkForSolved(testSudoku, solver).success).toBe(true)
          expect(solver.solved).not.toBe(0)
       })
 
-      test('fails when the sudoku doesnt have any new solved cells', () => {
-         const testSudoku = new Sudoku()
+      test('and then fails when the sudoku doesnt have any new solved cells', () => {
+         const testSudoku = PureSudoku.fromRepresentation(testBoards["Simple sudoku"])
+         checkForSolved(testSudoku, solver)
          expect(checkForSolved(testSudoku, solver).success).toBe(false)
       })
    })
@@ -106,11 +113,6 @@ describe('strategies', () => {
          expect(testSudoku.data[6][7]).not.toContain(4)
          expect(testSudoku.data[6][7]).not.toContain(9)
       })
-
-      test("Doesn't update when there's nothing to update", () => {
-         const testSudoku = new PureSudoku()
-         expect(updateCandidates(testSudoku, solver).success).toBe(false)
-      })
    })
 
    describe('hiddenSingles', () => {
@@ -134,19 +136,9 @@ describe('strategies', () => {
          updateCandidates(testSudoku, solver)
          expect(hiddenSingles(testSudoku, solver).success).toBe(false)
       })
-
-      test("Empty sudoku = fail", () => {
-         const testSudoku = new PureSudoku()
-         expect(hiddenSingles(testSudoku, solver).success).toBe(false)
-      })
    })
 
    describe('Pairs triples and quads', () => {
-      test("Empty sudoku = fail", () => {
-         const testSudoku = new PureSudoku()
-         expect(pairsTriplesAndQuads(testSudoku, solver).success).toBe(false)
-      })
-
       test('Pairs', () => {
          const testSudoku = new PureSudoku()
          testSudoku.set(0, 0).to(1, 2)
@@ -468,4 +460,25 @@ describe('strategies', () => {
          expect(testSudoku.data[0][4]).toStrictEqual([1, 2, 3, 5, 6, 7, 8, 9])
       })
    });
+
+   describe('X wing', () => {
+      test('1', () => {
+         const testSudoku = new PureSudoku()
+         testSudoku.import(`
+            1........
+            .........
+            ...23..54
+            ...67..89
+            .........
+            ..1......
+            .........
+            .........
+            .........
+         `)
+         updateCandidates(testSudoku, solver)
+         expect(xWing(testSudoku, solver).success).toBe(true)
+         expect(testSudoku.data[5][2]).toStrictEqual([1])
+         expect(testSudoku.data[7][5]).toStrictEqual([2, 3, 4, 5, 6, 7, 8, 9])
+      })
+   })
 })

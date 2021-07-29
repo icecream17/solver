@@ -4,6 +4,16 @@ Note: Many earlier versions are not specified, that's too much work.
 
 When a `@types` dependency updates, they almost always don't affect anything.
 
+## v0.17.0
+
+- (use) Add X wing strategy
+
+- (a11y) Remove `aria-checked` from StrategyToggler since `checked` is already there
+- (code) Simplify the `Strategy` type
+- (code) Extract `getCandidateLocations` from `intersectionRemoval.ts` to `PureSudoku.ts`
+- (docs) More stuff added/fixed in Strategies.md
+- (deps) Bump @types/node to 16.4.7
+
 ## v0.16.2
 
 Dependency bumps

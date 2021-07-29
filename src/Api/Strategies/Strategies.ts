@@ -6,6 +6,7 @@ import hiddenSingles from "./hiddenSingles";
 import intersectionRemoval from "./intersectionRemoval";
 import pairsTriplesAndQuads from "./pairsTriplesAndQuads";
 import updateCandidates from "./updateCandidates";
+import xWing from "./xWing";
 
 // See comments on `Strategy`
 const STRATEGIES = [
@@ -15,6 +16,7 @@ const STRATEGIES = [
    pairsTriplesAndQuads,
    hiddenPairsTriplesAndQuads,
    intersectionRemoval,
+   xWing,
 ] as const
 
 export default STRATEGIES as typeof STRATEGIES & Strategy[]

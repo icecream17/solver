@@ -1,6 +1,6 @@
 // @flow
-import { IndexToNine, INDICES_TO_NINE, SudokuDigits, ThreeDimensionalArray } from "../Types"
-import { to9by9 } from "./Utils"
+import { ALL_CANDIDATES, IndexToNine, INDICES_TO_NINE, SudokuDigits, ThreeDimensionalArray } from "../Types"
+import { boxAt, CellID, id, to9by9 } from "./Utils"
 
 export default class PureSudoku {
    data: ThreeDimensionalArray<SudokuDigits>
@@ -181,6 +181,64 @@ export default class PureSudoku {
       const startRow = index - (index % 3) // / 3 * 3
       const startColumn = (index % 3) * 3
       return this.data.slice(startRow, startRow + 3).flatMap(row => row.slice(startColumn, startColumn + 3))
+   }
+
+   /**
+    * Returns the candidate locations of the sudoku
+    *
+    * Returns: [undefined, candidate1Data, candidate2Data, ...]
+    *
+    * candidateNData: {
+    *    rows: [Set<CellID> for each index]
+    *    columns: [Set<CellID> for each index]
+    *    boxes: [Set<CellID> for each index]
+    * }
+    *
+    */
+   getCandidateLocations() {
+      const candidateLocations = [undefined] as [undefined, ...({
+         rows: Set<CellID>[]
+         columns: Set<CellID>[]
+         boxes: Set<CellID>[]
+      })[]]
+
+      for (const candidate of ALL_CANDIDATES) {
+         candidateLocations[candidate] = {
+            rows: [new Set<CellID>(), new Set<CellID>(), new Set<CellID>(), new Set<CellID>(), new Set<CellID>(), new Set<CellID>(), new Set<CellID>(), new Set<CellID>(), new Set<CellID>()],
+            columns: [new Set<CellID>(), new Set<CellID>(), new Set<CellID>(), new Set<CellID>(), new Set<CellID>(), new Set<CellID>(), new Set<CellID>(), new Set<CellID>(), new Set<CellID>()],
+            boxes: [new Set<CellID>(), new Set<CellID>(), new Set<CellID>(), new Set<CellID>(), new Set<CellID>(), new Set<CellID>(), new Set<CellID>(), new Set<CellID>(), new Set<CellID>()]
+         }
+      }
+
+      for (const row of INDICES_TO_NINE) {
+         for (const column of INDICES_TO_NINE) {
+            const cellID = id(row, column)
+            for (const candidate of this.data[row][column]) {
+               candidateLocations[candidate].rows[row].add(cellID)
+               candidateLocations[candidate].columns[column].add(cellID)
+               candidateLocations[candidate].boxes[boxAt(row, column)].add(cellID)
+            }
+         }
+      }
+
+      return candidateLocations
+   }
+
+   /**
+    * Toggles a candidate at a place
+    *
+    * @example
+    * (new PureSudoku()).toggle(7).at(3, 5)
+    */
+   toggle(candidate: SudokuDigits) {
+      // Using an arrow function here to use `this`
+      return {
+         at: (row: IndexToNine, column: IndexToNine) => {
+            this.set(row, column).to(
+               ...this.data[row][column].filter(candidatee => candidatee !== candidate)
+            )
+         }
+      }
    }
 }
 

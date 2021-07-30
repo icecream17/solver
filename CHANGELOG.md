@@ -4,6 +4,10 @@ Note: Many earlier versions are not specified, that's too much work.
 
 When a `@types` dependency updates, they almost always don't affect anything.
 
+## v0.17.2
+
+- (use) Don't show candidates if zero or nine candidates (fixes clear and undo)
+
 ## v0.17.1
 
 - (AAA) Oops, X wing absolutely explodes example 2. Fixed that

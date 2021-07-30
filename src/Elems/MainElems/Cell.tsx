@@ -147,8 +147,6 @@ export default class Cell extends React.Component<CellProps, CellState> {
    }
 
    clearCandidates() {
-      // In the future I could add `showCandidates: false`
-      // Right now it's a bug / feature
       this.setState({
          candidates: [1, 2, 3, 4, 5, 6, 7, 8, 9],
          showCandidates: false,
@@ -174,11 +172,13 @@ export default class Cell extends React.Component<CellProps, CellState> {
          }
 
          if (candidates.length === 0) {
+            newState.showCandidates = false
             newState.error = true
          } else if (1 < candidates.length && candidates.length < 9) {
             newState.showCandidates = true
             newState.error = false
          } else {
+            newState.showCandidates = false
             newState.error = false
          }
 

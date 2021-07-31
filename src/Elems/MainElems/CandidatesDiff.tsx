@@ -8,19 +8,23 @@ import Candidate from './Candidate';
 type CandidatesDiffProps = Readonly<{
    previous: SudokuDigits[] | null
    current: SudokuDigits[]
+   classes: string[] | null
 }> & _ReactProps
 
 /**
  * Based off of `Candidates`,
  * This adds css classes to show if one or more candidates were added or removed
  *
+ * The css classes actually have precedence over the classes defined by strategies
+ *
  * @requiredProps
  * - previous
  * - current
+ * - classes
  */
 export default class CandidatesDiff extends React.Component<CandidatesDiffProps> {
    constructor(props: CandidatesDiffProps) {
-      _expect(CandidatesDiff, props).toHaveProperties("previous", "current")
+      _expect(CandidatesDiff, props).toHaveProperties("previous", "current", "classes")
 
       if (!Array.isArray(props.previous) && props.previous !== null) {
          throw TypeError('CandidatesDiff: "previous" is not an array')
@@ -70,7 +74,7 @@ export default class CandidatesDiff extends React.Component<CandidatesDiffProps>
                return "eliminated" // Candidate now removed
             }
          } else {
-            return ""
+            return this.props.classes?.[candidate] ?? ""
          }
       }
 

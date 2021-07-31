@@ -30,26 +30,30 @@ type CellProps = PossibleConstructCallback & Readonly<{
 
 type CellState = Readonly<(
    {
-      candidates: SudokuDigits[],
-      showCandidates: boolean,
-      error: boolean,
+      candidates: SudokuDigits[]
+      showCandidates: boolean
+      error: boolean
    } & (
       {
-         active: false,
+         active: false
          pretend: false
       } |
       {
-         active: true,
+         active: true
          pretend: boolean
       }
    ) & (
       {
-         explaining: true,
+         explaining: true
          previousCandidates: null | SudokuDigits[]
+         classes: null | string[]
+         candidateClasses: null | string[]
       } |
       {
-         explaining: false,
+         explaining: false
          previousCandidates: null
+         classes: null
+         candidateClasses: null
       }
    )
 )>
@@ -97,6 +101,16 @@ export default class Cell extends React.Component<CellProps, CellState> {
            * Starts at [1, 2, 3, 4, 5, 6, 7, 8, 9] and updates in `whenKeyDown`
            */
          candidates: [1, 2, 3, 4, 5, 6, 7, 8, 9],
+
+         /**
+          * Used for styling - for example highlighting this cell blue
+          */
+         classes: null,
+
+         /**
+          * Used for styling - for example highlighting a candidate red
+          */
+         candidateClasses: null,
 
          /** Whether to show candidates
            *
@@ -151,8 +165,9 @@ export default class Cell extends React.Component<CellProps, CellState> {
          candidates: [1, 2, 3, 4, 5, 6, 7, 8, 9],
          showCandidates: false,
          error: false,
-         explaining: false
       })
+
+      this.setExplainingToFalse()
    }
 
    setCandidatesTo(candidates: SudokuDigits[], callback?: () => void) {
@@ -186,15 +201,6 @@ export default class Cell extends React.Component<CellProps, CellState> {
       }, callback)
    }
 
-   // BUG? Not using a callback for `setCandidatesTo`
-   undo() {
-      this.setState({ explaining: false })
-
-      if (this.state.previousCandidates !== null) {
-         this.setCandidatesTo(this.state.previousCandidates)
-      }
-   }
-
    toggleCandidate(candidate: SudokuDigits) {
       this.setState((state: CellState) => {
          const candidates = new Set(state.pretend ? [] : state.candidates)
@@ -222,33 +228,60 @@ export default class Cell extends React.Component<CellProps, CellState> {
       })
    }
 
+   setExplainingToTrue() {
+      this.setState({
+         explaining: true,
+      })
+   }
+
+   setExplainingToFalse() {
+      this.setState({
+         explaining: false,
+         previousCandidates: null,
+         classes: null,
+         candidateClasses: null,
+      })
+   }
+
+   // BUG? Not using a callback for `setCandidatesTo`
+   undo() {
+      if (this.state.previousCandidates !== null) {
+         this.setCandidatesTo(this.state.previousCandidates)
+      }
+
+      this.setExplainingToFalse()
+   }
+
    render() {
       let content = <></>;
 
       // Using a span for single digits
       // so that I can force cells to always be [css height: 1/9th]
       if (this.state.pretend) {
-         content = <Candidates data={this.state.candidates} /> // Nothing happens right now
+         content = <Candidates data={this.state.candidates} classes={this.state.candidateClasses} /> // Nothing happens right now
       } else if (this.state.active) {
-         content = <Candidates data={this.state.candidates} />
+         content = <Candidates data={this.state.candidates} classes={this.state.candidateClasses}  />
       } else if (this.state.explaining && this.state.previousCandidates !== null) {
-         content = <CandidatesDiff previous={this.state.previousCandidates} current={this.state.candidates} />
+         content = <CandidatesDiff previous={this.state.previousCandidates} current={this.state.candidates} classes={this.state.candidateClasses}  />
       } else if (this.numCandidates === 0) {
          content = <span className="ugh tables"> 0 </span>
       } else if (this.numCandidates === 1) {
          content = <span className={`ugh tables digit-${this.state.candidates[0]}`}> {this.state.candidates[0]} </span>
       } else if (this.state.showCandidates || this.state.candidates.length !== 9) {
-         content = <Candidates data={this.state.candidates} /> // Now numCandidates > 1
+         content = <Candidates data={this.state.candidates} classes={this.state.candidateClasses} /> // Now numCandidates > 1
       }
+
+
+      const className = this.state.classes?.concat(['Cell']).join(' ') ?? 'Cell'
 
       // 1. inner div to separate aria roles
       //    and because <button> elements cannot contain tables
       // 2. tabIndex for focusability
       //    ="0" because of a11y thing
       return (
-         <td className='Cell'>
+         <td className={className}>
             <div
-               className='Cell'
+               className={className}
                role='button'
                aria-label={Cell.labelAt(this.props.row, this.props.column)}
                data-error={this.state.error ? "true" : undefined}

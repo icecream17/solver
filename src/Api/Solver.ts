@@ -109,7 +109,7 @@ export default class Solver {
       this.sudokuNullCheck()
       for (const row of this.sudoku.cells) {
          for (const cell of row) {
-            cell?.setState({ explaining: true })
+            cell?.setExplainingToTrue()
          }
       }
       await forComponentsToUpdate()
@@ -118,15 +118,13 @@ export default class Solver {
    /**
     * Kind of a misnomer really.
     *
-    * For each cell, setState:
-    *    explaining: false
-    *    previousCandidates: null
+    * For each cell, run {@link Cell#setExplainingToFalse}
     */
    async resetCells() {
       this.sudokuNullCheck()
       for (const row of this.sudoku.cells) {
          for (const cell of row) {
-            cell?.setState({ explaining: false, previousCandidates: null })
+            cell?.setExplainingToFalse()
          }
       }
       await forComponentsToUpdate()

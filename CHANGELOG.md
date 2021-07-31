@@ -4,6 +4,11 @@ Note: Many earlier versions are not specified, that's too much work.
 
 When a `@types` dependency updates, they almost always don't affect anything.
 
+## v0.17.3
+
+- (future) Add "classes" and "candidateClasses" to Cell. In the future, strategies will change these classes
+- (code) Add Cell#setExplainingToTrue and Cell#setExplainingToFalse
+
 ## v0.17.2
 
 - (use) Don't show candidates if zero or nine candidates (fixes clear and undo)

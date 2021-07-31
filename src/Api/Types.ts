@@ -18,4 +18,7 @@ export type StrategyError = Readonly<{
    successcount: typeof SuccessError,
    message?: string
 }>
-export type Strategy = (arg: PureSudoku, solver: Solver) => StrategyResult
+export type Strategy = (
+   ((arg: PureSudoku) => StrategyResult) |
+   ((arg: PureSudoku, solver: Solver) => StrategyResult)
+)

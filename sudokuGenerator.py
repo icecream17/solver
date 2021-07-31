@@ -187,14 +187,15 @@ def fillGrid(grid, start=0):
                         box = getBox(row, col, grid)
                         if not digit in (box[0] + box[1] + box[2]):
                             grid[row][col] = digit
-                            if checkGrid(grid): # Different
-                                return True  # Different
                             if fillGrid(grid, i): # Different
                                 return True
                             grid[row][col] = 0
-            break
 
-    return False
+            # Couldn't place a digit
+            return False
+
+    # No more empty cells!
+    return True
 
 
 #Generate a Fully Solved Grid

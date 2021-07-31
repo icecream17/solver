@@ -1,11 +1,12 @@
 
 import React from 'react';
 import { _expect } from '../../utils';
-import { SudokuDigits, _ReactProps } from '../../Types';
+import { IndexToNine, SudokuDigits, _ReactProps } from '../../Types';
 import Candidate from './Candidate';
 
 type CandidatesProps = Readonly<{
    data: SudokuDigits[]
+   classes: string[] | null
 }> & _ReactProps
 
 /**
@@ -16,10 +17,11 @@ type CandidatesProps = Readonly<{
  *
  * @requiredProps
  * - data
+ * - classes
  */
 export default class Candidates extends React.Component<CandidatesProps> {
    constructor(props: CandidatesProps) {
-      _expect(Candidates, props).toHaveProperty("data")
+      _expect(Candidates, props).toHaveProperties("data", "classes")
 
       if (!Array.isArray(props.data)) {
          throw TypeError('Candidates: "data" is not an array')
@@ -41,6 +43,15 @@ export default class Candidates extends React.Component<CandidatesProps> {
    }
 
    render() {
+      let index = 0
+      const getRepeatedProps = () => {
+         return {
+            index: index++ as IndexToNine,
+            className: this.props.classes?.[index] ?? ''
+         } as const
+      }
+
+
       const content = (candidate: SudokuDigits) => {
          if (this.hasCandidate(candidate)) {
             return candidate
@@ -53,19 +64,19 @@ export default class Candidates extends React.Component<CandidatesProps> {
          <table className="Candidates">
             <tbody>
                <tr>
-                  <Candidate index={0}>{content(1)}</Candidate>
-                  <Candidate index={1}>{content(2)}</Candidate>
-                  <Candidate index={2}>{content(3)}</Candidate>
+                  <Candidate {...getRepeatedProps()}>{content(1)}</Candidate>
+                  <Candidate {...getRepeatedProps()}>{content(2)}</Candidate>
+                  <Candidate {...getRepeatedProps()}>{content(3)}</Candidate>
                </tr>
                <tr>
-                  <Candidate index={3}>{content(4)}</Candidate>
-                  <Candidate index={4}>{content(5)}</Candidate>
-                  <Candidate index={5}>{content(6)}</Candidate>
+                  <Candidate {...getRepeatedProps()}>{content(4)}</Candidate>
+                  <Candidate {...getRepeatedProps()}>{content(5)}</Candidate>
+                  <Candidate {...getRepeatedProps()}>{content(6)}</Candidate>
                </tr>
                <tr>
-                  <Candidate index={6}>{content(7)}</Candidate>
-                  <Candidate index={7}>{content(8)}</Candidate>
-                  <Candidate index={8}>{content(9)}</Candidate>
+                  <Candidate {...getRepeatedProps()}>{content(7)}</Candidate>
+                  <Candidate {...getRepeatedProps()}>{content(8)}</Candidate>
+                  <Candidate {...getRepeatedProps()}>{content(9)}</Candidate>
                </tr>
             </tbody>
          </table>

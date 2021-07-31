@@ -1,0 +1,17 @@
+
+.Candidate.eliminated {
+   background-color: yellow;
+}
+
+.Candidate.added {
+   background-color: green;
+}
+
+.Candidate.blue {
+   background-color: var(--blue-gray);
+   color: black;
+}
+
+.Candidate.green {
+   color: lightgreen;
+}

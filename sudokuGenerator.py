@@ -198,7 +198,7 @@ def fillGrid(grid, start=0):
     return True
 
 
-#Generate a Fully Solved Grid
+# Generate a Fully Solved Grid
 fillGrid(grid)
 # drawGrid(grid)
 # myPen.getscreen().update()

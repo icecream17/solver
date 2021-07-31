@@ -4,6 +4,7 @@ import { AlertType, IndexToNine, INDICES_TO_NINE, SudokuDigits, TwoDimensionalAr
 import { convertArrayToEnglishList } from "../../utils";
 import PureSudoku from "../PureSudoku";
 import Solver from "../Solver";
+import Sudoku from "../Sudoku";
 import { SuccessError } from "../Types";
 import { algebraic, boxAt, getPositionFromIndexWithinBox } from "../Utils";
 
@@ -165,6 +166,18 @@ function findConjugatesOfSudoku(sudoku: PureSudoku, maxSize = 4 as 2 | 3 | 4) {
    return [resultRows, resultColumns, resultBoxes] as const
 }
 
+/**
+ * Colors a conjugate, see Cell#highlight
+ */
+export function colorConjugate(sudoku: PureSudoku, conjugate: _cellInfoList, color='blue') {
+   if (sudoku instanceof Sudoku) {
+      for (const cell of conjugate) {
+         const element = sudoku.cells[cell.position[0]][cell.position[1]]
+         element?.highlight(cell.candidates, color)
+      }
+   }
+}
+
 
 function eliminateUsingConjugateGroups(sudoku: PureSudoku, conjugateGroups: readonly [_cellInfoList[][], _cellInfoList[][], _cellInfoList[][]]) {
    let successcount = 0;
@@ -189,6 +202,7 @@ function eliminateUsingConjugateGroups(sudoku: PureSudoku, conjugateGroups: read
                // The cell now cannot have any of the candidates in the conjugate
                if (row[column].find(candidate => conjugateCandidates.includes(candidate))) {
                   success = true
+                  colorConjugate(sudoku, conjugate)
                   sudoku.set(rowIndex, column).to(
                      ...row[column].filter(candidate => !conjugateCandidates.includes(candidate)))
                }
@@ -218,6 +232,7 @@ function eliminateUsingConjugateGroups(sudoku: PureSudoku, conjugateGroups: read
             if (!conjugate.find(cell => cell.position[0] === row)) {
                if (column[row].find(candidate => conjugateCandidates.includes(candidate))) {
                   success = true
+                  colorConjugate(sudoku, conjugate)
                   sudoku.set(row, columnIndex).to(
                      ...column[row].filter(candidate => !conjugateCandidates.includes(candidate)))
                }
@@ -247,6 +262,7 @@ function eliminateUsingConjugateGroups(sudoku: PureSudoku, conjugateGroups: read
             if (!conjugate.find(cell => cell.position[0] === thisPosition[0] && cell.position[1] === thisPosition[1])) {
                if (box[indexInBox].find(candidate => conjugateCandidates.includes(candidate))) {
                   success = true
+                  colorConjugate(sudoku, conjugate)
                   sudoku.set(...thisPosition).to(
                      ...box[indexInBox].filter(candidate => !conjugateCandidates.includes(candidate)))
                }

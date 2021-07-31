@@ -16,8 +16,8 @@ type CandidatesProps = Readonly<{
  * Be sure to update CandidatesDiff as well!
  *
  * @requiredProps
- * - data
- * - classes
+ * - data: The actual array of candidates
+ * - classes: The classes added to each candidate (see Cell#candidateClasses)
  */
 export default class Candidates extends React.Component<CandidatesProps> {
    constructor(props: CandidatesProps) {
@@ -47,7 +47,7 @@ export default class Candidates extends React.Component<CandidatesProps> {
       const getRepeatedProps = () => {
          return {
             index: index++ as IndexToNine,
-            className: this.props.classes?.[index] ?? ''
+            className: this.props.classes?.[index as SudokuDigits] ?? ''
          } as const
       }
 

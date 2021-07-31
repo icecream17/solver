@@ -109,6 +109,9 @@ export default class Cell extends React.Component<CellProps, CellState> {
 
          /**
           * Used for styling - for example highlighting a candidate red
+          *
+          * Although the type is `string[] | null`, it's really
+          * `{ [key: SudokuDigits]: string } | null`
           */
          candidateClasses: null,
 
@@ -224,6 +227,33 @@ export default class Cell extends React.Component<CellProps, CellState> {
          return {
             candidates: [...candidates],
             error: false
+         }
+      })
+   }
+
+   /**
+    * Adds a class to a bunch of candidates.
+    *
+    * @example
+    * (new Cell()).highlight([2, 3, 4], 'blue') // Adds the class "blue" to the Candidates 2, 3, and 4
+    *
+    * @param candidates
+    * @param color - This is really a css class, so remember to check `Candidate.css`
+    */
+   highlight(candidates: SudokuDigits[], color: string) {
+      this.setState((state: CellState) => {
+         if (state.explaining === false) {
+            return null
+         }
+
+         // Array of 10
+         const newCandidateClasses = state.candidateClasses ?? ['', '', '', '', '', '', '', '', '', '']
+         for (const candidate of candidates) {
+            newCandidateClasses[candidate] += ' ' + color
+         }
+
+         return {
+            candidateClasses: newCandidateClasses
          }
       })
    }

@@ -1,4 +1,5 @@
 
+import './Candidate.css'
 import React from 'react';
 import { _expect } from '../../utils';
 import { IndexToNine, _ReactProps } from '../../Types';

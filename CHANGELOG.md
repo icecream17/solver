@@ -4,6 +4,10 @@ Note: Many earlier versions are not specified, that's too much work.
 
 When a `@types` dependency updates, they almost always don't affect anything.
 
+## v0.18.0
+
+- (use + layout) Add better candidate highlighting for every strategy except X wing
+
 ## v0.17.3
 
 - (future) Add "classes" and "candidateClasses" to Cell. In the future, strategies will change these classes

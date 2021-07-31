@@ -105,3 +105,13 @@ This would establish a (nontrivial) link between two candidates.
 Which could make the linking strategies more powerful.
 
 Currently I have no linking strategies but when/if I do, this will be in mind.
+
+### "I would call that an Almost Locked Triple"
+
+There's also an "Almost Locked Pair".
+The first actual results are here: <http://forum.enjoysudoku.com/help-almost-locked-candidates-move-t37339.html>
+
+And also "Dual almost locked pair/triple"!???
+
+<https://f-puzzles.com/?id=ydudzk22>
+<https://f-puzzles.com/?id=yjgcfmdy>

@@ -1,7 +1,20 @@
 import { ALL_CANDIDATES, INDICES_TO_NINE, SudokuDigits } from "../../Types";
 import PureSudoku from "../PureSudoku";
 import Solver from "../Solver";
+import Sudoku from "../Sudoku";
 import { boxAt, CellID } from "../Utils";
+
+/**
+ * Colors a group of cells, see Cell#highlight
+ */
+function colorGroup(sudoku: PureSudoku, group: Set<CellID>, candidate: SudokuDigits, color = 'blue') {
+   if (sudoku instanceof Sudoku) {
+      for (const cell of group) {
+         const element = sudoku.cells[cell.row][cell.column]
+         element?.highlight([candidate], color)
+      }
+   }
+}
 
 /**
  * If all candidate N in group G attacks range R,
@@ -40,6 +53,7 @@ export default function intersectionRemoval(sudoku: PureSudoku, _solver: Solver)
       // In (row and box), but not (rest of box)
       if (boxDiff.size === 0 && group2Diff.size !== 0) {
          successcount++
+         colorGroup(sudoku, boxLocations, candidate)
          for (const extraCell of group2Diff) {
             _removeCandidate(candidate, extraCell)
          }
@@ -48,6 +62,7 @@ export default function intersectionRemoval(sudoku: PureSudoku, _solver: Solver)
       // In (row and box), but not (rest of row)
       if (group2Diff.size === 0 && boxDiff.size !== 0) {
          successcount++
+         colorGroup(sudoku, group2Locations, candidate)
          for (const extraCell of boxDiff) {
             _removeCandidate(candidate, extraCell)
          }

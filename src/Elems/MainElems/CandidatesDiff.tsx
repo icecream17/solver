@@ -1,5 +1,4 @@
 
-import './CandidatesDiff.css'
 import React from 'react';
 import { _expect } from '../../utils';
 import { SudokuDigits, _ReactProps } from '../../Types';

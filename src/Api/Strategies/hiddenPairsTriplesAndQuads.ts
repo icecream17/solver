@@ -4,7 +4,7 @@ import PureSudoku from "../PureSudoku";
 import Solver from "../Solver";
 import { SuccessError } from "../Types";
 import { algebraic, getPositionFromIndexWithinBox } from "../Utils";
-import { combinations, _cellInfoList } from "./pairsTriplesAndQuads";
+import { colorConjugate, combinations, _cellInfoList } from "./pairsTriplesAndQuads";
 
 /**
  * Returns an array of all the cells which contain at least one of the candidates
@@ -240,6 +240,7 @@ export default function hiddenPairsTriplesAndQuads(sudoku: PureSudoku, _solver: 
          // If different, replace
          if (actualCell.some(candidate => !conjugateCell.candidates.includes(candidate))) {
             sudoku.set(...conjugateCell.position).to(...conjugateCell.candidates)
+            colorConjugate(sudoku, conjugate, 'green')
             success = true
          }
       }

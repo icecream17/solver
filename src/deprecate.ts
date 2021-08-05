@@ -1,6 +1,6 @@
 import { _Function } from "./Types"
 
-const hits = new Set<_Function>()
+const hits = new WeakSet<_Function>()
 
 /**
  * Deprecates the function with a warning, but still keeps the original functionality

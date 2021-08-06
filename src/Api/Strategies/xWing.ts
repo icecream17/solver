@@ -2,6 +2,7 @@ import { ALL_CANDIDATES, IndexToNine, INDICES_TO_NINE } from "../../Types";
 import PureSudoku from "../PureSudoku"
 import Solver from "../Solver";
 import { CellID } from "../Utils";
+import { colorGroup } from "./intersectionRemoval";
 
 /**
  * 2 candidates in 2 rows, which align on 2 columns
@@ -21,64 +22,62 @@ export default function xWing (sudoku: PureSudoku, _solver: Solver) {
          const row = candidateLocations[candidate].rows[index]
          const column = candidateLocations[candidate].columns[index]
 
+         const check = []
          if (row.size < 3) {
-            for (const otherRow of possibleRows) {
-               const rowTotal = new Set<CellID>()
-               row.forEach(cell => rowTotal.add(cell))
-               otherRow.forEach(cell => rowTotal.add(cell))
-
-               if (rowTotal.size < 5) {
-                  const patternRows = new Set<IndexToNine>()
-                  const patternColumns = new Set<IndexToNine>()
-                  for (const cell of rowTotal) {
-                     patternRows.add(cell.row)
-                     patternColumns.add(cell.column)
-                  }
-
-                  if (patternColumns.size < 3) {
-                     // Pattern finally identified!
-                     let success = false
-                     for (const eliminationColumn of patternColumns) {
-                        for (const cell of candidateLocations[candidate].columns[eliminationColumn]) {
-                           if (patternRows.has(cell.row) === false) {
-                              sudoku.toggle(candidate).at(cell.row, cell.column)
-                              success = true
-                           }
-                        }
-                     }
-
-                     if (success) {
-                        successcount++
-                     }
-                  }
-               }
-            }
-
-            possibleRows.push(row)
+            check.push(row)
+            possibleRows.push(row) // Marker 1
          }
 
-         // See the `row.size` if statement
          if (column.size < 3) {
-            for (const otherColumn of possibleColumns) {
-               const columnTotal = new Set<CellID>()
-               column.forEach(cell => columnTotal.add(cell))
-               otherColumn.forEach(cell => columnTotal.add(cell))
+            check.push(column)
+            possibleColumns.push(column) // Marker 1
+         }
 
-               if (columnTotal.size < 5) {
+         // line = row/column
+         // pendLine = column/row
+         for (const line1 of check) {
+            const possibleLines =
+               line1 === row
+                  ? possibleRows
+                  : possibleColumns
+
+            for (const line2 of possibleLines) {
+               // Necessary because `Marker 1` happens before this
+               if (line1 === line2) {
+                  continue
+               }
+
+               const sumLines = new Set<CellID>()
+               line1.forEach(cell => sumLines.add(cell))
+               line2.forEach(cell => sumLines.add(cell))
+
+               if (sumLines.size < 5) {
                   const patternRows = new Set<IndexToNine>()
                   const patternColumns = new Set<IndexToNine>()
-                  for (const cell of columnTotal) {
+                  for (const cell of sumLines) {
                      patternRows.add(cell.row)
                      patternColumns.add(cell.column)
                   }
 
-                  if (patternRows.size < 3) {
+                  const { patternLines, patternPendLines } =
+                     line1 === row
+                        ? { patternLines: patternRows, patternPendLines: patternColumns }
+                        : { patternLines: patternColumns, patternPendLines: patternRows }
+
+                  const { lineProp, pendLineProp } =
+                     line1 === row
+                        ? { lineProp: "row", pendLineProp: "columns" } as const
+                        : { lineProp: "column", pendLineProp: "rows" } as const
+
+                  if (patternPendLines.size < 3) {
                      // Pattern finally identified!
                      let success = false
-                     for (const eliminationRow of patternRows) {
-                        for (const cell of candidateLocations[candidate].rows[eliminationRow]) {
-                           if (patternColumns.has(cell.column) === false) {
+
+                     for (const eliminationPendLine of patternPendLines) {
+                        for (const cell of candidateLocations[candidate][pendLineProp][eliminationPendLine]) {
+                           if (patternLines.has(cell[lineProp]) === false) {
                               sudoku.toggle(candidate).at(cell.row, cell.column)
+                              colorGroup(sudoku, sumLines, candidate)
                               success = true
                            }
                         }
@@ -90,8 +89,6 @@ export default function xWing (sudoku: PureSudoku, _solver: Solver) {
                   }
                }
             }
-
-            possibleColumns.push(column)
          }
       }
    }

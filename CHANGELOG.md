@@ -4,9 +4,14 @@ Note: Many earlier versions are not specified, that's too much work.
 
 When a `@types` dependency updates, they almost always don't affect anything.
 
+## v0.18.1
+
+- (use + layout) Add better candidate highlighting for x-wing
+- (docs) More ideas
+
 ## v0.18.0
 
-- (use + layout) Add better candidate highlighting for every strategy except X wing
+- (use + layout) Add better candidate highlighting for every strategy except X wing and hidden singles
 
 ## v0.17.3
 

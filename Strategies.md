@@ -98,6 +98,80 @@ So the rest of the candidates in those cells are eliminated.
 
 ## Ideas
 
+### Generalized Fish
+
+Say there's *n* rows in this fish. And you take away the candidates in *n-1* columns.
+
+At most, *n-1* candidates from those *n* rows are in those *n-1* columns.
+
+So, at least *1* of the remaining candidates in those *n* rows must be true!
+
+Therefore, any candidate seeing all of those remaining candidates must be false!
+
+```rust
+C     | C     | A A A
+      |       | e e e
+C     | C     | A A A
+------+-------+------
+C     | C     |
+
+// Here's an example with the 1st, 3rd, and 4th rows
+// There are 3 rows, but at *most* there's 2 occurances in the *c* region
+// Therefore, the A region must have at least 1 occurance.
+// So such candidate could be eliminated from the *e* region
+
+C     | C     | A
+      |       |     e
+C     | C     | 1 2
+------+-------+------
+C     | C     |     A
+      |       | e
+      |       | e
+
+// Here's another example, where the extra cells than an different boxes
+// I labeled such extra cells "attackers" represented with a capital A
+// If there was an attacker at "1", nothing would change!
+// But at "2", only the single elimination in box 3 applies.
+
+C     | C     | A A A
+e     | e     | e e e
+C     | C     | A A A
+------+-------+------
+C     | C     |
+e     | e     |
+e     | e     |
+------+-------+------
+e     | e     |
+e     | e     |
+e     | e     |
+
+// Notice that in the first example, there can be *at most* 1 occurance in the *a* region
+// Therefore the *c* region must have 2 occurances!
+// So actually there's more eliminations!
+
+// Note:
+// In the second example it's possible for the *c* region to only have 1 occurance.
+// So it's not possible there
+
+// Try finding it! Easy example:
+// 012037000000000800000000000067051040000000000000000000045012009000000000000000000
+```
+
+### Wow
+
+```rust
+A     |   E   | B
+  B   |   E   |   A
+E E E |   e   | E E E
+------+-------+------
+  N   |   E   | A
+N     |   E   |   B
+      |       |
+
+// "e" is eliminated since if all "E" was removed there would be an invalid loop
+// Not sure how this could be detected
+```
+
 ### EstablishLink
 
 This would establish a (nontrivial) link between two candidates.

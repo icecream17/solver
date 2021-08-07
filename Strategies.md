@@ -181,6 +181,10 @@ N     |   E   |   B
 // This example is a UVWXYZ-Wing
 ```
 
+## Exocet
+
+See my comment ("Steven" on 7-AUG-2021) <https://www.sudokuwiki.org/Exocet>
+
 ### Terrible
 
 You know about Pattern Overlay?
@@ -189,6 +193,8 @@ It's exhausting to try all the combinations for 1 number! Ugh!
 
 But... by trying the combinations... of the combinations for each digit,
 the puzzle is guaranteed to be solved.
+
+I wonder if this strategy can be simplified
 
 ### EstablishLink
 

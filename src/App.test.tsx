@@ -23,26 +23,6 @@ test("Strategy sections exist", () => {
    expect(screen.getByRole('group', { name: 'controls' })).toBeInTheDocument()
 })
 
-// Silly test
-test("Click everything", () => {
-   let elementsClicked = 0
-
-   for (const element of document.querySelectorAll("*")) {
-      userEvent.click(element)
-
-      elementsClicked++
-      if (elementsClicked > 10000) {
-         console.debug(element)
-         throw ReferenceError("Too many elements clicked")
-      }
-   }
-
-   console.info(elementsClicked)
-
-   // No errors!
-   expect(true).toBe(true)
-})
-
 test("The alert system", () => {
    const testText = "42 tnhbtxlvp320ajq6lcpy" // random string
    window._custom.alert(testText)
@@ -94,3 +74,23 @@ test("The prompt system", async () => {
 })
 
 test.todo("Strategy control testing")
+
+// Silly test - it goes at the end because Jest doesn't cleanup correctly
+test("Click everything", () => {
+   let elementsClicked = 0
+
+   for (const element of document.querySelectorAll("*")) {
+      userEvent.click(element)
+
+      elementsClicked++
+      if (elementsClicked > 10000) {
+         console.debug(element)
+         throw ReferenceError("Too many elements clicked")
+      }
+   }
+
+   console.info(elementsClicked)
+
+   // No errors!
+   expect(true).toBe(true)
+})

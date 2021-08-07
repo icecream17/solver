@@ -15,6 +15,7 @@ import STRATEGIES from "./Strategies";
 import xWing from "./xWing";
 import checkValidity from "./checkValidity";
 import swordfish from "./swordfish";
+import jellyfish from "./jellyfish";
 
 describe('strategies', () => {
    let solver: Solver;
@@ -544,6 +545,29 @@ describe('strategies', () => {
          `)
          updateCandidates(testSudoku, solver)
          expect(swordfish(testSudoku, solver).success).toBe(true)
+      })
+   })
+
+   describe('Jellyfish', () => {
+      test('1', () => {
+         const testSudoku = new PureSudoku()
+         testSudoku.import(`
+            +------------------+--------------+-------------------+
+            | 3589  4   589    | 289 7   268  | 2569  1    2359   |
+            | 1789  19  2      | 3   5   168  | 4679  469  79     |
+            | 13579 6   1579   | 249 24  12   | 2579  8    23579  |
+            +------------------+--------------+-------------------+
+            | 2     159 14589  | 46  3   7    | 14569 4569 1589   |
+            | 58    3   458    | 1   468 9    | 4567  2    578    |
+            | 6     7   1489   | 245 248 25   | 3     49   189    |
+            +------------------+--------------+-------------------+
+            | 4     15  3      | 258 9   258  | 128   7    6      |
+            | 159   8   1569   | 7   26  4    | 1259  3    1259   |
+            | 79    2   679    | 568 1   3    | 589   59   4      |
+            +------------------+--------------+-------------------+
+         `)
+         updateCandidates(testSudoku, solver)
+         expect(jellyfish(testSudoku, solver).success).toBe(true)
       })
    })
 })

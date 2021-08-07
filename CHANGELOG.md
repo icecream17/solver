@@ -4,6 +4,10 @@ Note: Many earlier versions are not specified, that's too much work.
 
 When a `@types` dependency updates, they almost always don't affect anything.
 
+## v0.19.1
+
+- (use) Jellyfish
+
 ## v0.19.0
 
 - (use) Swordfish!!!!

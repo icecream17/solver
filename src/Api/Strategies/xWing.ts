@@ -1,8 +1,57 @@
-import { ALL_CANDIDATES, IndexToNine, INDICES_TO_NINE } from "../../Types";
+import { ALL_CANDIDATES, IndexToNine, INDICES_TO_NINE, SudokuDigits } from "../../Types";
 import PureSudoku from "../PureSudoku"
 import Solver from "../Solver";
 import { CellID } from "../Utils";
 import { colorGroup } from "./intersectionRemoval";
+
+export function _innerWingLogic(
+   candidate: SudokuDigits,
+   candidateLocations: ReturnType<typeof PureSudoku.prototype.getCandidateLocations>,
+   sudoku: PureSudoku,
+   sumLines: Set<CellID>,
+   isRow: boolean,
+   wingSize: number
+) {
+   let successcount = 0
+
+   const patternRows = new Set<IndexToNine>()
+   const patternColumns = new Set<IndexToNine>()
+   for (const cell of sumLines) {
+      patternRows.add(cell.row)
+      patternColumns.add(cell.column)
+   }
+
+   const { patternLines, patternPendLines } =
+      isRow
+         ? { patternLines: patternRows, patternPendLines: patternColumns }
+         : { patternLines: patternColumns, patternPendLines: patternRows }
+
+   const { lineProp, pendLineProp } =
+      isRow
+         ? { lineProp: "row", pendLineProp: "columns" } as const
+         : { lineProp: "column", pendLineProp: "rows" } as const
+
+   if (patternPendLines.size <= wingSize) {
+      // Pattern finally identified!
+      let success = false
+
+      for (const eliminationPendLine of patternPendLines) {
+         for (const cell of candidateLocations[candidate][pendLineProp][eliminationPendLine]) {
+            if (patternLines.has(cell[lineProp]) === false) {
+               sudoku.toggle(candidate).at(cell.row, cell.column)
+               colorGroup(sudoku, sumLines, candidate)
+               success = true
+            }
+         }
+      }
+
+      if (success) {
+         successcount++
+      }
+   }
+
+   return successcount
+}
 
 /**
  * 2 candidates in 2 rows, which align on 2 columns
@@ -52,41 +101,7 @@ export default function xWing (sudoku: PureSudoku, _solver: Solver) {
                line2.forEach(cell => sumLines.add(cell))
 
                if (sumLines.size < 5) {
-                  const patternRows = new Set<IndexToNine>()
-                  const patternColumns = new Set<IndexToNine>()
-                  for (const cell of sumLines) {
-                     patternRows.add(cell.row)
-                     patternColumns.add(cell.column)
-                  }
-
-                  const { patternLines, patternPendLines } =
-                     line1 === row
-                        ? { patternLines: patternRows, patternPendLines: patternColumns }
-                        : { patternLines: patternColumns, patternPendLines: patternRows }
-
-                  const { lineProp, pendLineProp } =
-                     line1 === row
-                        ? { lineProp: "row", pendLineProp: "columns" } as const
-                        : { lineProp: "column", pendLineProp: "rows" } as const
-
-                  if (patternPendLines.size < 3) {
-                     // Pattern finally identified!
-                     let success = false
-
-                     for (const eliminationPendLine of patternPendLines) {
-                        for (const cell of candidateLocations[candidate][pendLineProp][eliminationPendLine]) {
-                           if (patternLines.has(cell[lineProp]) === false) {
-                              sudoku.toggle(candidate).at(cell.row, cell.column)
-                              colorGroup(sudoku, sumLines, candidate)
-                              success = true
-                           }
-                        }
-                     }
-
-                     if (success) {
-                        successcount++
-                     }
-                  }
+                  successcount += _innerWingLogic(candidate, candidateLocations, sudoku, sumLines, line1 === row, 2)
                }
             }
          }

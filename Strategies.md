@@ -172,6 +172,24 @@ N     |   E   |   B
 // Not sure how this could be detected
 ```
 
+### Substrat of Aligned Pair Exclusion
+
+```rust
+23   24   25  | 234567 e     e
+              | 26     27
+
+// This example is a UVWXYZ-Wing
+```
+
+### Terrible
+
+You know about Pattern Overlay?
+
+It's exhausting to try all the combinations for 1 number! Ugh!
+
+But... by trying the combinations... of the combinations for each digit,
+the puzzle is guaranteed to be solved.
+
 ### EstablishLink
 
 This would establish a (nontrivial) link between two candidates.

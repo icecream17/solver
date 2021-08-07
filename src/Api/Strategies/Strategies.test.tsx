@@ -14,6 +14,7 @@ import intersectionRemoval from "./intersectionRemoval";
 import STRATEGIES from "./Strategies";
 import xWing from "./xWing";
 import checkValidity from "./checkValidity";
+import swordfish from "./swordfish";
 
 describe('strategies', () => {
    let solver: Solver;
@@ -502,6 +503,47 @@ describe('strategies', () => {
          updateCandidates(testSudoku, solver)
          expect(xWing(testSudoku, solver).success).toBe(true)
          expect(checkValidity(testSudoku)).toStrictEqual({ ok: true as true })
+      })
+   })
+
+   describe('Swordfish', () => {
+      test('1', () => {
+         const testSudoku = new PureSudoku()
+         testSudoku.import(`
+            000000000
+            100200300
+            200300400
+            300400500
+            400500600
+            500600700
+            600700800
+            000000000
+            000000000
+         `)
+         updateCandidates(testSudoku, solver)
+         expect(swordfish(testSudoku, solver).success).toBe(true)
+         expect(checkValidity(testSudoku)).toStrictEqual({ ok: true as true })
+      })
+
+      test('2', () => {
+         const testSudoku = new PureSudoku()
+         testSudoku.import(`
+            +--------------+---------------+----------------+
+            | 9   8   47   | 346 1   346   | 5   2   3467   |
+            | 135 136 2    | 7   568 3468  | 9   68  3468   |
+            | 35  36  47   | 2   568 9     | 46  1   34678  |
+            +--------------+---------------+----------------+
+            | 7   123 13   | 5   4   26    | 8   9   16     |
+            | 6   5   8    | 1   9   7     | 3   4   2      |
+            | 4   12  9    | 68  3   268   | 16  7   5      |
+            +--------------+---------------+----------------+
+            | 138 4   6    | 9   7   138   | 2   5   18     |
+            | 2   9   13   | 34  68  5     | 7   68  14     |
+            | 18  7   5    | 468 2   1468  | 146 3   9      |
+            +--------------+---------------+----------------+
+         `)
+         updateCandidates(testSudoku, solver)
+         expect(swordfish(testSudoku, solver).success).toBe(true)
       })
    })
 })

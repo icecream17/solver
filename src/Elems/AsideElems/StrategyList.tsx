@@ -73,6 +73,11 @@ export default class StrategyList extends React.Component<StrategyListProps> {
                {...getRepeatedProps()}
             />
             <StrategyItem
+               name='Swordfish'
+               href='https://www.sudokuwiki.org/Sword_Fish_Strategy'
+               {...getRepeatedProps()}
+            />
+            <StrategyItem
                name='Another Example strategy'
                {...getRepeatedProps()}
             />

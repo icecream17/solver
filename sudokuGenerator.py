@@ -15,7 +15,7 @@
 # 070000050
 
 # So far it seems to take anywhere from a to b seconds:
-# 4.8813327s
+# 3.928570302s (wow!)
 # 191.2783888s (wow!)
 
 # It takes so long since it checks a sudoku's validity by bruteforce
@@ -33,6 +33,19 @@
 000705004
 001020008
 000400100
+"""
+
+# Here's the 3.9 second sudoku (also very easy)
+"""
+002060000
+008000703
+010700000
+900250006
+600000050
+004081030
+000006280
+000108090
+050000000
 """
 
 # Credits to www.101computing.net/sudoku-generator-algorithm/

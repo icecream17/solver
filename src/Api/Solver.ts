@@ -240,6 +240,7 @@ export default class Solver {
             cell?.setState({ explaining: false, previousCandidates: null })
          }
       }
+      this.skippable[this.strategyIndex] = false
       await forComponentsToUpdate()
    }
 
@@ -256,6 +257,7 @@ export default class Solver {
       this.solved = 0
       this.stepsTodo = 0
       this.strategyIndex = 0
+      this.skippable = []
    }
 
    Clear() {
@@ -265,5 +267,6 @@ export default class Solver {
       this.solved = 0
       this.stepsTodo = 0
       this.strategyIndex = 0
+      this.skippable = []
    }
 }

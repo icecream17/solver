@@ -1,19 +1,25 @@
 # Strategies
 
-## CheckForSolved
+## Explanations
+
+These strategies are probably better explained elsewhere.
+
+I am not attempting to explain these strategies as much as document them.
+
+### CheckForSolved
 
 This succeeds if there are new solved digits ("big digits").
 
 Also used to check if the sudoku is invalid, like having 0 fours in a column,
 or 7 threes in a box.
 
-## UpdateCandidates
+### UpdateCandidates
 
 For each solved digit, say "3", that digit cannot appear again in the same row, column, or box.
 
 So any candidate "3"s there are eliminated
 
-## Pairs, triples, and quads
+### Pairs, triples, and quads
 
 It's impossible for N cells to only have N-1 candidates.
 
@@ -77,7 +83,7 @@ r1c1 and r1c2 can contain at most one digit from the 123 triple and at most one 
 No need to credit, I’m definitely not the first person to describe SDCs this way :laughing:
 ```
 
-## Hidden pairs, triples, and quads
+### Hidden pairs, triples, and quads
 
 Instead of N cells needing N candidates, N candidates must be in N cells.
 So the rest of the candidates in those cells are eliminated.
@@ -96,9 +102,91 @@ So the rest of the candidates in those cells are eliminated.
 123...... ...456789 ...456789
 ```
 
+### X wing, Swordfish, and Jellyfish
+
+Just see Hodoku's page on Basic Fish
+
+Basically, 3 lines only appears in 3 crosslines = the rest of the crosslines can be eliminated
+
+### Skyscraper
+
+This is just an x-wing disjointed on one line.
+
+```rust
+. . . | A . .
+A . . | . e e
+. . . | . . .
+------+-------
+A . . | A . .
+```
+
+The reason this is so easy is because
+
+1. Simpler than a finned/sashimi x wing. (No groups!)
+2. It's super similar to an x wing.\
+   In fact, one of the lines stay the same.
+
+It's just below "x wing" is the strategy list below.
+
+## TODO
+
+Here's a list of a bunch of strategies, with somewhat of a difficulty spectrum
+
+"Has dual" just notes that it can happen twice with an almost similar setup (e.g. same base or something)
+
+A lot of this strategy ranking is me guessing.
+
+- [x] Check for solved
+- [x] Update candidates
+- [x] Pairs, triples, and quads
+- [x] Hidden pairs, triples, and quads
+- [x] Intersection Removal
+- [x] X wing (really a fish)
+- [] Skyscraper (Subset of wing/coloring)
+- [] 2-String Kite (Subset of coloring)
+  - [] Has dual
+- [x] Swordfish
+- [x] Jellyfish
+- [] Simple coloring
+- [] Y wing / XY wing / Bent triple
+  - [] Has dual (multi coloring). There's also 3D medusa
+  - [] This limited form is a subset of X chains
+- [] W wing
+- [] Empty Rectangle
+  - [] Has dual
+- [] Empty Rectangle but as a Grouped Nice Loop
+- [] XYZ wing
+- [] WXYZ wing (basic)
+- [] WXYZ wing (extended)
+
+To add:
+
+- More wings (Finned/Sashimi/Mutant)
+- Wow (see below)
+- Unique rectangles
+- Bug
+- Exocet
+- Chains/Loops
+  - X chains seem the easiest. They alternate strong/link, with both ends strong.
+  - XY chains are X chains but with multiple candidate
+- ALSs
+  - Sue de coq uses ALSs but seems much easier.
+  - Same with Almost Locked Triple, see below
+  - Chains < Loops < ALS
+
 ## Ideas
 
-### Generalized Fish
+### Finned/Sashimi Fish
+
+> EDIT: The Hodoku page for "Finned/Sashimi Fish" is actually just as general as the strategy described here. (The SudokuWiki page isn't.)
+>
+> And it turns out, you can use boxes as well as rows
+> So this is extension 2:
+>
+> 1. Take *n* rows, columns, or boxes; then subtract *n-1* row, columns, and boxes.
+> 2. Whatever sees *all* of the remainder can be eliminated
+>
+> See the hodoku page for finned/sashimi fish, and complex fish
 
 Say there's *n* rows in this fish. And you take away the candidates in *n-1* columns.
 

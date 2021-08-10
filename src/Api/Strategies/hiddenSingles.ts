@@ -1,7 +1,16 @@
-import { ALL_CANDIDATES, IndexToNine, INDICES_TO_NINE } from "../../Types"
+import { ALL_CANDIDATES, IndexToNine, INDICES_TO_NINE, SudokuDigits } from "../../Types"
 import PureSudoku from "../PureSudoku"
 import Solver from "../Solver"
+import Sudoku from "../Sudoku"
 import { boxAt } from "../Utils"
+import { colorGroup } from "./intersectionRemoval"
+
+function colorCandidate(sudoku: PureSudoku, row: IndexToNine, column: IndexToNine, candidate: SudokuDigits, color = 'blue') {
+   if (sudoku instanceof Sudoku) {
+      const element = sudoku.cells[row][column]
+      element?.highlight([candidate], color)
+   }
+}
 
 export default function hiddenSingles(sudoku: PureSudoku, _solver: Solver) {
    /**
@@ -81,14 +90,17 @@ export default function hiddenSingles(sudoku: PureSudoku, _solver: Solver) {
          if (typeof currentPossible.row !== "boolean") {
             successcount++
             sudoku.set(...currentPossible.row).to(candidate)
+            colorCandidate(sudoku, currentPossible.row[0], currentPossible.row[1], candidate, 'green')
          }
          if (typeof currentPossible.column !== "boolean") {
             successcount++
             sudoku.set(...currentPossible.column).to(candidate)
+            colorCandidate(sudoku, currentPossible.column[0], currentPossible.column[1], candidate, 'green')
          }
          if (typeof currentPossible.box !== "boolean") {
             successcount++
             sudoku.set(...currentPossible.box).to(candidate)
+            colorCandidate(sudoku, currentPossible.box[0], currentPossible.box[1], candidate, 'green')
          }
       }
    }

@@ -3,7 +3,6 @@ import PureSudoku from "../PureSudoku"
 import Solver from "../Solver"
 import Sudoku from "../Sudoku"
 import { boxAt } from "../Utils"
-import { colorGroup } from "./intersectionRemoval"
 
 function colorCandidate(sudoku: PureSudoku, row: IndexToNine, column: IndexToNine, candidate: SudokuDigits, color = 'blue') {
    if (sudoku instanceof Sudoku) {

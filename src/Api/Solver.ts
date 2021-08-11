@@ -260,6 +260,11 @@ export default class Solver {
       this.skippable = []
    }
 
+   Export() {
+      this.sudokuNullCheck()
+      window._custom.alert(this.props.solver.sudoku._to81())
+   }
+
    Clear() {
       this.sudokuNullCheck()
       this.sudoku.clear()

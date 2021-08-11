@@ -31,6 +31,7 @@ export default class StrategyControls extends React.Component<StrategyControlsPr
             <StrategyControl onClick={this.props.solver.Undo} name="undo" />
             <StrategyControl onClick={this.props.solver.Clear} name="clear" />
             <StrategyControl onClick={this.props.solver.Import} name="import" />
+            <StrategyControl onClick={window._custom.alert(this.props.solver.sudoku._to81?.())} name="export" />
          </fieldset>
       )
    }

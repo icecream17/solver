@@ -4,6 +4,17 @@ Note: Many earlier versions are not specified, that's too much work.
 
 When a `@types` dependency updates, they almost always don't affect anything.
 
+## v0.20.0
+
+- (use) Update skippable on clear, undo, and go
+- (use) Color candidate green in hidden singles
+- (use) Add export button
+
+- (deps) @types/react to 170.17
+- (docs) More Strategy docs
+- (tests) Move click everything test to the end
+- (other) New sudokuGenerator.py record
+
 ## v0.19.1
 
 - (use) Jellyfish

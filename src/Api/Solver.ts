@@ -29,6 +29,7 @@ export default class Solver {
       this.Step = this.Step.bind(this)
       this.Undo = this.Undo.bind(this)
       this.Import = this.Import.bind(this)
+      this.Export = this.Export.bind(this)
       this.Clear = this.Clear.bind(this)
    }
 

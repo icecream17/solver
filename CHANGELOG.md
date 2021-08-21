@@ -4,6 +4,12 @@ Note: Many earlier versions are not specified, that's too much work.
 
 When a `@types` dependency updates, they almost always don't affect anything.
 
+## v0.20.1
+
+- (docs) Add codefactor badge to readme
+- (deps) @types/node to 16.7.1
+- (deps) @types/react to 17.0.19
+
 ## v0.20.0
 
 - (use) Update skippable on clear, undo, and go

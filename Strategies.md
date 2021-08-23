@@ -21,6 +21,8 @@ So any candidate "3"s there are eliminated
 
 ### Pairs, triples, and quads
 
+> N candidates appear in N cells which are in the same row/column/box, so in the rest of that row/column/box, those N candidates are eliminated
+
 It's impossible for N cells to only have N-1 candidates.
 
 Therefore, any candidate that causes the N cells to have N-1 candidates can be removed.
@@ -86,7 +88,7 @@ No need to credit, I’m definitely not the first person to describe SDCs this w
 ### Hidden pairs, triples, and quads
 
 Instead of N cells needing N candidates, N candidates must be in N cells.
-So the rest of the candidates in those cells are eliminated.
+So the rest of the candidates in those *cells* are eliminated.
 
 ```rust
 123456789 ...456789 ...456789
@@ -104,6 +106,26 @@ So the rest of the candidates in those cells are eliminated.
 
 ### X wing, Swordfish, and Jellyfish
 
+> n lines must have n of a candidate
+> and those n candidates must all be in different... crosslines (which are perpendicular to the original lines)
+>
+> For example, 3 rows must have at least 3... sevens
+> those 3 sevens must also be in different columns
+> so those 3 sevens must be in 3 columns
+>
+> Usually you don't know what those columns are,
+> but if you do \[know what those columns are],
+> then you can be certain that each of the 3 rows has a seven corresponding to the 3 columns
+>
+> So, the rest of the 3 columns which are not part of the 3 rows _do not contain a seven_
+>
+> In short
+> 3 lines correspond to 3 crosslines, crosslines - lines = not candidate
+>
+> Also
+> n lines - n-1 lines = 1 line
+> If all of that 1 line sees a candidate, that candidate can be removed.
+
 Just see Hodoku's page on Basic Fish
 
 Basically, 3 lines only appears in 3 crosslines = the rest of the crosslines can be eliminated
@@ -113,7 +135,7 @@ Basically, 3 lines only appears in 3 crosslines = the rest of the crosslines can
 This is just an x-wing disjointed on one line.
 
 ```rust
-. . . | A . .
+. e e | A . .
 A . . | . e e
 . . . | . . .
 ------+-------

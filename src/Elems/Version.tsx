@@ -11,6 +11,6 @@ import React from 'react';
  */
 export default class Version extends React.Component {
    render() {
-      return <span className="Version">v0.20.1</span>
+      return <span className="Version">v0.21.0</span>
    }
 }

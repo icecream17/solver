@@ -4,6 +4,12 @@ Note: Many earlier versions are not specified, that's too much work.
 
 When a `@types` dependency updates, they almost always don't affect anything.
 
+## v0.21.0
+
+- (use) Add skyscraper (finally)
+
+- (code) Add Region + RegionLine (hopefully makes things... simpler (and easier))
+
 ## v0.20.1
 
 - (docs) Add codefactor badge to readme

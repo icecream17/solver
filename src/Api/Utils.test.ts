@@ -2,10 +2,10 @@ import { IndexToNine, INDICES_TO_NINE } from "../Types"
 import { affects, boxAt, getPositionFromIndexWithinBox } from "./Utils"
 
 test('affects', () => {
-   expect(affects(0, 0)).toContainEqual([0, 3]) // Row
-   expect(affects(0, 0)).toContainEqual([3, 0]) // Column
-   expect(affects(0, 0)).toContainEqual([1, 2]) // Box
-   expect(affects(0, 0)).not.toContainEqual([0, 0]) // Doesn't affect itself
+   expect(affects(0, 0)).toContainEqual({ row: 0, column: 3}) // Row
+   expect(affects(0, 0)).toContainEqual({ row: 3, column: 0}) // Column
+   expect(affects(0, 0)).toContainEqual({ row: 1, column: 2}) // Box
+   expect(affects(0, 0)).not.toContainEqual({ row: 0, column: 0}) // Doesn't affect itself
 
    for (const row of INDICES_TO_NINE) {
       for (const column of INDICES_TO_NINE) {

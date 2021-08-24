@@ -6,6 +6,7 @@ import hiddenSingles from "./hiddenSingles";
 import intersectionRemoval from "./intersectionRemoval";
 import jellyfish from "./jellyfish";
 import pairsTriplesAndQuads from "./pairsTriplesAndQuads";
+import skyscraper from "./skyscraper";
 import swordfish from "./swordfish";
 import updateCandidates from "./updateCandidates";
 import xWing from "./xWing";
@@ -21,6 +22,7 @@ const STRATEGIES = [
    xWing,
    swordfish,
    jellyfish,
+   skyscraper,
 ] as const
 
 export default STRATEGIES as typeof STRATEGIES & Strategy[]

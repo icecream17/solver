@@ -83,7 +83,7 @@ export default class StrategyList extends React.Component<StrategyListProps> {
                {...getRepeatedProps()}
             />
             <StrategyItem
-               name='Another Example strategy'
+               name='Skyscraper'
                {...getRepeatedProps()}
             />
          </ol>

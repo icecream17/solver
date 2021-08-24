@@ -16,6 +16,7 @@ import xWing from "./xWing";
 import checkValidity from "./checkValidity";
 import swordfish from "./swordfish";
 import jellyfish from "./jellyfish";
+import skyscraper from "./skyscraper";
 
 describe('strategies', () => {
    let solver: Solver;
@@ -569,5 +570,42 @@ describe('strategies', () => {
          updateCandidates(testSudoku, solver)
          expect(jellyfish(testSudoku, solver).success).toBe(true)
       })
+   })
+
+
+   describe('Skyscraper', () => {
+      test('1', () => {
+         const testSudoku = new PureSudoku()
+         testSudoku.import(`
+            .........
+            .........
+            4.5.67..8
+            1.3.89.5.
+            .........
+            .........
+            .2.......
+            ......2..
+            .........
+         `)
+         updateCandidates(testSudoku, solver)
+         expect(skyscraper(testSudoku, solver).success).toBe(true)
+      })
+   })
+
+   test('2', () => {
+      const testSudoku = new PureSudoku()
+      testSudoku.import(`
+         .4.......
+         ......5..
+         .8....6..
+         ...7.....
+         .5....4..
+         .3....9..
+         ....7....
+         .........
+         .1....2..
+      `)
+      updateCandidates(testSudoku, solver)
+      expect(skyscraper(testSudoku, solver).success).toBe(true)
    })
 })

@@ -17,7 +17,7 @@ export default function updateCandidates(sudoku: PureSudoku, _solver: Solver) {
             const solvedCandidate = sudoku.data[i][j][0]
 
             // Cell > Affects
-            for (const [row, column] of affects(i, j)) {
+            for (const {row, column} of affects(i, j)) {
 
                // Cell > Affects > Cell
                const datacell = sudoku.data[row][column]

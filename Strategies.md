@@ -134,6 +134,8 @@ Basically, 3 lines only appears in 3 crosslines = the rest of the crosslines can
 
 This is just an x-wing disjointed on one line.
 
+Or you could say that 2 lines - 1 crossline means the extra has at least 1
+
 ```rust
 . e e | A . .
 A . . | . e e

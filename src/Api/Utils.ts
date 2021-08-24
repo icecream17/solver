@@ -57,19 +57,19 @@ export function boxNameAt(row: IndexToNine, column: IndexToNine): BoxName {
    return BOX_NAMES[boxAt(row, column)]
 }
 
-const _affectsCache = new Map<IndexTo81, Readonly<Array<Readonly<[IndexToNine, IndexToNine]>>>>()
+const _affectsCache = new Map<IndexTo81, CellID[]>()
 
 /**
  * All cells a square affects, or
  * All cells that affect a square
  */
-export function affects (row: IndexToNine, column: IndexToNine): Readonly<Array<Readonly<[IndexToNine, IndexToNine]>>>  {
+export function affects (row: IndexToNine, column: IndexToNine) {
    const thisIndex = indexOf(row, column)
    const results = [] as IndexTo81[] // I could optimize, but it's here for simplicity
 
    if (_affectsCache.has(thisIndex)) {
       // Seems like another typescript bug
-      return _affectsCache.get(thisIndex) as Readonly<Array<Readonly<[IndexToNine, IndexToNine]>>>
+      return _affectsCache.get(thisIndex) as CellID[]
    }
 
    // For each row / column
@@ -97,7 +97,7 @@ export function affects (row: IndexToNine, column: IndexToNine): Readonly<Array<
       }
    }
 
-   const result = results.map(index => indexToRowAndColumn[index]) // Formatting
+   const result = results.map(index => id(...(indexToRowAndColumn[index] as [IndexToNine, IndexToNine]))) // Formatting
    _affectsCache.set(thisIndex, result) // Cache
    return result
 }
@@ -141,3 +141,34 @@ export function getPositionFromIndexWithinBox(indexOfBox: IndexToNine, indexInBo
    const [withinRow, withinColumn] = indexTo3x3[indexInBox]
    return [boxRow * 3 + withinRow as IndexToNine, boxColumn * 3 + withinColumn as IndexToNine] as [IndexToNine, IndexToNine]
 }
+
+/**
+ * Union of two arrays
+ */
+export function sharedArray<A, B>(a: A[], b: B[]) {
+   const union = []
+   for (const element of a) {
+      // @ts-expect-error Doesn't matter that they could be different
+      if (b.includes(element)) {
+         union.push(element)
+      }
+   }
+
+   return union
+}
+
+/**
+ * Unused
+ * {@link sharedArray}
+ */
+// export function sharedSet<A, B>(a: Set<A>, b: Set<B>) {
+//    const union = new Set()
+//    for (const element of a) {
+//       // @ts-expect-error Doesn't matter that they could be different
+//       if (b.has(element)) {
+//          union.add(element)
+//       }
+//    }
+
+//    return union
+// }

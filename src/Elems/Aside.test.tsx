@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import Sudoku from '../Api/Sudoku';
+import Sudoku from '../Api/Spaces/Sudoku';
 import Aside from './Aside';
 
 beforeEach(() => {

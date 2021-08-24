@@ -1,5 +1,5 @@
 import { ALL_CANDIDATES, IndexToNine, INDICES_TO_NINE, SudokuDigits } from "../../Types";
-import PureSudoku from "../PureSudoku"
+import PureSudoku from "../Spaces/PureSudoku"
 import Solver from "../Solver";
 import { CellID } from "../Utils";
 import { colorGroup } from "./intersectionRemoval";

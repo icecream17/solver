@@ -1,5 +1,5 @@
 import { AlertType, NUMBER_OF_CELLS } from "../../Types"
-import PureSudoku from "../PureSudoku"
+import PureSudoku from "../Spaces/PureSudoku"
 import Solver from "../Solver"
 import { SuccessError } from "../Types"
 import checkValidity from "./checkValidity"

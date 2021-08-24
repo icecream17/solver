@@ -1,5 +1,5 @@
-import Cell from "../Elems/MainElems/Cell"
-import { IndexToNine, SudokuDigits, TwoDimensionalArray } from "../Types"
+import Cell from "../../Elems/MainElems/Cell"
+import { IndexToNine, SudokuDigits, TwoDimensionalArray } from "../../Types"
 import PureSudoku from "./PureSudoku"
 
 export default class Sudoku extends PureSudoku {

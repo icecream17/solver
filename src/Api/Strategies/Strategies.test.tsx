@@ -1,4 +1,4 @@
-import PureSudoku from "../PureSudoku"
+import PureSudoku from "../Spaces/PureSudoku"
 import testBoards from "../boards"
 import Solver from "../Solver";
 import { NUMBER_OF_CELLS } from "../../Types";

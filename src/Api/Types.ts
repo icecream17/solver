@@ -1,6 +1,6 @@
 // @flow
 
-import PureSudoku from "./PureSudoku";
+import PureSudoku from "./Spaces/PureSudoku";
 import Solver from "./Solver";
 
 export const SuccessError = -1

@@ -1,7 +1,7 @@
 
 import React from 'react'
 import Solver from '../../Api/Solver'
-import Sudoku from '../../Api/Sudoku'
+import Sudoku from '../../Api/Spaces/Sudoku'
 import { StrategyResult } from '../../Api/Types'
 import { _expect } from '../../utils'
 import StrategyControls from './StrategyControls'

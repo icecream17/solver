@@ -1,5 +1,5 @@
 import { IndexToNine, INDICES_TO_NINE } from "../../Types"
-import PureSudoku from "../PureSudoku"
+import PureSudoku from "../Spaces/PureSudoku"
 import Solver from "../Solver"
 import { SuccessError } from "../Types"
 import { affects, algebraic } from "../Utils"

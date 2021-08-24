@@ -3,7 +3,7 @@ import React from 'react';
 
 import './Sudoku.css'
 import Row from './Row';
-import SudokuData from '../../Api/Sudoku';
+import SudokuData from '../../Api/Spaces/Sudoku';
 import { HasWhenConstruct, IndexToNine, PossibleConstructCallback } from '../../Types';
 import Cell from './Cell';
 

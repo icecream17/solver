@@ -1,6 +1,6 @@
 // @flow
-import { ALL_CANDIDATES, IndexToNine, INDICES_TO_NINE, SudokuDigits, ThreeDimensionalArray } from "../Types"
-import { boxAt, CellID, id, to9by9 } from "./Utils"
+import { ALL_CANDIDATES, IndexToNine, INDICES_TO_NINE, SudokuDigits, ThreeDimensionalArray } from "../../Types"
+import { boxAt, CellID, id, to9by9 } from "../Utils"
 
 export default class PureSudoku {
    data: ThreeDimensionalArray<SudokuDigits>

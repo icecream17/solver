@@ -1,6 +1,6 @@
 import { AlertType, BOX_NAMES, COLUMN_NAMES, IndexToNine, INDICES_TO_NINE, ROW_NAMES, SudokuDigits, TwoDimensionalArray } from "../../Types";
 import { convertArrayToEnglishList } from "../../utils";
-import PureSudoku from "../PureSudoku";
+import PureSudoku from "../Spaces/PureSudoku";
 import Solver from "../Solver";
 import { SuccessError } from "../Types";
 import { algebraic, getPositionFromIndexWithinBox } from "../Utils";

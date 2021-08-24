@@ -4,7 +4,7 @@ import StrategyItem from "../Elems/AsideElems/StrategyItem"
 import { AlertType } from "../Types"
 import { forComponentsToUpdate } from "../utils"
 import Strategies from "./Strategies/Strategies"
-import Sudoku from "./Sudoku"
+import Sudoku from "./Spaces/Sudoku"
 import { SuccessError } from "./Types"
 
 /**

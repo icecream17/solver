@@ -1,7 +1,7 @@
 import { ALL_CANDIDATES, INDICES_TO_NINE, SudokuDigits } from "../../Types";
-import PureSudoku from "../PureSudoku";
+import PureSudoku from "../Spaces/PureSudoku";
 import Solver from "../Solver";
-import Sudoku from "../Sudoku";
+import Sudoku from "../Spaces/Sudoku";
 import { boxAt, CellID } from "../Utils";
 
 /**

@@ -2,9 +2,9 @@
 
 import { AlertType, IndexToNine, INDICES_TO_NINE, SudokuDigits, TwoDimensionalArray } from "../../Types";
 import { convertArrayToEnglishList } from "../../utils";
-import PureSudoku from "../PureSudoku";
+import PureSudoku from "../Spaces/PureSudoku";
 import Solver from "../Solver";
-import Sudoku from "../Sudoku";
+import Sudoku from "../Spaces/Sudoku";
 import { SuccessError } from "../Types";
 import { algebraic, boxAt, getPositionFromIndexWithinBox } from "../Utils";
 

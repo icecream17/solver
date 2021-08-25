@@ -152,6 +152,33 @@ The reason this is so easy is because
 
 It's just below "x wing" is the strategy list below.
 
+### Two string kite
+
+```rust
+   A2    |   B2
+A1       |
+---------+------
+B1       |   e
+
+// A row and column share at box
+// So either B1 or B2, so not e
+```
+
+### Y wing / XY wing / Bent triple
+
+```rust
+AB  BC
+    n
+    n
+-------
+    AC
+n
+n
+
+// Whatever BC is, either AB or AC will have A
+// So A can be eliminated at n
+```
+
 ## TODO
 
 Here's a list of a bunch of strategies, with somewhat of a difficulty spectrum
@@ -282,6 +309,17 @@ N     |   E   |   B
 
 // "e" is eliminated since if all "E" was removed there would be an invalid loop
 // Not sure how this could be detected
+
+   | 999 |
+89 | 789 | e
+---+-----+---
+n9 | 79  | 99999999999
+
+// Say column 1 only has two possible 9s
+// Column 2 can have any amount of 9s. Also the rows as well
+
+// n9 is linked to 789 because of the 89 and 79
+// e cannot be 9
 ```
 
 ### Substrat of Aligned Pair Exclusion

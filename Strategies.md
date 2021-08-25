@@ -171,7 +171,7 @@ AB  BC
     n
     n
 -------
-    AC
+n   AC
 n
 n
 

@@ -1,5 +1,4 @@
 
-
 /* root variables */
 :root {
    --relative-pixel: calc(1ch / 25);
@@ -9,7 +8,8 @@
    --cell-fontsize: 2.5rem; /* fontsize of a solved digit */
    --candidate-fontsize: 0.9rem;
 
-   --background-color: #282c34;
+   /* colors */
+   --background-color: #282c34; /* dark mode */
    --link-color: #61dafb;
    --link-visited-color: #d7a1e8;
    --link-active-color: tomato;
@@ -47,6 +47,7 @@
    );
 }
 
+/* width >= 900px, 2 column layout*/
 @media (min-width: 900px) {
    .App {
       grid-template-columns: 250fr 1432fr 1314fr 250fr; /* ~ (8%, 44%, 40%, 8%)  */
@@ -61,6 +62,7 @@
    }
 }
 
+/* width <= 900px, 1 column layout */
 @media (max-width: 900px) {
    .App {
       --header-height: calc(2rem + 10px + 2vmin + 2rem);
@@ -77,6 +79,7 @@
          ". Aside .";
    }
 
+   /* Bigger text (aside) */
    .App-aside {
       font-size: calc(1rem + 1vh);
    }

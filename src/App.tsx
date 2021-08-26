@@ -48,7 +48,16 @@ class App extends React.Component<_UnusedProps, AppState> {
           * @default {null}
           */
          sudoku: null,
+
+         /**
+          * If the App has caught an error
+          */
          error: false,
+
+         /**
+          * The queue of alert and prompt messages to be sent
+          * Only 1 is displayed at a time
+          */
          notices: []
       }
 
@@ -65,7 +74,8 @@ class App extends React.Component<_UnusedProps, AppState> {
       window._custom.prompt = () => undefined;
    }
 
-   componentDidCatch(_error: Error, _errorInfo: React.ErrorInfo) {
+   componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
+      console.error("App crashed", { error, errorInfo });
       this.setState({ error: true })
    }
 
@@ -96,8 +106,8 @@ class App extends React.Component<_UnusedProps, AppState> {
    }
 
 
-   // These methods serve 2 purposes:
-   // 1. User isn't absolutely blcked
+   // The alert and prompt methods serve 2 purposes:
+   // 1. User isn't absolutely blocked
    // 2. No more `not implemented` errors in tests
 
    alert(message: string, alertType = AlertType.INFO) {

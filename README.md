@@ -21,6 +21,8 @@ You can run `npm install` and then `npm audit` for the full report.
 
 __The typescript version is still 4.2.4__. See <https://github.com/facebook/create-react-app/issues/11022>
 
+(I know package.json says 4.4.2 or something, but better typing doesn't hurt. I just cant use syntax features.)
+
 ## Also
 
 This uses `String.prototype.replaceAll`, so your node version must be `>=15.0.0`. In gitpod do `nvm install 16` on each new terminal.

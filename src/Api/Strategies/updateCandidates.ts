@@ -1,4 +1,4 @@
-import { IndexToNine, INDICES_TO_NINE } from "../../Types"
+import { INDICES_TO_NINE } from "../../Types"
 import PureSudoku from "../Spaces/PureSudoku"
 import Solver from "../Solver"
 import { SuccessError } from "../Types"

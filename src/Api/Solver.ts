@@ -161,11 +161,17 @@ export default class Solver {
       }
 
       if (this.strategyItemElements[this.strategyIndex] === undefined) {
-         console.warn(`undefined strategyItemElement @${this.strategyIndex}`)
          window._custom.alert(
             "The code somehow can't find the Strategy Item", AlertType.ERROR
          )
-         this.latestStrategyItem = null
+
+         // Only error if not null.
+         // Otherwise, this is only because the StrategyItem unloaded, e.g. when exiting the tab
+         //    (Really because of tests)
+         if (this.latestStrategyItem !== null) {
+            this.latestStrategyItem = null
+            console.error(`undefined strategyItemElement @${this.strategyIndex}`)
+         }
       } else {
          this.latestStrategyItem = this.strategyItemElements[this.strategyIndex] as StrategyItem
 

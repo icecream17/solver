@@ -1,6 +1,6 @@
 {
   "name": "solver",
-  "version": "0.21.0",
+  "version": "0.21.1",
   "private": true,
   "homepage": "https://icecream17.github.io/solver",
   "dependencies": {
@@ -27,8 +27,7 @@
     "build": "craco build",
     "test": "craco test",
     "eject": "react-scripts eject",
-    "test-with-coverage": "npm test -- --coverage",
-    "find-rules": "eslint-find-rules --option -pu .eslintrc"
+    "test-with-coverage": "npm test -- --coverage"
   },
   "browserslist": {
     "production": [
@@ -42,8 +41,5 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  },
-  "devDependencies": {
-    "eslint-find-rules": "^3.6.1"
   }
 }

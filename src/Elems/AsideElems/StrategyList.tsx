@@ -53,6 +53,11 @@ export default class StrategyList extends React.Component<StrategyListProps> {
                {...getRepeatedProps()}
             />
             <StrategyItem
+               name='Intersection removal'
+               href='https://www.sudokuwiki.org/Intersection_Removal'
+               {...getRepeatedProps()}
+            />
+            <StrategyItem
                name='Pairs, triples, and quads'
                href='https://www.sudokuwiki.org/Naked_Candidates'
                {...getRepeatedProps()}
@@ -60,11 +65,6 @@ export default class StrategyList extends React.Component<StrategyListProps> {
             <StrategyItem
                name='Hidden pairs, triples, and quads'
                href='https://www.sudokuwiki.org/Hidden_Candidates'
-               {...getRepeatedProps()}
-            />
-            <StrategyItem
-               name='Intersection removal'
-               href='https://www.sudokuwiki.org/Intersection_Removal'
                {...getRepeatedProps()}
             />
             <StrategyItem
@@ -84,6 +84,7 @@ export default class StrategyList extends React.Component<StrategyListProps> {
             />
             <StrategyItem
                name='Skyscraper'
+               href='http://hodoku.sourceforge.net/en/tech_sdp.php#sk'
                {...getRepeatedProps()}
             />
          </ol>

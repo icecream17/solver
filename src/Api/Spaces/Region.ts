@@ -9,6 +9,7 @@ type RegionOptions = {
 }
 
 export default class Region extends Array<Array<boolean>> {
+   /** O(n^3) */
    constructor (public sudoku: PureSudoku, options?: RegionOptions) {
       super(
          [false, false, false, false, false, false, false, false, false],
@@ -33,6 +34,7 @@ export default class Region extends Array<Array<boolean>> {
       }
    }
 
+   /** O(n^2) */
    lines() {
       const rows = [] as RegionLine[]
       const columns = [] as RegionLine[]

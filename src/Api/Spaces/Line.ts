@@ -5,6 +5,7 @@ import Region from "./Region";
  * Maybe there's anothe class called SudokuLine in the future
  */
 export class RegionLine extends Array<boolean> {
+   /** O(n) */
    constructor (public region: Region, public type: "row" | "column", public index: IndexToNine) {
       super()
       if (type === "row") {

@@ -4,10 +4,18 @@ Note: Many earlier versions are not specified, that's too much work.
 
 When a `@types` dependency updates, they almost always don't affect anything.
 
+## v0.21.1
+
+- (use) Move intersection removal before pairs/triples/quads strategies
+- (code) Simplify updateCandidates.ts
+- (code + use + tests) Don't warn (now error) unless the latestStrategyItem isn't null
+  - Basically, if the element is removed (like closing the tab) {especially tests}, don't error.
+
 ## v0.21.0
 
 - (use) Add skyscraper (finally)
 
+- (code) Add `src/Api/spaces` folder
 - (code) Add Region + RegionLine (hopefully makes things... simpler (and easier))
 
 ## v0.20.1

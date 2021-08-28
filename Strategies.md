@@ -181,23 +181,85 @@ n
 
 ## TODO
 
-Here's a list of a bunch of strategies, with somewhat of a difficulty spectrum
+Here's a list of a bunch of strategies, with somewhat of a difficulty spectrum.
+
+Many strategies are more well known, but that doesn't change anything here - this is based on intrinsic difficulty.
 
 "Has dual" just notes that it can happen twice with an almost similar setup (e.g. same base or something)
 
 A lot of this strategy ranking is me guessing.
 
-- [x] Check for solved
-- [x] Update candidates
-- [x] Pairs, triples, and quads
-- [x] Hidden pairs, triples, and quads
-- [x] Intersection Removal
-- [x] X wing (really a fish)
-- [] Skyscraper (Subset of wing/coloring)
+- [x] 1. Check for solved
+  - n
+- [x] 2. Hidden singles
+  - n^3 (n for each candidate, n for each group, n for each cell in group (checking single))
+  - Easier than update candidates because humans
+  - Despite this, hidden singles doesn't work if the candidates are not updated
+- [x] 3. Update candidates
+  - n^3 (n for each cell, n for each affects(cell), n for checking if affects(cell) contains that solved candidate)
+- [x] 4. Intersection Removal
+  - All candidates in a box see OR All candidates in a line see
+  - n^4 (n for each candidate, n^2 for box + line, n for each cell in (box - line) or (line - box))
+- [x] =5. Pairs, triples, and quads
+  - N cells have N candidates (and all see each other)
+  - n^5 (I have no idea how I did this. My code is quite big)
+- [x] =5. Hidden pairs, triples, and quads
+  - N candidates are in N cells (which all see each other)
+  - n^5 (Pretty much the same as the non hidden strategy.)
+- [x] 7. X wing (really a fish)
+  - 2 lines have a candidate in only 2 crosslines
+  - n^6 (see {fish note})
+- [x] 8. Skyscraper (Subset of wing/coloring)
+  - 2 lines - 1 line = extra
+  - n^8 (My implementation sacrificed "faster and better code" for "easier to code", in reality it should be about the same as x wing)
+  - But that means it's still last in the strategy list. Also I'd like for there to be another strategy for messing up the wing pattern.
+- [x] 9. Swordfish
+  - 3 lines have a candidate in only 3 crosslines
+  - n^6 (see {fish note})
+- [x] 10. Jellyfish
+  - 4 lines have a candidate in only 4 crosslines
+  - n^6 (see {fish note})
+
+> {wing note}: Instead of nesting loops for each line in a wing, I do the following:
+>
+> X wing
+>
+> Check if line.size <= 2
+> ...If so:
+> ......Check each line in possibleInXwing to see if it completes the pattern!
+> ......add it to possibleInXwing
+>
+> Swordfish
+>
+> Check if line.size <= 3
+> ...If so:
+> ......Check each line in twoLines to see if it completes the pattern!
+> ......Check each line in possibleInXwing, and if it continues the pattern, add it to twoLines
+> ......add it to possibleInXwing
+>
+> X wing
+>
+> Check if line.size <= 4
+> ...If so:
+> ......Check each line in threeLines to see if it completes the pattern!
+> ......Check each line in twoLines, and if it continues the pattern, add it to threeLines
+> ......Check each line in possibleInXwing, and if it continues the pattern, add it to twoLines
+> ......Check each line in possibleInXwing to see if it completes the pattern!
+> ......add it to possibleInXwing
+>
+>
+>
+> Since I accumulate lines instead of looping them, the detection is always n^2
+>
+> However, then I have to eliminate candidates, which adds a cost of
+> (for each crossline) and (for each cell of line) and (for checking if that cell has that candidate)
+>
+> So in total, n^5 for each candidate, or n^6
+
+Unimplemented
+
 - [] 2-String Kite (Subset of coloring)
   - [] Has dual
-- [x] Swordfish
-- [x] Jellyfish
 - [] Simple coloring
 - [] Y wing / XY wing / Bent triple
   - [] Has dual (multi coloring). There's also 3D medusa

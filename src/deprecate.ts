@@ -24,4 +24,3 @@ export default function deprecate <T extends _Function>(func: T, message = ""): 
 function sendDeprecationMessage(message: string) {
    console.warn(message)
 }
-

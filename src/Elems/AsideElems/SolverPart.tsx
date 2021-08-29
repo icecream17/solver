@@ -20,7 +20,7 @@ type SolverPartProps = Readonly<{
 export default class SolverPart extends React.Component<SolverPartProps> {
    solver: Solver
    children: {
-      controls: null | StrategyControls,
+      controls: null | StrategyControls
       list: null | StrategyList
    }
    strategyItemStates: StrategyResult[]

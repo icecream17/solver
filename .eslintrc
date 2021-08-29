@@ -28,7 +28,14 @@
   ],
   "reportUnusedDisableDirectives": true,
   "rules": {
+    "no-alert": "error", // It's deprecated
+    "prefer-arrow-callback": "warn",
+    "prefer-const": "warn",
+    "prefer-numeric-literals": "warn",
+    "prefer-promise-reject-errors": "warn",
     "prefer-regex-literals": "warn",
+    "prefer-rest-params": "warn",
+    "prefer-spread": "warn",
 
 
     "jest/no-commented-out-tests": "warn",
@@ -74,7 +81,12 @@
 
 
     "testing-library/await-fire-event": "warn",
-    "testing-library/prefer-explicit-assert": "warn"
+    "testing-library/prefer-explicit-assert": "warn",
+
+
+    // disabling base rules
+    "no-use-before-define": "off",
+    "@typescript-eslint/no-use-before-define": "error"
   },
   "settings": {
     "linkComponents": [

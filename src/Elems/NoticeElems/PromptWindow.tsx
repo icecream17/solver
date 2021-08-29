@@ -28,7 +28,7 @@ export default class PromptWindow extends React.Component<PromptWindowProps> {
             <div className="PromptNotice">
                <label htmlFor="PromptMessage">
                   <p>{this.props.message}</p>
-                  <textarea id="PromptMessage" ref={(element) => this.inputElement = element} defaultValue={this.props.defaultResponse} rows={9} />
+                  <textarea id="PromptMessage" ref={element => (this.inputElement = element)} defaultValue={this.props.defaultResponse} rows={9} />
                </label>
                <Control className="PromptCancel" onClick={this.cancel}>Cancel</Control>
                <Control className="PromptSubmit" onClick={this.submit}>Submit</Control>

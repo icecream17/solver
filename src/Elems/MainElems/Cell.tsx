@@ -290,9 +290,9 @@ export default class Cell extends React.Component<CellProps, CellState> {
       if (this.state.pretend) {
          content = <Candidates data={this.state.candidates} classes={this.state.candidateClasses} /> // Nothing happens right now
       } else if (this.state.active) {
-         content = <Candidates data={this.state.candidates} classes={this.state.candidateClasses}  />
+         content = <Candidates data={this.state.candidates} classes={this.state.candidateClasses} />
       } else if (this.state.explaining && this.state.previousCandidates !== null) {
-         content = <CandidatesDiff previous={this.state.previousCandidates} current={this.state.candidates} classes={this.state.candidateClasses}  />
+         content = <CandidatesDiff previous={this.state.previousCandidates} current={this.state.candidates} classes={this.state.candidateClasses} />
       } else if (this.numCandidates === 0) {
          content = <span className="ugh tables"> 0 </span>
       } else if (this.numCandidates === 1) {

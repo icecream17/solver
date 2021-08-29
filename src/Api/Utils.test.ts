@@ -19,7 +19,7 @@ test('affects', () => {
 test.todo('boxAt')
 
 test('box methods', () => {
-   let boxCounts = [0, 0, 0, 0, 0, 0, 0, 0, 0] as [IndexToNine, IndexToNine, IndexToNine, IndexToNine, IndexToNine, IndexToNine, IndexToNine, IndexToNine, IndexToNine]
+   const boxCounts = [0, 0, 0, 0, 0, 0, 0, 0, 0] as [IndexToNine, IndexToNine, IndexToNine, IndexToNine, IndexToNine, IndexToNine, IndexToNine, IndexToNine, IndexToNine]
    for (const row of INDICES_TO_NINE) {
       for (const column of INDICES_TO_NINE) {
          const indexOfBox = boxAt(row, column)

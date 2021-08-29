@@ -61,7 +61,7 @@ export default class Sudoku extends React.Component<PossibleConstructCallback> {
 
       return (
          <table className='Sudoku' id='Sudoku' title='Sudoku' aria-label='Sudoku'>
-            <tbody ref={elem => this.tbodyElement = elem}>
+            <tbody ref={elem => (this.tbodyElement = elem)}>
                <Row {...getRepeatedProps()} />
                <Row {...getRepeatedProps()} />
                <Row {...getRepeatedProps()} />

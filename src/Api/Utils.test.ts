@@ -1,5 +1,5 @@
 import { IndexToNine, INDICES_TO_NINE } from "../Types"
-import { affects, boxAt, getPositionFromIndexWithinBox } from "./Utils"
+import { affects, boxAt, getIDFromIndexWithinBox, id } from "./Utils"
 
 test('affects', () => {
    expect(affects(0, 0)).toContainEqual({ row: 0, column: 3}) // Row
@@ -24,7 +24,7 @@ test('box methods', () => {
       for (const column of INDICES_TO_NINE) {
          const indexOfBox = boxAt(row, column)
          const indexInBox = boxCounts[indexOfBox]++ as IndexToNine
-         expect(getPositionFromIndexWithinBox(indexOfBox, indexInBox)).toStrictEqual([row, column])
+         expect(getIDFromIndexWithinBox(indexOfBox, indexInBox)).toBe(id(row, column))
       }
    }
 })

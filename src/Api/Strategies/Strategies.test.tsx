@@ -236,7 +236,7 @@ describe('strategies', () => {
          `)
          updateCandidates(testSudoku, solver)
          expect(pairsTriplesAndQuads(testSudoku, solver).success).toBe(true)
-         expect(testSudoku.data[2][0]).not.toContain(8)
+         expect(testSudoku.data[2][0]).toStrictEqual([6, 7])
       })
 
       test('When 3 cells need 2 candidates', () => {

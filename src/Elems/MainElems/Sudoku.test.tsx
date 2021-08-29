@@ -2,8 +2,8 @@
 import { fireEvent, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import App from '../../App';
-import Cell from './Cell';
 import { IndexToNine } from '../../Types';
+import { getButtonCellElement, getTableCellElement } from './Sudoku.testUtils';
 
 beforeEach(() => {
    render(<App />);
@@ -13,15 +13,6 @@ beforeEach(() => {
 test('getting the sudoku table', () => {
    expect(screen.getByRole('table', { name: 'Sudoku' })).toBeInTheDocument()
 })
-
-function getTableCellElement (row: IndexToNine, column: IndexToNine) {
-   return getButtonCellElement(row, column).parentElement as HTMLElement
-}
-
-// The actual handler
-function getButtonCellElement(row: IndexToNine, column: IndexToNine) {
-   return screen.getByRole('button', { name: Cell.labelAt(row, column) })
-}
 
 const cellTests = [
    [0, 0],

@@ -6,15 +6,19 @@ export function algebraic (row: IndexToNine, column: IndexToNine): AlgebraicName
    return `${ROW_NAMES[row]}${COLUMN_NAMES[column]}` as const
 }
 
-export type CellID = Readonly<{
-   row: IndexToNine
-   column: IndexToNine
-}>
+export class CellID {
+   constructor (public row: IndexToNine, public column: IndexToNine) {}
+
+   *[Symbol.iterator]() {
+      yield this.row
+      yield this.column
+   }
+}
 
 const IDs = [] as TwoDimensionalArray<CellID>
 export function id (row: IndexToNine, column: IndexToNine) {
    IDs[row] ??= []
-   IDs[row][column] ??= { row, column } as const
+   IDs[row][column] ??= new CellID(row, column)
    return IDs[row][column]
 }
 
@@ -132,14 +136,12 @@ export const indexTo3x3 = [
 /**
  * Takes a box and the index of a cell in that box
  *
- * Then returns the position of the cell (in the whole sudoku)
- *
- * Position format: [row, column]
+ * Then returns the position (CellID) of the cell (in the whole sudoku)
  */
-export function getPositionFromIndexWithinBox(indexOfBox: IndexToNine, indexInBox: IndexToNine) {
+export function getIDFromIndexWithinBox(indexOfBox: IndexToNine, indexInBox: IndexToNine) {
    const [boxRow, boxColumn] = indexTo3x3[indexOfBox]
    const [withinRow, withinColumn] = indexTo3x3[indexInBox]
-   return [boxRow * 3 + withinRow as IndexToNine, boxColumn * 3 + withinColumn as IndexToNine] as [IndexToNine, IndexToNine]
+   return id(boxRow * 3 + withinRow as IndexToNine, boxColumn * 3 + withinColumn as IndexToNine)
 }
 
 /**

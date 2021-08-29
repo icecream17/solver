@@ -17,6 +17,7 @@ import checkValidity from "./checkValidity";
 import swordfish from "./swordfish";
 import jellyfish from "./jellyfish";
 import skyscraper from "./skyscraper";
+import boards from "../boards";
 
 describe('strategies', () => {
    let solver: Solver;
@@ -257,11 +258,6 @@ describe('strategies', () => {
    })
 
    describe('Hidden pairs, triples, and quads', () => {
-      test('Empty sudoku = fail', () => {
-         const testSudoku = new PureSudoku()
-         expect(hiddenPairsTriplesAndQuads(testSudoku, solver).success).toBe(false)
-      })
-
       test('Example 1', () => {
          const testSudoku = new PureSudoku()
          testSudoku.import(`
@@ -545,6 +541,14 @@ describe('strategies', () => {
             +--------------+---------------+----------------+
          `)
          updateCandidates(testSudoku, solver)
+         expect(swordfish(testSudoku, solver).success).toBe(true)
+      })
+
+      test('3', () => {
+         const testSudoku = new PureSudoku()
+         testSudoku.import(boards["swordfish wow"])
+         updateCandidates(testSudoku, solver)
+         hiddenPairsTriplesAndQuads(testSudoku, solver)
          expect(swordfish(testSudoku, solver).success).toBe(true)
       })
    })

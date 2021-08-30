@@ -195,7 +195,8 @@ export default class Solver {
       await this.setupCells()
 
       // Run strategy
-      const strategyResult = Strategies[this.strategyIndex](this.sudoku, this)
+      const _strategyResult = Strategies[this.strategyIndex](this.sudoku, this)
+      const strategyResult = {...{successcount: null}, ..._strategyResult} // successcount defaults to null
 
       // Set cells to non-strategy mode if failed
       if (strategyResult.success === false) {
@@ -204,15 +205,10 @@ export default class Solver {
 
       // strategyItem UI - update lastStrategyItem state
       if (this.latestStrategyItem !== null) {
-         const newState = {
-            success: strategyResult.success,
-            successcount: strategyResult.successcount ?? null
-         } as const
-
-         if (newState.successcount === SuccessError) {
+         if (strategyResult.successcount === SuccessError) {
             this.erroring = true
          }
-         this.latestStrategyItem.setState(newState)
+         this.latestStrategyItem.setState(strategyResult)
          await forComponentsToUpdate()
       }
 

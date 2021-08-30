@@ -1,9 +1,72 @@
-import { ALL_CANDIDATES, IndexToNine } from "../../Types";
+import { ALL_CANDIDATES, IndexToNine, INDICES_TO_NINE, SudokuDigits } from "../../Types";
 import Solver from "../Solver";
 import PureSudoku from "../Spaces/PureSudoku";
-import Region from "../Spaces/Region";
-import { affects, CellID, id, sharedArray } from "../Utils";
+import { affects, CellID } from "../Utils";
 import { colorGroup } from "./intersectionRemoval";
+
+function __incrementMapValue<T extends Map<K, number>, K>(map: T, key: K) {
+   if (map.has(key)) { // @ts-expect-error Typescript is dumb. The if statement is right there!
+      map.set(key, map.get(key) + 1)
+   } else {
+      map.set(key, 1)
+   }
+}
+
+export function _innerSkyscraperLogic(
+   candidate: SudokuDigits,
+   sudoku: PureSudoku,
+   sumLines: Set<CellID>,
+   isRow: boolean,
+   wingSize: number
+) {
+   const patternRows = new Map<IndexToNine, number>()
+   const patternColumns = new Map<IndexToNine, number>()
+   for (const cell of sumLines) {
+      __incrementMapValue(patternRows, cell.row)
+      __incrementMapValue(patternColumns, cell.column)
+   }
+
+   const patternPendLines = isRow ? patternColumns : patternRows
+   const pendLineProp = isRow ? "column" : "row"
+
+   if (patternPendLines.size === wingSize + 1) {
+      for (const [eliminationPendLine, count] of patternPendLines) {
+         if (count > 1) {
+            const notInLine = [] as CellID[][]
+            for (const cell of sumLines) {
+               if (cell[pendLineProp] !== eliminationPendLine) {
+                  notInLine.push(affects(cell.row, cell.column))
+               }
+            }
+
+            notInLine.sort((a, b) => a.length - b.length) // Smallest length
+            if (notInLine?.[0].length > 0) {
+               const shared = []
+               for (const cell of notInLine[0]) {
+                  for (const affectsCell of notInLine) {
+                     if (affectsCell.includes(cell)) {
+                        shared.push(cell)
+                     }
+                  }
+               }
+
+               if (shared.length > 0) {
+                  for (const cell of shared) {
+                     sudoku.toggle(candidate).at(cell.row, cell.column)
+                  }
+                  colorGroup(sudoku, sumLines, candidate)
+                  return {
+                     success: true,
+                     successcount: 1
+                  } as const
+               }
+            }
+         }
+      }
+   }
+
+   return null
+}
 
 /**
  * Disjointed x wing - see Strategies.md
@@ -12,101 +75,48 @@ import { colorGroup } from "./intersectionRemoval";
  * If all extra see n, n is eliminated (since extra must have at least 1)
  */
 export default function skyscraper(sudoku: PureSudoku, _solver: Solver) {
+   const candidateLocations = sudoku.getCandidateLocations()
    for (const candidate of ALL_CANDIDATES) {
-      const region = new Region(sudoku, { type: "candidate", candidate })
-      const lines = region.lines()
-      const has = {
-         rows: lines.rows.map(row => row.true()),
-         columns: lines.columns.map(column => column.true())
-      }
+      const possibleRows = [] as Set<CellID>[]
+      const possibleColumns = [] as Set<CellID>[]
+      for (const index of INDICES_TO_NINE) {
+         const row = candidateLocations[candidate].rows[index]
+         const column = candidateLocations[candidate].columns[index]
 
-      const twoHas = {
-         rows: has.rows.map(row => row.length === 2 ? row : undefined),
-         columns: has.columns.map(column => column.length === 2 ? column : undefined)
-      }
-
-      for (const [index1, row1] of twoHas.rows.entries()) {
-         if (row1 === undefined) continue;
-         for (const [index2, row2] of twoHas.rows.entries()) {
-            if (row2 === undefined) continue;
-
-            const positions = new Set<CellID>()
-            const columns = new Set<IndexToNine>()
-            const shared = [] as IndexToNine[]
-            for (const cell of row1) {
-               positions.add(id(index1 as IndexToNine, cell)) //
-               columns.add(cell)
-            }
-            for (const cell of row2) {
-               positions.add(id(index2 as IndexToNine, cell)) //
-               if (columns.has(cell)) {
-                  shared.push(cell)
-               } else {
-                  columns.add(cell)
-               }
-            }
-
-            if (shared.length === 1) {
-               const extra = Array.from(positions).filter(cell => cell.column !== shared[0]) //
-               const affects1 = affects(extra[0].row, extra[0].column)
-               const affects2 = affects(extra[1].row, extra[1].column)
-               const sharedAffects = sharedArray(affects1, affects2).filter(cell =>
-                  sudoku.data[cell.row][cell.column].includes(candidate)
-               )
-               if (sharedAffects.length !== 0) {
-                  colorGroup(sudoku, positions, candidate)
-                  for (const cell of sharedAffects) {
-                     sudoku.toggle(candidate).at(cell.row, cell.column)
-                  }
-
-                  return {
-                     success: true,
-                     successcount: 1,
-                  } as const
-               }
-            }
+         const check = []
+         if (row.size < 3) {
+            check.push(row)
+            possibleRows.push(row) // Marker 1
          }
-      }
 
-      // dry code for columns
-      for (const [index1, column1] of twoHas.columns.entries()) {
-         if (column1 === undefined) continue;
-         for (const [index2, column2] of twoHas.columns.entries()) {
-            if (column2 === undefined) continue;
+         if (column.size < 3) {
+            check.push(column)
+            possibleColumns.push(column) // Marker 1
+         }
 
-            const positions = new Set<CellID>()
-            const columns = new Set<IndexToNine>()
-            const shared = [] as IndexToNine[]
-            for (const cell of column1) {
-               positions.add(id(cell, index1 as IndexToNine)) // Different from rows indicator
-               columns.add(cell)
-            }
-            for (const cell of column2) {
-               positions.add(id(cell, index2 as IndexToNine)) //
-               if (columns.has(cell)) {
-                  shared.push(cell)
-               } else {
-                  columns.add(cell)
+         // line = row/column
+         // pendLine = column/row
+         for (const line1 of check) {
+            const possibleLines =
+               line1 === row
+                  ? possibleRows
+                  : possibleColumns
+
+            for (const line2 of possibleLines) {
+               // Necessary because `Marker 1` happens before this
+               if (line1 === line2) {
+                  continue
                }
-            }
 
-            if (shared.length === 1) {
-               const extra = Array.from(positions).filter(cell => cell.row !== shared[0]) //
-               const affects1 = affects(extra[0].row, extra[0].column)
-               const affects2 = affects(extra[1].row, extra[1].column)
-               const sharedAffects = sharedArray(affects1, affects2).filter(cell =>
-                  sudoku.data[cell.row][cell.column].includes(candidate)
-               )
-               if (sharedAffects.length !== 0) {
-                  colorGroup(sudoku, positions, candidate)
-                  for (const cell of sharedAffects) {
-                     sudoku.toggle(candidate).at(cell.row, cell.column)
+               const sumLines = new Set<CellID>()
+               line1.forEach(cell => sumLines.add(cell))
+               line2.forEach(cell => sumLines.add(cell))
+
+               if (sumLines.size < 5) {
+                  const result = _innerSkyscraperLogic(candidate, sudoku, sumLines, line1 === row, 2)
+                  if (result !== null) {
+                     return result
                   }
-
-                  return {
-                     success: true,
-                     successcount: 1,
-                  } as const
                }
             }
          }

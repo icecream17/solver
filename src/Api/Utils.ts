@@ -145,7 +145,7 @@ export function getIDFromIndexWithinBox(indexOfBox: IndexToNine, indexInBox: Ind
 }
 
 /**
- * Union of two arrays
+ * Intersection of multiple arrays
  */
 export function sharedArray<A, B>(a: A[], b: B[]) {
    const union = []
@@ -156,7 +156,7 @@ export function sharedArray<A, B>(a: A[], b: B[]) {
       }
    }
 
-   return union
+   return union as Array<A & B>
 }
 
 /**

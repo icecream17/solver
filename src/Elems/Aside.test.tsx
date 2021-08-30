@@ -11,7 +11,7 @@ function getTogglers () {
    try {
       return screen.getAllByRole('checkbox')
    } catch (error) {
-      if (error.name === "TestingLibraryElementError") {
+      if (error instanceof Error && error.name === "TestingLibraryElementError") {
          return screen.getAllByRole('switch')
       } else {
          throw error

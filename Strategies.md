@@ -211,8 +211,7 @@ A lot of this strategy ranking is me guessing.
   - n^6 (see {fish note})
 - [x] 8. Skyscraper (Subset of wing/coloring)
   - 2 lines - 1 line = extra
-  - n^8 (My implementation sacrificed "faster and better code" for "easier to code", in reality it should be about the same as x wing)
-  - But that means it's still last in the strategy list. Also I'd like for there to be another strategy for messing up the wing pattern.
+  - n^6 ({fish note} - but instead I spend n^3 * {n counting pend lines, n^3 to get attacks(cell of line), n^3 per attacks to get shared} = n^6)
 - [x] 9. Swordfish
   - 3 lines have a candidate in only 3 crosslines
   - n^6 (see {fish note})

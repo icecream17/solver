@@ -13,7 +13,7 @@ though sometimes I didn't bother to make it not compatible with older versions.
 
 And even then, those dependencies themselves aren't updated.
 
-Current status: `102 vulnerabilities (5 low, 89 moderate, 8 high)`
+Current status: `16 vulnerabilities (15 moderate, 1 high)`
 
 You can run `npm install` and then `npm audit` for the full report.
 

@@ -4,6 +4,12 @@ Note: Many earlier versions are not specified, that's too much work.
 
 When a `@types` dependency updates, they almost always don't affect anything.
 
+## v0.21.2
+
+- (code) Simplify skyscraper
+- (use) Fix simplified skyscraper
+- (code) Remove Region + RegionLine for now
+
 ## v0.21.1
 
 - (use) Move intersection removal before pairs/triples/quads strategies

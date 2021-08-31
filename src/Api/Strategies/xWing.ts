@@ -38,7 +38,7 @@ export function _innerWingLogic(
       for (const eliminationPendLine of patternPendLines) {
          for (const cell of candidateLocations[candidate][pendLineProp][eliminationPendLine]) {
             if (patternLines.has(cell[lineProp]) === false) {
-               sudoku.toggle(candidate).at(cell.row, cell.column)
+               sudoku.remove(candidate).at(cell.row, cell.column)
                colorGroup(sudoku, sumLines, candidate)
                success = true
             }

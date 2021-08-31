@@ -225,12 +225,12 @@ export default class PureSudoku {
    }
 
    /**
-    * Toggles a candidate at a place
+    * Removes a candidate at a cell
     *
     * @example
     * (new PureSudoku()).toggle(7).at(3, 5)
     */
-   toggle(candidate: SudokuDigits) {
+   remove(candidate: SudokuDigits) {
       // Using an arrow function here to use `this`
       return {
          at: (row: IndexToNine, column: IndexToNine) => {

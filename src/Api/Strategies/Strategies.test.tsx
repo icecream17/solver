@@ -612,4 +612,21 @@ describe('strategies', () => {
       updateCandidates(testSudoku, solver)
       expect(skyscraper(testSudoku, solver).success).toBe(true)
    })
+
+   test('3', () => {
+      const testSudoku = new PureSudoku()
+      testSudoku.import(`
+         .........
+         ....4....
+         ......4..
+         ........7
+         .........
+         .....6..8
+         .........
+         ...4.....
+         ........9
+      `)
+      updateCandidates(testSudoku, solver)
+      expect(skyscraper(testSudoku, solver).success).toBe(false)
+   })
 })

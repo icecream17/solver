@@ -248,8 +248,12 @@ export default class Cell extends React.Component<CellProps, CellState> {
 
          // Array of 10
          const newCandidateClasses = state.candidateClasses ?? ['', '', '', '', '', '', '', '', '', '']
+
+         const hasColorAlready = new RegExp(` ${color}( |$)`)
          for (const candidate of candidates) {
-            newCandidateClasses[candidate] += ' ' + color
+            if (!hasColorAlready.test(newCandidateClasses[candidate])) {
+               newCandidateClasses[candidate] += ` ${color}`
+            }
          }
 
          return {

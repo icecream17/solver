@@ -5,8 +5,8 @@ import { affects, CellID } from "../Utils";
 import { colorGroup } from "./intersectionRemoval";
 
 function __incrementMapValue<T extends Map<K, number>, K>(map: T, key: K) {
-   if (map.has(key)) { // @ts-expect-error Typescript is dumb. The if statement is right there!
-      map.set(key, map.get(key) + 1)
+   if (map.has(key)) {
+      map.set(key, (map.get(key) as number) + 1)
    } else {
       map.set(key, 1)
    }

@@ -1,6 +1,6 @@
 // @flow
 
-import { AlgebraicName, BoxName, BOX_NAMES, COLUMN_NAMES, IndexTo81, IndexToNine, INDICES_TO_NINE, ROW_NAMES, TwoDimensionalArray } from "../Types";
+import { AlgebraicName, BoxName, BOX_NAMES, COLUMN_NAMES, IndexTo81, IndexToNine, INDICES_TO_NINE, ROW_NAMES, SudokuDigits, ThreeDimensionalArray, TwoDimensionalArray } from "../Types";
 
 export function algebraic (row: IndexToNine, column: IndexToNine): AlgebraicName {
    return `${ROW_NAMES[row]}${COLUMN_NAMES[column]}` as const
@@ -15,11 +15,38 @@ export class CellID {
    }
 }
 
-const IDs = [] as TwoDimensionalArray<CellID>
-export function id (row: IndexToNine, column: IndexToNine) {
-   IDs[row] ??= []
-   IDs[row][column] ??= new CellID(row, column)
-   return IDs[row][column]
+/**
+ * WARNING: CandidateID#index is a digit
+ */
+export class CandidateID {
+   constructor(
+      public row: IndexToNine,
+      public column: IndexToNine,
+      public digit: SudokuDigits,
+   ) {}
+
+   *[Symbol.iterator] () {
+      yield this.row
+      yield this.column
+      yield this.digit
+   }
+}
+
+const cellIDs = [] as TwoDimensionalArray<CellID>
+const candidateIDs = [] as ThreeDimensionalArray<CandidateID>
+export function id (row: IndexToNine, column: IndexToNine): CellID;
+export function id (row: IndexToNine, column: IndexToNine, digit: SudokuDigits): CandidateID;
+export function id (row: IndexToNine, column: IndexToNine, digit?: SudokuDigits) {
+   if (digit === undefined) {
+      cellIDs[row] ??= []
+      cellIDs[row][column] ??= new CellID(row, column)
+      return cellIDs[row][column]
+   } else {
+      candidateIDs[row] ??= []
+      candidateIDs[row][column] ??= []
+      candidateIDs[row][column][digit] ??= new CandidateID(row, column, digit)
+      return candidateIDs[row][column][digit]
+   }
 }
 
 /** What index a cell is at */
@@ -146,17 +173,26 @@ export function getIDFromIndexWithinBox(indexOfBox: IndexToNine, indexInBox: Ind
 
 /**
  * Intersection of multiple arrays
+ *
+ * [2, 3] & [3, 4] --> 3
+ * [2, 3, 4] & [3, 4] --> 3, 4
+ *
+ * @example
+ * notInLine.sort((a, b) => a.length - b.length) // Smallest length
+ * const shared = sharedInArrays(...notInLine)
  */
-export function sharedArray<A, B>(a: A[], b: B[]) {
-   const union = []
-   for (const element of a) {
-      // @ts-expect-error Doesn't matter that they could be different
-      if (b.includes(element)) {
-         union.push(element)
+export function sharedInArrays<T>(...arrays: T[][]) {
+   arrays = arrays.sort((a, b) => a.length - b.length) // Optimization
+   const shared = new Set<T>(arrays[0])
+   for (const element of shared) {
+      for (const array of arrays) {
+         if (!array.includes(element)) {
+            shared.delete(element)
+         }
       }
    }
 
-   return union as Array<A & B>
+   return shared
 }
 
 /**

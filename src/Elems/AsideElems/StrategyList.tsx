@@ -87,6 +87,11 @@ export default class StrategyList extends React.Component<StrategyListProps> {
                href='http://hodoku.sourceforge.net/en/tech_sdp.php#sk'
                {...getRepeatedProps()}
             />
+            <StrategyItem
+               name='Y wing (aka Bent triple)'
+               href='https://www.sudokuwiki.org/Y_Wing_Strategy'
+               {...getRepeatedProps()}
+            />
          </ol>
       )
    }

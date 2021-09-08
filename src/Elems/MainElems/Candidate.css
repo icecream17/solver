@@ -7,15 +7,24 @@
    background-color: green;
 }
 
+.Candidate.solved {
+   color: lightgreen;
+}
+
+.Cell.blue,
 .Candidate.blue {
    background-color: var(--blue-gray);
    color: black;
 }
 
+.Cell.green,
 .Candidate.green {
-   color: lightgreen;
+   background-color: lightgreen;
+   color: black;
 }
 
+.Cell.orange,
 .Candidate.orange {
    background-color: rgb(255, 166, 0);
+   color: black;
 }

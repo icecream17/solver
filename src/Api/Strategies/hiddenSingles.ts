@@ -89,17 +89,17 @@ export default function hiddenSingles(sudoku: PureSudoku, _solver: Solver) {
          if (typeof currentPossible.row !== "boolean") {
             successcount++
             sudoku.set(...currentPossible.row).to(candidate)
-            colorCandidate(sudoku, currentPossible.row[0], currentPossible.row[1], candidate, 'green')
+            colorCandidate(sudoku, currentPossible.row[0], currentPossible.row[1], candidate, 'solved')
          }
          if (typeof currentPossible.column !== "boolean") {
             successcount++
             sudoku.set(...currentPossible.column).to(candidate)
-            colorCandidate(sudoku, currentPossible.column[0], currentPossible.column[1], candidate, 'green')
+            colorCandidate(sudoku, currentPossible.column[0], currentPossible.column[1], candidate, 'solved')
          }
          if (typeof currentPossible.box !== "boolean") {
             successcount++
             sudoku.set(...currentPossible.box).to(candidate)
-            colorCandidate(sudoku, currentPossible.box[0], currentPossible.box[1], candidate, 'green')
+            colorCandidate(sudoku, currentPossible.box[0], currentPossible.box[1], candidate, 'solved')
          }
       }
    }

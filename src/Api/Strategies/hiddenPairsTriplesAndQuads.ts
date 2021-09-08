@@ -244,7 +244,7 @@ export default function hiddenPairsTriplesAndQuads(sudoku: PureSudoku, _solver: 
          // If different, replace
          if (actualCell.some(candidate => !conjugateCell.candidates.includes(candidate))) {
             sudoku.set(conjugateCell.position.row, conjugateCell.position.column).to(...conjugateCell.candidates)
-            colorConjugate(sudoku, conjugate, 'green')
+            colorConjugate(sudoku, conjugate, 'solved')
             success = true
          }
       }

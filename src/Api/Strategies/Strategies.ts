@@ -10,6 +10,7 @@ import skyscraper from "./skyscraper";
 import swordfish from "./swordfish";
 import updateCandidates from "./updateCandidates";
 import xWing from "./xWing";
+import yWing from "./yWing";
 
 // See comments on `Strategy`
 const STRATEGIES = [
@@ -23,6 +24,7 @@ const STRATEGIES = [
    swordfish,
    jellyfish,
    skyscraper,
+   yWing,
 ] as const
 
 export default STRATEGIES as typeof STRATEGIES & Strategy[]

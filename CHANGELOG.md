@@ -4,6 +4,15 @@ Note: Many earlier versions are not specified, that's too much work.
 
 When a `@types` dependency updates, they almost always don't affect anything.
 
+## v0.22.0
+
+- (use) Add y wing!
+- (code) Implement `sharedInArrays` in utils, simplifying skyscraper even more
+- (css) Change `Candidate.green` to `Candidate.solved`, then make actual `Candidate.green`
+
+- (deps) @types/react to 17.0.20
+- (deps) @types/node to 16.7.13
+
 ## v0.21.2
 
 - (code) Simplify skyscraper

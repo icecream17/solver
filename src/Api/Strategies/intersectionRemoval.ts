@@ -5,7 +5,7 @@ import Sudoku from "../Spaces/Sudoku";
 import { boxAt, CellID } from "../Utils";
 
 /**
- * Colors a group of cells, see Cell#highlight
+ * Colors a group of cells' candidates, see Cell#highlight
  */
 export function colorGroup(sudoku: PureSudoku, group: Iterable<CellID>, candidate: SudokuDigits, color = 'blue') {
    if (sudoku instanceof Sudoku) {

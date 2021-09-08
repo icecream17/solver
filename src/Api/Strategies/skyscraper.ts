@@ -1,7 +1,7 @@
 import { ALL_CANDIDATES, IndexToNine, INDICES_TO_NINE, SudokuDigits } from "../../Types";
 import Solver from "../Solver";
 import PureSudoku from "../Spaces/PureSudoku";
-import { affects, CellID } from "../Utils";
+import { affects, CellID, sharedInArrays } from "../Utils";
 import { colorGroup } from "./intersectionRemoval";
 
 function __incrementMapValue<T extends Map<K, number>, K>(map: T, key: K) {
@@ -41,37 +41,25 @@ export function _innerSkyscraperLogic(
                }
             }
 
-            // This bunch of code gets the intersection of affectsCell
-            notInLine.sort((a, b) => a.length - b.length) // Smallest length
-            if (notInLine?.[0].length > 0) {
-               const shared = new Set<CellID>(notInLine[0])
+            // shared = all extra see
+            const shared = sharedInArrays(...notInLine)
+
+            if (shared.size > 0) {
+               let success = false
                for (const cell of shared) {
-                  for (const affectsCell of notInLine) {
-                     if (!affectsCell.includes(cell)) {
-                        shared.delete(cell)
-                     }
+                  if (sudoku.data[cell.row][cell.column].includes(candidate)) {
+                     sudoku.remove(candidate).at(cell.row, cell.column)
+                     success = true
                   }
                }
 
-               // shared = all extra see
-               if (shared.size > 0) {
-                  let success = false
-                  for (const cell of shared) {
-                     if (sudoku.data[cell.row][cell.column].includes(candidate)) {
-                        sudoku.remove(candidate).at(cell.row, cell.column)
-                        success = true
-                     }
-                  }
-
-                  if (success) {
-                     colorGroup(sudoku, sumLines, candidate)
-                     colorGroup(sudoku, cellsNotInLine, candidate, "orange")
-                     console.debug(shared)
-                     return {
-                        success: true,
-                        successcount: 1
-                     } as const
-                  }
+               if (success) {
+                  colorGroup(sudoku, sumLines, candidate)
+                  colorGroup(sudoku, cellsNotInLine, candidate, "orange")
+                  return {
+                     success: true,
+                     successcount: 1
+                  } as const
                }
             }
          }

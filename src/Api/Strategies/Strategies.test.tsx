@@ -18,6 +18,7 @@ import swordfish from "./swordfish";
 import jellyfish from "./jellyfish";
 import skyscraper from "./skyscraper";
 import boards from "../boards";
+import yWing from "./yWing";
 
 describe('strategies', () => {
    let solver: Solver;
@@ -594,39 +595,97 @@ describe('strategies', () => {
          updateCandidates(testSudoku, solver)
          expect(skyscraper(testSudoku, solver).success).toBe(true)
       })
+
+      test('2', () => {
+         const testSudoku = new PureSudoku()
+         testSudoku.import(`
+            .4.......
+            ......5..
+            .8....6..
+            ...7.....
+            .5....4..
+            .3....9..
+            ....7....
+            .........
+            .1....2..
+         `)
+         updateCandidates(testSudoku, solver)
+         expect(skyscraper(testSudoku, solver).success).toBe(true)
+      })
+
+      test('3', () => {
+         const testSudoku = new PureSudoku()
+         testSudoku.import(`
+            .........
+            ....4....
+            ......4..
+            ........7
+            .........
+            .....6..8
+            .........
+            ...4.....
+            ........9
+         `)
+         updateCandidates(testSudoku, solver)
+         expect(skyscraper(testSudoku, solver).success).toBe(false)
+      })
    })
 
-   test('2', () => {
-      const testSudoku = new PureSudoku()
-      testSudoku.import(`
-         .4.......
-         ......5..
-         .8....6..
-         ...7.....
-         .5....4..
-         .3....9..
-         ....7....
-         .........
-         .1....2..
-      `)
-      updateCandidates(testSudoku, solver)
-      expect(skyscraper(testSudoku, solver).success).toBe(true)
-   })
 
-   test('3', () => {
-      const testSudoku = new PureSudoku()
-      testSudoku.import(`
-         .........
-         ....4....
-         ......4..
-         ........7
-         .........
-         .....6..8
-         .........
-         ...4.....
-         ........9
-      `)
-      updateCandidates(testSudoku, solver)
-      expect(skyscraper(testSudoku, solver).success).toBe(false)
+   describe('Y wing', () => {
+      test('1', () => {
+         const testSudoku = new PureSudoku()
+         testSudoku.set(1, 1).to(1, 2) // AB
+         testSudoku.set(2, 2).to(1, 3) // AC
+         testSudoku.set(3, 1).to(2, 3) // BC
+
+         updateCandidates(testSudoku, solver)
+         expect(yWing(testSudoku, solver).success).toBe(true)
+      })
+
+      test('2', () => {
+         const testSudoku = new PureSudoku()
+         testSudoku.set(2, 2).to(1, 2) // AB
+         testSudoku.set(2, 5).to(1, 3) // AC
+         testSudoku.set(0, 1).to(2, 3) // BC
+
+         updateCandidates(testSudoku, solver)
+         expect(yWing(testSudoku, solver).success).toBe(true)
+      })
+
+      test('3', () => {
+         const testSudoku = new PureSudoku()
+         testSudoku.set(0, 0).to(1, 2) // AB
+         testSudoku.set(0, 1).to(1, 2) // AC
+         testSudoku.set(0, 4).to(2, 3) // BC
+
+         updateCandidates(testSudoku, solver)
+         expect(yWing(testSudoku, solver).success).toBe(false)
+      })
+
+      test('4', () => {
+         const testSudoku = new PureSudoku()
+         testSudoku.import(`
+            +-----------+-------------+------------+
+            | 35 69  2  | 8   579 4   | 79  3679 1 |
+            | 35 19  4  | 179 6   159 | 2   379  8 |
+            | 8  7   16 | 3   2   19  | 4   69   5 |
+            +-----------+-------------+------------+
+            | 9  2   3  | 6   1   8   | 57  57   4 |
+            | 4  18  5  | 279 79  29  | 6   18   3 |
+            | 7  168 16 | 5   4   3   | 18  2    9 |
+            +-----------+-------------+------------+
+            | 2  5   8  | 19  3   7   | 19  4    6 |
+            | 6  4   9  | 12  8   125 | 3   15   7 |
+            | 1  3   7  | 4   59  6   | 589 589  2 |
+            +-----------+-------------+------------+
+         `)
+
+         updateCandidates(testSudoku, solver)
+         expect(yWing(testSudoku, solver).success).toBe(true)
+         expect(yWing(testSudoku, solver).success).toBe(true)
+         expect(yWing(testSudoku, solver).success).toBe(true)
+         expect(yWing(testSudoku, solver).success).toBe(true)
+      })
    })
 })

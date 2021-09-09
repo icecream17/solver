@@ -179,6 +179,24 @@ n
 // So A can be eliminated at n
 ```
 
+### Two minus one lines
+
+If you have 2 lines, and remove 1 crossline, the remainder must have at least 1 of \[unmentioned specific candidate].
+
+So anything that sees *all* of the extras can be eliminated
+
+```rust
+// Example
+  E E | C
+e     |
+e     |
+------+--
+E     | C
+
+```
+
+This happens to be equivalent to sashimi/finned x wing, but with 3 lines it's more general.
+
 ## TODO
 
 Here's a list of a bunch of strategies, with somewhat of a difficulty spectrum.

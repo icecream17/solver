@@ -3,16 +3,9 @@ import Solver from "../Solver";
 import PureSudoku from "../Spaces/PureSudoku";
 import { affects, CellID, sharedInArrays } from "../Utils";
 import { colorGroup } from "./intersectionRemoval";
+import { __incrementMapValue } from "./skyscraper";
 
-export function __incrementMapValue<T extends Map<K, number>, K>(map: T, key: K) {
-   if (map.has(key)) {
-      map.set(key, (map.get(key) as number) + 1)
-   } else {
-      map.set(key, 1)
-   }
-}
-
-export function _innerSkyscraperLogic(
+export function _innerGroupSubtractionLogic(
    candidate: SudokuDigits,
    sudoku: PureSudoku,
    sumLines: Set<CellID>,
@@ -26,45 +19,64 @@ export function _innerSkyscraperLogic(
       __incrementMapValue(patternColumns, cell.column)
    }
 
+   // How many line see a candidate
+   const patternPendLineElims = new Map<CellID, number>()
    const patternPendLines = isRow ? patternColumns : patternRows
    const pendLineProp = isRow ? "column" : "row"
 
-   if (patternPendLines.size === wingSize + 1) {
-      for (const [eliminationPendLine, count] of patternPendLines) {
-         if (count > 1) {
-            const cellsNotInLine = [] as CellID[]
-            const notInLine = [] as CellID[][]
-            for (const cell of sumLines) {
-               if (cell[pendLineProp] !== eliminationPendLine) {
-                  cellsNotInLine.push(cell)
-                  notInLine.push(affects(cell.row, cell.column))
-               }
-            }
+   /**
+    * A  B  C | D
+    *       ! |
+    *       ! |
+    * --------+--
+    *       C | D
+    *
+    * A  B  C | D   | D
+    * A  B  C | D   | D
+    * ab ab ! |     |
+    * --------+-----+---
+    * a  b  C | D   | D
+    * Take each column and ask what they collectively see
+    * Anything seen by > total - wingSize columns can be eliminated
+    */
+   for (const [eliminationPendLine] of patternPendLines) {
+      const inLine = [] as CellID[][]
+      for (const cell of sumLines) {
+         if (cell[pendLineProp] === eliminationPendLine) {
+            inLine.push(affects(cell.row, cell.column))
+         }
+      }
 
-            // shared = all extra see
-            const shared = sharedInArrays(...notInLine)
+      // shared = all extra see
+      const shared = sharedInArrays(...inLine)
+      for (const cell of shared) {
+         const complexCondition =
+            sudoku.data[cell.row][cell.column].includes(candidate) &&
+            !sumLines.has(cell)
 
-            if (shared.size > 0) {
-               let success = false
-               for (const cell of shared) {
-                  if (sudoku.data[cell.row][cell.column].includes(candidate)) {
-                     sudoku.remove(candidate).at(cell.row, cell.column)
-                     success = true
-                  }
-               }
-
-               if (success) {
-                  colorGroup(sudoku, sumLines, candidate)
-                  colorGroup(sudoku, cellsNotInLine, candidate, "orange")
-                  return {
-                     success: true,
-                     successcount: 1
-                  } as const
-               }
-            }
+         if (complexCondition) {
+            __incrementMapValue(patternPendLineElims, cell)
          }
       }
    }
+
+   let successcount = 0
+   for (const [cell, count] of patternPendLineElims) {
+      if (patternPendLines.size - count < wingSize) {
+         successcount++
+         sudoku.remove(candidate).at(cell.row, cell.column)
+         // NOTE: Highlighting is currently done in the main function
+      }
+   }
+
+   if (successcount) {
+      console.debug({patternRows, patternColumns, patternPendLineElims})
+      return {
+         success: true,
+         successcount
+      }
+   }
+
 
    return null
 }
@@ -75,7 +87,7 @@ export function _innerSkyscraperLogic(
  * Two lines - 1 cross line = extra
  * If all extra see n, n is eliminated (since extra must have at least 1)
  */
-export default function skyscraper(sudoku: PureSudoku, _solver: Solver) {
+export default function twoMinusOneLines(sudoku: PureSudoku, _solver: Solver) {
    const candidateLocations = sudoku.getCandidateLocations()
    for (const candidate of ALL_CANDIDATES) {
       const possibleRows = [] as Set<CellID>[]
@@ -85,12 +97,12 @@ export default function skyscraper(sudoku: PureSudoku, _solver: Solver) {
          const column = candidateLocations[candidate].columns[index]
 
          const check = []
-         if (row.size < 3) {
+         if (row.size < 2 + 4) { // 4 candidates of a row cannot share anything affects other than the row
             check.push(row)
             possibleRows.push(row) // Marker 1
          }
 
-         if (column.size < 3) {
+         if (column.size < 2 + 4) {
             check.push(column)
             possibleColumns.push(column) // Marker 1
          }
@@ -113,11 +125,10 @@ export default function skyscraper(sudoku: PureSudoku, _solver: Solver) {
                line1.forEach(cell => sumLines.add(cell))
                line2.forEach(cell => sumLines.add(cell))
 
-               if (sumLines.size < 5) {
-                  const result = _innerSkyscraperLogic(candidate, sudoku, sumLines, line1 === row, 2)
-                  if (result !== null) {
-                     return result
-                  }
+               const result = _innerGroupSubtractionLogic(candidate, sudoku, sumLines, line1 === row, 2)
+               if (result !== null) {
+                  colorGroup(sudoku, sumLines, candidate)
+                  return result
                }
             }
          }

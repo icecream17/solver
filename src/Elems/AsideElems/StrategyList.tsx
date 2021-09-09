@@ -92,6 +92,11 @@ export default class StrategyList extends React.Component<StrategyListProps> {
                href='https://www.sudokuwiki.org/Y_Wing_Strategy'
                {...getRepeatedProps()}
             />
+            <StrategyItem
+               name='Two minus one lines'
+               href='https://github.com/icecream17/solver/blob/main/Strategies.md#twominusonelines'
+               {...getRepeatedProps()}
+            />
          </ol>
       )
    }

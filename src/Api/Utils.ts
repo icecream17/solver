@@ -93,6 +93,8 @@ const _affectsCache = new Map<IndexTo81, CellID[]>()
 /**
  * All cells a square affects, or
  * All cells that affect a square
+ *
+ * A cell does not affect itself
  */
 export function affects (row: IndexToNine, column: IndexToNine) {
    const thisIndex = indexOf(row, column)

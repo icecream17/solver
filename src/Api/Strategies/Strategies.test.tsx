@@ -19,6 +19,7 @@ import jellyfish from "./jellyfish";
 import skyscraper from "./skyscraper";
 import boards from "../boards";
 import yWing from "./yWing";
+import twoMinusOneLines from "./twoMinusOneLines";
 
 describe('strategies', () => {
    let solver: Solver;
@@ -686,6 +687,27 @@ describe('strategies', () => {
          expect(yWing(testSudoku, solver).success).toBe(true)
          expect(yWing(testSudoku, solver).success).toBe(true)
          expect(yWing(testSudoku, solver).success).toBe(true)
+      })
+   })
+
+
+   describe('twoMinusOneLines', () => {
+      test('1', () => {
+         const testSudoku = new PureSudoku()
+         testSudoku.import(`
+            ....23...
+            ......1..
+            .........
+            .76.54...
+            .......1.
+            .........
+            8........
+            .........
+            .........
+         `)
+         updateCandidates(testSudoku, solver)
+         expect(twoMinusOneLines(testSudoku, solver).success).toBe(true)
+         expect(testSudoku.data[0][0]).toContain(1)
       })
    })
 })

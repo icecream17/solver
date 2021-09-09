@@ -4,6 +4,10 @@ Note: Many earlier versions are not specified, that's too much work.
 
 When a `@types` dependency updates, they almost always don't affect anything.
 
+## v0.23.0
+
+- (use) two minus one lines
+
 ## v0.22.1
 
 - (deps) Use CRA 5.0.0-next and remove craco!!! (and @babel/plugin-proposal-logical-assignment-operators)

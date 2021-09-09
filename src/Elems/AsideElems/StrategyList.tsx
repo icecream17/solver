@@ -94,7 +94,7 @@ export default class StrategyList extends React.Component<StrategyListProps> {
             />
             <StrategyItem
                name='Two minus one lines'
-               href='https://github.com/icecream17/solver/blob/main/Strategies.md#twominusonelines'
+               href='https://github.com/icecream17/solver/blob/main/Strategies.md#two-minus-one-lines'
                {...getRepeatedProps()}
             />
          </ol>

@@ -115,7 +115,10 @@ td.Candidate {
    width: var(--candidate-height);
    font-size: var(--candidate-fontsize);
    text-align: center;
-   color: var(--text-color);
+   color: inherit; /*
+      If the cell is highlighted, such a class would also affect the candidates
+      But if the candidate is highlighted that takes css precedence.
+   */
 
    /* [ref 1] */
    overflow: hidden;

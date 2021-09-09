@@ -84,12 +84,16 @@ export default class StrategyItem extends React.Component<StrategyItemProps, Str
          )
       }
 
+      // StrategyLabel is placed before StrategyToggler because
+      // it makes sense a11y wise to put the text first
+
+      // And theoretically, the site both supports ltr and rtl
       return (
          <li className={thisClass} id={this.id}>
             {/* eslint-disable-next-line jsx-a11y/label-has-for */}
             <label htmlFor={this.togglerId as string}>
-               <StrategyToggler callback={this.toggle.bind(this)} id={this.togglerId as string} />
                <StrategyLabel {...this.props} />
+               <StrategyToggler callback={this.toggle.bind(this)} id={this.togglerId as string} />
             </label>
             <StrategyStatus {...this.state} />
          </li>

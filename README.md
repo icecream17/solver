@@ -13,15 +13,9 @@ though sometimes I didn't bother to make it not compatible with older versions.
 
 And even then, those dependencies themselves aren't updated.
 
-Current status: `16 vulnerabilities (15 moderate, 1 high)`
+Current status: `3 vulnerabilities (3 moderate)`
 
 You can run `npm install` and then `npm audit` for the full report.
-
-## Slightly less silly dependency note
-
-__The typescript version is still 4.2.4__. See <https://github.com/facebook/create-react-app/issues/11022>
-
-(I know package.json says 4.4.2 or something, but better typing doesn't hurt. I just cant use syntax features.)
 
 ## Also
 

@@ -4,6 +4,13 @@ Note: Many earlier versions are not specified, that's too much work.
 
 When a `@types` dependency updates, they almost always don't affect anything.
 
+## v0.22.1
+
+- (deps) Use CRA 5.0.0-next and remove craco!!! (and @babel/plugin-proposal-logical-assignment-operators)
+- (css) Use percentages instead of rem (Possible TODO: Use flex or grid)
+- (css + use) Better rtl support
+- (css) Attempt to center align checkboxes
+
 ## v0.22.0
 
 - (use) Add y wing!

@@ -23,7 +23,7 @@ jobs:
     - name: Use Node.js
       uses: actions/setup-node@v2
       with:
-        node-version: '16'
+        node-version: '16.8.0' # See https://github.com/nodejs/node/issues/40030
         check-latest: false
     - run: npm ci
     - run: npm run build --if-present

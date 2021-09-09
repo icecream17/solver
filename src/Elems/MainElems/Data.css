@@ -27,26 +27,6 @@
 /* TODO: Uncomment supports when postcss-preset-env makes it to postcss 8
  * https://github.com/csstools/postcss-preset-env/issues/191
  */
-/* @supports selector(:dir(ltr)) { */
-   .Data:dir(ltr) {
-      border-left: var(--regular-border) solid var(--text-color);
-      padding-left: inherit;
-   }
-
-   .DataLabelText:dir(ltr) {
-      padding-right: inherit; /* The container has the padding-left */
-   }
-
-   .Data:dir(rtl) {
-      border-right: var(--regular-border) solid var(--text-color);
-      padding-right: inherit;
-   }
-
-   .DataLabelText:dir(rtl) {
-      padding-left: inherit; /* The container has the padding-left */
-   }
-/* } */
-
 /* TODO: Remove when all recent browsers support the :dir selector */
 /* @supports not selector(:dir(ltr)) { */
    /* Assuming ltr is the default */
@@ -69,6 +49,26 @@
    [dir=rtl] .DataLabelText {
       padding-left: inherit; /* The container has the padding-left */
       padding-right: initial;
+   }
+/* } */
+
+/* @supports selector(:dir(ltr)) { */
+   .Data:dir(ltr) {
+      border-left: var(--regular-border) solid var(--text-color);
+      padding-left: inherit;
+   }
+
+   .DataLabelText:dir(ltr) {
+      padding-right: inherit; /* The container has the padding-left */
+   }
+
+   .Data:dir(rtl) {
+      border-right: var(--regular-border) solid var(--text-color);
+      padding-right: inherit;
+   }
+
+   .DataLabelText:dir(rtl) {
+      padding-left: inherit; /* The container has the padding-left */
    }
 /* } */
 

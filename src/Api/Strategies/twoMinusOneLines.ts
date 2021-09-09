@@ -5,6 +5,39 @@ import { affects, CellID, sharedInArrays } from "../Utils";
 import { colorGroup } from "./intersectionRemoval";
 import { __incrementMapValue } from "./skyscraper";
 
+function __inLine(sumLines: Set<CellID>, eliminationPendLine: IndexToNine, pendLineProp: "column" | "row") {
+   const inLine = [] as CellID[]
+   for (const cell of sumLines) {
+      if (cell[pendLineProp] === eliminationPendLine) {
+         inLine.push(cell)
+      }
+   }
+
+   return inLine
+}
+
+function __updatePatternPendLineElims(
+   sudoku: PureSudoku,
+   cell: CellID,
+   candidate: SudokuDigits,
+   sumLines: Set<CellID>,
+   patternPendLineElims: Map<CellID, IndexToNine[]>,
+   eliminationPendLine: IndexToNine
+) {
+   const complexCondition =
+      sudoku.data[cell.row][cell.column].includes(candidate) &&
+      !sumLines.has(cell)
+
+   if (complexCondition) {
+      const recieved = patternPendLineElims.get(cell)
+      if (recieved === undefined) {
+         patternPendLineElims.set(cell, [eliminationPendLine])
+      } else {
+         patternPendLineElims.set(cell, [...recieved, eliminationPendLine])
+      }
+   }
+}
+
 export function _innerGroupSubtractionLogic(
    candidate: SudokuDigits,
    sudoku: PureSudoku,
@@ -20,7 +53,7 @@ export function _innerGroupSubtractionLogic(
    }
 
    // How many line see a candidate
-   const patternPendLineElims = new Map<CellID, number>()
+   const patternPendLineElims = new Map<CellID, IndexToNine[]>()
    const patternPendLines = isRow ? patternColumns : patternRows
    const pendLineProp = isRow ? "column" : "row"
 
@@ -50,33 +83,32 @@ export function _innerGroupSubtractionLogic(
       // shared = all extra see
       const shared = sharedInArrays(...inLine)
       for (const cell of shared) {
-         const complexCondition =
-            sudoku.data[cell.row][cell.column].includes(candidate) &&
-            !sumLines.has(cell)
-
-         if (complexCondition) {
-            __incrementMapValue(patternPendLineElims, cell)
-         }
+         __updatePatternPendLineElims(sudoku, cell, candidate, sumLines, patternPendLineElims, eliminationPendLine)
       }
    }
 
    let successcount = 0
-   for (const [cell, count] of patternPendLineElims) {
-      if (patternPendLines.size - count < wingSize) {
-         successcount++
-         sudoku.remove(candidate).at(cell.row, cell.column)
-         // NOTE: Highlighting is currently done in the main function
+   let nonExtraLine = null
+   for (const [cell, linesWhichSee] of patternPendLineElims) {
+      if (patternPendLines.size - linesWhichSee.length < wingSize) {
+         const currentNonExtraLine = [...patternPendLines.keys()].find(line => !linesWhichSee.includes(line))
+         nonExtraLine ??= currentNonExtraLine
+         if (nonExtraLine === currentNonExtraLine) {
+            successcount++
+            sudoku.remove(candidate).at(cell.row, cell.column)
+         }
       }
    }
 
    if (successcount) {
-      console.debug({patternRows, patternColumns, patternPendLineElims})
+      const nonExtraLineCells = __inLine(sumLines, nonExtraLine as IndexToNine, pendLineProp)
+      colorGroup(sudoku, sumLines, candidate, "orange")
+      colorGroup(sudoku, nonExtraLineCells, candidate)
       return {
          success: true,
          successcount
       }
    }
-
 
    return null
 }
@@ -127,7 +159,6 @@ export default function twoMinusOneLines(sudoku: PureSudoku, _solver: Solver) {
 
                const result = _innerGroupSubtractionLogic(candidate, sudoku, sumLines, line1 === row, 2)
                if (result !== null) {
-                  colorGroup(sudoku, sumLines, candidate)
                   return result
                }
             }

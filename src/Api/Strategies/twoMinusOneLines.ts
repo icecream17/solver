@@ -102,7 +102,8 @@ export function _innerGroupSubtractionLogic(
 
    if (successcount) {
       const nonExtraLineCells = __inLine(sumLines, nonExtraLine as IndexToNine, pendLineProp)
-      colorGroup(sudoku, sumLines, candidate, "orange")
+      const extraCells = [...sumLines].filter(cell => !nonExtraLineCells.includes(cell))
+      colorGroup(sudoku, extraCells, candidate, "orange")
       colorGroup(sudoku, nonExtraLineCells, candidate)
       return {
          success: true,

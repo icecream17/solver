@@ -4,9 +4,16 @@ Note: Many earlier versions are not specified, that's too much work.
 
 When a `@types` dependency updates, they almost always don't affect anything.
 
+## v0.23.1
+
+- (use) Fix highlighting
+- (use) Fix link
+- (code) New sudokuGenerator.py record
+
 ## v0.23.0
 
 - (use) two minus one lines
+- (css) fix rtl precedence
 
 ## v0.22.1
 

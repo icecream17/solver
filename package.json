@@ -1,6 +1,6 @@
 {
   "name": "solver",
-  "version": "0.23.0",
+  "version": "0.23.1",
   "private": true,
   "homepage": "https://icecream17.github.io/solver",
   "dependencies": {

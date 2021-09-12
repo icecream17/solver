@@ -20,6 +20,7 @@ import skyscraper from "./skyscraper";
 import boards from "../boards";
 import yWing from "./yWing";
 import twoMinusOneLines from "./twoMinusOneLines";
+import xyLoop from "./xyLoop";
 
 describe('strategies', () => {
    let solver: Solver;
@@ -708,6 +709,25 @@ describe('strategies', () => {
          updateCandidates(testSudoku, solver)
          expect(twoMinusOneLines(testSudoku, solver).success).toBe(true)
          expect(testSudoku.data[0][0]).toContain(1)
+      })
+   })
+
+   describe('xyLoop', () => {
+      test('1', () => {
+         const testSudoku = new PureSudoku()
+         testSudoku.import(`
+            .........
+            ..8.4.1..
+            .1.2.3.9.
+            ..4...6..
+            .7.....2.
+            ..1...5..
+            .2.3.7.1.
+            ..5.6.4..
+            .........
+         `)
+         updateCandidates(testSudoku, solver)
+         expect(xyLoop(testSudoku, solver).success).toBe(true)
       })
    })
 })

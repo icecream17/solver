@@ -97,6 +97,11 @@ export default class StrategyList extends React.Component<StrategyListProps> {
                href='https://github.com/icecream17/solver/blob/main/Strategies.md#two-minus-one-lines'
                {...getRepeatedProps()}
             />
+            <StrategyItem
+               name='XY Ring (Loop)'
+               href='https://youtu.be/OUKwjVs4MsY'
+               {...getRepeatedProps()}
+            />
          </ol>
       )
    }

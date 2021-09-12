@@ -2,7 +2,7 @@ import { ALL_CANDIDATES, INDICES_TO_NINE, SudokuDigits } from "../../Types";
 import PureSudoku from "../Spaces/PureSudoku";
 import Solver from "../Solver";
 import Sudoku from "../Spaces/Sudoku";
-import { boxAt, CellID } from "../Utils";
+import { boxAt, CellID, removeFromArray } from "../Utils";
 
 /**
  * Colors a group of cells' candidates, see {@link Cell#highlight}
@@ -28,7 +28,7 @@ export function colorGroup(sudoku: PureSudoku, group: Iterable<CellID>, candidat
 export default function intersectionRemoval(sudoku: PureSudoku, _solver: Solver) {
    function _removeCandidate(candidate: SudokuDigits, cellID: CellID) {
       const newCandidates = sudoku.data[cellID.row][cellID.column]
-      newCandidates.splice(newCandidates.indexOf(candidate), 1)
+      removeFromArray(candidate, newCandidates)
       sudoku.set(cellID.row, cellID.column).to(...newCandidates)
 
       candidateLocations[candidate].rows[cellID.row].delete(cellID)

@@ -401,6 +401,41 @@ n9 | 79  | 99999999999
 // e cannot be 9
 ```
 
+### Combinations of almost fishes
+
+```rust
+// Idea when looking at https://youtu.be/OUKwjVs4MsY
+
+56 6 | 58 | 8
+   6 | 58 | 8 56
+
+// Pretend all of these cells have way more digits
+// However, in these two rows, 5, 6, and 8 are restricted...
+
+// We can color the eights with A and B
+56 6 | 5B | A
+   6 | 5A | B 56
+
+// Next we can color the fives with C and D, where A <> C and B <> D
+C6 6 | DB | A
+   6 | CA | B D6
+
+// And finally the sixes
+CE F | DB | A
+   E | CA | B DF
+
+// Tada! We have proved that in column 2, six must either be at F or E
+
+// Of course, in the actual sudoku the same relation can be proved like this:
+67 | 78
+---+---
+69 | 89
+
+// If top left = 7, top right = 8, bottom right = 9, bottom left = 6
+// In fact this is an XY Ring
+// Kinda of like XY Chain but it's a Loop
+```
+
 ### Substrat of Aligned Pair Exclusion
 
 ```rust
@@ -413,6 +448,21 @@ n9 | 79  | 99999999999
 ## Exocet
 
 See my comment ("Steven" on 7-AUG-2021) <https://www.sudokuwiki.org/Exocet>
+
+Also this double exocet is impossible:
+
+```rust
+AB AB    |        |   AB AB
+      T  |        | T
+         | T      |
+
+// However, if the double exocet base cells had "1234"
+// and everything fits...
+
+// ...except that 4 has 3 coverlines....
+// That means, one of the base cells = 4 = invalid
+// And the rest correspond to targets
+```
 
 ### Terrible
 

@@ -15,9 +15,6 @@ export class CellID {
    }
 }
 
-/**
- * WARNING: CandidateID#index is a digit
- */
 export class CandidateID {
    constructor(
       public row: IndexToNine,
@@ -174,6 +171,16 @@ export function getIDFromIndexWithinBox(indexOfBox: IndexToNine, indexInBox: Ind
 }
 
 /**
+ * Removes an {@param element} from an {@param array}
+ */
+export function removeFromArray<T> (element: T, array: T[]) {
+   const index = array.indexOf(element)
+   if (index !== -1) {
+      array.splice(index, 1)
+   }
+}
+
+/**
  * Intersection of multiple arrays
  *
  * [2, 3] & [3, 4] --> 3
@@ -198,17 +205,18 @@ export function sharedInArrays<T>(...arrays: T[][]) {
 }
 
 /**
- * Unused
- * {@link sharedArray}
+ * Very similar to {@link sharedInArrays}
  */
-// export function sharedSet<A, B>(a: Set<A>, b: Set<B>) {
-//    const union = new Set()
-//    for (const element of a) {
-//       // @ts-expect-error Doesn't matter that they could be different
-//       if (b.has(element)) {
-//          union.add(element)
-//       }
-//    }
+export function sharedInSets<T> (...sets: Set<T>[]) {
+   sets = sets.sort((a, b) => a.size - b.size) // Optimization
+   const shared = new Set<T>(sets[0])
+   for (const element of shared) {
+      for (const set of sets) {
+         if (!set.has(element)) {
+            shared.delete(element)
+         }
+      }
+   }
 
-//    return union
-// }
+   return shared
+}

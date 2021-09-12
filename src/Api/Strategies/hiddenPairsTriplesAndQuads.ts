@@ -3,7 +3,7 @@ import { convertArrayToEnglishList } from "../../utils";
 import PureSudoku from "../Spaces/PureSudoku";
 import Solver from "../Solver";
 import { SuccessError } from "../Types";
-import { algebraic, CellID, getIDFromIndexWithinBox, id } from "../Utils";
+import { algebraic, CellID, getIDFromIndexWithinBox, id, removeFromArray } from "../Utils";
 import { CellInfo, colorConjugate, combinations, _CellInfoList } from "./pairsTriplesAndQuads";
 
 /**
@@ -67,10 +67,7 @@ function findHiddenConjugatesOfGroup(
       possibleCandidates.delete(candidate)
 
       for (const cell of groupCopy) {
-         const index = cell.indexOf(candidate)
-         if (index !== -1) {
-            cell.splice(index, 1)
-         }
+         removeFromArray(candidate, cell)
       }
    }
 

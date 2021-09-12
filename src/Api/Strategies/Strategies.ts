@@ -11,6 +11,7 @@ import swordfish from "./swordfish";
 import twoMinusOneLines from "./twoMinusOneLines";
 import updateCandidates from "./updateCandidates";
 import xWing from "./xWing";
+import xyLoop from "./xyLoop";
 import yWing from "./yWing";
 
 // See comments on `Strategy`
@@ -27,6 +28,7 @@ const STRATEGIES = [
    skyscraper,
    yWing,
    twoMinusOneLines,
+   xyLoop,
 ] as const
 
 export default STRATEGIES as typeof STRATEGIES & Strategy[]

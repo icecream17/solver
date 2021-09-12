@@ -23,8 +23,13 @@
    color: black;
 }
 
-.Cell.orange,
 .Candidate.orange {
-   background-color: rgb(255, 166, 0);
+   background-color: orange;
+   color: black;
+}
+
+/* More like tan instead of orange, but at least my eyes don't hurt from the contrast */
+.Cell.orange {
+   background-color: hsl(39, 80%, 70%); /* orange - 20 sat + 20 lig */
    color: black;
 }

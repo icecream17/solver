@@ -197,6 +197,52 @@ E     | C
 
 This happens to be equivalent to sashimi/finned x wing, but with 3 lines it's more general.
 
+### XY Loop
+
+See <https://youtu.be/OUKwjVs4MsY> for an explanation of an XY Loop.
+
+It's basically an XY Chain, where both ends connect:
+
+```rust
+12 23
+   34 45
+--------
+      56
+61
+```
+
+You can color these candidates A or B, and any candidate seeing both A and B can be eliminated
+
+```rust
+12 23 a
+b  34 45
+--------
+c  d  56
+61 e  f
+
+// 1 is eliminated from b and c
+// 2 is eliminated from a and b
+// 3 is eliminated from a, b, d, and e
+// 4 is eliminated from a and b
+// 5 is eliminated from a and f
+// 6 is eliminated from c, d, e, and f
+```
+
+My implementation just so happens to not care if the last cell is connected to the first:
+
+```rust
+12 23    | (not 1)
+   34 45 |
+---------+---
+      56 | 61
+```
+
+Which just so happens to implement XY Chain.
+
+XY Chain (see <https://www.sudokuwiki.org/XY_Chains>) is a strategy which proves that some candidate, in this case 1, must appear on at least one end of the chain.
+
+So wow!
+
 ## TODO
 
 Here's a list of a bunch of strategies, with somewhat of a difficulty spectrum.

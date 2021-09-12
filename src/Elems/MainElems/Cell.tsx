@@ -262,6 +262,20 @@ export default class Cell extends React.Component<CellProps, CellState> {
       })
    }
 
+   /**
+    * Adds a class to the cell itself
+    */
+   addClass(color: string) {
+      this.setState((state: CellState) => {
+         if (state.explaining) {
+            return {
+               classes: [...(state.classes ?? []), color]
+            }
+         }
+         return null
+      })
+   }
+
    setExplainingToTrue() {
       this.setState({
          explaining: true,

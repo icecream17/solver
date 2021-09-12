@@ -29,7 +29,7 @@ export default class PureSudoku {
    /**
     * Currently for debugging
     */
-   _to81() {
+   _to81 () {
       let str = ""
       for (const row of this.data) {
          for (const cell of row) {
@@ -42,6 +42,26 @@ export default class PureSudoku {
             }
          }
          str += "\n"
+      }
+      return str
+   }
+
+   /**
+    * Currently for debugging
+    * But also used in the "export" button
+    */
+   to729 () {
+      let str = ""
+      for (const row of this.data) {
+         for (const cell of row) {
+            for (const candidate of ALL_CANDIDATES) {
+               if (cell.includes(candidate)) {
+                  str += candidate
+               } else {
+                  str += "0"
+               }
+            }
+         }
       }
       return str
    }

@@ -22,18 +22,6 @@ function assertGet<K, V>(map: Map<K, V>, key: K) {
    return value
 }
 
-// /**
-//  * Colors a group of cells', see Cell#highlight
-//  */
-// export function highlightGroup (sudoku: PureSudoku, group: Iterable<CellID>, color = 'blue') {
-//    if (sudoku instanceof Sudoku) {
-//       for (const cell of group) {
-//          const element = sudoku.cells[cell.row][cell.column]
-//          element?.addClass(color)
-//       }
-//    }
-// }
-
 export default function yWing (sudoku: PureSudoku, _solver: Solver) {
    // AB   BC
    // AC

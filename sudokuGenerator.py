@@ -178,6 +178,11 @@ def solutionCount(grid, depth=1, start=0):
                             grid[row][col] = value
                             numberOfSolutions += solutionCount(grid, depth+1, i)
                             grid[row][col] = 0
+
+                            # early exit on multiple solutions
+                            # remove this if you actually need an accurate solution count
+                            if numberOfSolutions > 1:
+                                return numberOfSolutions + 1e7
             return numberOfSolutions
 
     # No empty cells, so 1 solution

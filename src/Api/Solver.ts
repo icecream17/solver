@@ -265,7 +265,7 @@ export default class Solver {
 
    Export() {
       this.sudokuNullCheck()
-      window._custom.alert(this.sudoku._to81())
+      window._custom.alert(this.sudoku.to729())
    }
 
    Clear() {

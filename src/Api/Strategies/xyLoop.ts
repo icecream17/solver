@@ -34,6 +34,16 @@ function colorCandidate (sudoku: PureSudoku, {row, column, digit}: CandidateID, 
 }
 
 /**
+ * Colors a group of cells', see {@link Cell#highlight}
+ */
+export function highlightCell (sudoku: PureSudoku, cell: CellID, color = 'blue') {
+   if (sudoku instanceof Sudoku) {
+      const element = sudoku.cells[cell.row][cell.column]
+      element?.addClass(color)
+   }
+}
+
+/**
  * Looking for a loop of cells
  *
  * AB, BC, CD, DE, EF, ... and so on, until you reach the end ZA,
@@ -61,13 +71,22 @@ export default function xyLoop (sudoku: PureSudoku, _solver: Solver) {
 
    /**
     * Checks if a loop actually eliminates anything
+    *
+    * @param endsConnect If ends don't connect, only eliminate from the ends
     */
-   function checkLoop(color1: CandidateID[], color2: CandidateID[]) {
-      const seenByColor1 = seenByColor(color1)
-      const seenByColor2 = seenByColor(color2)
+   function checkLoop(color1: CandidateID[], color2: CandidateID[], endsConnect: boolean) {
+      const start = color1.at(-1) as CandidateID
+      const end = color2[0]
+      const seenByColor1 = endsConnect ? seenByColor(color1) : seenByColor([start])
+      const seenByColor2 = endsConnect ? seenByColor(color2) : seenByColor([end])
       const seenByBoth = sharedInSets(seenByColor1, seenByColor2)
 
       if (seenByBoth.size > 0) {
+         if (!endsConnect) {
+            highlightCell(sudoku, id(start.row, start.column), "orange")
+            highlightCell(sudoku, id(end.row, end.column), "orange")
+         }
+
          for (const candidate of color1) {
             colorCandidate(sudoku, candidate)
          }
@@ -97,7 +116,7 @@ export default function xyLoop (sudoku: PureSudoku, _solver: Solver) {
     * @param end The last cell in the loop needs to have *this* candidate
     * @returns false if failed, CellID[] is loop was found
     */
-   function findLoop (cell: CellID, next: SudokuDigits, end: SudokuDigits, color1: CandidateID[], color2: CandidateID[], loop: CellID[] = [cell]): ReturnType<typeof checkLoop> | false {
+   function findLoop (cell: CellID, start: CellID, next: SudokuDigits, end: SudokuDigits, color1: CandidateID[], color2: CandidateID[], loop: CellID[] = [cell]): ReturnType<typeof checkLoop> | false {
       // All cells AB sees with 2 candidates
       const validAffectsCell = __getFellowCWTC(cell).filter(fellow => cellIsValidLoop(sudoku, fellow, next, loop))
 
@@ -112,15 +131,21 @@ export default function xyLoop (sudoku: PureSudoku, _solver: Solver) {
          color2.push(id(possibleNext.row, possibleNext.column, next))
          color1.push(nextNextId)
 
+         //! This only guarantees that one end of the "loop" is the same as the other
+         //! So this strategy is accidentally also implements XY Chain
+         //! However with an XY Chain, only the two ends matter
+         //! So check the ends anyway
          if (nextNext === end) {
-            const isLoopResult = checkLoop(color1, color2)
+            // Check the ends anyway, = isALoop
+            const endsConnect = affects(start.row, start.column).includes(possibleNext)
+            const isLoopResult = checkLoop(color1, color2, endsConnect)
 
             if (isLoopResult) {
                return isLoopResult
             }
          }
 
-         const result = findLoop(possibleNext, nextNext, end, color1, color2, loop)
+         const result = findLoop(possibleNext, start, nextNext, end, color1, color2, loop)
          if (result) {
             return result
          }
@@ -160,7 +185,7 @@ export default function xyLoop (sudoku: PureSudoku, _solver: Solver) {
 
       // Start with candA
       // With a recursive function, add to the list until it fails or succeeds
-      const result = findLoop(cell, candA, candB, color1, color2)
+      const result = findLoop(cell, cell, candA, candB, color1, color2)
       if (result) {
          return result
       }

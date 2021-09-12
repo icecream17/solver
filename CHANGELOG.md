@@ -4,6 +4,11 @@ Note: Many earlier versions are not specified, that's too much work.
 
 When a `@types` dependency updates, they almost always don't affect anything.
 
+## v0.24.1
+
+- (docs) Wow, my XY Ring implementation is more general than I thought! Nice!
+- (use) Export button now exports candidates as well
+
 ## v0.24.0
 
 - (use) XY Ring (Loop)

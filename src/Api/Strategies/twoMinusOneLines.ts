@@ -1,8 +1,7 @@
 import { ALL_CANDIDATES, IndexToNine, INDICES_TO_NINE, SudokuDigits } from "../../Types";
 import Solver from "../Solver";
 import PureSudoku from "../Spaces/PureSudoku";
-import { affects, CellID, sharedInArrays } from "../Utils";
-import { colorGroup } from "./intersectionRemoval";
+import { affects, colorGroup, CellID, sharedInArrays } from "../Utils";
 import { __incrementMapValue } from "./skyscraper";
 
 function __inLine(sumLines: Set<CellID>, eliminationPendLine: IndexToNine, pendLineProp: "column" | "row") {

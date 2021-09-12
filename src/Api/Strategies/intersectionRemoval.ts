@@ -1,25 +1,7 @@
 import { ALL_CANDIDATES, INDICES_TO_NINE, SudokuDigits } from "../../Types";
 import PureSudoku from "../Spaces/PureSudoku";
 import Solver from "../Solver";
-import Sudoku from "../Spaces/Sudoku";
-import { boxAt, CellID, removeFromArray } from "../Utils";
-
-/**
- * Colors a group of cells' candidates, see {@link Cell#highlight}
- *
- * The precedence for colors is:
- * 1. orange
- * 2. green
- * 3. blue
- */
-export function colorGroup(sudoku: PureSudoku, group: Iterable<CellID>, candidate: SudokuDigits, color = 'blue') {
-   if (sudoku instanceof Sudoku) {
-      for (const cell of group) {
-         const element = sudoku.cells[cell.row][cell.column]
-         element?.highlight([candidate], color)
-      }
-   }
-}
+import { boxAt, colorGroup, CellID, removeFromArray } from "../Utils";
 
 /**
  * If all candidate N in group G attacks range R,

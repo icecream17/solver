@@ -243,6 +243,12 @@ XY Chain (see <https://www.sudokuwiki.org/XY_Chains>) is a strategy which proves
 
 So wow!
 
+Edit: See XY Chain
+
+## XY Chain
+
+About that XY Loop stuff... yeah, XY Chain is special enough to get it's own function now.
+
 ## TODO
 
 Here's a list of a bunch of strategies, with somewhat of a difficulty spectrum.

@@ -98,8 +98,13 @@ export default class StrategyList extends React.Component<StrategyListProps> {
                {...getRepeatedProps()}
             />
             <StrategyItem
-               name='XY Ring (Loop) + XY Chain'
-               href='https://github.com/icecream17/solver/blob/main/Strategies.md#xy-loop'
+               name='XY Ring (Loop)'
+               href='https://youtu.be/OUKwjVs4MsY'
+               {...getRepeatedProps()}
+            />
+            <StrategyItem
+               name='XY Chain'
+               href='https://www.sudokuwiki.org/XY_Chains'
                {...getRepeatedProps()}
             />
          </ol>

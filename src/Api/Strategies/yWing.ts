@@ -1,8 +1,7 @@
-import { INDICES_TO_NINE, SudokuDigits } from "../../Types";
+import { SudokuDigits } from "../../Types";
 import Solver from "../Solver";
 import PureSudoku from "../Spaces/PureSudoku";
-import { affects, CellID, id, sharedInArrays } from "../Utils";
-import { colorGroup } from "./intersectionRemoval";
+import { affects, assertGet, CellID, getCellsWithTwoCandidates, colorGroup, sharedInArrays } from "../Utils";
 
 /**
  * The AC cell has A but not B
@@ -13,15 +12,6 @@ function cellIsValidWing(sudoku: PureSudoku, sees: CellID, has: SudokuDigits, no
    return cell.includes(has) && !cell.includes(notHas)
 }
 
-function assertGet<K, V>(map: Map<K, V>, key: K) {
-   const value = map.get(key)
-   if (value === undefined) {
-      throw ReferenceError("Map doesn't have this value / This error will never happen")
-   }
-
-   return value
-}
-
 export default function yWing (sudoku: PureSudoku, _solver: Solver) {
    // AB   BC
    // AC
@@ -30,14 +20,7 @@ export default function yWing (sudoku: PureSudoku, _solver: Solver) {
    // Where A sees another A in AC
    // Where B sees another B in BC
 
-   const cellsWithTwoCandidates = [] as CellID[]
-   for (const row of INDICES_TO_NINE) {
-      for (const column of INDICES_TO_NINE) {
-         if (sudoku.data[row][column].length === 2) {
-            cellsWithTwoCandidates.push(id(row, column))
-         }
-      }
-   }
+   const cellsWithTwoCandidates = getCellsWithTwoCandidates(sudoku)
 
    // CWTC acronym for cellsWithTwoCandidates
    const affectsCWTC = new Map(

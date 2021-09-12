@@ -5,6 +5,7 @@
    right: 2vw;
    height: fit-content;
    width: fit-content;
+   max-width: calc(100% - 4rem);
 
    background-color: #444;
    z-index: 4;
@@ -16,6 +17,9 @@
 
    border-width: var(--regular-border);
    border-style: solid;
+
+   word-wrap: break-word;
+   word-break: break-all;
 }
 
 /** Positioning */

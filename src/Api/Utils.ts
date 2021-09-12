@@ -1,6 +1,8 @@
 // @flow
 
 import { AlgebraicName, BoxName, BOX_NAMES, COLUMN_NAMES, IndexTo81, IndexToNine, INDICES_TO_NINE, ROW_NAMES, SudokuDigits, ThreeDimensionalArray, TwoDimensionalArray } from "../Types";
+import PureSudoku from "./Spaces/PureSudoku";
+import Sudoku from "./Spaces/Sudoku";
 
 export function algebraic (row: IndexToNine, column: IndexToNine): AlgebraicName {
    return `${ROW_NAMES[row]}${COLUMN_NAMES[column]}` as const
@@ -220,3 +222,44 @@ export function sharedInSets<T> (...sets: Set<T>[]) {
 
    return shared
 }
+
+export function assertGet<K, V> (map: Map<K, V>, key: K) {
+   const value = map.get(key)
+   if (value === undefined) {
+      throw ReferenceError("Map doesn't have this value / This error will never happen")
+   }
+
+   return value
+}
+
+/**
+ * Colors a group of cells' candidates, see {@link Cell#highlight}
+ *
+ * The precedence for colors is:
+ * 1. orange
+ * 2. green
+ * 3. blue
+ */
+
+export function colorGroup (sudoku: PureSudoku, group: Iterable<CellID>, candidate: SudokuDigits, color = 'blue') {
+   if (sudoku instanceof Sudoku) {
+      for (const cell of group) {
+         const element = sudoku.cells[cell.row][cell.column];
+         element?.highlight([candidate], color);
+      }
+   }
+}
+
+export function getCellsWithTwoCandidates (sudoku: PureSudoku) {
+   const cellsWithTwoCandidates = [] as CellID[]
+   for (const row of INDICES_TO_NINE) {
+      for (const column of INDICES_TO_NINE) {
+         if (sudoku.data[row][column].length === 2) {
+            cellsWithTwoCandidates.push(id(row, column))
+         }
+      }
+   }
+
+   return cellsWithTwoCandidates
+}
+

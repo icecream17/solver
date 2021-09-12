@@ -4,6 +4,13 @@ Note: Many earlier versions are not specified, that's too much work.
 
 When a `@types` dependency updates, they almost always don't affect anything.
 
+## v0.24.2
+
+- (use) Extract XY Chain from XY Ring (Loop)
+- (use) Export button now sends both an 81 and 729 representation
+- (css) Set max width on alert boxes
+- (code) Move assertGet, colorGroup, and getCellsWithTwoCandidates to utils
+
 ## v0.24.1
 
 - (docs) Wow, my XY Ring implementation is more general than I thought! Nice!

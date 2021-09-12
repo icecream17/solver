@@ -62,13 +62,13 @@ test('getBox', () => {
 
 test('_to81', () => {
    const testSudoku = new PureSudoku()
-   testSudoku.set(1, 2).to(3, 4, 5)
+   testSudoku.set(1, 2).to(3)
    const toSudoku = new PureSudoku()
    expect(toSudoku.import(testSudoku._to81())).toStrictEqual({
       success: true,
       representationType: '81'
    })
-   expect(toSudoku.data[1][2]).toStrictEqual([3, 4, 5])
+   expect(toSudoku.data[1][2]).toStrictEqual([3]) // Only single candidate information is retained
 })
 
 test('to729', () => {

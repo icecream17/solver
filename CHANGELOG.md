@@ -7,6 +7,8 @@ When a `@types` dependency updates, they almost always don't affect anything.
 ## v0.24.1
 
 - (docs) Wow, my XY Ring implementation is more general than I thought! Nice!
+  - (use) In fact, it covers XY Chains!
+  - (use) But wait... it's way too general when eliminating in the XY Chain case... oops, fix bug.
 - (use) Export button now exports candidates as well
 
 ## v0.24.0

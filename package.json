@@ -13,7 +13,7 @@
     "@types/react-dom": "^17.0.9",
     "babel-plugin-const-enum": "^1.1.0",
     "eslint-config-react-app": "^6.0.0",
-    "eslint-plugin-jest-dom": "^3.9.0",
+    "eslint-plugin-jest-dom": "^3.9.2",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-scripts": "^5.0.0-next.37",

@@ -16,26 +16,26 @@
 
 # So far it seems to take anywhere from a to b seconds:
 # 2.975757427s (wow!)
-# 191.2783888s (wow!)
+# 819.054982936s (WOWWWWWWW!)
 
 # It takes so long since it checks a sudoku's validity by bruteforce
 # So the longer it takes, the harder it is to bruteforce the solution.
 # And generally hard to bruteforce sudokus are ... vaguely harder to solve.
 
-# Here's the 191 second sudoku (very easy)
+# Here's the 819 second sudoku (hard)
 """
-000000007
-000069000
-190000000
-042100800
-030050200
-800000650
-000705004
-001020008
-000400100
+004000000
+805000000
+070500030
+000000800
+000706004
+000400316
+009100070
+300080100
+007090005
 """
 
-# Here's the 2.9 second sudoku (not as easy, which is surprising)
+# Here's the 2.9 second sudoku (moderate)
 """
 002600310
 050400006
@@ -181,8 +181,8 @@ def solutionCount(grid, depth=1, start=0):
 
                             # early exit on multiple solutions
                             # remove this if you actually need an accurate solution count
-                            if numberOfSolutions > 1:
-                                return numberOfSolutions + 1e7
+                            # if numberOfSolutions > 1:
+                            #     return numberOfSolutions + 1e7
             return numberOfSolutions
 
     # No empty cells, so 1 solution

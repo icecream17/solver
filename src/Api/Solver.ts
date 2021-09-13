@@ -5,7 +5,7 @@ import { AlertType } from "../Types"
 import { forComponentsToUpdate } from "../utils"
 import Strategies from "./Strategies/Strategies"
 import Sudoku from "./Spaces/Sudoku"
-import { SuccessError } from "./Types"
+import { SuccessError, StrategyMemory } from "./Types"
 
 /**
  * A strategy is skippable if
@@ -16,8 +16,8 @@ export default class Solver {
    latestStrategyItem: null | StrategyItem = null
    isDoingStep = false
    erroring = false
+   memory = new StrategyMemory() // Information strategies keep across calls
    skippable = [] as boolean[]
-   solved = 0
    stepsTodo = 0
    strategyIndex = 0
    /** When a strategyItem is about to unmount, the strategy item element is deleted. */
@@ -37,20 +37,21 @@ export default class Solver {
     * Called after the last strategy is done,
     * and just before the first strategy is done.
     */
-   async resetStrategies() {
-      for (const strategyElement of this.strategyItemElements) {
-         if (strategyElement === undefined) {
-            console.warn(`undefined strategyItemElement @resetStrategies`)
-            continue;
-         }
-
-         strategyElement.setState({
-            success: null,
-            successcount: null
-         })
+   resetStrategies(index = 0): void {
+      if (index >= this.strategyItemElements.length) {
+         return
       }
 
-      await forComponentsToUpdate()
+      const strategyElement = this.strategyItemElements[index]
+      if (strategyElement === undefined) {
+         console.warn(`undefined strategyItemElement @resetStrategies`)
+         return this.resetStrategies(index + 1)
+      }
+
+      strategyElement.setState({
+         success: null,
+         successcount: null
+      }, () => this.resetStrategies(index + 1))
    }
 
    updateCounters(success: boolean, isFinished: boolean) {
@@ -150,7 +151,7 @@ export default class Solver {
 
       // See resetStrategies documentation
       if (this.strategyIndex === 0) {
-         await this.resetStrategies()
+         this.resetStrategies()
          await this.resetCells()
       }
 
@@ -195,8 +196,11 @@ export default class Solver {
       await this.setupCells()
 
       // Run strategy
-      const _strategyResult = Strategies[this.strategyIndex](this.sudoku, this)
-      const strategyResult = {...{successcount: null}, ..._strategyResult} // successcount defaults to null
+      const _strategyResult = Strategies[this.strategyIndex](this.sudoku, this.memory[this.strategyIndex])
+      const strategyResult = {
+         success: _strategyResult.success,
+         successcount: "successcount" in _strategyResult ? _strategyResult.successcount ?? null : null
+      }
 
       // Set cells to non-strategy mode if failed
       if (strategyResult.success === false) {
@@ -253,14 +257,9 @@ export default class Solver {
          return; // Maybe do something else
       }
 
-      await this.resetCells()
+      await this.reset()
       this.sudokuNullCheck()
       this.sudoku.import(result)
-      this.erroring = false
-      this.solved = 0
-      this.stepsTodo = 0
-      this.strategyIndex = 0
-      this.skippable = []
    }
 
    Export() {
@@ -269,11 +268,16 @@ export default class Solver {
       window._custom.alert(this.sudoku.to729())
    }
 
-   Clear() {
+   async Clear() {
       this.sudokuNullCheck()
       this.sudoku.clear()
+      await this.reset()
+   }
+
+   async reset() {
+      await this.resetCells()
       this.erroring = false
-      this.solved = 0
+      this.memory = new StrategyMemory()
       this.stepsTodo = 0
       this.strategyIndex = 0
       this.skippable = []

@@ -1,16 +1,14 @@
 
 import React from 'react';
-import Sudoku from './Sudoku';
-import { IndexToNine, _Function, _ReactProps } from '../../Types';
+import { IndexToNine, _ReactProps } from '../../Types';
 
-import Cell from './Cell';
+import Cell, { BaseCellProps } from './Cell';
 import { _expect } from '../../utils';
+
 
 type RowProps = Readonly<{
    index: IndexToNine
-   parent: Sudoku
-   whenCellMounts: _Function
-   whenCellUnmounts: _Function
+   propsPassedDown: Omit<BaseCellProps, "row" | "column">
 }> & _ReactProps
 
 /**
@@ -26,16 +24,14 @@ type RowProps = Readonly<{
  */
 export default class Row extends React.Component<RowProps> {
    constructor(props: RowProps) {
-      _expect(Row, props).toHaveProperties('index', 'whenCellMounts', 'whenCellUnmounts', 'parent')
+      _expect(Row, props).toHaveProperties('index', 'propsPassedDown')
       super(props)
    }
 
    render() {
       const propsPassedDown = {
          row: this.props.index,
-         sudoku: this.props.parent,
-         whenCellMounts: this.props.whenCellMounts,
-         whenCellUnmounts: this.props.whenCellUnmounts,
+         ...(this.props.propsPassedDown)
       } as const
 
       return (

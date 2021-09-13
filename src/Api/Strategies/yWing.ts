@@ -1,7 +1,7 @@
 import { SudokuDigits } from "../../Types";
-import Solver from "../Solver";
 import PureSudoku from "../Spaces/PureSudoku";
-import { affects, assertGet, CellID, getCellsWithTwoCandidates, colorGroup, sharedInArrays } from "../Utils";
+import { affects, assertGet, CellID, sharedInArrays } from "../Utils";
+import { getCellsWithTwoCandidates, colorGroup } from "../Utils.dependent";
 
 /**
  * The AC cell has A but not B
@@ -12,7 +12,7 @@ function cellIsValidWing(sudoku: PureSudoku, sees: CellID, has: SudokuDigits, no
    return cell.includes(has) && !cell.includes(notHas)
 }
 
-export default function yWing (sudoku: PureSudoku, _solver: Solver) {
+export default function yWing (sudoku: PureSudoku) {
    // AB   BC
    // AC
 

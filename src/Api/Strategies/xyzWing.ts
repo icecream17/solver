@@ -1,7 +1,7 @@
 import { SudokuDigits } from "../../Types";
-import Solver from "../Solver";
 import PureSudoku from "../Spaces/PureSudoku";
-import { affects, assertGet, CellID, getCellsWithTwoCandidates } from "../Utils";
+import { affects, assertGet, CellID } from "../Utils";
+import { getCellsWithTwoCandidates } from "../Utils.dependent";
 
 /**
  * The AC cell has A but not B
@@ -12,7 +12,7 @@ function cellIsValidWing (sudoku: PureSudoku, sees: CellID, has: SudokuDigits, n
    return cell.includes(has) && !cell.includes(notHas)
 }
 
-export default function xyzWing (sudoku: PureSudoku, _solver: Solver) {
+export default function xyzWing (sudoku: PureSudoku) {
    // ABC  ec | BC
    // AC      |
 

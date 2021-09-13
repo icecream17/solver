@@ -1,7 +1,6 @@
 import { AlertType, BOX_NAMES, COLUMN_NAMES, IndexToNine, INDICES_TO_NINE, ROW_NAMES, SudokuDigits, TwoDimensionalArray } from "../../Types";
 import { convertArrayToEnglishList } from "../../utils";
 import PureSudoku from "../Spaces/PureSudoku";
-import Solver from "../Solver";
 import { SuccessError } from "../Types";
 import { algebraic, CellID, getIDFromIndexWithinBox, id, removeFromArray } from "../Utils";
 import { CellInfo, colorConjugate, combinations, _CellInfoList } from "./pairsTriplesAndQuads";
@@ -220,7 +219,7 @@ function findHiddenConjugatesOfSudoku(sudoku: PureSudoku, maxSize = 4 as 2 | 3 |
  * then there would be a simpler hidden pair/triple/quad:
  * `12.......   12.......   .........`
  */
-export default function hiddenPairsTriplesAndQuads(sudoku: PureSudoku, _solver: Solver) {
+export default function hiddenPairsTriplesAndQuads(sudoku: PureSudoku) {
    let successcount = 0
 
    const result = findHiddenConjugatesOfSudoku(sudoku)

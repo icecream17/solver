@@ -1,44 +1,8 @@
 // @flow
 import { ALL_CANDIDATES, IndexToNine, INDICES_TO_NINE, SudokuDigits, ThreeDimensionalArray } from "../../Types"
 import { boxAt, CellID, id, to9by9 } from "../Utils"
-import Link from "./Link"
-import LinkRegistry from "./LinkRegistry"
 
 export default class PureSudoku {
-   #links: LinkRegistry = new LinkRegistry()
-   public get links () {
-      this.#links = new LinkRegistry() // Right now, just reset every time
-
-      // Strong links in cells
-      for (const row of INDICES_TO_NINE) {
-         for (const column of INDICES_TO_NINE) {
-            if (this.data[row][column].length === 2) {
-               const [cand1, cand2] = this.data[row][column].map(candidate => id(row, column, candidate))
-               this.#links.add(new Link(cand1, cand2))
-            }
-         }
-      }
-
-      // Strong links in row, columns, and boxes
-      const candidateLocations = this.getCandidateLocations()
-      for (const candidate of ALL_CANDIDATES) {
-         for (const groupIndex of INDICES_TO_NINE) {
-            const __checkGroup = (group: Set<CellID>) => {
-               if (group.size === 2) {
-                  const [a, b] = [...group].map(cell => id(cell.row, cell.column, candidate))
-                  this.#links.add(new Link(a, b))
-               }
-            }
-
-            __checkGroup(candidateLocations[candidate].rows[groupIndex])
-            __checkGroup(candidateLocations[candidate].columns[groupIndex])
-            __checkGroup(candidateLocations[candidate].boxes[groupIndex])
-         }
-      }
-
-      return this.#links
-   }
-
    data: ThreeDimensionalArray<SudokuDigits>
    constructor(representation?: string) {
       this.data = [
@@ -160,8 +124,9 @@ export default class PureSudoku {
    import(representation: string) {
       representation = representation.trim().normalize()
       const representationWithoutWhitespace = representation.replaceAll(/\s/g, "")
+      const onlyDigitRepresentation = representation.replaceAll(/[^0-9]/g, "")
 
-      for (const testRepresentation of [representation, representationWithoutWhitespace] as const) {
+      for (const testRepresentation of [representation, representationWithoutWhitespace, onlyDigitRepresentation] as const) {
          if (testRepresentation.length === 81) {
             this.import81(testRepresentation)
             return {

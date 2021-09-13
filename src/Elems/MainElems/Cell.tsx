@@ -1,14 +1,14 @@
+// @flow
 
 import React from 'react';
 import { _expect } from '../../utils';
 import { IndexToNine, Mutable, PossibleConstructCallback, SudokuDigits, ZeroToNine, _Function } from '../../Types';
 
 import Candidates from './Candidates';
-import Sudoku from './Sudoku';
 import CandidatesDiff from './CandidatesDiff';
 
 // Maps keys to coords
-const keyboardMappings = {
+export const keyboardMappings = {
    'ArrowUp': { vRow: -1, vColumn: 0 },
    'KeyW': { vRow: -1, vColumn: 0 },
    'ArrowLeft': { vRow: 0, vColumn: -1 },
@@ -19,14 +19,18 @@ const keyboardMappings = {
    'KeyD': { vRow: 0, vColumn: 1 },
 }
 
-type CellProps = PossibleConstructCallback & Readonly<{
-   row: IndexToNine,
-   column: IndexToNine,
-   sudoku: Sudoku
+export type BaseCellProps = Readonly<{
+   row: IndexToNine
+   column: IndexToNine
+
+   whenNewCandidates: (cell: Cell, candidates: SudokuDigits[]) => void
+   whenKeyboardArrows: (cell: Cell, event: React.KeyboardEvent) => void
 
    whenCellMounts: _Function
    whenCellUnmounts: _Function
 }>
+
+type CellProps = PossibleConstructCallback & BaseCellProps
 
 type CellState = Readonly<(
    {
@@ -74,6 +78,8 @@ type CellState = Readonly<(
  * - sudoku
  * - whenCellMounts
  * - whenCellUnmounts
+ * - whenNewCandidates
+ * - whenKeyboardArrows
  */
 export default class Cell extends React.Component<CellProps, CellState> {
    static labelAt(row: IndexToNine, column: IndexToNine) {
@@ -81,7 +87,7 @@ export default class Cell extends React.Component<CellProps, CellState> {
    }
 
    constructor(props: CellProps) {
-      _expect(Cell, props).toHaveProperties("row", "column", "sudoku", "whenCellMounts", "whenCellUnmounts")
+      _expect(Cell, props).toHaveProperties("row", "column", "whenCellMounts", "whenCellUnmounts", "whenNewCandidates", "whenKeyboardArrows")
 
       super(props)
 
@@ -359,7 +365,7 @@ export default class Cell extends React.Component<CellProps, CellState> {
    }
 
    whenBlur(_event?: React.FocusEvent) {
-      this.props.sudoku.data.data[this.props.row][this.props.column] = this.state.candidates
+      this.props.whenNewCandidates(this, this.state.candidates)
       this.setState((state: CellState): CellState => {
          const newState = {
             active: false,
@@ -388,7 +394,7 @@ export default class Cell extends React.Component<CellProps, CellState> {
     * TODO: Arrow key navigation
     */
    whenKeyDown(event: React.KeyboardEvent) {
-      const target = event.target as HTMLTableDataCellElement
+      const target = event.target as HTMLTableCellElement
       if ('123456789'.includes(event.key)) {
          const candidate = Number(event.key) as SudokuDigits
          this.toggleCandidate(candidate)
@@ -410,15 +416,7 @@ export default class Cell extends React.Component<CellProps, CellState> {
          }
       } else if (event.key in keyboardMappings) {
          // Keyboard controls
-         // TODO: Diagonal steps, use onkeyup and lift to Sudoku
-         const step = keyboardMappings[(event.key as keyof typeof keyboardMappings)]
-
-         // blur this and focus the other cell
-         target.blur()
-         this.props.sudoku.focusCell(
-            (this.props.row + 9 + step.vRow) % 9 as IndexToNine,
-            (this.props.column + 9 + step.vColumn) % 9 as IndexToNine
-         )
+         this.props.whenKeyboardArrows(this, event)
       } else if (event.key === 'Escape') {
          target.blur()
       } else {

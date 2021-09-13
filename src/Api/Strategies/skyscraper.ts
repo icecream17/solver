@@ -1,7 +1,7 @@
 import { ALL_CANDIDATES, IndexToNine, INDICES_TO_NINE, SudokuDigits } from "../../Types";
-import Solver from "../Solver";
 import PureSudoku from "../Spaces/PureSudoku";
-import { affects, colorGroup, CellID, sharedInArrays } from "../Utils";
+import { affects, CellID, sharedInArrays } from "../Utils";
+import { colorGroup } from "../Utils.dependent";
 
 export function __incrementMapValue<T extends Map<K, number>, K>(map: T, key: K) {
    if (map.has(key)) {
@@ -74,7 +74,7 @@ export function _innerSkyscraperLogic(
  * Two lines - 1 cross line = extra
  * If all extra see n, n is eliminated (since extra must have at least 1)
  */
-export default function skyscraper(sudoku: PureSudoku, _solver: Solver) {
+export default function skyscraper(sudoku: PureSudoku) {
    const candidateLocations = sudoku.getCandidateLocations()
    for (const candidate of ALL_CANDIDATES) {
       const possibleRows = [] as Set<CellID>[]

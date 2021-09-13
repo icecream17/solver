@@ -3,7 +3,6 @@
 import { AlertType, IndexToNine, INDICES_TO_NINE, SudokuDigits, TwoDimensionalArray } from "../../Types";
 import { convertArrayToEnglishList } from "../../utils";
 import PureSudoku from "../Spaces/PureSudoku";
-import Solver from "../Solver";
 import Sudoku from "../Spaces/Sudoku";
 import { SuccessError } from "../Types";
 import { algebraic, boxAt, CellID, getIDFromIndexWithinBox, id } from "../Utils";
@@ -260,7 +259,7 @@ function eliminateUsingConjugateGroups(sudoku: PureSudoku, conjugateGroups: read
 }
 
 // Math.max(O(n^5), O(n^5))
-export default function pairsTriplesAndQuads(sudoku: PureSudoku, _solver: Solver) {
+export default function pairsTriplesAndQuads(sudoku: PureSudoku) {
    const conjugateGroups = findConjugatesOfSudoku(sudoku)
 
    if (conjugateGroups === "ERROR!!!") {

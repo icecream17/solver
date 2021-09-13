@@ -1,8 +1,8 @@
 import { SudokuDigits } from "../../Types";
-import Solver from "../Solver";
 import PureSudoku from "../Spaces/PureSudoku";
 import Sudoku from "../Spaces/Sudoku";
-import { affects, assertGet, CandidateID, CellID, getCellsWithTwoCandidates, id, removeFromArray, sharedInSets } from "../Utils";
+import { affects, assertGet, CandidateID, CellID, id, removeFromArray, sharedInSets } from "../Utils";
+import { getCellsWithTwoCandidates } from "../Utils.dependent";
 
 /**
  * next = has
@@ -46,7 +46,7 @@ export function highlightCell (sudoku: PureSudoku, cell: CellID, color = 'blue')
  * or
  * BCDEF....A
  */
-export default function xyLoop (sudoku: PureSudoku, _solver: Solver) {
+export default function xyLoop (sudoku: PureSudoku) {
    function seenByColor(color: CandidateID[]) {
       const seen = new Set<CandidateID>()
       for (const {row, column, digit} of color) {

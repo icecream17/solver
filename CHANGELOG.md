@@ -4,6 +4,13 @@ Note: Many earlier versions are not specified, that's too much work.
 
 When a `@types` dependency updates, they almost always don't affect anything.
 
+## v0.24.3
+
+- (use) Links like <https://something.something/blahblahlbah?sudoku=123456789123456789123456789123456789123456789123456789123456789123456789123456789> can be imported directly! (As long as there are 81 or 729 digits in the url)
+- (css + use) Better printing
+- (code) Resolve all circular dependencies except for Solver importing SolverPart, moving a bunch of stuff around
+  - This is actually the main change
+
 ## v0.24.2
 
 - (use) Extract XY Chain from XY Ring (Loop)

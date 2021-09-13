@@ -1,7 +1,7 @@
 import { SudokuDigits } from "../../Types";
-import Solver from "../Solver";
 import PureSudoku from "../Spaces/PureSudoku";
-import { affects, assertGet, CandidateID, CellID, getCellsWithTwoCandidates, id, sharedInSets } from "../Utils";
+import { affects, assertGet, CandidateID, CellID, id, sharedInSets } from "../Utils";
+import { getCellsWithTwoCandidates } from "../Utils.dependent";
 import { highlightCell, colorCandidate, cellIsValidLoop } from "./xyLoop";
 
 
@@ -18,7 +18,7 @@ import { highlightCell, colorCandidate, cellIsValidLoop } from "./xyLoop";
  *
  * Basically no matter what, one of the ends has candidate.
  */
-export default function xyChain (sudoku: PureSudoku, _solver: Solver) {
+export default function xyChain (sudoku: PureSudoku) {
    function seenByEnd ({ row, column, digit }: CandidateID) {
       const seen = new Set<CandidateID>()
       for (const cell of affects(row, column)) {

@@ -1,6 +1,5 @@
 import { ALL_CANDIDATES, IndexToNine, INDICES_TO_NINE, SudokuDigits } from "../../Types"
 import PureSudoku from "../Spaces/PureSudoku"
-import Solver from "../Solver"
 import Sudoku from "../Spaces/Sudoku"
 import { boxAt } from "../Utils"
 
@@ -11,7 +10,7 @@ function colorCandidate(sudoku: PureSudoku, row: IndexToNine, column: IndexToNin
    }
 }
 
-export default function hiddenSingles(sudoku: PureSudoku, _solver: Solver) {
+export default function hiddenSingles(sudoku: PureSudoku) {
    /**
     * The state for a candidate in a group
     * true = 0 found, hidden single still possible

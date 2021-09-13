@@ -85,11 +85,11 @@ export type _Function = (...args: any[]) => any
 // Typescript workaround: optional whenConstruct
 export type PossibleConstructCallback = Readonly<{
    whenConstruct?: _Function
-}> & _ReactProps
+}>
 
 export type GuaranteedConstructCallback = Readonly<{
    whenConstruct: _Function
-}> & _ReactProps
+}>
 
 export function HasWhenConstruct(obj: DontUseObject): obj is GuaranteedConstructCallback {
    return "whenConstruct" in obj

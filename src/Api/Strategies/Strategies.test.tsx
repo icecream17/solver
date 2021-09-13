@@ -8,7 +8,7 @@ import checkForSolved from "./checkForSolved";
 import hiddenSingles from "./hiddenSingles";
 import updateCandidates from "./updateCandidates";
 import pairsTriplesAndQuads from "./pairsTriplesAndQuads";
-import { SuccessError } from "../Types";
+import { Strategy, StrategyMemory, SuccessError } from "../Types";
 import hiddenPairsTriplesAndQuads from "./hiddenPairsTriplesAndQuads";
 import intersectionRemoval from "./intersectionRemoval";
 import STRATEGIES from "./Strategies";
@@ -23,19 +23,23 @@ import twoMinusOneLines from "./twoMinusOneLines";
 import xyLoop from "./xyLoop";
 import xyChain from "./xyChain";
 
+const STRATEGIES_AND_THEIR_INDICES = STRATEGIES.map(
+   (strategy: Strategy, index) => [strategy, index] as const
+)
+
 describe('strategies', () => {
    let solver: Solver;
 
    beforeEach(() => {
       solver = Object.create(Solver)
       solver.strategyIndex = 0
-      solver.solved = 0
+      solver.memory = new StrategyMemory()
       solver.strategyItemElements = []
    })
 
-   test.each(STRATEGIES)('$variable.name fails on an empty sudoku', (strategy) => {
+   test.each(STRATEGIES_AND_THEIR_INDICES)('$variable.name fails on an empty sudoku', (strategy: Strategy, index: number) => {
       const testSudoku = new PureSudoku()
-      expect(strategy(testSudoku, solver).success).toBe(false)
+      expect(strategy(testSudoku, solver.memory[index]).success).toBe(false)
    })
 
    describe('check for solved', () => {
@@ -43,17 +47,17 @@ describe('strategies', () => {
          const testSudoku = PureSudoku.fromRepresentation(testBoards["Solved board"])
 
          // @ts-expect-error
-         solver.solved = undefined
-         expect(() => checkForSolved(testSudoku, solver)).toThrow(TypeError)
+         solver.memory[0].solved = undefined
+         expect(() => checkForSolved(testSudoku, solver.memory[0])).toThrow(TypeError)
 
-         solver.solved = 0.5
-         expect(() => checkForSolved(testSudoku, solver)).toThrow(TypeError)
+         solver.memory[0].solved = 0.5
+         expect(() => checkForSolved(testSudoku, solver.memory[0])).toThrow(TypeError)
 
-         solver.solved = -2
-         expect(() => checkForSolved(testSudoku, solver)).toThrow(TypeError)
+         solver.memory[0].solved = -2
+         expect(() => checkForSolved(testSudoku, solver.memory[0])).toThrow(TypeError)
 
-         solver.solved = Infinity
-         expect(() => checkForSolved(testSudoku, solver)).toThrow(TypeError)
+         solver.memory[0].solved = Infinity
+         expect(() => checkForSolved(testSudoku, solver.memory[0])).toThrow(TypeError)
       })
 
       test('succeeds when sudoku is finished', () => {
@@ -63,22 +67,22 @@ describe('strategies', () => {
          const testSudoku = PureSudoku.fromRepresentation(testBoards["Solved board"])
 
          {
-            solver.solved = NUMBER_OF_CELLS
-            expect(checkForSolved(testSudoku, solver)).toStrictEqual({
+            solver.memory[0].solved = NUMBER_OF_CELLS
+            expect(checkForSolved(testSudoku, solver.memory[0])).toStrictEqual({
                success: true,
                successcount: NUMBER_OF_CELLS
             })
-            expect(solver.solved).toBe(NUMBER_OF_CELLS)
+            expect(solver.memory[0].solved).toBe(NUMBER_OF_CELLS)
          }
 
          // Also check when the sudoku was just updated
          {
-            solver.solved = 0
-            expect(checkForSolved(testSudoku, solver)).toStrictEqual({
+            solver.memory[0].solved = 0
+            expect(checkForSolved(testSudoku, solver.memory[0])).toStrictEqual({
                success: true,
                successcount: NUMBER_OF_CELLS
             })
-            expect(solver.solved).toBe(NUMBER_OF_CELLS)
+            expect(solver.memory[0].solved).toBe(NUMBER_OF_CELLS)
          }
 
          expect(window._custom.alert).toHaveBeenCalledTimes(2)
@@ -90,14 +94,14 @@ describe('strategies', () => {
       // solver.solved is set in the beforeEach
       test('succeeds when the sudoku has new solved cells', () => {
          const testSudoku = PureSudoku.fromRepresentation(testBoards["Simple sudoku"])
-         expect(checkForSolved(testSudoku, solver).success).toBe(true)
-         expect(solver.solved).not.toBe(0)
+         expect(checkForSolved(testSudoku, solver.memory[0]).success).toBe(true)
+         expect(solver.memory[0].solved).not.toBe(0)
       })
 
       test('and then fails when the sudoku doesnt have any new solved cells', () => {
          const testSudoku = PureSudoku.fromRepresentation(testBoards["Simple sudoku"])
-         checkForSolved(testSudoku, solver)
-         expect(checkForSolved(testSudoku, solver).success).toBe(false)
+         checkForSolved(testSudoku, solver.memory[0])
+         expect(checkForSolved(testSudoku, solver.memory[0]).success).toBe(false)
       })
    })
 
@@ -106,15 +110,15 @@ describe('strategies', () => {
          // Just one candidate
          let testSudoku = new PureSudoku()
          testSudoku.set(7, 7).to(4)
-         expect(updateCandidates(testSudoku, solver).success).toBe(true)
+         expect(updateCandidates(testSudoku).success).toBe(true)
 
          // The last candidate
          testSudoku.set(8, 8).to(9)
-         expect(updateCandidates(testSudoku, solver).success).toBe(true)
+         expect(updateCandidates(testSudoku).success).toBe(true)
 
          // The first candidate
          testSudoku.set(0, 0).to(1)
-         expect(updateCandidates(testSudoku, solver).success).toBe(true)
+         expect(updateCandidates(testSudoku).success).toBe(true)
 
          // The other cells candidates have changed
          expect(testSudoku.data[0][7]).not.toContain(1)
@@ -131,8 +135,8 @@ describe('strategies', () => {
          testSudoku.set(3, 6).to(5)
          testSudoku.set(6, 8).to(1)
          testSudoku.set(7, 8).to(2)
-         updateCandidates(testSudoku, solver)
-         expect(hiddenSingles(testSudoku, solver).success).toBe(true)
+         updateCandidates(testSudoku)
+         expect(hiddenSingles(testSudoku).success).toBe(true)
 
          // Make sure it doesn't change anything
          expect(testSudoku.data[2][7]).toStrictEqual([5])
@@ -142,8 +146,8 @@ describe('strategies', () => {
          const testSudoku = new PureSudoku()
          testSudoku.set(2, 7).to(5)
          testSudoku.set(7, 8).to(2)
-         updateCandidates(testSudoku, solver)
-         expect(hiddenSingles(testSudoku, solver).success).toBe(false)
+         updateCandidates(testSudoku)
+         expect(hiddenSingles(testSudoku).success).toBe(false)
       })
    })
 
@@ -152,7 +156,7 @@ describe('strategies', () => {
          const testSudoku = new PureSudoku()
          testSudoku.set(0, 0).to(1, 2)
          testSudoku.set(0, 1).to(1, 2)
-         expect(pairsTriplesAndQuads(testSudoku, solver).success).toBe(true)
+         expect(pairsTriplesAndQuads(testSudoku).success).toBe(true)
 
          // Actual bug - same in box
          testSudoku.import(`
@@ -166,8 +170,8 @@ describe('strategies', () => {
             ..9......
             ..3......
          `)
-         updateCandidates(testSudoku, solver)
-         expect(pairsTriplesAndQuads(testSudoku, solver).success).toBe(true)
+         updateCandidates(testSudoku)
+         expect(pairsTriplesAndQuads(testSudoku).success).toBe(true)
       })
 
       test('Quads', () => {
@@ -181,7 +185,7 @@ describe('strategies', () => {
          testSudoku.set(5, 3).to(1, 6, 8, 9)
          testSudoku.set(5, 4).to(2, 8) // <
          testSudoku.set(5, 5).to(3, 7, 8) // <
-         expect(pairsTriplesAndQuads(testSudoku, solver).success).toBe(true)
+         expect(pairsTriplesAndQuads(testSudoku).success).toBe(true)
       })
 
       test('No cell contains all candidates', () => {
@@ -190,7 +194,7 @@ describe('strategies', () => {
          testSudoku.set(0, 0).to(1, 2)
          testSudoku.set(0, 1).to(2, 3)
          testSudoku.set(0, 2).to(3, 1)
-         expect(pairsTriplesAndQuads(testSudoku, solver).success).toBe(true)
+         expect(pairsTriplesAndQuads(testSudoku).success).toBe(true)
       })
 
       test('Fails', () => {
@@ -209,9 +213,9 @@ describe('strategies', () => {
             .........
             .........
          `)
-         updateCandidates(testSudoku, solver)
+         updateCandidates(testSudoku)
 
-         expect(pairsTriplesAndQuads(testSudoku, solver)).toStrictEqual({
+         expect(pairsTriplesAndQuads(testSudoku)).toStrictEqual({
             success: false,
             successcount: SuccessError
          })
@@ -238,8 +242,8 @@ describe('strategies', () => {
             .........
             .........
          `)
-         updateCandidates(testSudoku, solver)
-         expect(pairsTriplesAndQuads(testSudoku, solver).success).toBe(true)
+         updateCandidates(testSudoku)
+         expect(pairsTriplesAndQuads(testSudoku).success).toBe(true)
          expect(testSudoku.data[2][0]).toStrictEqual([6, 7])
       })
 
@@ -256,8 +260,8 @@ describe('strategies', () => {
             .........
             .........
          `)
-         updateCandidates(testSudoku, solver)
-         expect(pairsTriplesAndQuads(testSudoku, solver).successcount).toBe(SuccessError)
+         updateCandidates(testSudoku)
+         expect(pairsTriplesAndQuads(testSudoku).successcount).toBe(SuccessError)
       })
    })
 
@@ -275,8 +279,8 @@ describe('strategies', () => {
             .........
             .........
          `)
-         updateCandidates(testSudoku, solver)
-         expect(hiddenPairsTriplesAndQuads(testSudoku, solver).success).toBe(true)
+         updateCandidates(testSudoku)
+         expect(hiddenPairsTriplesAndQuads(testSudoku).success).toBe(true)
          expect(testSudoku.data[0][8]).toStrictEqual([7, 8])
          expect(testSudoku.data[8][8]).not.toStrictEqual([7, 8])
       })
@@ -294,8 +298,8 @@ describe('strategies', () => {
             .........
             .......7.
          `)
-         updateCandidates(testSudoku, solver)
-         expect(hiddenPairsTriplesAndQuads(testSudoku, solver).success).toBe(true)
+         updateCandidates(testSudoku)
+         expect(hiddenPairsTriplesAndQuads(testSudoku).success).toBe(true)
          expect(testSudoku.data[4][6]).toStrictEqual([3, 7])
          expect(testSudoku.data[5][0]).not.toStrictEqual([3, 7])
       })
@@ -313,10 +317,10 @@ describe('strategies', () => {
             ..6...84.
             .........
          `)
-         updateCandidates(testSudoku, solver)
-         expect(hiddenPairsTriplesAndQuads(testSudoku, solver).success).toBe(true)
-         expect(hiddenPairsTriplesAndQuads(testSudoku, solver).success).toBe(true)
-         expect(hiddenPairsTriplesAndQuads(testSudoku, solver).success).toBe(false)
+         updateCandidates(testSudoku)
+         expect(hiddenPairsTriplesAndQuads(testSudoku).success).toBe(true)
+         expect(hiddenPairsTriplesAndQuads(testSudoku).success).toBe(true)
+         expect(hiddenPairsTriplesAndQuads(testSudoku).success).toBe(false)
       })
 
       // The only time no bug was discovered
@@ -333,8 +337,8 @@ describe('strategies', () => {
             .........
             .........
          `)
-         updateCandidates(testSudoku, solver)
-         expect(hiddenPairsTriplesAndQuads(testSudoku, solver).success).toBe(true)
+         updateCandidates(testSudoku)
+         expect(hiddenPairsTriplesAndQuads(testSudoku).success).toBe(true)
       })
 
       // Unreal. Somehow every candidate in column 7 appears 2-4 times
@@ -356,7 +360,7 @@ describe('strategies', () => {
             | 1    3    246   | 7   5   46   | 26   9   8    |
             +-----------------+--------------+---------------+
          `)
-         expect(hiddenPairsTriplesAndQuads(testSudoku, solver)).toStrictEqual({
+         expect(hiddenPairsTriplesAndQuads(testSudoku)).toStrictEqual({
             success: true,
             successcount: 1
          })
@@ -375,8 +379,8 @@ describe('strategies', () => {
             .........
             .875.6..2
          `)
-         updateCandidates(testSudoku, solver)
-         expect(hiddenPairsTriplesAndQuads(testSudoku, solver)).toStrictEqual({
+         updateCandidates(testSudoku)
+         expect(hiddenPairsTriplesAndQuads(testSudoku)).toStrictEqual({
             success: false
          })
       })
@@ -394,8 +398,8 @@ describe('strategies', () => {
             .........
             .........
          `)
-         updateCandidates(testSudoku, solver)
-         expect(hiddenPairsTriplesAndQuads(testSudoku, solver).successcount).toBe(SuccessError)
+         updateCandidates(testSudoku)
+         expect(hiddenPairsTriplesAndQuads(testSudoku).successcount).toBe(SuccessError)
 
          testSudoku.import(`
             ..3......
@@ -408,8 +412,8 @@ describe('strategies', () => {
             .........
             .........
          `)
-         updateCandidates(testSudoku, solver)
-         expect(hiddenPairsTriplesAndQuads(testSudoku, solver).successcount).toBe(SuccessError)
+         updateCandidates(testSudoku)
+         expect(hiddenPairsTriplesAndQuads(testSudoku).successcount).toBe(SuccessError)
 
          testSudoku.import(`
             .........
@@ -422,8 +426,8 @@ describe('strategies', () => {
             .........
             .........
          `)
-         updateCandidates(testSudoku, solver)
-         expect(hiddenPairsTriplesAndQuads(testSudoku, solver).successcount).toBe(SuccessError)
+         updateCandidates(testSudoku)
+         expect(hiddenPairsTriplesAndQuads(testSudoku).successcount).toBe(SuccessError)
       })
    });
 
@@ -441,8 +445,8 @@ describe('strategies', () => {
             .........
             .........
          `)
-         updateCandidates(testSudoku, solver)
-         expect(intersectionRemoval(testSudoku, solver).success).toBe(true)
+         updateCandidates(testSudoku)
+         expect(intersectionRemoval(testSudoku).success).toBe(true)
          expect(testSudoku.data[1][3]).toStrictEqual([1, 2, 3, 5, 6, 7, 8, 9])
       })
 
@@ -459,8 +463,8 @@ describe('strategies', () => {
             .....6...
             ......4..
          `)
-         updateCandidates(testSudoku, solver)
-         expect(intersectionRemoval(testSudoku, solver).success).toBe(true)
+         updateCandidates(testSudoku)
+         expect(intersectionRemoval(testSudoku).success).toBe(true)
          expect(testSudoku.data[0][4]).toStrictEqual([1, 2, 3, 5, 6, 7, 8, 9])
       })
    });
@@ -479,8 +483,8 @@ describe('strategies', () => {
             .........
             .........
          `)
-         updateCandidates(testSudoku, solver)
-         expect(xWing(testSudoku, solver).success).toBe(true)
+         updateCandidates(testSudoku)
+         expect(xWing(testSudoku).success).toBe(true)
          expect(testSudoku.data[5][2]).toStrictEqual([1])
          expect(testSudoku.data[7][5]).toStrictEqual([2, 3, 4, 5, 6, 7, 8, 9])
       })
@@ -502,8 +506,8 @@ describe('strategies', () => {
             | 258  258 1258  | 7   9   3    | 124 6   14   |
             +----------------+--------------+--------------+
          `)
-         updateCandidates(testSudoku, solver)
-         expect(xWing(testSudoku, solver).success).toBe(true)
+         updateCandidates(testSudoku)
+         expect(xWing(testSudoku).success).toBe(true)
          expect(checkValidity(testSudoku)).toStrictEqual({ ok: true as true })
       })
    })
@@ -522,8 +526,8 @@ describe('strategies', () => {
             000000000
             000000000
          `)
-         updateCandidates(testSudoku, solver)
-         expect(swordfish(testSudoku, solver).success).toBe(true)
+         updateCandidates(testSudoku)
+         expect(swordfish(testSudoku).success).toBe(true)
          expect(checkValidity(testSudoku)).toStrictEqual({ ok: true as true })
       })
 
@@ -544,16 +548,16 @@ describe('strategies', () => {
             | 18  7   5    | 468 2   1468  | 146 3   9      |
             +--------------+---------------+----------------+
          `)
-         updateCandidates(testSudoku, solver)
-         expect(swordfish(testSudoku, solver).success).toBe(true)
+         updateCandidates(testSudoku)
+         expect(swordfish(testSudoku).success).toBe(true)
       })
 
       test('3', () => {
          const testSudoku = new PureSudoku()
          testSudoku.import(boards["swordfish wow"])
-         updateCandidates(testSudoku, solver)
-         hiddenPairsTriplesAndQuads(testSudoku, solver)
-         expect(swordfish(testSudoku, solver).success).toBe(true)
+         updateCandidates(testSudoku)
+         hiddenPairsTriplesAndQuads(testSudoku)
+         expect(swordfish(testSudoku).success).toBe(true)
       })
    })
 
@@ -575,8 +579,8 @@ describe('strategies', () => {
             | 79    2   679    | 568 1   3    | 589   59   4      |
             +------------------+--------------+-------------------+
          `)
-         updateCandidates(testSudoku, solver)
-         expect(jellyfish(testSudoku, solver).success).toBe(true)
+         updateCandidates(testSudoku)
+         expect(jellyfish(testSudoku).success).toBe(true)
       })
    })
 
@@ -595,8 +599,8 @@ describe('strategies', () => {
             ......2..
             .........
          `)
-         updateCandidates(testSudoku, solver)
-         expect(skyscraper(testSudoku, solver).success).toBe(true)
+         updateCandidates(testSudoku)
+         expect(skyscraper(testSudoku).success).toBe(true)
       })
 
       test('2', () => {
@@ -612,8 +616,8 @@ describe('strategies', () => {
             .........
             .1....2..
          `)
-         updateCandidates(testSudoku, solver)
-         expect(skyscraper(testSudoku, solver).success).toBe(true)
+         updateCandidates(testSudoku)
+         expect(skyscraper(testSudoku).success).toBe(true)
       })
 
       test('3', () => {
@@ -629,8 +633,8 @@ describe('strategies', () => {
             ...4.....
             ........9
          `)
-         updateCandidates(testSudoku, solver)
-         expect(skyscraper(testSudoku, solver).success).toBe(false)
+         updateCandidates(testSudoku)
+         expect(skyscraper(testSudoku).success).toBe(false)
       })
    })
 
@@ -642,8 +646,8 @@ describe('strategies', () => {
          testSudoku.set(2, 2).to(1, 3) // AC
          testSudoku.set(3, 1).to(2, 3) // BC
 
-         updateCandidates(testSudoku, solver)
-         expect(yWing(testSudoku, solver).success).toBe(true)
+         updateCandidates(testSudoku)
+         expect(yWing(testSudoku).success).toBe(true)
       })
 
       test('2', () => {
@@ -652,8 +656,8 @@ describe('strategies', () => {
          testSudoku.set(2, 5).to(1, 3) // AC
          testSudoku.set(0, 1).to(2, 3) // BC
 
-         updateCandidates(testSudoku, solver)
-         expect(yWing(testSudoku, solver).success).toBe(true)
+         updateCandidates(testSudoku)
+         expect(yWing(testSudoku).success).toBe(true)
       })
 
       test('3', () => {
@@ -662,8 +666,8 @@ describe('strategies', () => {
          testSudoku.set(0, 1).to(1, 2) // AC
          testSudoku.set(0, 4).to(2, 3) // BC
 
-         updateCandidates(testSudoku, solver)
-         expect(yWing(testSudoku, solver).success).toBe(false)
+         updateCandidates(testSudoku)
+         expect(yWing(testSudoku).success).toBe(false)
       })
 
       test('4', () => {
@@ -684,11 +688,11 @@ describe('strategies', () => {
             +-----------+-------------+------------+
          `)
 
-         updateCandidates(testSudoku, solver)
-         expect(yWing(testSudoku, solver).success).toBe(true)
-         expect(yWing(testSudoku, solver).success).toBe(true)
-         expect(yWing(testSudoku, solver).success).toBe(true)
-         expect(yWing(testSudoku, solver).success).toBe(true)
+         updateCandidates(testSudoku)
+         expect(yWing(testSudoku).success).toBe(true)
+         expect(yWing(testSudoku).success).toBe(true)
+         expect(yWing(testSudoku).success).toBe(true)
+         expect(yWing(testSudoku).success).toBe(true)
       })
    })
 
@@ -707,8 +711,8 @@ describe('strategies', () => {
             .........
             .........
          `)
-         updateCandidates(testSudoku, solver)
-         expect(twoMinusOneLines(testSudoku, solver).success).toBe(true)
+         updateCandidates(testSudoku)
+         expect(twoMinusOneLines(testSudoku).success).toBe(true)
          expect(testSudoku.data[0][0]).toContain(1)
       })
    })
@@ -727,20 +731,20 @@ describe('strategies', () => {
             ..5.6.4..
             .........
          `)
-         updateCandidates(testSudoku, solver)
-         expect(xyLoop(testSudoku, solver).success).toBe(true)
+         updateCandidates(testSudoku)
+         expect(xyLoop(testSudoku).success).toBe(true)
       })
 
       test('2', () => {
          const testSudoku = new PureSudoku()
          testSudoku.import(`000000080020000000003006009003006000003400000100000000000050000000000700000400009003400000103400009003006009023006700000050000020000709000400009000000080120000000000050000100400009000000700000000080000400009020000009000006000003000000120000000003400000003400000020000000000000009000006000000050000000000080100000000000000700000000709000006000000000080003000700100000000003400700003400009020000000000050000000000709000050000100000000023000700000000080023400700003400009000006000000400009020000000003000009000400000100000000003000009000000080000000700000050000000006000000006000000000700003000009000050000020000000003000009100000000000400000000000080100000000000000080000050000000400000000000700000006000020000000000000009003000000`)
-         expect(xyLoop(testSudoku, solver).success).toBe(true)
+         expect(xyLoop(testSudoku).success).toBe(true)
       })
 
       test('Not xy chain', () => {
          const testSudoku = new PureSudoku()
          testSudoku.import(`000006000003000000000400000000000700000000009020000000100000080100000080000050000020000000000000009000000080000050000100000000000006000000000700000400000003000000100000000000000700000050000003000080003000080000400000000006000000000009020000000000000780020450000100000700000006000003450000100050000103050080120000780000000009000000089020450000100006009023000009000000700100050009103050080120000080000406000003000000020450000100006709020000009000450000000000080100050000120000700000406000000050000000000080020000000000400000000006000000000700000000009003000000100000000000400000100000000003000000000000089000050080000050009020000000000006000000000700000000709000006000000000709100000000020000000003000000000400000000050000000000080`)
-         expect(xyLoop(testSudoku, solver).success).toBe(false)
+         expect(xyLoop(testSudoku).success).toBe(false)
       })
    })
 
@@ -748,20 +752,20 @@ describe('strategies', () => {
       test('1', () => {
          const testSudoku = new PureSudoku()
          testSudoku.import(`000006000003000000000400000000000700000000009020000000100000080100000080000050000020000000000000009000000080000050000100000000000006000000000700000400000003000000100000000000000700000050000003000080003000080000400000000006000000000009020000000000000780020450000100000700000006000003450000100050000103050080120000780000000009000000089020450000100006009023000009000000700100050009103050080120000080000406000003000000020450000100006709020000009000450000000000080100050000120000700000406000000050000000000080020000000000400000000006000000000700000000009003000000100000000000400000100000000003000000000000089000050080000050009020000000000006000000000700000000709000006000000000709100000000020000000003000000000400000000050000000000080`)
-         updateCandidates(testSudoku, solver)
-         expect(xyChain(testSudoku, solver).success).toBe(true)
+         updateCandidates(testSudoku)
+         expect(xyChain(testSudoku).success).toBe(true)
       })
 
       test('2', () => {
          const testSudoku = new PureSudoku()
          testSudoku.import(`000000080020000000000006009003006000003400000100000000000050000000000700000400009003400000100000000003006009000006700000050000000000709000400009000000080020000000000050000000400009000000700000000080000400009020000000000006000003000000100000000003400000003400000020000000000000009000006000000050000000000080100000000000000700000000709000006000000000080003000700100000000003400700003400009020000000000050000000000709000050000100000000020000000000000080003400700003400009000006000000400009020000000003000009000400000100000000003000009000000080000000700000050000000006000000006000000000700003000009000050000020000000003000009100000000000400000000000080100000000000000080000050000000400000000000700000006000020000000000000009003000000`)
-         expect(xyChain(testSudoku, solver).success).toBe(true)
+         expect(xyChain(testSudoku).success).toBe(true)
       })
 
       test('3', () => {
          const testSudoku = new PureSudoku()
          testSudoku.import(`000000700023400000023400000000050000003400000000006080000000009100000080100006000003406080003406080003400080103000000103400000000000009020000000000050000000000700000050000100000000000000009020000080020000700000006780000006080003000000000400000020006000000050000000000700120000000000000080003000000000400000000000009100006000000406080000406080100000000000000700000000009000050000000006080020000000003000000023000080000000009023000080000006000120000000000400000000000700100000080000050000020000080020000080000050000000400000000006000100000000003000000000000700000000009100000009003400700003400000003000089003050700000000780100050000000006000020000000100000009003000700000006000003000009003050700020000000100050000000400000000000080`)
-         expect(xyChain(testSudoku, solver).success).toBe(true)
+         expect(xyChain(testSudoku).success).toBe(true)
          expect(checkValidity(testSudoku)).toStrictEqual({ ok: true as true })
       })
    })

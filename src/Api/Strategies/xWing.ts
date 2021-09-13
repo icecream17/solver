@@ -1,7 +1,7 @@
 import { ALL_CANDIDATES, IndexToNine, INDICES_TO_NINE, SudokuDigits } from "../../Types";
 import PureSudoku from "../Spaces/PureSudoku"
-import Solver from "../Solver";
-import { CellID, colorGroup } from "../Utils";
+import { CellID } from "../Utils";
+import { colorGroup } from "../Utils.dependent";
 
 export function _innerWingLogic(
    candidate: SudokuDigits,
@@ -59,7 +59,7 @@ export function _innerWingLogic(
  *
  * 2 candidates in 2 columns, which align on 2 rows
  */
-export default function xWing (sudoku: PureSudoku, _solver: Solver) {
+export default function xWing (sudoku: PureSudoku) {
    let successcount = 0
 
    const candidateLocations = sudoku.getCandidateLocations()

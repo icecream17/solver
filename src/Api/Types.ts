@@ -1,7 +1,6 @@
 // @flow
 
 import PureSudoku from "./Spaces/PureSudoku";
-import Solver from "./Solver";
 
 export const SuccessError = -1
 export type StrategyResult = Readonly<{
@@ -20,5 +19,10 @@ export type StrategyError = Readonly<{
 }>
 export type Strategy = (
    ((arg: PureSudoku) => StrategyResult) |
-   ((arg: PureSudoku, solver: Solver) => StrategyResult)
+   ((arg: PureSudoku, memory: StrategyMemory[number]) => StrategyResult)
 )
+
+// Information strategies might want to know
+export class StrategyMemory extends Array {
+   public [0] = { solved: 0 }
+}

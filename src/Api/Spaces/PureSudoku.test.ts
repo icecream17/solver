@@ -20,6 +20,8 @@ test('it imports', () => {
       expect(testSudoku.import(board).success).toBe(true)
       expect(testSudoku._to81()).toBe(new PureSudoku(board)._to81())
    }
+
+   expect(testSudoku.import(`https://www.sudokuwiki.org/sudoku.htm?bd=000000001004060208070320400900018000005000600000540009008037040609080300100000000`).success).toBe(true)
 })
 
 test('setting a candidate', () => {

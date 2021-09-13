@@ -1,13 +1,13 @@
 import { ALL_CANDIDATES, INDICES_TO_NINE, SudokuDigits } from "../../Types";
 import PureSudoku from "../Spaces/PureSudoku";
-import Solver from "../Solver";
-import { boxAt, colorGroup, CellID, removeFromArray } from "../Utils";
+import { boxAt, CellID, removeFromArray } from "../Utils";
+import { colorGroup } from "../Utils.dependent";
 
 /**
  * If all candidate N in group G attacks range R,
  * you can remove N from R
  */
-export default function intersectionRemoval(sudoku: PureSudoku, _solver: Solver) {
+export default function intersectionRemoval(sudoku: PureSudoku) {
    function _removeCandidate(candidate: SudokuDigits, cellID: CellID) {
       const newCandidates = sudoku.data[cellID.row][cellID.column]
       removeFromArray(candidate, newCandidates)

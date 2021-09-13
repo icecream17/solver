@@ -1,11 +1,10 @@
 import { INDICES_TO_NINE } from "../../Types"
 import PureSudoku from "../Spaces/PureSudoku"
-import Solver from "../Solver"
 import { SuccessError } from "../Types"
 import { affects, algebraic } from "../Utils"
 
 // O(n^5)
-export default function updateCandidates(sudoku: PureSudoku, _solver: Solver) {
+export default function updateCandidates(sudoku: PureSudoku) {
    let updated = 0
 
    for (const i of INDICES_TO_NINE) {

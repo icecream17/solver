@@ -1,10 +1,9 @@
 import { AlertType, NUMBER_OF_CELLS } from "../../Types"
 import PureSudoku from "../Spaces/PureSudoku"
-import Solver from "../Solver"
-import { SuccessError } from "../Types"
+import { StrategyMemory, SuccessError } from "../Types"
 import checkValidity from "./checkValidity"
 
-export default function checkForSolved(sudoku: PureSudoku, solver: Solver) {
+export default function checkForSolved(sudoku: PureSudoku, memory: StrategyMemory[0]) {
    const validity = checkValidity(sudoku)
    if (!validity.ok) {
       window._custom.alert(validity.message, AlertType.ERROR)
@@ -16,12 +15,12 @@ export default function checkForSolved(sudoku: PureSudoku, solver: Solver) {
    }
 
    // Should this be before checkValidity?
-   if (typeof solver.solved !== "number") {
-      throw TypeError(`solver.solved is not a number - got ${String(solver.solved)}`)
-   } else if (!Number.isInteger(solver.solved)) {
-      throw TypeError(`solver.solved is not an integer - got ${solver.solved}`)
-   } else if (0 > solver.solved || solver.solved > NUMBER_OF_CELLS) {
-      throw TypeError(`impossible amount of solver.solved - got ${solver.solved}`)
+   if (typeof memory.solved !== "number") {
+      throw TypeError(`memory.solved is not a number - got ${String(memory.solved)}`)
+   } else if (!Number.isInteger(memory.solved)) {
+      throw TypeError(`memory.solved is not an integer - got ${memory.solved}`)
+   } else if (0 > memory.solved || memory.solved > NUMBER_OF_CELLS) {
+      throw TypeError(`impossible amount of memory.solved - got ${memory.solved}`)
    }
 
    let totalSolved = 0
@@ -35,16 +34,16 @@ export default function checkForSolved(sudoku: PureSudoku, solver: Solver) {
 
    if (totalSolved === NUMBER_OF_CELLS) {
       window._custom.alert("Finished! :D", AlertType.SUCCESS)
-      solver.solved = NUMBER_OF_CELLS
+      memory.solved = NUMBER_OF_CELLS
       return {
          success: true,
          successcount: NUMBER_OF_CELLS
       } as const
    }
 
-   if (totalSolved !== solver.solved) {
-      const difference = totalSolved - solver.solved
-      solver.solved = totalSolved
+   if (totalSolved !== memory.solved) {
+      const difference = totalSolved - memory.solved
+      memory.solved = totalSolved
 
       return {
          success: true,

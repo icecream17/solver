@@ -1,13 +1,12 @@
 import { ALL_CANDIDATES, INDICES_TO_NINE } from "../../Types";
-import PureSudoku from "../Spaces/PureSudoku"
-import Solver from "../Solver";
+import PureSudoku from "../Spaces/PureSudoku";
 import { CellID } from "../Utils";
 import { _innerWingLogic } from "./xWing";
 
 /**
  * Same as xWing and swordfish, but with 4 lines
  */
-export default function jellyfish(sudoku: PureSudoku, _solver: Solver) {
+export default function jellyfish(sudoku: PureSudoku) {
    let successcount = 0
 
    const candidateLocations = sudoku.getCandidateLocations()

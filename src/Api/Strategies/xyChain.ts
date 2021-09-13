@@ -36,7 +36,7 @@ export default function xyChain (sudoku: PureSudoku) {
     * @param endsConnect If ends don't connect, only eliminate from the ends
     */
    function checkLoop (color1: CandidateID[], color2: CandidateID[]) {
-      const start = color1.at(-1) as CandidateID
+      const start = color1[color1.length - 1] // TODO: Change when chromebook updates
       const end = color2[0]
       const seenByColor1 = seenByEnd(start)
       const seenByColor2 = seenByEnd(end)

@@ -27,9 +27,9 @@ class Main extends React.Component<MainProps> {
    render() {
       return (
          <main className="App-main">
-            <DataContainer />
-            <Sudoku whenConstruct={this.props.whenSudokuConstructs} />
             <Coords />
+            <Sudoku whenConstruct={this.props.whenSudokuConstructs} />
+            <DataContainer />
          </main>
       );
    }

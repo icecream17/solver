@@ -4,6 +4,14 @@ Note: Many earlier versions are not specified, that's too much work.
 
 When a `@types` dependency updates, they almost always don't affect anything.
 
+## v0.24.4
+
+- (use) Lazyload PromptWindow / AlertNotice for faster initial loading
+- (a11y) Correct tabbing order (Data vs Sudoku) to match visuals.
+- (support) Don't ban Opera Mini
+- (support) Don't use `Array#at` for chromebook compatibility
+- (docs) Update everything
+
 ## v0.24.3
 
 - (use) Links like <https://something.something/blahblahlbah?sudoku=123456789123456789123456789123456789123456789123456789123456789123456789123456789> can be imported directly! (As long as there are 81 or 729 digits in the url)

@@ -23,10 +23,10 @@ test("Strategy sections exist", () => {
    expect(screen.getByRole('group', { name: 'controls' })).toBeInTheDocument()
 })
 
-test("The alert system", () => {
+test("The alert system", async () => {
    const testText = "42 tnhbtxlvp320ajq6lcpy" // random string
    window._custom.alert(testText)
-   expect(screen.getByText(testText)).toBeInTheDocument()
+   expect(await screen.findByText(testText)).toBeInTheDocument()
 
    const closeButton = screen.getByRole('button', { name: 'Ok' })
    expect(closeButton).toBeInTheDocument()
@@ -35,7 +35,7 @@ test("The alert system", () => {
 
    // Alert type
    window._custom.alert(testText, AlertType.ERROR)
-   const closeButton2 = screen.getByRole('button', { name: 'Ok' })
+   const closeButton2 = await screen.findByRole('button', { name: 'Ok' })
    expect(closeButton2.parentElement).toHaveClass(AlertType.ERROR)
    userEvent.click(closeButton2)
 })
@@ -45,8 +45,7 @@ test("The prompt system", async () => {
 
    // Cancel
    const promptPromise = asyncPrompt(testText)
-   await forComponentsToUpdate()
-   expect(screen.getByText(testText)).toBeInTheDocument()
+   expect(await screen.findByText(testText)).toBeInTheDocument()
    const closeButton = screen.getByRole('button', { name: 'Cancel' })
    expect(closeButton).toBeInTheDocument()
    userEvent.click(closeButton)

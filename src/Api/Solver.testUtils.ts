@@ -5,7 +5,7 @@ import { forComponentsToUpdate } from "../utils";
 export async function importBoard(text: string) {
    userEvent.click(screen.getByRole("button", { name: "import" }))
    await forComponentsToUpdate()
-   userEvent.type(screen.getByRole("textbox", { name: "Enter data (todo: clarify)" }), text)
+   userEvent.type(await screen.findByRole("textbox", { name: "Enter data (todo: clarify)" }), text)
    userEvent.click(screen.getByRole("button", { name: "Submit" }))
    await forComponentsToUpdate()
 }

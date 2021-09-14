@@ -1,6 +1,6 @@
 {
   "name": "solver",
-  "version": "0.24.3",
+  "version": "0.24.4",
   "private": true,
   "homepage": "https://icecream17.github.io/solver",
   "dependencies": {
@@ -31,7 +31,6 @@
     "production": [
       ">0.2%",
       "not dead",
-      "not OperaMini all",
       "since 2021"
     ],
     "development": [

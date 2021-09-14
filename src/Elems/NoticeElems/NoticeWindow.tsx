@@ -5,11 +5,11 @@
  * But it's still... _aside_ ```<Main />```
  */
 
-import React from 'react'
+import React, { lazy } from 'react'
 import App from '../../App';
 import { NoticeInfo, NoticeType, _ReactProps } from '../../Types';
-import AlertNotice from './AlertNotice';
-import PromptWindow from './PromptWindow';
+const AlertNotice = lazy(() => import('./AlertNotice'));
+const PromptWindow = lazy(() => import('./PromptWindow'));
 
 type NoticeProps = Readonly<{
    todo: NoticeInfo[],

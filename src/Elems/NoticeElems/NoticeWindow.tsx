@@ -5,7 +5,7 @@
  * But it's still... _aside_ ```<Main />```
  */
 
-import React, { lazy } from 'react'
+import React, { lazy, Suspense } from 'react'
 import App from '../../App';
 import { NoticeInfo, NoticeType, _ReactProps } from '../../Types';
 const AlertNotice = lazy(() => import('./AlertNotice'));
@@ -26,14 +26,24 @@ export default class Notice extends React.Component<NoticeProps> {
          return <></>
       }
 
+      const loading = <span>Loading...</span>
       const nextTodo = this.props.todo[0]
       switch (nextTodo.type) {
          case NoticeType.ALERT:
-            return <AlertNotice type={nextTodo.alertType} message={nextTodo.message} finish={this.props.finish} />
+            return (
+               <Suspense fallback={loading}>
+                  <AlertNotice type={nextTodo.alertType} message={nextTodo.message} finish={this.props.finish} />
+               </Suspense>
+            )
          case NoticeType.PROMPT:
-            return <PromptWindow {...nextTodo} finish={this.props.finish} />
+            return (
+               <Suspense fallback={loading}>
+                  <PromptWindow {...nextTodo} finish={this.props.finish} />
+               </Suspense>
+            )
          default:
-            // @ts-expect-error Here since TypeScript is now sure that `.type` doesn't exist
+            console.error(nextTodo)
+            // @ts-expect-error TypeScript is now sure that nextTodo can't be anything. So `.type` doesn't exist, right?
             throw new TypeError(`unknown todo type: ${String(nextTodo.type)}`)
       }
    }

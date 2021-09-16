@@ -1,12 +1,11 @@
 
 import './AlertNotice.css'
 import React from 'react'
-import App from '../../App'
 import Control from '../Control'
 import { AlertType } from '../../Types'
 
 type AlertProps = {
-   finish: typeof App.prototype.finishNotice
+   whenFinish: () => void
    message: string
    type: AlertType
 }
@@ -23,7 +22,7 @@ export default class AlertNotice extends React.Component<AlertProps> {
       return (
          <div className={`AlertNotice ${this.props.type}`} role="status">
             <p>{text}</p>
-            <Control className="AlertOk" onClick={this.props.finish}>Ok</Control>
+            <Control className="AlertOk" onClick={this.props.whenFinish}>Ok</Control>
          </div>
       )
    }

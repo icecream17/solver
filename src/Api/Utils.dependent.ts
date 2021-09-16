@@ -26,16 +26,16 @@ export function colorGroup (sudoku: PureSudoku, group: Iterable<CellID>, candida
    }
 }
 
-export function getCellsWithTwoCandidates (sudoku: PureSudoku) {
-   const cellsWithTwoCandidates = [] as CellID[]
+export function getCellsWithNCandidates (sudoku: PureSudoku, N: number) {
+   const cellsWithNCandidates = [] as CellID[]
    for (const row of INDICES_TO_NINE) {
       for (const column of INDICES_TO_NINE) {
-         if (sudoku.data[row][column].length === 2) {
-            cellsWithTwoCandidates.push(id(row, column))
+         if (sudoku.data[row][column].length === N) {
+            cellsWithNCandidates.push(id(row, column))
          }
       }
    }
 
-   return cellsWithTwoCandidates
+   return cellsWithNCandidates
 }
 

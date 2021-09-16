@@ -6,14 +6,13 @@
  */
 
 import React, { lazy, Suspense } from 'react'
-import App from '../../App';
 import { NoticeInfo, NoticeType, _ReactProps } from '../../Types';
 const AlertNotice = lazy(() => import('./AlertNotice'));
 const PromptWindow = lazy(() => import('./PromptWindow'));
 
 type NoticeProps = Readonly<{
    todo: NoticeInfo[],
-   finish: typeof App.prototype.finishNotice
+   whenFinish: () => void
 }> & _ReactProps
 
 /**
@@ -32,13 +31,13 @@ export default class Notice extends React.Component<NoticeProps> {
          case NoticeType.ALERT:
             return (
                <Suspense fallback={loading}>
-                  <AlertNotice type={nextTodo.alertType} message={nextTodo.message} finish={this.props.finish} />
+                  <AlertNotice type={nextTodo.alertType} message={nextTodo.message} whenFinish={this.props.whenFinish} />
                </Suspense>
             )
          case NoticeType.PROMPT:
             return (
                <Suspense fallback={loading}>
-                  <PromptWindow {...nextTodo} finish={this.props.finish} />
+                  <PromptWindow {...nextTodo} whenFinish={this.props.whenFinish} />
                </Suspense>
             )
          default:

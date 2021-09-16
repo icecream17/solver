@@ -1,7 +1,7 @@
 import { SudokuDigits } from "../../Types";
 import PureSudoku from "../Spaces/PureSudoku";
 import { affects, assertGet, CellID, sharedInArrays } from "../Utils";
-import { getCellsWithTwoCandidates, colorGroup } from "../Utils.dependent";
+import { getCellsWithNCandidates, colorGroup } from "../Utils.dependent";
 
 /**
  * The AC cell has A but not B
@@ -20,7 +20,7 @@ export default function yWing (sudoku: PureSudoku) {
    // Where A sees another A in AC
    // Where B sees another B in BC
 
-   const cellsWithTwoCandidates = getCellsWithTwoCandidates(sudoku)
+   const cellsWithTwoCandidates = getCellsWithNCandidates(sudoku, 2)
 
    // CWTC acronym for cellsWithTwoCandidates
    const affectsCWTC = new Map(

@@ -1,13 +1,12 @@
 
 import './PromptWindow.css'
 import React from 'react'
-import App from '../../App'
 import { PromptCallback } from '../../Types'
 import Control from '../Control'
 
 // Could also have other props (e.g. "type")
 type PromptWindowProps = {
-   finish: typeof App.prototype.finishNotice,
+   whenFinish: () => void,
 
    message: string,
    defaultResponse: string,
@@ -43,7 +42,7 @@ export default class PromptWindow extends React.Component<PromptWindowProps> {
       if (this.props.callback !== undefined) {
          this.props.callback(null)
       }
-      this.props.finish()
+      this.props.whenFinish()
    }
 
    submit() {
@@ -54,6 +53,6 @@ export default class PromptWindow extends React.Component<PromptWindowProps> {
             throw new ReferenceError("Cannot submit property `value` of `null` (aka this.inputElement)")
          }
       }
-      this.props.finish()
+      this.props.whenFinish()
    }
 }

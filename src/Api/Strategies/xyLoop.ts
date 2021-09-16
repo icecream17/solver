@@ -2,7 +2,7 @@ import { SudokuDigits } from "../../Types";
 import PureSudoku from "../Spaces/PureSudoku";
 import Sudoku from "../Spaces/Sudoku";
 import { affects, assertGet, CandidateID, CellID, id, removeFromArray, sharedInSets } from "../Utils";
-import { getCellsWithTwoCandidates } from "../Utils.dependent";
+import { getCellsWithNCandidates } from "../Utils.dependent";
 
 /**
  * next = has
@@ -141,7 +141,7 @@ export default function xyLoop (sudoku: PureSudoku) {
       assertGet(affectsCWTC, cell).filter(sees => cellsWithTwoCandidates.includes(sees))
 
 
-   const cellsWithTwoCandidates = getCellsWithTwoCandidates(sudoku)
+   const cellsWithTwoCandidates = getCellsWithNCandidates(sudoku, 2)
 
    // CWTC acronym for cellsWithTwoCandidates
    const affectsCWTC = new Map(

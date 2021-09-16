@@ -95,7 +95,7 @@ class App extends React.Component<_UnusedProps, AppState> {
             <Aside sudoku={this.state.sudoku} />
 
             <GithubCorner />
-            <NoticeWindow todo={this.state.notices} finish={this.finishNotice} />
+            <NoticeWindow todo={this.state.notices} whenFinish={this.finishNotice} />
          </div>
       );
    }

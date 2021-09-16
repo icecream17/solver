@@ -1,7 +1,7 @@
 import { SudokuDigits } from "../../Types";
 import PureSudoku from "../Spaces/PureSudoku";
 import { affects, assertGet, CandidateID, CellID, id, sharedInSets } from "../Utils";
-import { getCellsWithTwoCandidates } from "../Utils.dependent";
+import { getCellsWithNCandidates } from "../Utils.dependent";
 import { highlightCell, colorCandidate, cellIsValidLoop } from "./xyLoop";
 
 
@@ -18,11 +18,11 @@ import { highlightCell, colorCandidate, cellIsValidLoop } from "./xyLoop";
  *
  * Basically no matter what, one of the ends has candidate.
  */
-export default function xyChain (sudoku: PureSudoku) {
+export default function xyChain(sudoku: PureSudoku) {
    // Very similar to seenByColor in xyLoop
-   function seenByEnd(end: [CandidateID, CandidateID]) {
+   function seenByEnd(end: CandidateID[]) {
       const seen = new Set<CandidateID>()
-      for (const {row, column, digit} of end) {
+      for (const { row, column, digit } of end) {
          for (const cell of affects(row, column)) {
             if (sudoku.data[cell.row][cell.column].includes(digit)) {
                seen.add(id(cell.row, cell.column, digit))
@@ -38,16 +38,16 @@ export default function xyChain (sudoku: PureSudoku) {
     *
     * @param endsConnect If ends don't connect, only eliminate from the ends
     */
-   function checkLoop (color1: CandidateID[], color2: CandidateID[]) {
-      const end1 = [color1[0], color1[color1.length - 1]] // TODO: Change when chromebook updates
-      const end2 = [color2[0], color2[color2.length - 1]]
-      const seenByColor1 = seenByEnd(end1)
-      const seenByColor2 = seenByEnd(end2)
+   function checkLoop(color1: CandidateID[], color2: CandidateID[]) {
+      const color1End = [color1[0], color1[color1.length - 1]] // TODO: Change when chromebook updates
+      const color2End = [color2[0], color2[color2.length - 1]]
+      const seenByColor1 = seenByEnd(color1End)
+      const seenByColor2 = seenByEnd(color2End)
       const seenByBoth = sharedInSets(seenByColor1, seenByColor2)
 
       if (seenByBoth.size > 0) {
-         highlightCell(sudoku, id(start.row, start.column), "orange")
-         highlightCell(sudoku, id(end.row, end.column), "orange")
+         highlightCell(sudoku, id(color1End[0].row, color1End[0].column), "orange")
+         highlightCell(sudoku, id(color2End[1].row, color2End[1].column), "orange")
 
          for (const candidate of color1) {
             colorCandidate(sudoku, candidate)
@@ -79,7 +79,7 @@ export default function xyChain (sudoku: PureSudoku) {
     * @param end The last cell in the loop needs to have *this* candidate
     * @returns false if failed, CellID[] is loop was found
     */
-   function findLoop (cell: CellID, start: CellID, next: SudokuDigits, end: SudokuDigits, color1: CandidateID[], color2: CandidateID[], loop: CellID[] = [cell]): ReturnType<typeof checkLoop> | false {
+   function findLoop(cell: CellID, start: CellID, next: SudokuDigits, end: SudokuDigits, color1: CandidateID[], color2: CandidateID[], loop: CellID[] = [cell]): ReturnType<typeof checkLoop> | false {
       // All cells AB sees with 2 candidates
       const validAffectsCell = __getFellowCWTC(cell).filter(fellow => cellIsValidLoop(sudoku, fellow, next, loop))
 
@@ -120,7 +120,7 @@ export default function xyChain (sudoku: PureSudoku) {
       assertGet(affectsCWTC, cell).filter(sees => cellsWithTwoCandidates.includes(sees))
 
 
-   const cellsWithTwoCandidates = getCellsWithTwoCandidates(sudoku)
+   const cellsWithTwoCandidates = getCellsWithNCandidates(sudoku, 2)
 
    // CWTC acronym for cellsWithTwoCandidates
    const affectsCWTC = new Map(

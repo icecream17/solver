@@ -4,6 +4,10 @@ Note: Many earlier versions are not specified, that's too much work.
 
 When a `@types` dependency updates, they almost always don't affect anything.
 
+## v0.24.6
+
+- (use) Fix directional bug in xyChain
+
 ## v0.24.5
 
 - (a11y) The StrategyItem's are labelled by their text

@@ -1,6 +1,6 @@
 
 .AlertNotice {
-   position: absolute;
+   position: fixed;
    bottom: 2vh;
    right: 2vw;
    height: fit-content;

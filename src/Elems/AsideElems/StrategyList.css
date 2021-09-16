@@ -30,8 +30,3 @@
 .StrategyItem.disabled:nth-child(even) {
    background-color: #31353c;
 }
-
-.StrategyItem.disabled > .StrategyLabel > .StrategyLabelTooltip {
-   background-color: rgb(42, 42, 46);
-   border: var(--regular-border) solid rgb(177, 156, 130);
-}

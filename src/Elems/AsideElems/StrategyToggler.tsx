@@ -36,7 +36,6 @@ export default class StrategyToggler extends React.Component<StrategyTogglerProp
             className="StrategyToggler"
             id={this.props.id}
             type="checkbox"
-            aria-label="toggle strategy"
             role="switch"
             onChange={this.callback.bind(this)}
             checked={this.state.checked}

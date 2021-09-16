@@ -7,6 +7,7 @@ import StrategyToggler from './StrategyToggler';
 import StrategyStatus, { StrategyStatusProps } from './StrategyStatus';
 import Solver from '../../Api/Solver';
 import { _expect } from '../../utils';
+import StrategyTogglerLabel from './StrategyTogglerLabel';
 
 export type StrategyItemProps = StrategyLabelProps & Readonly<{
    solver: Solver,
@@ -34,16 +35,19 @@ export type StrategyItemState = StrategyStatusProps & Readonly<{
  * - required
  */
 export default class StrategyItem extends React.Component<StrategyItemProps, StrategyItemState> {
-   id: string;
-   togglerId?: string;
+   id: `strategy-${string}`;
+   labelId: `label-for-strategy-${string}`;
+   togglerId?: `strategy-toggler-${string}`;
    constructor(props: StrategyItemProps) {
       _expect(StrategyItem, props).toHaveProperties("name", "solver", "index")
 
       super(props)
 
-      this.id = 'strategy-' + this.props.name.replaceAll(' ', '-')
+      const name = this.props.name.replaceAll(' ', '-')
+      this.id = `strategy-${name}` as const
+      this.labelId = `label-for-strategy-${name}` as const
       if (this.props.required === undefined) {
-         this.togglerId = 'strategy-toggler-' + this.props.name.replaceAll(' ', '-')
+         this.togglerId = `strategy-toggler-${name}` as const
       }
 
       this.state = {
@@ -67,6 +71,17 @@ export default class StrategyItem extends React.Component<StrategyItemProps, Str
    }
 
    render() {
+      /**
+       * a11y considerations:
+       *
+       * I want the strategy toggler checkbox to be
+       * activatable by just clicking the whole text.
+       *
+       * But the whole text isn't a good label.
+       * A better label would be "toggle strategyName" instead of "strategyName"
+       *
+       * Also, "strategyName" should label the <li> rather than the checkbox
+       */
       let thisClass = 'StrategyItem'
       if (this.state.disabled) {
          thisClass += ' disabled'
@@ -75,29 +90,26 @@ export default class StrategyItem extends React.Component<StrategyItemProps, Str
          thisClass += ' isCurrent'
       }
 
-      if (this.props.required) {
-         return (
-            <li className={thisClass} id={this.id}>
-               <StrategyLabel {...this.props} />
-               <StrategyStatus {...this.state} />
-            </li>
-         )
-      }
+      const togglerPart = this.props.required ? <></> : (
+         // eslint-disable-next-line jsx-a11y/label-has-for
+         <label htmlFor={ this.togglerId as string }>
+            <StrategyTogglerLabel {...this.props} />
+            <StrategyToggler callback={this.toggle.bind(this)} id={this.togglerId as string} />
+         </label>
+      )
+
+      return (
+         <li className={thisClass} id={this.id} aria-labelledby={this.labelId}>
+            <StrategyLabel id={this.labelId} {...this.props} />
+            {togglerPart}
+            <StrategyStatus {...this.state} />
+         </li>
+      )
 
       // StrategyLabel is placed before StrategyToggler because
       // it makes sense a11y wise to put the text first
 
       // And theoretically, the site both supports ltr and rtl
-      return (
-         <li className={thisClass} id={this.id}>
-            {/* eslint-disable-next-line jsx-a11y/label-has-for */}
-            <label htmlFor={this.togglerId as string}>
-               <StrategyLabel {...this.props} />
-               <StrategyToggler callback={this.toggle.bind(this)} id={this.togglerId as string} />
-            </label>
-            <StrategyStatus {...this.state} />
-         </li>
-      )
    }
 
    toggle(_event: React.ChangeEvent) {

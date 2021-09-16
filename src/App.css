@@ -60,6 +60,11 @@
          ". Main Aside ."
          ". . . .";
    }
+
+   /* Declares variable for consistency (see below) */
+   .App-aside {
+      --font-size: 1rem;
+   }
 }
 
 /* width <= 900px, 1 column layout */
@@ -79,9 +84,13 @@
          ". Aside .";
    }
 
-   /* Bigger text (aside) */
+   /**
+    * Bigger text (aside)
+    * Variable exists because of the strategyItem shenanigans
+    */
    .App-aside {
-      font-size: calc(1rem + 1vh);
+      --font-size: calc(1rem + 1vh);
+      font-size: var(--font-size);
    }
 }
 

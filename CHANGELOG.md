@@ -4,6 +4,16 @@ Note: Many earlier versions are not specified, that's too much work.
 
 When a `@types` dependency updates, they almost always don't affect anything.
 
+## v0.24.5
+
+- (a11y) The StrategyItem's are labelled by their text
+- (a11y) And so the StrategyToggler are not labelled by their text
+  - (a11y) Instead they are labelled by "StrategyTogglerLabel" which isn't highlightable and exists in the same space as the StrategyResult region
+  - (use) If you click the StrategyResult region, it toggles.
+- (layout) checkboxes are finally aligned correctly
+- (layout) Alert boxes finally stay in the bottom right
+- (code) Labels and ExternalLink supports the id property
+
 ## v0.24.4
 
 - (use) Lazyload PromptWindow / AlertNotice for faster initial loading

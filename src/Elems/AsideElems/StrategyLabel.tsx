@@ -7,10 +7,7 @@ import ExternalLink from '../ExternalLink';
 export type StrategyLabelProps = Readonly<{
    name: string
    href?: string
-}>
-
-type StrategyLabelState = Readonly<{
-   bold: boolean // This isn't actually used
+   id?: string
 }>
 
 /**
@@ -19,32 +16,20 @@ type StrategyLabelState = Readonly<{
  * Really it's just the text inside the StrategyItem,
  * besides StrategyResult
  */
-export default class StrategyLabel extends React.Component<StrategyLabelProps, StrategyLabelState> {
+export default class StrategyLabel extends React.Component<StrategyLabelProps> {
    constructor(props: StrategyLabelProps) {
       _expect(StrategyLabel, props).toHaveProperties("name")
-
       super(props)
-
-      this.state = {
-         bold: false
-      }
    }
 
    render() {
-      let content = <span className="StrategyLabel">{this.props.name}</span>
+      let content = <span className="StrategyLabel" id={this.props.id}>{this.props.name}</span>
       if (this.props.href) {
          content = (
-            <ExternalLink className="StrategyLabel" href={this.props.href}>
+            <ExternalLink className="StrategyLabel" id={this.props.id} href={this.props.href}>
                {this.props.name}
             </ExternalLink>
          )
-      }
-
-      // Should I use <b> or <strong>?
-      // <strong> = Strong importance
-      // <b> = Draw attention to text without indicating it's more important
-      if (this.state.bold) {
-         return <strong>{content}</strong>
       }
 
       return content

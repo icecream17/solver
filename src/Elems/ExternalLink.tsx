@@ -15,6 +15,7 @@ type ExternalLinkProps = Readonly<{
    children?: React.ReactNode
    className?: string
    href?: string
+   id?: string
 }>
 
 /**
@@ -52,6 +53,7 @@ export default class ExternalLink extends React.Component<ExternalLinkProps> {
 
       return (
          <a
+            id={this.props.id}
             className={className}
             href={this.props.href}
             target="_blank"

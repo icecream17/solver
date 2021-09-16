@@ -7,7 +7,7 @@
    The checkbox needs to be --item-height
    This impacts the strategy list, since the padding-left must account for the checkbox
    */
-   --item-height: 1rem;
+   --item-height: var(--font-size); /* see App.css */
 
    position: relative;
    max-width: initial;
@@ -24,7 +24,7 @@
    padding-left: var(--padding);
 
    /* But this is for list item positioning */
-   /* height: var(--item-height); */
+   line-height: calc(var(--item-height) + 0.1rem);
 
    /* Making room for status */
    min-width: calc(var(--label-width) + var(--status-width));
@@ -34,13 +34,13 @@
 .StrategyToggler {
    position: absolute;
    left: -1rem;
+   margin: 0; /* Now sanitize.css works! */
    vertical-align: middle;
    text-align: center;
    line-height: inherit;
 
-   /* sanitize.css (doesn't work)
-   margin: 0;
-   vertical-align: middle; */ /* centers checkbox */
+   width: var(--item-height);
+   height: var(--item-height);
 }
 
 /* TODO: Use @supports */
@@ -74,7 +74,7 @@
    right: -1rem;
 }
 
-/* Label structure: Name+Tooltip Status */
+/* Label structure: Name Status */
 .StrategyLabel {
    width: var(--label-width);
    display: inline-grid; /* Still inline but behaves like a block element */
@@ -92,6 +92,25 @@
       grid-template-areas:
         'name status';
     */
+}
+
+.StrategyTogglerLabel {
+   position: absolute;
+   color: transparent;
+   user-select: none;
+   overflow: hidden;
+   text-overflow: clip;
+
+   /* Tap size */
+   height: var(--item-height);
+   width: 100%;
+   right: 0;
+}
+
+/* If there's a link don't block it */
+/* (a[href] + label) selects label */
+a[href] + label > .StrategyTogglerLabel {
+   width: 20%;
 }
 
 /* Result */

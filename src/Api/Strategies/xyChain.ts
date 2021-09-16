@@ -19,11 +19,14 @@ import { highlightCell, colorCandidate, cellIsValidLoop } from "./xyLoop";
  * Basically no matter what, one of the ends has candidate.
  */
 export default function xyChain (sudoku: PureSudoku) {
-   function seenByEnd ({ row, column, digit }: CandidateID) {
+   // Very similar to seenByColor in xyLoop
+   function seenByEnd(end: [CandidateID, CandidateID]) {
       const seen = new Set<CandidateID>()
-      for (const cell of affects(row, column)) {
-         if (sudoku.data[cell.row][cell.column].includes(digit)) {
-            seen.add(id(cell.row, cell.column, digit))
+      for (const {row, column, digit} of end) {
+         for (const cell of affects(row, column)) {
+            if (sudoku.data[cell.row][cell.column].includes(digit)) {
+               seen.add(id(cell.row, cell.column, digit))
+            }
          }
       }
 
@@ -36,10 +39,10 @@ export default function xyChain (sudoku: PureSudoku) {
     * @param endsConnect If ends don't connect, only eliminate from the ends
     */
    function checkLoop (color1: CandidateID[], color2: CandidateID[]) {
-      const start = color1[color1.length - 1] // TODO: Change when chromebook updates
-      const end = color2[0]
-      const seenByColor1 = seenByEnd(start)
-      const seenByColor2 = seenByEnd(end)
+      const end1 = [color1[0], color1[color1.length - 1]] // TODO: Change when chromebook updates
+      const end2 = [color2[0], color2[color2.length - 1]]
+      const seenByColor1 = seenByEnd(end1)
+      const seenByColor2 = seenByEnd(end2)
       const seenByBoth = sharedInSets(seenByColor1, seenByColor2)
 
       if (seenByBoth.size > 0) {

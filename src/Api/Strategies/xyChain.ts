@@ -136,9 +136,14 @@ export default function xyChain(sudoku: PureSudoku) {
 
       // Start with candA
       // With a recursive function, add to the list until it fails or succeeds
-      const result = findLoop(cell, cell, candA, candB, color1, color2)
-      if (result) {
-         return result
+      const resultA = findLoop(cell, cell, candA, candB, color1, color2)
+      if (resultA) {
+         return resultA
+      }
+      
+      const resultB = findLoop(cell, cell, candB, candA, color2, color1)
+      if (resultB) {
+         return resultB
       }
    }
 

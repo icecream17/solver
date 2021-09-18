@@ -21,6 +21,7 @@ export default class StrategyList extends React.Component<StrategyListProps> {
       _expect(StrategyList, props).toHaveProperties("solver")
 
       super(props)
+      this.props.whenConstruct()
    }
 
    render() {

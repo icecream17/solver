@@ -6,10 +6,11 @@ import Title from './Elems/Title'
 import Version from './Elems/Version'
 import Main from './Elems/Main'
 import Aside from './Elems/Aside'
-import Sudoku from './Elems/MainElems/Sudoku'
-import { AlertType, NoticeInfo, NoticeType, PromptCallback, _UnusedProps } from './Types'
+import SudokuData from './Api/Spaces/Sudoku'
+import { AlertType, NoticeInfo, NoticeType, PromptCallback, SudokuDigits, _UnusedProps } from './Types'
 import NoticeWindow from './Elems/NoticeElems/NoticeWindow'
 import GithubCorner from './Elems/GithubCorner'
+import Cell from './Elems/MainElems/Cell'
 
 declare global {
    interface Window {
@@ -22,8 +23,7 @@ declare global {
 
 
 type AppState = {
-   sudoku: null | typeof Sudoku.prototype.data,
-   error: boolean,
+   error: boolean
    notices: NoticeInfo[]
 }
 
@@ -35,20 +35,22 @@ type AppState = {
  * <App />
  */
 class App extends React.Component<_UnusedProps, AppState> {
+   sudoku: SudokuData
    constructor (props: _UnusedProps) {
       super(props)
 
+      /**
+       * Cells are added to the sudokudata as they are mounted
+       * ```js
+       * // In cell setup
+       * callback()
+       *
+       * // Sudoku callback
+       * this.data.updateFromCell(cell)
+       * ```
+       */
+      this.sudoku = new SudokuData()
       this.state = {
-         /**
-          * See `sudoku.js`.
-          * When none of the sudoku's cells are initialized,
-          * the prop defaults to null
-          *
-          * @name Sudoku.state.sudoku
-          * @default {null}
-          */
-         sudoku: null,
-
          /**
           * If the App has caught an error
           */
@@ -61,7 +63,9 @@ class App extends React.Component<_UnusedProps, AppState> {
          notices: []
       }
 
-      this.whenSudokuConstructs = this.whenSudokuConstructs.bind(this)
+      this.whenCellMounts = this.whenCellMounts.bind(this)
+      this.whenCellUnmounts = this.whenCellUnmounts.bind(this)
+      this.whenCellUpdates = this.whenCellUpdates.bind(this)
       this.finishNotice = this.finishNotice.bind(this)
       window._custom = {
          alert: this.alert.bind(this),
@@ -85,14 +89,20 @@ class App extends React.Component<_UnusedProps, AppState> {
          classNames.push("error")
       }
 
+      const propsPassedDown = {
+         whenCellMounts: this.whenCellMounts,
+         whenCellUnmounts: this.whenCellUnmounts,
+         whenCellUpdates: this.whenCellUpdates,
+      }
+
       return (
          <div className={classNames.join(' ')}>
             <header className="App-header">
                <Title />
                <Version />
             </header>
-            <Main whenSudokuConstructs={this.whenSudokuConstructs} />
-            <Aside sudoku={this.state.sudoku} />
+            <Main propsPassedDown={propsPassedDown} />
+            <Aside sudoku={this.sudoku} />
 
             <GithubCorner />
             <NoticeWindow todo={this.state.notices} whenFinish={this.finishNotice} />
@@ -100,9 +110,16 @@ class App extends React.Component<_UnusedProps, AppState> {
       );
    }
 
-   whenSudokuConstructs(sudoku: Sudoku) {
-      // Only have to set once, since Arrays are "reference like". Lol
-      this.setState({ sudoku: sudoku.data })
+   whenCellMounts (cell: Cell) {
+      this.sudoku.addCell(cell)
+   }
+
+   whenCellUnmounts (cell: Cell) {
+      this.sudoku.removeCell(cell)
+   }
+
+   whenCellUpdates (cell: Cell, candidates: SudokuDigits[]) {
+      this.sudoku.data[cell.props.row][cell.props.column] = candidates
    }
 
 

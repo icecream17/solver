@@ -14,7 +14,7 @@ export default class AlertNotice extends React.Component<AlertProps> {
    render () {
       const text = [...this.props.message].map((character, index) => {
          if (character === '\n') {
-            return <br></br>
+            return <br key={index}></br>
          } else {
             return character
          }

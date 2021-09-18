@@ -1,11 +1,19 @@
+// @flow
 
 import React from 'react';
 
 import './Sudoku.css'
 import Row from './Row';
-import SudokuData from '../../Api/Spaces/Sudoku';
-import { HasWhenConstruct, IndexToNine, PossibleConstructCallback, SudokuDigits } from '../../Types';
+import { IndexToNine, PossibleConstructCallback, _Function } from '../../Types';
 import Cell, { keyboardMappings } from './Cell';
+
+export type BaseSudokuProps = Readonly<{
+   whenCellMounts: _Function
+   whenCellUnmounts: _Function
+   whenCellUpdates: _Function
+}>
+
+type SudokuProps = BaseSudokuProps & PossibleConstructCallback
 
 /**
  * The main sudoku!!!
@@ -15,37 +23,15 @@ import Cell, { keyboardMappings } from './Cell';
  * // Sending state up
  * <Sudoku whenUpdate={callback} />
  */
-export default class Sudoku extends React.Component<PossibleConstructCallback> {
-   data: SudokuData;
+export default class Sudoku extends React.Component<SudokuProps> {
    tbodyElement: HTMLTableSectionElement | null;
-   constructor(props: PossibleConstructCallback) {
+   constructor(props: SudokuProps) {
       super(props)
 
-      /**
-       * Cells are added to the sudokudata as they are mounted
-       * ```js
-       * // In cell setup
-       * callback()
-       *
-       * // Sudoku callback
-       * this.data.updateFromCell(cell)
-       * ```
-       *
-       * @name Sudoku.data
-       */
-      this.data = new SudokuData();
-
-      this.whenCellMounts = this.whenCellMounts.bind(this)
-      this.whenCellUnmounts = this.whenCellUnmounts.bind(this)
-      this.whenCellUpdates = this.whenCellUpdates.bind(this)
       this.whenCellKeydown = this.whenCellKeydown.bind(this)
 
       /** See App.js - this if statement is anticipating future code changes */
-      if (HasWhenConstruct(this.props)) {
-         this.props.whenConstruct(this)
-      } else {
-         console.warn("Remove useless code in Sudoku.js")
-      }
+      this.props.whenConstruct?.(this)
 
       this.tbodyElement = null
    }
@@ -56,10 +42,10 @@ export default class Sudoku extends React.Component<PossibleConstructCallback> {
          return {
             index: index++ as IndexToNine,
             propsPassedDown: {
-               whenCellMounts: this.whenCellMounts,
-               whenCellUnmounts: this.whenCellUnmounts,
-               whenNewCandidates: this.whenCellUpdates,
-               whenKeyboardArrows: this.whenCellKeydown,
+               whenCellMounts: this.props.whenCellMounts,
+               whenCellUnmounts: this.props.whenCellUnmounts,
+               whenNewCandidates: this.props.whenCellUpdates,
+               whenCellKeydown: this.whenCellKeydown,
             } as const
          } as const
       }
@@ -112,18 +98,6 @@ export default class Sudoku extends React.Component<PossibleConstructCallback> {
 
       // this.element > tbody > row
       return this.tbodyElement.children[index]
-   }
-
-   whenCellMounts(cell: Cell) {
-      this.data.addCell(cell)
-   }
-
-   whenCellUnmounts(cell: Cell) {
-      this.data.removeCell(cell)
-   }
-
-   whenCellUpdates(cell: Cell, candidates: SudokuDigits[]) {
-      this.data.data[cell.props.row][cell.props.column] = candidates
    }
 
    whenCellKeydown(cell: Cell, event: React.KeyboardEvent) {

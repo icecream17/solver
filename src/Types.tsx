@@ -82,7 +82,7 @@ export type _Function = (...args: any[]) => any
 // export type XOR<T, U> = (T | U) extends object ? (Without<T, U> & U) | (Without<U, T> & T) : T | U;
 
 ////////////
-// Typescript workaround: optional whenConstruct
+// whenConstruct types
 export type PossibleConstructCallback = Readonly<{
    whenConstruct?: _Function
 }>
@@ -90,7 +90,3 @@ export type PossibleConstructCallback = Readonly<{
 export type GuaranteedConstructCallback = Readonly<{
    whenConstruct: _Function
 }>
-
-export function HasWhenConstruct(obj: DontUseObject): obj is GuaranteedConstructCallback {
-   return "whenConstruct" in obj
-}

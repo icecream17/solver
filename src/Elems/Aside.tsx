@@ -8,12 +8,12 @@
 import './Aside.css'
 import React from 'react'
 import SolverPart from './AsideElems/SolverPart'
-import Sudoku from './MainElems/Sudoku'
+import SudokuData from '../Api/Spaces/Sudoku'
 import { _expect } from '../utils'
 import { _ReactProps } from '../Types'
 
 type AsideProps = Readonly<{
-   sudoku: null | typeof Sudoku.prototype.data
+   sudoku: SudokuData
 }> & _ReactProps
 
 /**

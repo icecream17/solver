@@ -8,7 +8,7 @@ import StrategyControls from './StrategyControls'
 import StrategyList from './StrategyList'
 
 type SolverPartProps = Readonly<{
-   sudoku: null | Sudoku
+   sudoku: Sudoku
 }>
 
 /**

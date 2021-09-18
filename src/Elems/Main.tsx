@@ -1,14 +1,13 @@
 import './Main.css'
 import React from 'react'
 
-import Sudoku from './MainElems/Sudoku'
+import Sudoku, { BaseSudokuProps } from './MainElems/Sudoku'
 import DataContainer from './MainElems/Data'
 import Coords from './MainElems/Coords'
 import { _expect } from '../utils'
-import { _Function } from '../Types'
 
 type MainProps = Readonly<{
-   whenSudokuConstructs: _Function
+   propsPassedDown: BaseSudokuProps
 }>
 
 /**
@@ -19,8 +18,7 @@ type MainProps = Readonly<{
  */
 class Main extends React.Component<MainProps> {
    constructor(props: MainProps) {
-      _expect(Main, props).toHaveProperty("whenSudokuConstructs")
-
+      _expect(Main, props).toHaveProperty("propsPassedDown")
       super(props)
    }
 
@@ -28,7 +26,7 @@ class Main extends React.Component<MainProps> {
       return (
          <main className="App-main">
             <Coords />
-            <Sudoku whenConstruct={this.props.whenSudokuConstructs} />
+            <Sudoku {...this.props.propsPassedDown} />
             <DataContainer />
          </main>
       );

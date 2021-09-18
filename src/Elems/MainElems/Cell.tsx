@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { _expect } from '../../utils';
-import { IndexToNine, Mutable, PossibleConstructCallback, SudokuDigits, ZeroToNine, _Function } from '../../Types';
+import { IndexToNine, Mutable, SudokuDigits, ZeroToNine, _Function } from '../../Types';
 
 import Candidates from './Candidates';
 import CandidatesDiff from './CandidatesDiff';
@@ -24,13 +24,13 @@ export type BaseCellProps = Readonly<{
    column: IndexToNine
 
    whenNewCandidates: (cell: Cell, candidates: SudokuDigits[]) => void
-   whenKeyboardArrows: (cell: Cell, event: React.KeyboardEvent) => void
+   whenCellKeydown: (cell: Cell, event: React.KeyboardEvent) => void
 
    whenCellMounts: _Function
    whenCellUnmounts: _Function
 }>
 
-type CellProps = PossibleConstructCallback & BaseCellProps
+type CellProps = BaseCellProps
 
 type CellState = Readonly<(
    {
@@ -79,7 +79,7 @@ type CellState = Readonly<(
  * - whenCellMounts
  * - whenCellUnmounts
  * - whenNewCandidates
- * - whenKeyboardArrows
+ * - whenCellKeydown
  */
 export default class Cell extends React.Component<CellProps, CellState> {
    static labelAt(row: IndexToNine, column: IndexToNine) {
@@ -87,7 +87,7 @@ export default class Cell extends React.Component<CellProps, CellState> {
    }
 
    constructor(props: CellProps) {
-      _expect(Cell, props).toHaveProperties("row", "column", "whenCellMounts", "whenCellUnmounts", "whenNewCandidates", "whenKeyboardArrows")
+      _expect(Cell, props).toHaveProperties("row", "column", "whenCellMounts", "whenCellUnmounts", "whenNewCandidates", "whenCellKeydown")
 
       super(props)
 
@@ -416,7 +416,7 @@ export default class Cell extends React.Component<CellProps, CellState> {
          }
       } else if (event.key in keyboardMappings) {
          // Keyboard controls
-         this.props.whenKeyboardArrows(this, event)
+         this.props.whenCellKeydown(this, event)
       } else if (event.key === 'Escape') {
          target.blur()
       } else {

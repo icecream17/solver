@@ -8,7 +8,7 @@
     "@testing-library/react": "^12.1.0",
     "@testing-library/user-event": "^13.2.1",
     "@types/jest": "^26.0.24",
-    "@types/node": "^16.9.2",
+    "@types/node": "^16.9.4",
     "@types/react": "^17.0.21",
     "@types/react-dom": "^17.0.9",
     "babel-plugin-const-enum": "^1.1.0",

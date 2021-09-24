@@ -1,11 +1,11 @@
 // @flow
 
-import React from 'react';
+import React, { Suspense } from 'react';
 import { _expect } from '../../utils';
 import { IndexToNine, Mutable, SudokuDigits, ZeroToNine, _Function } from '../../Types';
 
-import Candidates from './Candidates';
-import CandidatesDiff from './CandidatesDiff';
+const Candidates = React.lazy(() => import('./Candidates'));
+const CandidatesDiff = React.lazy(() => import('./CandidatesDiff'));
 
 // Maps keys to coords
 export const keyboardMappings = {
@@ -308,21 +308,39 @@ export default class Cell extends React.Component<CellProps, CellState> {
 
    render() {
       let content = <></>;
+      const loading = <span className="small">loading</span>
 
       // Using a span for single digits
       // so that I can force cells to always be [css height: 1/9th]
-      if (this.state.pretend) {
-         content = <Candidates data={this.state.candidates} classes={this.state.candidateClasses} /> // Nothing happens right now
+      if (this.state.pretend) { // Nothing special happens in this case
+         content = (
+            <Suspense fallback={loading}>
+               <Candidates data={this.state.candidates} classes={this.state.candidateClasses} />
+            </Suspense>
+         )
       } else if (this.state.active) {
-         content = <Candidates data={this.state.candidates} classes={this.state.candidateClasses} />
+         content = (
+            <Suspense fallback={loading}>
+               <Candidates data={this.state.candidates} classes={this.state.candidateClasses} />
+            </Suspense>
+         )
       } else if (this.state.explaining && this.state.previousCandidates !== null) {
-         content = <CandidatesDiff previous={this.state.previousCandidates} current={this.state.candidates} classes={this.state.candidateClasses} />
+         content = (
+            <Suspense fallback={loading}>
+               <CandidatesDiff previous={this.state.previousCandidates} current={this.state.candidates} classes={this.state.candidateClasses} />
+            </Suspense>
+         )
       } else if (this.numCandidates === 0) {
          content = <span className="ugh tables"> 0 </span>
       } else if (this.numCandidates === 1) {
          content = <span className={`ugh tables digit-${this.state.candidates[0]}`}> {this.state.candidates[0]} </span>
       } else if (this.state.showCandidates || this.state.candidates.length !== 9) {
-         content = <Candidates data={this.state.candidates} classes={this.state.candidateClasses} /> // Now numCandidates > 1
+         // Now numCandidates > 1. This is a fallback if statement
+         content = (
+            <Suspense fallback={loading}>
+               <Candidates data={this.state.candidates} classes={this.state.candidateClasses} />
+            </Suspense>
+         )
       }
 
 

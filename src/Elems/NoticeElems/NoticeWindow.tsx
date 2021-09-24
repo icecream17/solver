@@ -11,7 +11,7 @@ const AlertNotice = lazy(() => import('./AlertNotice'));
 const PromptWindow = lazy(() => import('./PromptWindow'));
 
 type NoticeProps = Readonly<{
-   todo: NoticeInfo[],
+   todo: NoticeInfo[]
    whenFinish: () => void
 }> & _ReactProps
 
@@ -25,7 +25,7 @@ export default class Notice extends React.Component<NoticeProps> {
          return <></>
       }
 
-      const loading = <span>Loading...</span>
+      const loading = <span className="loading">Loading...</span>
       const nextTodo = this.props.todo[0]
       switch (nextTodo.type) {
          case NoticeType.ALERT:

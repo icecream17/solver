@@ -125,3 +125,9 @@ td.Candidate {
    text-overflow: clip;
 }
 
+/* For the lazy loaded props */
+.Cell > .Loading {
+   font-size: var(--candidate-fontsize);
+   text-overflow: ellipsis;
+}
+

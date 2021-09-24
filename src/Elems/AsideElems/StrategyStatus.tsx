@@ -5,10 +5,10 @@ import { SuccessError } from '../../Api/Types';
 import { _expect } from '../../utils';
 
 export type StrategyStatusProps = Readonly<{
-   success: null,
+   success: null
    successcount: null | number
 }> | Readonly<{
-   success: boolean,
+   success: boolean
    successcount: number
 }>
 

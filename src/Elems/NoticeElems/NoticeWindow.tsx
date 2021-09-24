@@ -16,8 +16,10 @@ type NoticeProps = Readonly<{
 }> & _ReactProps
 
 /**
- * @requiredProps
- * - sudoku
+ * A general component which either renders nothing, an {@link AlertNotice},
+ * or a {@link PromptWindow} based on Notice.props.todo
+ *
+ * Lazyloads both the AlertNotice and the PromptWindow
  */
 export default class Notice extends React.Component<NoticeProps> {
    render() {

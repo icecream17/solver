@@ -82,6 +82,8 @@
          ". Main ."
          ". . ."
          ". Aside .";
+
+      justify-content: center;
    }
 
    /**

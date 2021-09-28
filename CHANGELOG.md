@@ -4,6 +4,11 @@ Note: Many earlier versions are not specified, that's too much work.
 
 When a `@types` dependency updates, they almost always don't affect anything.
 
+## v0.24.7
+
+- (use) Fix css text direction bug in the Cell and StrategyItem borders
+- (use) Use yarn. Fix build
+
 ## v0.24.6
 
 - (use) Fix directional bug in xyChain

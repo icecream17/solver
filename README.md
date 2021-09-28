@@ -20,3 +20,5 @@ You can run `npm install` and then `npm audit` for the full report.
 ## Also
 
 This uses `String.prototype.replaceAll`, so your node version must be `>=15.0.0`. In gitpod do `nvm install 16` on each new terminal.
+
+Until create-react-app uploads a new version with the postcss-normalize fix, I have to use this override in the package.json

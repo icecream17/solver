@@ -1,9 +1,17 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
+# yarn deps
+.yarn/*
+!.yarn/patches
+!.yarn/releases
+!.yarn/plugins
+!.yarn/sdks
+!.yarn/versions
+
 # dependencies
 /node_modules
 /.pnp
-.pnp.js
+.pnp.*
 
 # testing
 /coverage

@@ -59,7 +59,7 @@ td.Cell:nth-child(3n):not(:last-child) {
    border-right: var(--large-border) solid white;
 }
 
-td.Cell:nth-child(3n):not(:last-child)[dir="rtl"] {
+[dir=rtl] td.Cell:nth-child(3n):not(:last-child) {
    border-left: var(--large-border) solid white;
 }
 

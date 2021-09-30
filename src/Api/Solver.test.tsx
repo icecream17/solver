@@ -12,7 +12,7 @@ beforeEach(() => {
 
 test("Import board", async () => {
    await importBoard(BOARDS["swordfish wow"])
-   waitFor(() => {
+   await waitFor(() => {
       expect(getButtonCellElement(8, 0)).toHaveTextContent("4")
    })
 })

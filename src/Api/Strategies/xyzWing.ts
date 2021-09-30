@@ -9,14 +9,14 @@ function inSameBox(cellA: CellID, cellB: CellID) {
 }
 
 
-/**
- * The AC cell has A but not B
- * The BC cell has B but not A
- */
-function cellIsValidWing (sudoku: PureSudoku, sees: CellID, has: SudokuDigits, notHas: SudokuDigits) {
-   const cell = sudoku.data[sees.row][sees.column]
-   return cell.includes(has) && !cell.includes(notHas)
-}
+// /**
+//  * The AC cell has A but not B
+//  * The BC cell has B but not A
+//  */
+// function cellIsValidWing (sudoku: PureSudoku, sees: CellID, has: SudokuDigits, notHas: SudokuDigits) {
+//    const cell = sudoku.data[sees.row][sees.column]
+//    return cell.includes(has) && !cell.includes(notHas)
+// }
 
 export default function xyzWing (sudoku: PureSudoku) {
    // ABC  eliminations | [ABC]{2}

@@ -32,7 +32,7 @@ describe('strategies', () => {
    let solver: Solver;
 
    beforeEach(() => {
-      solver = Object.create(Solver)
+      solver = Object.create(Solver) as Solver
       solver.strategyIndex = 0
       solver.memory = new StrategyMemory()
       solver.strategyItemElements = []
@@ -40,7 +40,8 @@ describe('strategies', () => {
 
    test.each(STRATEGY_INDICES)('$variable.name fails on an empty sudoku', async (index: number) => {
       const testSudoku = new PureSudoku()
-      expect((await getStrategy(index))(testSudoku, solver.memory[index]).success).toBe(false)
+      const strategy = await getStrategy(index)
+      expect(strategy(testSudoku, solver.memory[index]).success).toBe(false)
    })
 
    describe('check for solved', () => {
@@ -108,7 +109,7 @@ describe('strategies', () => {
    describe('update candidates', () => {
       test('Actually updates', () => {
          // Just one candidate
-         let testSudoku = new PureSudoku()
+         const testSudoku = new PureSudoku()
          testSudoku.set(7, 7).to(4)
          expect(updateCandidates(testSudoku).success).toBe(true)
 
@@ -199,7 +200,7 @@ describe('strategies', () => {
 
       test('Fails', () => {
          render(<App />)
-         window._custom.alert = jest.fn()
+         jest.spyOn(window._custom, 'alert').mockImplementation()
 
          const testSudoku = new PureSudoku()
          testSudoku.import(`
@@ -221,9 +222,7 @@ describe('strategies', () => {
          })
 
          expect(window._custom.alert).toHaveBeenCalled()
-
-         // @ts-expect-error
-         window._custom.alert.mockClear()
+         jest.restoreAllMocks()
       })
 
       test('When a conjugate is a subset of another', () => {

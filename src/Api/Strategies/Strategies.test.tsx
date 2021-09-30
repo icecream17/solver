@@ -1,3 +1,4 @@
+
 import PureSudoku from "../Spaces/PureSudoku"
 import testBoards from "../boards"
 import Solver from "../Solver";
@@ -8,10 +9,10 @@ import checkForSolved from "./checkForSolved";
 import hiddenSingles from "./hiddenSingles";
 import updateCandidates from "./updateCandidates";
 import pairsTriplesAndQuads from "./pairsTriplesAndQuads";
-import { StrategyMemory, SuccessError } from "../Types";
+import { Strategy, StrategyMemory, SuccessError } from "../Types";
 import hiddenPairsTriplesAndQuads from "./hiddenPairsTriplesAndQuads";
 import intersectionRemoval from "./intersectionRemoval";
-import { getStrategy, NUM_STRATEGIES } from "./Strategies";
+import STRATEGIES from "./Strategies";
 import xWing from "./xWing";
 import checkValidity from "./checkValidity";
 import swordfish from "./swordfish";
@@ -23,11 +24,6 @@ import twoMinusOneLines from "./twoMinusOneLines";
 import xyLoop from "./xyLoop";
 import xyChain from "./xyChain";
 
-const STRATEGY_INDICES = [] as number[]
-for (let i = 0; i < NUM_STRATEGIES; i++) {
-   STRATEGY_INDICES.push(i)
-}
-
 describe('strategies', () => {
    let solver: Solver;
 
@@ -38,9 +34,8 @@ describe('strategies', () => {
       solver.strategyItemElements = []
    })
 
-   test.each(STRATEGY_INDICES)('$variable.name fails on an empty sudoku', async (index: number) => {
-      const testSudoku = new PureSudoku()
-      const strategy = await getStrategy(index)
+   test.each(Object.entries(STRATEGIES))('$variable.name fails on an empty sudoku', (index: string, strategy: Strategy) => {
+      const testSudoku = new PureSudoku() // @ts-expect-error Ugh, it's String(number), which is basically the same as number used as a property. Whatever.
       expect(strategy(testSudoku, solver.memory[index]).success).toBe(false)
    })
 

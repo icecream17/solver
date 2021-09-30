@@ -8,17 +8,21 @@ import { SuccessError } from "../Types";
 import { algebraic, boxAt, CellID, getIDFromIndexWithinBox, id } from "../Utils";
 
 /**
- * Gets the unique combinations of an array
+ * Gets the unique combinations of an array\
  * All elements are unmodified and assumed different
  *
  * "combinations" is in the mathematical sense:
  * if you give 7 elements, with min = 2 and max = 4,
  * you get (7 choose 2) + (7 choose 3) + (7 choose 4) elements.
  *
+ * @example
+ * combinations([1, 2, 3])
+ * // [[3], [3, 2], [3, 2, 1], [3, 1], [2], [2, 1], [1]]
+ *
  * @param {number} min - The minimum size of a combination
  * @param {number} max - The maximum size of a combination
  */
-export function combinations<T>(array: T[], min: number, max: number, currentCount = 1) {
+export function combinations<T>(array: T[], min: number = 1, max: number = array.length, currentCount = 1) {
    const _combinations: T[][] = []
    const _arrayCopy = array.slice()
    while (_arrayCopy.length) {

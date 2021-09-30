@@ -3,7 +3,7 @@ import SolverPart from "../Elems/AsideElems/SolverPart"
 import StrategyItem from "../Elems/AsideElems/StrategyItem"
 import { AlertType, _Callback } from "../Types"
 import { forComponentsToUpdate } from "../utils"
-import { getStrategy, NUM_STRATEGIES } from "./Strategies/Strategies"
+import STRATEGIES from "./Strategies/Strategies"
 import Sudoku from "./Spaces/Sudoku"
 import { SuccessError, StrategyMemory } from "./Types"
 import React from "react"
@@ -102,7 +102,7 @@ export default class Solver {
          this.strategyIndex = 2
       } else {
          this.strategyIndex++
-         if (this.strategyIndex === NUM_STRATEGIES) {
+         if (this.strategyIndex === STRATEGIES.length) {
             this.strategyIndex = 0
          }
       }
@@ -110,7 +110,7 @@ export default class Solver {
       // Exception 3
       while (this.skippable[this.strategyIndex] && this.strategyIndex !== 0) {
          this.strategyIndex++
-         if (this.strategyIndex === NUM_STRATEGIES) {
+         if (this.strategyIndex === STRATEGIES.length) {
             this.strategyIndex = 0
          }
       }
@@ -257,7 +257,7 @@ export default class Solver {
       this.sudokuNullCheck()
 
       // Run strategy
-      const _strategyResult = (await getStrategy(this.strategyIndex))(this.sudoku, this.memory[this.strategyIndex])
+      const _strategyResult = STRATEGIES[this.strategyIndex](this.sudoku, this.memory[this.strategyIndex])
       const strategyResult = {
          success: _strategyResult.success,
          successcount: "successcount" in _strategyResult ? _strategyResult.successcount ?? null : null

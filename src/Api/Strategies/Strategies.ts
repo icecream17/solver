@@ -1,33 +1,36 @@
-import { Strategy } from '../Types'
+
+import { Strategy } from "../Types";
+import checkForSolved from "./checkForSolved";
+import hiddenPairsTriplesAndQuads from "./hiddenPairsTriplesAndQuads";
+import hiddenSingles from "./hiddenSingles";
+import intersectionRemoval from "./intersectionRemoval";
+import jellyfish from "./jellyfish";
+import pairsTriplesAndQuads from "./pairsTriplesAndQuads";
+import skyscraper from "./skyscraper";
+import swordfish from "./swordfish";
+import twoMinusOneLines from "./twoMinusOneLines";
+import updateCandidates from "./updateCandidates";
+import xWing from "./xWing";
+import xyChain from "./xyChain";
+import xyLoop from "./xyLoop";
+import yWing from "./yWing";
 
 // See comments on `Strategy`
 const STRATEGIES = [
-   'checkForSolved',
-   'updateCandidates',
-   'hiddenSingles',
-   'intersectionRemoval',
-   'pairsTriplesAndQuads',
-   'hiddenPairsTriplesAndQuads',
-   'xWing',
-   'swordfish',
-   'jellyfish',
-   'skyscraper',
-   'yWing',
-   'twoMinusOneLines',
-   'xyLoop',
-   'xyChain',
-]
+   checkForSolved,
+   updateCandidates,
+   hiddenSingles,
+   intersectionRemoval,
+   pairsTriplesAndQuads,
+   hiddenPairsTriplesAndQuads,
+   xWing,
+   swordfish,
+   jellyfish,
+   skyscraper,
+   yWing,
+   twoMinusOneLines,
+   xyLoop,
+   xyChain,
+] as const
 
-const strategyCache = [] as Strategy[]
-
-export const NUM_STRATEGIES = STRATEGIES.length
-
-/**
- * Gets the strategy at an index\
- * Used to lazyload
- */
-export async function getStrategy<I extends number>(index: I): Promise<Strategy> {
-   return strategyCache[index] ??= (
-      await import(`./${STRATEGIES[index]}`) as { default: Strategy }
-   ).default
-}
+export default STRATEGIES as typeof STRATEGIES & Strategy[]

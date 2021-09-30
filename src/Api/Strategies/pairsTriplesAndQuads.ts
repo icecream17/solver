@@ -22,7 +22,7 @@ import { algebraic, boxAt, CellID, getIDFromIndexWithinBox, id } from "../Utils"
  * @param {number} min - The minimum size of a combination
  * @param {number} max - The maximum size of a combination
  */
-export function combinations<T>(array: T[], min: number = 1, max: number = array.length, currentCount = 1) {
+export function combinations<T>(array: T[], min = 1, max = array.length, currentCount = 1) {
    const _combinations: T[][] = []
    const _arrayCopy = array.slice()
    while (_arrayCopy.length) {

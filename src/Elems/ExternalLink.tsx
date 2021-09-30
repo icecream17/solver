@@ -31,7 +31,7 @@ type ExternalLinkProps = Readonly<{
  *    What does <code>this</code> do?
  * /></ExternalLink>
  */
-export default class ExternalLink extends React.Component<ExternalLinkProps> {
+export default class ExternalLink extends React.PureComponent<ExternalLinkProps> {
    constructor (props: ExternalLinkProps) {
       for (const requiredProperty of ["children", "href"] as const) {
          if (!(requiredProperty in props)) {

@@ -9,7 +9,7 @@ type ControlProps = Readonly<{
 /**
  * A general button control
  */
-export default class Control extends React.Component<ControlProps> {
+export default class Control extends React.PureComponent<ControlProps> {
    constructor(props: ControlProps) {
       _expect(Control, props).toHaveProperties("onClick")
       super(props)

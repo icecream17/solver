@@ -1,5 +1,6 @@
 
 import React from 'react';
+import StaticComponent from './StaticComponent';
 
 /**
  * The version
@@ -9,7 +10,7 @@ import React from 'react';
  * @example
  * <Version />
  */
-export default class Version extends React.Component {
+export default class Version extends StaticComponent {
    render() {
       return <span className="Version">v0.24.7</span>
    }

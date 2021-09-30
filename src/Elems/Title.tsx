@@ -1,5 +1,6 @@
 
 import React from 'react';
+import StaticComponent from './StaticComponent';
 
 /**
  * The title
@@ -7,7 +8,7 @@ import React from 'react';
  * @example
  * <Title />
  */
-export default class Title extends React.Component {
+export default class Title extends StaticComponent {
    render() {
       return <h1 className='Title'>Sudoku solver</h1>
    }

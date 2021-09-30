@@ -8,10 +8,10 @@ import checkForSolved from "./checkForSolved";
 import hiddenSingles from "./hiddenSingles";
 import updateCandidates from "./updateCandidates";
 import pairsTriplesAndQuads from "./pairsTriplesAndQuads";
-import { Strategy, StrategyMemory, SuccessError } from "../Types";
+import { StrategyMemory, SuccessError } from "../Types";
 import hiddenPairsTriplesAndQuads from "./hiddenPairsTriplesAndQuads";
 import intersectionRemoval from "./intersectionRemoval";
-import STRATEGIES from "./Strategies";
+import { getStrategy, NUM_STRATEGIES } from "./Strategies";
 import xWing from "./xWing";
 import checkValidity from "./checkValidity";
 import swordfish from "./swordfish";
@@ -23,9 +23,10 @@ import twoMinusOneLines from "./twoMinusOneLines";
 import xyLoop from "./xyLoop";
 import xyChain from "./xyChain";
 
-const STRATEGIES_AND_THEIR_INDICES = STRATEGIES.map(
-   (strategy: Strategy, index) => [strategy, index] as const
-)
+const STRATEGY_INDICES = [] as number[]
+for (let i = 0; i < NUM_STRATEGIES; i++) {
+   STRATEGY_INDICES.push(i)
+}
 
 describe('strategies', () => {
    let solver: Solver;
@@ -37,16 +38,16 @@ describe('strategies', () => {
       solver.strategyItemElements = []
    })
 
-   test.each(STRATEGIES_AND_THEIR_INDICES)('$variable.name fails on an empty sudoku', (strategy: Strategy, index: number) => {
+   test.each(STRATEGY_INDICES)('$variable.name fails on an empty sudoku', async (index: number) => {
       const testSudoku = new PureSudoku()
-      expect(strategy(testSudoku, solver.memory[index]).success).toBe(false)
+      expect((await getStrategy(index))(testSudoku, solver.memory[index]).success).toBe(false)
    })
 
    describe('check for solved', () => {
       test('error if solver.solved is invalid', () => {
          const testSudoku = PureSudoku.fromRepresentation(testBoards["Solved board"])
 
-         // @ts-expect-error
+         // @ts-expect-error obv
          solver.memory[0].solved = undefined
          expect(() => checkForSolved(testSudoku, solver.memory[0])).toThrow(TypeError)
 
@@ -62,7 +63,7 @@ describe('strategies', () => {
 
       test('succeeds when sudoku is finished', () => {
          render(<App />)
-         window._custom.alert = jest.fn()
+         jest.spyOn(window._custom, 'alert').mockImplementation()
 
          const testSudoku = PureSudoku.fromRepresentation(testBoards["Solved board"])
 
@@ -87,8 +88,7 @@ describe('strategies', () => {
 
          expect(window._custom.alert).toHaveBeenCalledTimes(2)
 
-         // @ts-expect-error
-         window._custom.alert.mockClear()
+         jest.restoreAllMocks()
       })
 
       // solver.solved is set in the beforeEach

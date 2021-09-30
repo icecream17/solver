@@ -2,7 +2,7 @@
 
 import React, { Suspense } from 'react';
 import { _expect } from '../../utils';
-import { IndexToNine, Mutable, SudokuDigits, ZeroToNine, _Function } from '../../Types';
+import { IndexToNine, Mutable, SudokuDigits, ZeroToNine, _Callback } from '../../Types';
 
 const Candidates = React.lazy(() => import('./Candidates'));
 const CandidatesDiff = React.lazy(() => import('./CandidatesDiff'));
@@ -26,8 +26,8 @@ export type BaseCellProps = Readonly<{
    whenNewCandidates: (cell: Cell, candidates: SudokuDigits[]) => void
    whenCellKeydown: (cell: Cell, event: React.KeyboardEvent) => void
 
-   whenCellMounts: _Function
-   whenCellUnmounts: _Function
+   whenCellMounts: _Callback
+   whenCellUnmounts: _Callback
 }>
 
 type CellProps = BaseCellProps
@@ -282,19 +282,19 @@ export default class Cell extends React.Component<CellProps, CellState> {
       })
    }
 
-   setExplainingToTrue() {
+   setExplainingToTrue (callback?: _Callback) {
       this.setState({
          explaining: true,
-      })
+      }, callback)
    }
 
-   setExplainingToFalse() {
+   setExplainingToFalse (callback?: _Callback) {
       this.setState({
          explaining: false,
          previousCandidates: null,
          classes: null,
          candidateClasses: null,
-      })
+      }, callback)
    }
 
    // BUG? Not using a callback for `setCandidatesTo`

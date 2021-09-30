@@ -2,13 +2,16 @@
 import './GithubCorner.css'
 import React from 'react';
 import ExternalLink from './ExternalLink';
+import StaticComponent from './StaticComponent';
 
 /**
  * A nice github corner
  *
  * Thanks to react-github-corner
  */
-export default class GithubCorner extends React.Component {
+export default class GithubCorner extends StaticComponent {
+   shouldComponentUpdate() { return false }
+
    render() {
       // The &apos; means a single quote, and the &quot; means a double quote
       return (

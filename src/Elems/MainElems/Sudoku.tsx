@@ -4,13 +4,13 @@ import React from 'react';
 
 import './Sudoku.css'
 import Row from './Row';
-import { IndexToNine, PossibleConstructCallback, _Function } from '../../Types';
+import { IndexToNine, PossibleConstructCallback, _Callback } from '../../Types';
 import Cell, { keyboardMappings } from './Cell';
 
 export type BaseSudokuProps = Readonly<{
-   whenCellMounts: _Function
-   whenCellUnmounts: _Function
-   whenCellUpdates: _Function
+   whenCellMounts: _Callback
+   whenCellUnmounts: _Callback
+   whenCellUpdates: _Callback
 }>
 
 type SudokuProps = BaseSudokuProps & PossibleConstructCallback

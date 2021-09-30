@@ -4,6 +4,12 @@ Note: Many earlier versions are not specified, that's too much work.
 
 When a `@types` dependency updates, they almost always don't affect anything.
 
+## v0.24.8
+
+- (use) Useless almost 5 KB save in initial loading!
+- (use) This is done by lazyloading strategies. I'm not sure if this is a good change actually.
+- (code) Use PureComponent, StaticComponent, separate \_Function and \_Callback
+
 ## v0.24.7
 
 - (use) Fix css text direction bug in the Cell and StrategyItem borders

@@ -1,11 +1,18 @@
 import asyncPrompt from "../asyncPrompt"
 import SolverPart from "../Elems/AsideElems/SolverPart"
 import StrategyItem from "../Elems/AsideElems/StrategyItem"
-import { AlertType } from "../Types"
+import { AlertType, _Callback } from "../Types"
 import { forComponentsToUpdate } from "../utils"
-import Strategies from "./Strategies/Strategies"
+import { getStrategy, NUM_STRATEGIES } from "./Strategies/Strategies"
 import Sudoku from "./Spaces/Sudoku"
 import { SuccessError, StrategyMemory } from "./Types"
+import React from "react"
+
+function asyncSetState<T extends React.Component>(component: T, state: Readonly<Parameters<T["setState"]>[0]>) {
+   return new Promise<undefined>(resolve => {
+      component.setState(state, () => resolve(undefined))
+   })
+}
 
 /**
  * A strategy is skippable if
@@ -13,15 +20,25 @@ import { SuccessError, StrategyMemory } from "./Types"
  * 2. It's retried with no changes
  */
 export default class Solver {
-   latestStrategyItem: null | StrategyItem = null
-   isDoingStep = false
-   erroring = false
-   memory = new StrategyMemory() // Information strategies keep across calls
-   skippable = [] as boolean[]
-   stepsTodo = 0
    strategyIndex = 0
+   latestStrategyItem: null | StrategyItem = null
+
    /** When a strategyItem is about to unmount, the strategy item element is deleted. */
    strategyItemElements: Array<StrategyItem | undefined> = []
+
+   /** Used so that when there are multiple steps at the same time, the latter steps can wait */
+   whenStepHasFinished: _Callback[] = []
+   isDoingStep = false
+   stepsTodo = 0
+
+   /** Whether the most recent strategy has errored */
+   erroring = false
+
+   /** Information strategies keep across calls */
+   memory = new StrategyMemory()
+
+   /** Whether a strategy is skippable */
+   skippable = [] as boolean[]
 
    constructor(public sudoku: null | Sudoku = null, public solverElement: SolverPart) {
       // These capitalized methods are used as handlers in StrategyControls, so they need to be bound beforehand.
@@ -34,24 +51,26 @@ export default class Solver {
    }
 
    /**
+    * !async
+    *
     * Called after the last strategy is done,
     * and just before the first strategy is done.
     */
-   resetStrategies(index = 0): void {
-      if (index >= this.strategyItemElements.length) {
-         return
+   resetStrategies() {
+      const promises = [] as Array<Promise<undefined>>
+      for (const strategyElement of this.strategyItemElements) {
+         if (strategyElement === undefined) {
+            console.warn(`undefined strategyItemElement @resetStrategies`)
+            continue;
+         }
+
+         promises.push(asyncSetState(strategyElement, {
+            success: null,
+            successcount: null
+         }))
       }
 
-      const strategyElement = this.strategyItemElements[index]
-      if (strategyElement === undefined) {
-         console.warn(`undefined strategyItemElement @resetStrategies`)
-         return this.resetStrategies(index + 1)
-      }
-
-      strategyElement.setState({
-         success: null,
-         successcount: null
-      }, () => this.resetStrategies(index + 1))
+      return Promise.allSettled(promises)
    }
 
    updateCounters(success: boolean, isFinished: boolean) {
@@ -83,7 +102,7 @@ export default class Solver {
          this.strategyIndex = 2
       } else {
          this.strategyIndex++
-         if (this.strategyIndex === Strategies.length) {
+         if (this.strategyIndex === NUM_STRATEGIES) {
             this.strategyIndex = 0
          }
       }
@@ -91,7 +110,7 @@ export default class Solver {
       // Exception 3
       while (this.skippable[this.strategyIndex] && this.strategyIndex !== 0) {
          this.strategyIndex++
-         if (this.strategyIndex === Strategies.length) {
+         if (this.strategyIndex === NUM_STRATEGIES) {
             this.strategyIndex = 0
          }
       }
@@ -107,17 +126,25 @@ export default class Solver {
       }
    }
 
-   async setupCells() {
+   // *async
+   setupCells() {
+      const promises = [] as Promise<undefined>[]
+
       this.sudokuNullCheck()
       for (const row of this.sudoku.cells) {
          for (const cell of row) {
-            cell?.setExplainingToTrue()
+            promises.push(new Promise(resolve => {
+               cell?.setExplainingToTrue(resolve) ?? resolve(undefined)
+            }))
          }
       }
-      await forComponentsToUpdate()
+
+      return Promise.allSettled(promises)
    }
 
    /**
+    * !async
+    *
     * Kind of a misnomer really.
     *
     * For each cell, run {@link Cell#setExplainingToFalse}
@@ -132,33 +159,20 @@ export default class Solver {
       await forComponentsToUpdate()
    }
 
-   // This is a big function.
-   // Each comment labels a group of code that does something
-
-   // Originally Promise<undefined>
-   async Step(): Promise<void> {
+   private async StartStep () {
       await forComponentsToUpdate()
 
-      this.erroring = false
-
-      if (this.isDoingStep) {
-         this.stepsTodo++
-         return;
-      }
-
       this.isDoingStep = true
-      this.sudokuNullCheck()
 
       // See resetStrategies documentation
       if (this.strategyIndex === 0) {
-         this.resetStrategies()
+         await this.resetStrategies()
          await this.resetCells()
       }
 
       // strategyItem UI - update lastStrategyItem
       if (this.latestStrategyItem !== null) {
-         this.latestStrategyItem.setState({ isCurrentStrategy: false })
-         await forComponentsToUpdate()
+         await asyncSetState(this.latestStrategyItem, { isCurrentStrategy: false })
       }
 
       if (this.strategyItemElements[this.strategyIndex] === undefined) {
@@ -181,8 +195,7 @@ export default class Solver {
          if (this.latestStrategyItem.state.disabled) {
             this.updateCounters(false, false)
             this.isDoingStep = false // Set back in the next step
-            await forComponentsToUpdate() // currently unneccessary
-            return this.Step()
+            return this.Step() // Return other step promise
          }
 
          // Not disabled, so update state
@@ -194,14 +207,12 @@ export default class Solver {
 
       // Set cells to strategy mode
       await this.setupCells()
+   }
 
-      // Run strategy
-      const _strategyResult = Strategies[this.strategyIndex](this.sudoku, this.memory[this.strategyIndex])
-      const strategyResult = {
-         success: _strategyResult.success,
-         successcount: "successcount" in _strategyResult ? _strategyResult.successcount ?? null : null
-      }
-
+   private async FinishStep (strategyResult: {
+      success: boolean
+      successcount: number | null
+   }) {
       // Set cells to non-strategy mode if failed
       if (strategyResult.success === false) {
          await this.resetCells()
@@ -219,17 +230,46 @@ export default class Solver {
       this.updateCounters(strategyResult.success, strategyResult.successcount === 81)
       await forComponentsToUpdate()
 
-      if (this.stepsTodo > 0) {
-         this.stepsTodo--
-         try {
-            await this.Step()
-         } catch (error) {
-            console.error(error)
-         }
+      this.isDoingStep = false
+   }
+
+   // This is a big function.
+   // Each comment labels a group of code that does something
+
+   // Originally Promise<undefined>
+   async Step(): Promise<void> {
+      this.erroring = false
+
+      // Code for multiple steps at the same time
+      if (this.isDoingStep) {
+         this.stepsTodo++
+
+         // Wait for the current step to finish
+         // After that, continue to the main code
+         await new Promise(resolve => {
+            this.whenStepHasFinished.push(resolve)
+         });
       }
 
-      this.isDoingStep = false
-      return;
+      // Main code
+      await this.StartStep()
+
+      this.sudokuNullCheck()
+
+      // Run strategy
+      const _strategyResult = (await getStrategy(this.strategyIndex))(this.sudoku, this.memory[this.strategyIndex])
+      const strategyResult = {
+         success: _strategyResult.success,
+         successcount: "successcount" in _strategyResult ? _strategyResult.successcount ?? null : null
+      }
+
+      await this.FinishStep(strategyResult)
+
+      // Code for multiple steps at the same time
+      if (this.stepsTodo > 0) {
+         this.stepsTodo--
+         this.whenStepHasFinished[0]()
+      }
    }
 
    /** Does "Step" until it reaches the end or a strategy succeeds */

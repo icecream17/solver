@@ -75,6 +75,7 @@ export type Mutable<T> = {
 export type DontUseObject = Record<PropertyKey, unknown>
 
 // See https://github.com/microsoft/TypeScript/issues/41225
+export type _Callback = (...args: any[]) => void
 export type _Function = (...args: any[]) => any
 
 // // See https://github.com/microsoft/TypeScript/issues/14094#issuecomment-373782604
@@ -84,9 +85,9 @@ export type _Function = (...args: any[]) => any
 ////////////
 // whenConstruct types
 export type PossibleConstructCallback = Readonly<{
-   whenConstruct?: _Function
+   whenConstruct?: _Callback
 }>
 
 export type GuaranteedConstructCallback = Readonly<{
-   whenConstruct: _Function
+   whenConstruct: _Callback
 }>

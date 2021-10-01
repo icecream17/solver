@@ -51,10 +51,7 @@ test.skip("Stays at first strategy when board is invalid", async () => {
 test("After a strategy success, the index is 0 again", async () => {
    await importBoard(BOARDS["Simple sudoku"])
 
-   userEvent.click(screen.getByRole("button", { name: "step" }))
-   await waitFor(() => expect(currentStrategyIndex()).toBe(0))
-
-   userEvent.click(screen.getByRole("button", { name: "step" }))
+   userEvent.click(screen.getByRole("button", { name: "go" }))
    await waitFor(() => expect(currentStrategyIndex()).toBe(1))
 
    userEvent.click(screen.getByRole("button", { name: "step" }))

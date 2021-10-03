@@ -4,6 +4,10 @@ Note: Many earlier versions are not specified, that's too much work.
 
 When a `@types` dependency updates, they almost always don't affect anything.
 
+## v0.24.9
+
+- (use) Fix bug in XY Chain where it eliminated some candidates invalidly
+
 ## v0.24.8
 
 > Note: The following two were undone:

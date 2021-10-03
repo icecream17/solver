@@ -20,13 +20,11 @@ import { highlightCell, colorCandidate, cellIsValidLoop } from "./xyLoop";
  */
 export default function xyChain(sudoku: PureSudoku) {
    // Very similar to seenByColor in xyLoop
-   function seenByEnd(end: CandidateID[]) {
+   function seenByEnd ({ row, column, digit }: CandidateID) {
       const seen = new Set<CandidateID>()
-      for (const { row, column, digit } of end) {
-         for (const cell of affects(row, column)) {
-            if (sudoku.data[cell.row][cell.column].includes(digit)) {
-               seen.add(id(cell.row, cell.column, digit))
-            }
+      for (const cell of affects(row, column)) {
+         if (sudoku.data[cell.row][cell.column].includes(digit)) {
+            seen.add(id(cell.row, cell.column, digit))
          }
       }
 
@@ -39,15 +37,15 @@ export default function xyChain(sudoku: PureSudoku) {
     * @param endsConnect If ends don't connect, only eliminate from the ends
     */
    function checkLoop(color1: CandidateID[], color2: CandidateID[]) {
-      const color1End = [color1[0], color1[color1.length - 1]] // TODO: Change when chromebook updates
-      const color2End = [color2[0], color2[color2.length - 1]]
+      const color1End = color1[color1.length - 1] // TODO: Use .at when chromebook updates
+      const color2End = color2[0]
       const seenByColor1 = seenByEnd(color1End)
       const seenByColor2 = seenByEnd(color2End)
       const seenByBoth = sharedInSets(seenByColor1, seenByColor2)
 
       if (seenByBoth.size > 0) {
-         highlightCell(sudoku, id(color1End[0].row, color1End[0].column), "orange")
-         highlightCell(sudoku, id(color2End[1].row, color2End[1].column), "orange")
+         highlightCell(sudoku, id(color1End.row, color1End.column), "orange")
+         highlightCell(sudoku, id(color2End.row, color2End.column), "orange")
 
          for (const candidate of color1) {
             colorCandidate(sudoku, candidate)
@@ -140,7 +138,7 @@ export default function xyChain(sudoku: PureSudoku) {
       if (resultA) {
          return resultA
       }
-      
+
       const resultB = findLoop(cell, cell, candB, candA, color2, color1)
       if (resultB) {
          return resultB

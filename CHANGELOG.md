@@ -4,6 +4,13 @@ Note: Many earlier versions are not specified, that's too much work.
 
 When a `@types` dependency updates, they almost always don't affect anything.
 
+## v0.24.10
+
+- (tests) Allow more time for 1 specific test
+- (tests) Time how long strategies take
+- (deps) Update everything
+- (use) Slightly speed up `hiddenSingles`
+
 ## v0.24.9
 
 - (use) Fix bug in XY Chain where it eliminated some candidates invalidly

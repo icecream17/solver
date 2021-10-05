@@ -6,6 +6,8 @@ import { getButtonCellElement } from "../Elems/MainElems/Sudoku.testUtils";
 import BOARDS from "./boards";
 import { importBoard, visuallyCurrentStrategy, currentStrategyIndex } from "./Solver.testUtils";
 
+jest.setTimeout(7000);
+
 beforeEach(() => {
    render(<App />);
 })
@@ -49,6 +51,7 @@ test.skip("Stays at first strategy when board is invalid", async () => {
 })
 
 test("After a strategy success, the index is 0 again", async () => {
+   console.time('long test')
    await importBoard(BOARDS["Simple sudoku"])
 
    userEvent.click(screen.getByRole("button", { name: "go" }))
@@ -56,4 +59,5 @@ test("After a strategy success, the index is 0 again", async () => {
 
    userEvent.click(screen.getByRole("button", { name: "step" }))
    await waitFor(() => expect(currentStrategyIndex()).toBe(0))
+   console.timeEnd('long test')
 })

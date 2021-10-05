@@ -1,7 +1,7 @@
 import { ALL_CANDIDATES, IndexToNine, INDICES_TO_NINE, SudokuDigits } from "../../Types"
 import PureSudoku from "../Spaces/PureSudoku"
 import Sudoku from "../Spaces/Sudoku"
-import { boxAt } from "../Utils"
+import { boxAt, CellID, id } from "../Utils"
 
 function colorCandidate(sudoku: PureSudoku, row: IndexToNine, column: IndexToNine, candidate: SudokuDigits, color = 'blue') {
    if (sudoku instanceof Sudoku) {
@@ -13,11 +13,15 @@ function colorCandidate(sudoku: PureSudoku, row: IndexToNine, column: IndexToNin
 export default function hiddenSingles(sudoku: PureSudoku) {
    /**
     * The state for a candidate in a group
-    * true = 0 found, hidden single still possible
+    * At the beginning, the state isn't set. This is practically undefined
+    * undefined = 0 found
     * [...] = 1 found, position of hidden single
     * false = 2+ found, hidden single not possible anymore
     */
-   type PossibleState = boolean | [IndexToNine, IndexToNine]
+   type PossibleState = false | {
+      row: IndexToNine
+      column: IndexToNine
+   }
 
    /**
     * For each group (row, column, or box) there are 9 candidates.
@@ -25,14 +29,14 @@ export default function hiddenSingles(sudoku: PureSudoku) {
     *
     * So each group tracks the possibilities of each digit.
     */
-   type PossibleGroup = [null, PossibleState, PossibleState, PossibleState, PossibleState, PossibleState, PossibleState, PossibleState, PossibleState, PossibleState]
+   type PossibleGroup = Partial<Record<SudokuDigits, PossibleState>>
 
    /** A group of rows or columns or boxes. */
    type PossibleGroups = [PossibleGroup, PossibleGroup, PossibleGroup, PossibleGroup, PossibleGroup, PossibleGroup, PossibleGroup, PossibleGroup, PossibleGroup]
 
-   function nextState(currentState: PossibleState, row: IndexToNine, column: IndexToNine) {
-      if (currentState === true) {
-         return [row, column] as [IndexToNine, IndexToNine]
+   function nextState(currentState: PossibleState | undefined, row: IndexToNine, column: IndexToNine) {
+      if (currentState === undefined) {
+         return { row, column }
       }
 
       return false
@@ -40,16 +44,10 @@ export default function hiddenSingles(sudoku: PureSudoku) {
 
    function _CreateArrayOf9Groups (): PossibleGroups {
       return [
-         [null, true, true, true, true, true, true, true, true, true],
-         [null, true, true, true, true, true, true, true, true, true],
-         [null, true, true, true, true, true, true, true, true, true],
-         [null, true, true, true, true, true, true, true, true, true],
-         [null, true, true, true, true, true, true, true, true, true],
-         [null, true, true, true, true, true, true, true, true, true],
-         [null, true, true, true, true, true, true, true, true, true],
-         [null, true, true, true, true, true, true, true, true, true],
-         [null, true, true, true, true, true, true, true, true, true],
-      ]
+         {}, {}, {},
+         {}, {}, {},
+         {}, {}, {},
+      ] as PossibleGroups
    }
 
    const possible = {
@@ -66,13 +64,12 @@ export default function hiddenSingles(sudoku: PureSudoku) {
             possible.rows[row][candidate] = false
             possible.columns[column][candidate] = false
             possible.boxes[boxAt(row, column)][candidate] = false
-            continue;
-         }
-
-         for (const candidate of sudoku.data[row][column]) {
-            possible.rows[row][candidate] = nextState(possible.rows[row][candidate], row, column)
-            possible.columns[column][candidate] = nextState(possible.columns[column][candidate], row, column)
-            possible.boxes[boxAt(row, column)][candidate] = nextState(possible.boxes[boxAt(row, column)][candidate], row, column)
+         } else {
+            for (const candidate of sudoku.data[row][column]) {
+               possible.rows[row][candidate] = nextState(possible.rows[row][candidate], row, column)
+               possible.columns[column][candidate] = nextState(possible.columns[column][candidate], row, column)
+               possible.boxes[boxAt(row, column)][candidate] = nextState(possible.boxes[boxAt(row, column)][candidate], row, column)
+            }
          }
       }
    }
@@ -80,25 +77,18 @@ export default function hiddenSingles(sudoku: PureSudoku) {
    let successcount = 0
    for (const candidate of ALL_CANDIDATES) {
       for (let i = 0; i < 9; i++) {
-         const currentPossible = {
-            row: possible.rows[i][candidate],
-            column: possible.columns[i][candidate],
-            box: possible.boxes[i][candidate],
-         }
-         if (typeof currentPossible.row !== "boolean") {
-            successcount++
-            sudoku.set(...currentPossible.row).to(candidate)
-            colorCandidate(sudoku, currentPossible.row[0], currentPossible.row[1], candidate, 'solved')
-         }
-         if (typeof currentPossible.column !== "boolean") {
-            successcount++
-            sudoku.set(...currentPossible.column).to(candidate)
-            colorCandidate(sudoku, currentPossible.column[0], currentPossible.column[1], candidate, 'solved')
-         }
-         if (typeof currentPossible.box !== "boolean") {
-            successcount++
-            sudoku.set(...currentPossible.box).to(candidate)
-            colorCandidate(sudoku, currentPossible.box[0], currentPossible.box[1], candidate, 'solved')
+         const currentPossible = [
+            possible.rows[i][candidate],
+            possible.columns[i][candidate],
+            possible.boxes[i][candidate],
+         ]
+
+         for (const cell of currentPossible) {
+            if (cell !== false && cell !== undefined) {
+               successcount++
+               sudoku.set(cell.row, cell.column).to(candidate)
+               colorCandidate(sudoku, cell.row, cell.column, candidate, 'solved')
+            }
          }
       }
    }

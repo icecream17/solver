@@ -4,21 +4,37 @@
 [![build](https://github.com/icecream17/solver/workflows/build/badge.svg)](https://github.com/icecream17/solver/actions)
 [![CodeFactor](https://www.codefactor.io/repository/github/icecream17/solver/badge/main)](https://www.codefactor.io/repository/github/icecream17/solver/overview/main)
 
-A simple sudoku solver I made. This is inspired by <https://sudokuwiki.org/>
+A simple sudoku solver I made. This is inspired by <https://sudokuwiki.org/>.
+
+## file structure
+
+Hopefully the folders are helpful and the code is clear enough.\
+If you have any feedback feel free to post an issue or something.
+
+Idea: Separate this repo into 4 packages:
+
+1. core
+2. sudoku (and related react components)
+3. solver api
+4. website
+
+## yarn
+
+This project uses yarn. It's probably also possible to install with npm.
 
 ## Silly dependency note
 
 This projects is compatible with its latest dependencies' versions,
 though sometimes I didn't bother to make it not compatible with older versions.
 
-And even then, those dependencies themselves aren't updated.
+And even then, sometimes those dependencies themselves aren't updated.
 
-Current status: `3 vulnerabilities (3 moderate)`
+Current status: `➤ YN0001: No audit suggestions`
 
-You can run `npm install` and then `npm audit` for the full report.
+You can run `yarn install` and then `yarn npm audit` for the full report.
 
-## Also
+## Node version
 
-This uses `String.prototype.replaceAll`, so your node version must be `>=15.0.0`. In gitpod do `nvm install 16` on each new terminal.
+This uses `String.prototype.replaceAll`, so your node version must be `>=15.0.0`.
 
-Until create-react-app uploads a new version with the postcss-normalize fix, I have to use this override in the package.json
+If you're on gitpod run `nvm install 16` on each new terminal.

@@ -1,7 +1,7 @@
 import { ALL_CANDIDATES, IndexToNine, INDICES_TO_NINE, SudokuDigits } from "../../Types"
 import PureSudoku from "../Spaces/PureSudoku"
 import Sudoku from "../Spaces/Sudoku"
-import { boxAt, CellID, id } from "../Utils"
+import { boxAt } from "../Utils"
 
 function colorCandidate(sudoku: PureSudoku, row: IndexToNine, column: IndexToNine, candidate: SudokuDigits, color = 'blue') {
    if (sudoku instanceof Sudoku) {

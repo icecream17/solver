@@ -18,6 +18,8 @@ Idea: Separate this repo into 4 packages:
 3. solver api
 4. website
 
+Plus, at some point I'd want to support variants: https://github.com/dclamage/SudokuSolver
+
 ## yarn
 
 This project uses yarn. It's probably also possible to install with npm.

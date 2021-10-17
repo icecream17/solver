@@ -33,3 +33,6 @@ yarn-error.log*
 
 # Dependency analytics report
 /target/npmlist.json
+
+# copy/paste storage
+temp

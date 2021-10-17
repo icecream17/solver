@@ -2,7 +2,6 @@
 import './StrategyList.css'
 import React from 'react';
 import Solver from '../../Api/Solver';
-import { _expect } from '../../utils';
 import { GuaranteedConstructCallback } from '../../Types';
 import StrategyItem from './StrategyItem';
 
@@ -12,14 +11,9 @@ type StrategyListProps = Readonly<{
 
 /**
  * A list of strategies
- *
- * @requiredProps
- * - solver
  */
 export default class StrategyList extends React.Component<StrategyListProps> {
    constructor(props: StrategyListProps) {
-      _expect(StrategyList, props).toHaveProperties("solver")
-
       super(props)
       this.props.whenConstruct()
    }

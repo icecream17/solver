@@ -2,7 +2,6 @@
 
 import React from 'react';
 import { SuccessError } from '../../Api/Types';
-import { _expect } from '../../utils';
 
 export type StrategyStatusProps = Readonly<{
    success: null
@@ -14,18 +13,8 @@ export type StrategyStatusProps = Readonly<{
 
 /**
  * How did trying the strategy go?
- *
- * @requiredProps
- * - success
- * - successcount
  */
 export default class StrategyStatus extends React.Component<StrategyStatusProps> {
-   constructor(props: StrategyStatusProps) {
-      _expect(StrategyStatus, props).toHaveProperties("success", "successcount")
-
-      super(props)
-   }
-
    render() {
       const resultText =
          this.props.success === null

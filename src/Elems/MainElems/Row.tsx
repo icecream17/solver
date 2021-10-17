@@ -3,7 +3,6 @@ import React from 'react';
 import { IndexToNine, _ReactProps } from '../../Types';
 
 import Cell, { BaseCellProps } from './Cell';
-import { _expect } from '../../utils';
 
 
 type RowProps = Readonly<{
@@ -16,18 +15,8 @@ type RowProps = Readonly<{
  *
  * @example
  * <Row index={3} />
- *
- * @requiredProps
- * - index
- * - whenCellMounts
- * - whenCellUnmounts
  */
 export default class Row extends React.Component<RowProps> {
-   constructor(props: RowProps) {
-      _expect(Row, props).toHaveProperties('index', 'propsPassedDown')
-      super(props)
-   }
-
    render() {
       const propsPassedDown = {
          row: this.props.index,

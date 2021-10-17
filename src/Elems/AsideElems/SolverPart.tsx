@@ -3,7 +3,6 @@ import React from 'react'
 import Solver from '../../Api/Solver'
 import Sudoku from '../../Api/Spaces/Sudoku'
 import { StrategyResult } from '../../Api/Types'
-import { _expect } from '../../utils'
 import StrategyControls from './StrategyControls'
 import StrategyList from './StrategyList'
 
@@ -13,9 +12,7 @@ type SolverPartProps = Readonly<{
 
 /**
  * The solver part of the sudoku solver
- *
- * @requiredProps
- * - sudoku
+ * TODO: Change to tab system. Sudoku controls vs strategy controls
  */
 export default class SolverPart extends React.Component<SolverPartProps> {
    solver: Solver
@@ -25,8 +22,6 @@ export default class SolverPart extends React.Component<SolverPartProps> {
    }
    strategyItemStates: StrategyResult[]
    constructor(props: SolverPartProps) {
-      _expect(SolverPart, props).toHaveProperties("sudoku")
-
       super(props)
 
       this.children = {

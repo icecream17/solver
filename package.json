@@ -1,6 +1,6 @@
 {
   "name": "solver",
-  "version": "0.24.10",
+  "version": "0.24.11",
   "private": true,
   "homepage": "https://icecream17.github.io/solver",
   "dependencies": {
@@ -45,5 +45,6 @@
   },
   "engines": {
     "node": ">=15.0.0"
-  }
+  },
+  "packageManager": "yarn@3.0.2"
 }

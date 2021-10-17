@@ -1,6 +1,5 @@
 
 import React from 'react';
-import { _expect } from '../../utils';
 import { SudokuDigits, _ReactProps } from '../../Types';
 import Candidate from './Candidate';
 
@@ -15,24 +14,9 @@ type CandidatesDiffProps = Readonly<{
  * This adds css classes to show if one or more candidates were added or removed
  *
  * The css classes actually have precedence over the classes defined by strategies
- *
- * @requiredProps
- * - previous
- * - current
- * - classes
  */
 export default class CandidatesDiff extends React.Component<CandidatesDiffProps> {
    constructor(props: CandidatesDiffProps) {
-      _expect(CandidatesDiff, props).toHaveProperties("previous", "current", "classes")
-
-      if (!Array.isArray(props.previous) && props.previous !== null) {
-         throw TypeError('CandidatesDiff: "previous" is not an array')
-      }
-
-      if (!Array.isArray(props.current)) {
-         throw TypeError('CandidatesDiff: "current" is not an array')
-      }
-
       super(props)
 
       this.hadCandidate = this.hadCandidate.bind(this)

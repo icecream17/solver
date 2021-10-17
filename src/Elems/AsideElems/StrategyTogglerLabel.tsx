@@ -1,7 +1,6 @@
 // @flow
 
 import React from 'react';
-import { _expect } from '../../utils';
 
 export type StrategyTogglerLabelProps = Readonly<{
    name: string
@@ -14,13 +13,12 @@ export type StrategyTogglerLabelProps = Readonly<{
  * Really it's just the text inside the StrategyItem,
  * besides StrategyResult
  */
-export default class StrategyTogglerLabel extends React.Component<StrategyTogglerLabelProps> {
-   constructor(props: StrategyTogglerLabelProps) {
-      _expect(StrategyTogglerLabel, props).toHaveProperties("name")
-      super(props)
-   }
-
+export default class StrategyTogglerLabel extends React.PureComponent<StrategyTogglerLabelProps> {
    render() {
-      return <span className="StrategyTogglerLabel" id={this.props.id}>{"Toggle " + this.props.name}</span>
+      return (
+         <span className="StrategyTogglerLabel" id={this.props.id}>
+            {`Toggle ${this.props.name}`}
+         </span>
+      )
    }
 }

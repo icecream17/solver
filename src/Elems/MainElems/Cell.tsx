@@ -1,7 +1,6 @@
 // @flow
 
 import React, { Suspense } from 'react';
-import { _expect } from '../../utils';
 import { IndexToNine, Mutable, SudokuDigits, ZeroToNine, _Callback } from '../../Types';
 
 const Candidates = React.lazy(() => import('./Candidates'));
@@ -71,15 +70,6 @@ type CellState = Readonly<(
  *
  * @example
  * <Cell row={1} column={4} />
- *
- * @requiredProps
- * - row
- * - column
- * - sudoku
- * - whenCellMounts
- * - whenCellUnmounts
- * - whenNewCandidates
- * - whenCellKeydown
  */
 export default class Cell extends React.Component<CellProps, CellState> {
    static labelAt(row: IndexToNine, column: IndexToNine) {
@@ -87,8 +77,6 @@ export default class Cell extends React.Component<CellProps, CellState> {
    }
 
    constructor(props: CellProps) {
-      _expect(Cell, props).toHaveProperties("row", "column", "whenCellMounts", "whenCellUnmounts", "whenNewCandidates", "whenCellKeydown")
-
       super(props)
 
       this.state = {

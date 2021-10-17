@@ -6,7 +6,6 @@ import StrategyLabel, { StrategyLabelProps } from './StrategyLabel';
 import StrategyToggler from './StrategyToggler';
 import StrategyStatus, { StrategyStatusProps } from './StrategyStatus';
 import Solver from '../../Api/Solver';
-import { _expect } from '../../utils';
 import StrategyTogglerLabel from './StrategyTogglerLabel';
 
 export type StrategyItemProps = StrategyLabelProps & Readonly<{
@@ -24,23 +23,12 @@ export type StrategyItemState = StrategyStatusProps & Readonly<{
  * The strategy element
  *
  * Passes props to StrategyLabel
- *
- * @requiredProps
- * - name
- * - solver
- * - index
- *
- * @optionalProps
- * - href
- * - required
  */
 export default class StrategyItem extends React.Component<StrategyItemProps, StrategyItemState> {
    id: `strategy-${string}`;
    labelId: `label-for-strategy-${string}`;
    togglerId?: `strategy-toggler-${string}`;
    constructor(props: StrategyItemProps) {
-      _expect(StrategyItem, props).toHaveProperties("name", "solver", "index")
-
       super(props)
 
       const name = this.props.name.replaceAll(' ', '-')

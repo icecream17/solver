@@ -1,5 +1,4 @@
 import React from 'react';
-import { _expect } from '../utils';
 
 type ControlProps = Readonly<{
    className?: string
@@ -10,11 +9,6 @@ type ControlProps = Readonly<{
  * A general button control
  */
 export default class Control extends React.PureComponent<ControlProps> {
-   constructor(props: ControlProps) {
-      _expect(Control, props).toHaveProperties("onClick")
-      super(props)
-   }
-
    render() {
       const className = this.props.className ?? 'Control'
       return (

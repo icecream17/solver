@@ -1,6 +1,5 @@
 import React from 'react';
 import Solver from '../../Api/Solver';
-import { _expect } from '../../utils';
 import { GuaranteedConstructCallback } from '../../Types';
 import StrategyControl from './StrategyControl';
 
@@ -10,14 +9,9 @@ type StrategyControlsProps = Readonly<{
 
 /**
  * A bunch of strategy controls [TODO]
- *
- * @requiredProps
- * - solver: Solver
  */
 export default class StrategyControls extends React.Component<StrategyControlsProps> {
    constructor(props: StrategyControlsProps) {
-      _expect(StrategyControls, props).toHaveProperties("solver")
-
       super(props)
       this.props.whenConstruct(this)
    }

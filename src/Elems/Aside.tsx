@@ -9,7 +9,6 @@ import './Aside.css'
 import React from 'react'
 import SolverPart from './AsideElems/SolverPart'
 import SudokuData from '../Api/Spaces/Sudoku'
-import { _expect } from '../utils'
 import { _ReactProps } from '../Types'
 
 type AsideProps = Readonly<{
@@ -17,15 +16,9 @@ type AsideProps = Readonly<{
 }> & _ReactProps
 
 /**
- * @requiredProps
- * - sudoku
+ * Will be made of tabs later on
  */
 export default class Aside extends React.Component<AsideProps> {
-   constructor(props: AsideProps) {
-      _expect(Aside, props).toHaveProperty("sudoku")
-      super(props)
-   }
-
    render() {
       return (
          <section className="App-aside">

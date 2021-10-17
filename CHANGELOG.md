@@ -4,6 +4,12 @@ Note: Many earlier versions are not specified, that's too much work.
 
 When a `@types` dependency updates, they almost always don't affect anything.
 
+## v0.24.11
+
+- (code) Use yarn 3.0.2
+- (code / tests) Remove _expect
+- (docs) Remove `@requiredProps` and `@optionalProps` in favor of TypeScript
+
 ## v0.24.10
 
 - (tests) Allow more time for 1 specific test

@@ -1,11 +1,17 @@
 
 import React from 'react';
-import { _expect } from '../../utils';
 import { IndexToNine, SudokuDigits, _ReactProps } from '../../Types';
 import Candidate from './Candidate';
 
 type CandidatesProps = Readonly<{
+   /**
+    * The actual array of candidates
+    */
    data: SudokuDigits[]
+
+   /**
+    * The classes added to each candidate (see {@link Cell#candidateClasses})
+    */
    classes: string[] | null
 }> & _ReactProps
 
@@ -14,21 +20,10 @@ type CandidatesProps = Readonly<{
  * Candidates are the possible digits of a cell.
  *
  * Be sure to update CandidatesDiff as well!
- *
- * @requiredProps
- * - data: The actual array of candidates
- * - classes: The classes added to each candidate (see Cell#candidateClasses)
  */
 export default class Candidates extends React.Component<CandidatesProps> {
    constructor(props: CandidatesProps) {
-      _expect(Candidates, props).toHaveProperties("data", "classes")
-
-      if (!Array.isArray(props.data)) {
-         throw TypeError('Candidates: "data" is not an array')
-      }
-
       super(props)
-
       this.hasCandidate = this.hasCandidate.bind(this)
    }
 

@@ -1,26 +1,6 @@
-import React from "react"
-
 /**
- * Used internally inside React Components to require that some props exist.
- * Might not be neccesary nowadays due to typing
+ * Utility functions
  */
-export const _expect = (component: typeof React.Component, props: typeof component.prototype.props) => {
-   return {
-      toHaveProperty(requiredProperty: keyof typeof props) {
-         if (!(requiredProperty in props)) {
-            throw TypeError(`${component.name}: Required property ${String(requiredProperty)} is missing`)
-         }
-      },
-
-      toHaveProperties(...requiredProperties: Array<keyof typeof props>) {
-         for (const requiredProperty of requiredProperties) {
-            if (!(requiredProperty in props)) {
-               throw TypeError(`${component.name}: Required property ${String(requiredProperty)} is missing`)
-            }
-         }
-      }
-   }
-}
 
 /**
  * This function is used to wait for the components to update

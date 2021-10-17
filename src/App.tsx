@@ -36,7 +36,7 @@ type AppState = {
  */
 class App extends React.Component<_UnusedProps, AppState> {
    sudoku: SudokuData
-   constructor (props: _UnusedProps) {
+   constructor(props: _UnusedProps) {
       super(props)
 
       /**
@@ -73,17 +73,17 @@ class App extends React.Component<_UnusedProps, AppState> {
       }
    }
 
-   componentWillUnmount() {
+   componentWillUnmount () {
       window._custom.alert = () => undefined;
       window._custom.prompt = () => undefined;
    }
 
-   componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
+   componentDidCatch (error: Error, errorInfo: React.ErrorInfo) {
       console.error("App crashed", { error, errorInfo });
       this.setState({ error: true })
    }
 
-   render() {
+   render () {
       const classNames = ["App"]
       if (this.state.error) {
          classNames.push("error")
@@ -127,7 +127,7 @@ class App extends React.Component<_UnusedProps, AppState> {
    // 1. User isn't absolutely blocked
    // 2. No more `not implemented` errors in tests
 
-   alert(message: string, alertType = AlertType.INFO) {
+   alert (message: string, alertType = AlertType.INFO) {
       this.setState(state => {
          const notices = state.notices.slice()
          notices.push({
@@ -140,7 +140,7 @@ class App extends React.Component<_UnusedProps, AppState> {
       })
    }
 
-   prompt(message = "default message (shouldn't appear)", defaultResponse = "", callback?: PromptCallback) {
+   prompt (message = "default message (shouldn't appear)", defaultResponse = "", callback?: PromptCallback) {
       this.setState(state => {
          const notices = state.notices.slice()
          notices.push({
@@ -154,7 +154,7 @@ class App extends React.Component<_UnusedProps, AppState> {
       })
    }
 
-   finishNotice() {
+   finishNotice () {
       this.setState(state => {
          const notices = state.notices.slice()
          notices.shift()

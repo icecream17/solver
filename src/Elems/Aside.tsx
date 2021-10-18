@@ -10,6 +10,7 @@ import React from 'react'
 import SolverPart from './AsideElems/SolverPart'
 import SudokuData from '../Api/Spaces/Sudoku'
 import { _ReactProps } from '../Types'
+import Tabs from './AsideElems/Tabs'
 
 type AsideProps = Readonly<{
    sudoku: SudokuData
@@ -22,6 +23,7 @@ export default class Aside extends React.Component<AsideProps> {
    render() {
       return (
          <section className="App-aside">
+            <Tabs />
             <SolverPart sudoku={this.props.sudoku} />
          </section>
       );

@@ -97,10 +97,6 @@ class App extends React.Component<_UnusedProps, AppState> {
 
       return (
          <div className={classNames.join(' ')}>
-            <header className="App-header">
-               <Title />
-               <Version />
-            </header>
             <Main propsPassedDown={propsPassedDown} />
             <Aside sudoku={this.sudoku} />
 

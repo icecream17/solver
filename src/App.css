@@ -32,6 +32,8 @@
    color: var(--text-color);
 
    display: grid;
+   gap: 1rem;
+   align-content: space-between;
    /* default moved to min-width media querys */
 
    /* See app.main */
@@ -42,23 +44,20 @@
          calc(7 * var(--regular-border) * 2) +
          calc(2 * var(--regular-border) * 1) +
          calc(2 * 8 * var(--regular-border) / 3)
-      ) +
-      2rem + 5vh /* min Data height + view height */
+      )
    );
 }
 
 /* width >= 900px, 2 column layout*/
 @media (min-width: 900px) {
    .App {
-      grid-template-columns: 250fr 1432fr 1314fr 250fr; /* ~ (8%, 44%, 40%, 8%)  */
-      grid-template-rows: 0.3fr 0.3fr 2rem var(--app-main-height) 0.3fr; /* prev ~ (7%, 7%, 2rem, 72%, 7%) */
+      grid-template-columns: 250fr 1432fr 150fr 1314fr 250fr; /* ~ (8%, 44%, 40%, 8%)  */
+      grid-template-rows: auto var(--app-main-height) 0.3fr; /* prev ~ (7%, 7%, 2rem, 72%, 7%) */
       gap: 0 0;
       grid-template-areas:
-         ". . . ."
-         ". Header Aside ."
-         ". . Aside ."
-         ". Main Aside ."
-         ". . . .";
+         "Header Header Header Header Header"
+         ". Main . Aside ."
+         ". . . . .";
    }
 
    /* Declares variable for consistency (see below) */
@@ -70,17 +69,11 @@
 /* width <= 900px, 1 column layout */
 @media (max-width: 900px) {
    .App {
-      --header-height: calc(2rem + 10px + 2vmin + 2rem);
-
       grid-template-columns: 250fr 2745fr 250fr; /* ~ (8%, 84%, 8%)  */
-      grid-template-rows: 2rem var(--header-height) 2rem var(--app-main-height) 2rem calc(var(--app-main-height) + 9vh);
-      gap: 0 0;
+      grid-template-rows: auto var(--app-main-height) auto;
       grid-template-areas:
-         ". . ."
          ". Header ."
-         ". . ."
          ". Main ."
-         ". . ."
          ". Aside .";
 
       justify-content: center;
@@ -118,6 +111,25 @@
 }
 */
 
+.App-header {
+   grid-area: Header;
+   padding: 2vh 0;
+   height: fit-content;
+   font-size: calc(10px + 2vmin);
+}
+
+.App-header > h1.Title {
+   display: inline;
+   font-size: 1em;
+   padding: 0 2vw;
+   margin: 0;
+}
+
+.App-header > .Version {
+   font-size: 0.7em;
+   color: silver;
+}
+
 /* TODO: Fix layout when error */
 .App.error {
    border: 0.5rem solid var(--red);
@@ -128,20 +140,6 @@
    color: var(--red);
 }
 
-.App-header {
-   font-size: calc(10px + 2vmin);
-
-   grid-area: Header;
-   height: fit-content;
-}
-
-.App-header > .Title {
-   margin: 0;
-}
-
-.App-header > .Version {
-   color: silver;
-}
 
 .App-link {
    color: var(--link-color);

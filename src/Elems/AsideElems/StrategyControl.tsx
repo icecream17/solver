@@ -1,16 +1,14 @@
 import React from 'react';
-import { _ReactProps } from '../../Types';
 import Control from '../Control';
 
 type StrategyControlProps = Readonly<{
    onClick: React.MouseEventHandler,
-   name: _ReactProps["children"]
+   name: string
 }>
 
 /**
  * Strategy control
- * When a user clicks on the control... something happens,
- * like a strategy being run against the sudoku.
+ * Useless - there's "Control". Don't know why this exists.
  */
 export default class StrategyControl extends React.Component<StrategyControlProps> {
    render() {
@@ -18,7 +16,8 @@ export default class StrategyControl extends React.Component<StrategyControlProp
          <Control
             className='StrategyControl'
             onClick={this.props.onClick}
-         >{this.props.name}</Control>
+            name={this.props.name}
+         />
       )
    }
 }

@@ -4,12 +4,13 @@ import userEvent from "@testing-library/user-event";
 import App from "../App";
 import { getButtonCellElement } from "../Elems/MainElems/Sudoku.testUtils";
 import BOARDS from "./boards";
-import { importBoard, visuallyCurrentStrategy, currentStrategyIndex } from "./Solver.testUtils";
+import { importBoard, visuallyCurrentStrategy, currentStrategyIndex, switchTab } from "../testUtils";
 
 jest.setTimeout(7000);
 
 beforeEach(() => {
    render(<App />);
+   switchTab("strats");
 })
 
 test("Import board", async () => {

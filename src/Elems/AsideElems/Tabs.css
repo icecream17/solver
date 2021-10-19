@@ -1,0 +1,15 @@
+
+.Tabs {
+   display: grid;
+   grid-template-columns: repeat(2, 1fr);
+}
+
+.Tab.selected {
+   border: none;
+   background-color: var(--background-color);
+}
+
+.Tab.unselected {
+   border-style: outset;
+   background-color: rgb(85, 85, 85);
+}

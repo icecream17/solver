@@ -121,6 +121,10 @@ To use:
 1. <https://reactjs.org/docs/test-utils.html>
 1. <https://reactjs.org/docs/context.html>
 
+## todo
+
+Idea: Remove coords
+
 ## List of bugs
 
 Putting them here so that I can add tests for them later.

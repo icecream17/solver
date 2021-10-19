@@ -1,6 +1,7 @@
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import Sudoku from '../Api/Spaces/Sudoku';
+import { switchTab } from '../testUtils';
 import Aside from './Aside';
 
 beforeEach(() => {
@@ -8,6 +9,8 @@ beforeEach(() => {
 })
 
 function getTogglers () {
+   switchTab('strats')
+
    try {
       return screen.getAllByRole('checkbox')
    } catch (error) {
@@ -19,9 +22,8 @@ function getTogglers () {
    }
 }
 
-test('has accessible role', () => {
-   getTogglers()
-   expect(true).toBe(true)
+test('togglers have accessible role', () => {
+   expect(getTogglers).not.toThrow()
 })
 
 test('the togglers toggle the strategy item', () => {

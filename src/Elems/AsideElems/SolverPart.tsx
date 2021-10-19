@@ -8,6 +8,7 @@ import StrategyList from './StrategyList'
 
 type SolverPartProps = Readonly<{
    sudoku: Sudoku
+   solver: Solver
 }>
 
 /**
@@ -15,7 +16,6 @@ type SolverPartProps = Readonly<{
  * TODO: Change to tab system. Sudoku controls vs strategy controls
  */
 export default class SolverPart extends React.Component<SolverPartProps> {
-   solver: Solver
    children: {
       controls: null | StrategyControls
       list: null | StrategyList
@@ -28,7 +28,6 @@ export default class SolverPart extends React.Component<SolverPartProps> {
          controls: null,
          list: null
       }
-      this.solver = new Solver(this.props.sudoku, this as SolverPart)
       this.strategyItemStates = []
 
       this.whenControlsConstruct = this.whenControlsConstruct.bind(this)
@@ -38,10 +37,10 @@ export default class SolverPart extends React.Component<SolverPartProps> {
    render() {
       return (
          <div className='SolverPart'>
-            <StrategyControls solver={this.solver} whenConstruct={this.whenControlsConstruct} />
+            <StrategyControls solver={this.props.solver} whenConstruct={this.whenControlsConstruct} />
             <fieldset className="StrategyListContainer">
                <legend>strategies</legend>
-               <StrategyList solver={this.solver} whenConstruct={this.whenListConstructs} />
+               <StrategyList solver={this.props.solver} whenConstruct={this.whenListConstructs} />
             </fieldset>
         </div>
       )

@@ -1,6 +1,6 @@
 import { screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { forComponentsToUpdate } from "../utils";
+import { forComponentsToUpdate } from "./utils";
 
 export async function importBoard(text: string) {
    userEvent.click(screen.getByRole("button", { name: "import" }))
@@ -25,4 +25,8 @@ export function currentStrategyIndex() {
       throw TypeError("Current strategy does not have a parent???")
    }
    return Array.prototype.indexOf.call(parentChildren, currentStrategy)
+}
+
+export function switchTab (name: string) {
+   userEvent.click(screen.getByRole("tab", { name }))
 }

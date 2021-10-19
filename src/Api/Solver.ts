@@ -1,5 +1,4 @@
 import asyncPrompt from "../asyncPrompt"
-import SolverPart from "../Elems/AsideElems/SolverPart"
 import StrategyItem from "../Elems/AsideElems/StrategyItem"
 import { AlertType, _Callback } from "../Types"
 import { forComponentsToUpdate } from "../utils"
@@ -40,7 +39,7 @@ export default class Solver {
    /** Whether a strategy is skippable */
    skippable = [] as boolean[]
 
-   constructor(public sudoku: null | Sudoku = null, public solverElement: SolverPart) {
+   constructor(public sudoku: Sudoku) {
       // These capitalized methods are used as handlers in StrategyControls, so they need to be bound beforehand.
       this.Go = this.Go.bind(this)
       this.Step = this.Step.bind(this)
@@ -116,21 +115,10 @@ export default class Solver {
       }
    }
 
-   sudokuNullCheck(): asserts this is { sudoku: Sudoku } {
-      if (this.sudoku === null) {
-         if (this.solverElement.props.sudoku === null) {
-            throw ReferenceError('Uninitialized sudoku!')
-         } else {
-            this.sudoku = this.solverElement.props.sudoku
-         }
-      }
-   }
-
    // *async
    setupCells() {
       const promises = [] as Promise<undefined>[]
 
-      this.sudokuNullCheck()
       for (const row of this.sudoku.cells) {
          for (const cell of row) {
             promises.push(new Promise(resolve => {
@@ -150,7 +138,6 @@ export default class Solver {
     * For each cell, run {@link Cell#setExplainingToFalse}
     */
    async resetCells() {
-      this.sudokuNullCheck()
       for (const row of this.sudoku.cells) {
          for (const cell of row) {
             cell?.setExplainingToFalse()
@@ -254,8 +241,6 @@ export default class Solver {
       // Main code
       await this.StartStep()
 
-      this.sudokuNullCheck()
-
       // Run strategy
       const _strategyResult = STRATEGIES[this.strategyIndex](this.sudoku, this.memory[this.strategyIndex])
       const strategyResult = {
@@ -298,18 +283,15 @@ export default class Solver {
       }
 
       await this.reset()
-      this.sudokuNullCheck()
       this.sudoku.import(result)
    }
 
    Export() {
-      this.sudokuNullCheck()
       window._custom.alert(this.sudoku._to81())
       window._custom.alert(this.sudoku.to729())
    }
 
    async Clear() {
-      this.sudokuNullCheck()
       this.sudoku.clear()
       await this.reset()
    }

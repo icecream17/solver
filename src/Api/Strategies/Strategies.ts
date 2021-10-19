@@ -13,6 +13,7 @@ import updateCandidates from "./updateCandidates";
 import xWing from "./xWing";
 import xyChain from "./xyChain";
 import xyLoop from "./xyLoop";
+import xyzWing from "./xyzWing";
 import yWing from "./yWing";
 
 // See comments on `Strategy`
@@ -29,6 +30,7 @@ const STRATEGIES = [
    skyscraper,
    yWing,
    twoMinusOneLines,
+   xyzWing,
    xyLoop,
    xyChain,
 ] as const

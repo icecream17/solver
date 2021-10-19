@@ -268,8 +268,11 @@ export default class Solver {
       if (this.sudoku === null) return;
       for (const row of this.sudoku.cells) {
          for (const cell of row) {
-            cell?.undo()
-            cell?.setState({ explaining: false, previousCandidates: null })
+            cell?.undo(() => {
+               void this.sudoku
+                  .set(cell.props.row, cell.props.column)
+                  .to(...cell.state.candidates)
+            })
          }
       }
       this.skippable[this.strategyIndex] = false

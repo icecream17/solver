@@ -283,12 +283,12 @@ export default class Cell extends React.Component<CellProps, CellState> {
    }
 
    // BUG? Not using a callback for `setCandidatesTo`
-   undo() {
+   undo(callback?: _Callback) {
       if (this.state.previousCandidates !== null) {
          this.setCandidatesTo(this.state.previousCandidates)
       }
 
-      this.setExplainingToFalse()
+      this.setExplainingToFalse(callback)
    }
 
    render() {

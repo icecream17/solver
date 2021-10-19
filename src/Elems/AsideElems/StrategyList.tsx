@@ -93,6 +93,10 @@ export default class StrategyList extends React.Component<StrategyListProps> {
                {...getRepeatedProps()}
             />
             <StrategyItem
+               name='XYZ wing'
+               {...getRepeatedProps()}
+            />
+            <StrategyItem
                name='XY Ring (Loop)'
                href='https://youtu.be/OUKwjVs4MsY'
                {...getRepeatedProps()}

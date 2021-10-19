@@ -2,6 +2,7 @@ import { SudokuDigits } from "../../Types";
 import PureSudoku from "../Spaces/PureSudoku";
 import { affects, assertGet, boxAt, CellID, sharedInArrays } from "../Utils";
 import { getCellsWithNCandidates } from "../Utils.dependent";
+import { highlightCell } from "./xyLoop";
 
 /* TODO: When finished move to Utils */
 function inSameBox(cellA: CellID, cellB: CellID) {
@@ -24,10 +25,7 @@ export default function xyzWing (sudoku: PureSudoku) {
 
    // Looking for ABC
    // which is in the same box as an AB
-   // and also sees another two candidate cell
-   // If BC, B
-   // If AC, A
-   // If AB, Nothing...
+   // and also sees another two candidate cell with C (AC or BC)
    const cellsWithThreeCandidates = getCellsWithNCandidates(sudoku, 3)
    const cellsWithTwoCandidates = getCellsWithNCandidates(sudoku, 2)
 
@@ -47,33 +45,50 @@ export default function xyzWing (sudoku: PureSudoku) {
       // All cells AB sees with 2 candidates
       const affectsBaseCell = assertGet(affectsCW3C, basecell)
       const validAffectsCell = affectsBaseCell.filter(
-         sees => cellsWithTwoCandidates.includes(sees) && sharedInArrays(sudokubasecell, sudoku.data[sees.row][sees.column])
+         sees => cellsWithTwoCandidates.includes(sees) && sudoku.data[sees.row][sees.column].every(candidate => sudokubasecell.includes(candidate))
       )
-      const valid1stWing = validAffectsCell.filter(sees => inSameBox(sees, basecell))
+      const [valid1stWing, valid2ndWing] = validAffectsCell.reduce < [CellID[], CellID[]]>((accum, sees) => {
+         if (inSameBox(sees, basecell)) {
+            accum[0].push(sees)
+         } else {
+            accum[1].push(sees)
+         }
+         return accum
+      }, [[], []])
+
+      if (valid1stWing.length === 0 || valid2ndWing.length === 0) {
+         continue
+      }
 
       for (const wing1 of valid1stWing) {
          const wing1Cell = sudoku.data[wing1.row][wing1.column]
-         const extraCandidate = sudokubasecell.find(candidate => wing1Cell.includes(candidate)) as SudokuDigits
+         const extraCandidate = sudokubasecell.find(candidate => !wing1Cell.includes(candidate)) as SudokuDigits
 
-         for (const wing2 of validAffectsCell) {
+         for (const wing2 of valid2ndWing) {
             const wing2Cell = sudoku.data[wing2.row][wing2.column]
-            if (wing2Cell.includes(extraCandidate)) {
+            if (wing2Cell.includes(extraCandidate) && wing2Cell.every(candidate => sudokubasecell.includes(candidate))) {
+               const sharedCandidate = sudokubasecell.find(candidate =>
+                  wing1Cell.includes(candidate) && wing2Cell.includes(candidate)
+               ) as SudokuDigits
+
                const affectsAll = sharedInArrays(
                   affectsBaseCell,
                   assertGet(affectsCW2C, wing1),
                   assertGet(affectsCW2C, wing2)
                )
 
-
                let success = false
                for (const cell of affectsAll) {
-                  if (sudoku.data[cell.row][cell.column].includes(extraCandidate)) {
-                     sudoku.remove(extraCandidate).at(cell.row, cell.column)
+                  if (sudoku.data[cell.row][cell.column].includes(sharedCandidate)) {
+                     sudoku.remove(sharedCandidate).at(cell.row, cell.column)
                      success = true
                   }
                }
 
                if (success) {
+                  highlightCell(sudoku, wing1)
+                  highlightCell(sudoku, wing2)
+                  highlightCell(sudoku, basecell, 'orange')
                   return {
                      success: true,
                      successcount: 1

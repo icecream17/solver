@@ -4,6 +4,11 @@ Note: Many earlier versions are not specified, that's too much work.
 
 When a `@types` dependency updates, they almost always don't affect anything.
 
+## v0.26.0
+
+- (use) Actually change the sudoku after undo
+- (use) xyzWing
+
 ## v0.25.0
 
 - (use) Tabs!

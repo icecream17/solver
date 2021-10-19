@@ -1,5 +1,4 @@
 import React from 'react';
-import "./StrategyControls.css"
 
 import Solver from '../../Api/Solver';
 import { GuaranteedConstructCallback } from '../../Types';

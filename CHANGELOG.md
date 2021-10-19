@@ -9,10 +9,12 @@ When a `@types` dependency updates, they almost always don't affect anything.
 - (use) Tabs!
   - TODO: a11y
   - TODO: Tabpanel + Tabpanel aria
+- (ui) Remove data
+  - TODO: More sudoku editing controls
 - (ui) Header is smaller
   - TODO: New header with sudoku's title
-- (ui) Strats controls are in grid layout
 - (ui) Padding between two columns in two column layout
+- (ui) Unintentional, but the controls for strats were reordered.
 - (code) Remove `solverElement` and `sudokuNullCheck()` from `Solver`
 - (tests) Add changeTab
 - (tests) Only independent css does stuff with the StrategyList id

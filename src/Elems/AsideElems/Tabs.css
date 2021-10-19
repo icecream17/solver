@@ -5,7 +5,8 @@
 }
 
 .Tab.selected {
-   border-style: inset;
+   border: none;
+   background-color: var(--background-color);
 }
 
 .Tab.unselected {

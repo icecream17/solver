@@ -32,7 +32,7 @@
    color: var(--text-color);
 
    display: grid;
-   gap: 0;
+   gap: 1rem;
    align-content: space-between;
    /* default moved to min-width media querys */
 
@@ -44,8 +44,7 @@
          calc(7 * var(--regular-border) * 2) +
          calc(2 * var(--regular-border) * 1) +
          calc(2 * 8 * var(--regular-border) / 3)
-      ) +
-      2rem + 5vh /* min Data height + view height */
+      )
    );
 }
 
@@ -71,7 +70,7 @@
 @media (max-width: 900px) {
    .App {
       grid-template-columns: 250fr 2745fr 250fr; /* ~ (8%, 84%, 8%)  */
-      grid-template-rows: auto var(--app-main-height) 2rem calc(var(--app-main-height) + 9vh);
+      grid-template-rows: auto var(--app-main-height) auto;
       grid-template-areas:
          ". Header ."
          ". Main ."

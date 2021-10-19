@@ -201,7 +201,6 @@ export default class Cell extends React.Component<CellProps, CellState> {
    toggleCandidate(candidate: SudokuDigits) {
       this.setState((state: CellState) => {
          const candidates = new Set(state.pretend ? [] : state.candidates)
-         const dataElement = document.getElementById('Data') as HTMLTextAreaElement
 
          if (candidates.has(candidate)) {
             candidates.delete(candidate)
@@ -210,14 +209,12 @@ export default class Cell extends React.Component<CellProps, CellState> {
          }
 
          if (candidates.size === 0) {
-            dataElement.value = "empty!"
             return {
                candidates: [],
                error: true
             }
          }
 
-         dataElement.value = [...candidates].join('')
          return {
             candidates: [...candidates],
             error: false
@@ -405,20 +402,17 @@ export default class Cell extends React.Component<CellProps, CellState> {
          const candidate = Number(event.key) as SudokuDigits
          this.toggleCandidate(candidate)
       } else if (['Backspace', 'Delete', 'Clear'].includes(event.key)) {
-         const dataElement = document.getElementById('Data') as HTMLTextAreaElement
          if (event.shiftKey) {
             this.setState({
                candidates: [1, 2, 3, 4, 5, 6, 7, 8, 9],
                showCandidates: false,
                error: false
             })
-            dataElement.value = '123456789'
          } else {
             this.setState({
                candidates: [],
                error: true
             })
-            dataElement.value = 'Empty!'
          }
       } else if (event.key in keyboardMappings) {
          // Keyboard controls

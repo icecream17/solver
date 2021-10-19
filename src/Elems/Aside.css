@@ -1,3 +1,9 @@
+.App-aside {
+   height: fit-content;
+   border: inset;
+   margin: 1.5rem 0 20vh 0;
+}
+
 .StrategyList {
    margin-left: 1rem;
    margin-top: 0;

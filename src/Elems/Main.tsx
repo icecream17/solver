@@ -2,7 +2,6 @@ import './Main.css'
 import React from 'react'
 
 import Sudoku, { BaseSudokuProps } from './MainElems/Sudoku'
-import DataContainer from './MainElems/Data'
 import Coords from './MainElems/Coords'
 
 type MainProps = Readonly<{
@@ -12,8 +11,8 @@ type MainProps = Readonly<{
 /**
  * The "main" component, which is just the sudoku parts for now.
  *
- * Currently the parts are Coords, Sudoku, and Data
- * TODO: Remove Data
+ * Currently the parts are Coords and Sudoku
+ * TODO: Remove coords
  */
 class Main extends React.Component<MainProps> {
    render() {
@@ -21,7 +20,6 @@ class Main extends React.Component<MainProps> {
          <main className="App-main">
             <Coords />
             <Sudoku {...this.props.propsPassedDown} />
-            <DataContainer />
          </main>
       );
    }

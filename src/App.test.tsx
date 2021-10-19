@@ -2,6 +2,7 @@ import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import App from './App';
 import asyncPrompt from './asyncPrompt';
+import { switchTab } from './testUtils';
 import { AlertType } from './Types';
 import { forComponentsToUpdate } from './utils';
 
@@ -19,6 +20,7 @@ test('a header exists', () => {
 })
 
 test("Strategy sections exist", () => {
+   switchTab('strats')
    expect(screen.getByRole('group', { name: 'strategies' })).toBeInTheDocument()
    expect(screen.getByRole('group', { name: 'controls' })).toBeInTheDocument()
 })

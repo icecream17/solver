@@ -1,5 +1,4 @@
 import React from "react";
-import { _Callback } from "../../Types";
 import Control from "../Control";
 
 type TabProps = Readonly<{
@@ -18,9 +17,12 @@ export default class Tab extends React.Component<TabProps> {
    render () {
       const className = this.props.selected ? `Tab selected` : `Tab unselected`
       return (
-         <Control onClick={this.callbackIfNotSelected} className={className}>
-            {this.props.title}
-         </Control>
+         <Control
+            onClick={this.callbackIfNotSelected}
+            className={className}
+            role="tab"
+            aria-selected={this.props.selected}
+         >{this.props.title}</Control>
       )
    }
 

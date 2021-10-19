@@ -4,6 +4,21 @@ Note: Many earlier versions are not specified, that's too much work.
 
 When a `@types` dependency updates, they almost always don't affect anything.
 
+## v0.25.0
+
+- (use) Tabs!
+  - TODO: a11y
+  - TODO: Tabpanel + Tabpanel aria
+- (ui) Header is smaller
+  - TODO: New header with sudoku's title
+- (ui) Strats controls are in grid layout
+- (ui) Padding between two columns in two column layout
+- (code) Remove `solverElement` and `sudokuNullCheck()` from `Solver`
+- (tests) Add changeTab
+- (tests) Only independent css does stuff with the StrategyList id
+
+- (deps) Update some dependencies
+
 ## v0.24.11
 
 - (code) Use yarn 3.0.2

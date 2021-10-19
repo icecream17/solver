@@ -1,4 +1,6 @@
 import React from "react";
+import "./Tabs.css"
+
 import { _Callback } from "../../Types";
 import Tab from "./Tab";
 
@@ -17,25 +19,38 @@ export default class Tabs extends React.Component<TabsProps, TabsState> {
       this.state = {
          selectedTab: 0
       }
+
+      this.whenTabChange = this.whenTabChange.bind(this)
    }
 
    render () {
-      let tabs = []
+      const tabs = []
       for (const [index, title] of this.props.tabNames.entries()) {
          tabs.push(
             <Tab
+               key={index}
                index={index}
                selected={this.state.selectedTab === index}
                title={title}
-               whenSelected={this.props.whenTabChange}
+               whenSelected={this.whenTabChange}
             />
          )
       }
 
+      /**
+       * https://www.w3.org/TR/wai-aria-practices-1.1/examples/tabs/tabs-1/tabs.html
+       *
+       * Using div here because it's recommended
+       */
       return (
-         <fieldset className="Tabs">
+         <div className="Tabs" role="tablist">
             {tabs}
-         </fieldset>
+         </div>
       )
+   }
+
+   whenTabChange(index: number) {
+      this.setState({selectedTab: index})
+      this.props.whenTabChange(index)
    }
 }

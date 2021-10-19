@@ -2,8 +2,6 @@
 import './App.css'
 import React from 'react'
 
-import Title from './Elems/Title'
-import Version from './Elems/Version'
 import Main from './Elems/Main'
 import Aside from './Elems/Aside'
 import SudokuData from './Api/Spaces/Sudoku'
@@ -11,6 +9,8 @@ import { AlertType, NoticeInfo, NoticeType, PromptCallback, SudokuDigits, _Unuse
 import NoticeWindow from './Elems/NoticeElems/NoticeWindow'
 import GithubCorner from './Elems/GithubCorner'
 import Cell from './Elems/MainElems/Cell'
+import Title from './Elems/Title'
+import Version from './Elems/Version'
 
 declare global {
    interface Window {
@@ -97,6 +97,10 @@ class App extends React.Component<_UnusedProps, AppState> {
 
       return (
          <div className={classNames.join(' ')}>
+            <header className="App-header">
+               <Title />
+               <Version />
+            </header>
             <Main propsPassedDown={propsPassedDown} />
             <Aside sudoku={this.sudoku} />
 

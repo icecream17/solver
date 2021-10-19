@@ -18,7 +18,7 @@ Idea: Separate this repo into 4 packages:
 3. solver api
 4. website
 
-Plus, at some point I'd want to support variants: https://github.com/dclamage/SudokuSolver
+Plus, at some point I'd want to support variants: <https://github.com/dclamage/SudokuSolver>
 
 ## yarn
 
@@ -40,3 +40,5 @@ You can run `yarn install` and then `yarn npm audit` for the full report.
 This uses `String.prototype.replaceAll`, so your node version must be `>=15.0.0`.
 
 If you're on gitpod run `nvm install 16` on each new terminal.
+
+Also, `@types/node` is usually on one of the latest versions. If this is incompatible with an earlier version of node, please post an issue.

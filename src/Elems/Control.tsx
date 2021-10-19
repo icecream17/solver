@@ -2,8 +2,10 @@ import React from 'react';
 
 type ControlProps = Readonly<{
    className?: string
-   onClick: React.MouseEventHandler
-}>
+   name?: string
+
+   onClick: React.MouseEventHandler // required
+}> & React.ButtonHTMLAttributes<HTMLButtonElement>
 
 /**
  * A general button control
@@ -14,9 +16,9 @@ export default class Control extends React.PureComponent<ControlProps> {
       return (
          <button
             type='button'
+            {...this.props}
             className={className}
-            onClick={this.props.onClick}
-         >{this.props.children}</button>
+         >{this.props.children ?? this.props.name}</button>
       )
    }
 }

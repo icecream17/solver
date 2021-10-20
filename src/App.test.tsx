@@ -43,11 +43,16 @@ test("The alert system", async () => {
 })
 
 test("The prompt system", async () => {
+   const testTitle = "4[36 49 4ryapoz[34\u0927 s4"
    const testText = "42 tnhbtxlvp320ajq6lcpy" // random string
 
    // Cancel
-   const promptPromise = asyncPrompt(testText)
+   const promptPromise = asyncPrompt(testTitle, testText)
+
+   // --- But first check that the title / description is there
+   expect(await screen.findByText(testTitle)).toBeInTheDocument()
    expect(await screen.findByText(testText)).toBeInTheDocument()
+
    const closeButton = screen.getByRole('button', { name: 'Cancel' })
    expect(closeButton).toBeInTheDocument()
    userEvent.click(closeButton)
@@ -55,7 +60,7 @@ test("The prompt system", async () => {
    expect(promptPromise).resolves.toBeNull()
 
    // Submit
-   const promptPromise2 = asyncPrompt(testText)
+   const promptPromise2 = asyncPrompt(testTitle, testText)
    await forComponentsToUpdate()
    const inputElement = screen.getByRole('textbox', { name: testText }) as HTMLInputElement
    const submitButton = screen.getByRole('button', { name: 'Submit' })
@@ -65,7 +70,7 @@ test("The prompt system", async () => {
    expect(promptPromise2).resolves.toBe(testText)
 
    // Submit with default result
-   const promptPromise3 = asyncPrompt(testText, testText)
+   const promptPromise3 = asyncPrompt(testTitle, testText, testText)
    await forComponentsToUpdate()
    const inputElementAgain = screen.getByRole('textbox', { name: testText }) as HTMLInputElement
    const submitButtonAgain = screen.getByRole('button', { name: 'Submit' })

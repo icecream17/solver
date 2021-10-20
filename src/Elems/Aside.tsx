@@ -56,10 +56,15 @@ export default class Aside extends React.Component<AsideProps, AsideState> {
          throw new ReferenceError(`unknown Selected tab index: ${this.state.selectedTab}`)
       }
 
+      /**
+       * Tabpanel id used in Tabs (aria-owns)
+       * div because that's what's recommended
+       * tabindex for focusability but not tabbability (-1)
+       */
       return (
          <section className="App-aside">
             <Tabs whenTabChange={this.whenTabChange} tabNames={tabNames} />
-            {content}
+            <div role="tabpanel" id="TabContent" tabIndex={-1}>{content}</div>
          </section>
       );
    }

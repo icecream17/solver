@@ -4,6 +4,15 @@ Note: Many earlier versions are not specified, that's too much work.
 
 When a `@types` dependency updates, they almost always don't affect anything.
 
+## v0.26.1
+
+- (css) Use sanitize.css
+- (use, a11y) Add headers to prompts. autofocus textarea???
+- (use, css, a11y) Better tab controls + classes + aria
+- (use, a11y, code) Add titles to cells
+- (ui) Fix github corner location on smaller screens
+- (a11y) Slight aria improvement in github corner
+
 ## v0.26.0
 
 - (use) Actually change the sudoku after undo
@@ -12,12 +21,12 @@ When a `@types` dependency updates, they almost always don't affect anything.
 ## v0.25.0
 
 - (use) Tabs!
-  - TODO: a11y
-  - TODO: Tabpanel + Tabpanel aria
+  - !TODO: a11y (done in 0.26.1)
+  - !TODO: Tabpanel + Tabpanel aria (done in 0.26.1)
 - (ui) Remove data
   - TODO: More sudoku editing controls
 - (ui) Header is smaller
-  - TODO: New header with sudoku's title
+  - TODO: New header with sudoku's title and author
 - (ui) Padding between two columns in two column layout
 - (ui) Unintentional, but the controls for strats were reordered.
 - (code) Remove `solverElement` and `sudokuNullCheck()` from `Solver`

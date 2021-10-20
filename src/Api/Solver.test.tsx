@@ -44,7 +44,7 @@ test("Strategy index goes to 1 next", async () => {
    await waitFor(() => expect(currentStrategyIndex()).toBe(1))
 })
 
-test.skip("Stays at first strategy when board is invalid", async () => {
+test("Stays at first strategy when board is invalid", async () => {
    await importBoard(BOARDS["Invalid board"])
    userEvent.click(screen.getByRole("button", { name: "step" }))
    userEvent.click(screen.getByRole("button", { name: "step" }))

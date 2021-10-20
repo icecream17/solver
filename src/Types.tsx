@@ -48,6 +48,7 @@ export type NoticeInfo = {
    message: string
 } | {
    type: NoticeType.PROMPT
+   title: string
    message: string
    defaultResponse: string
    callback?: PromptCallback

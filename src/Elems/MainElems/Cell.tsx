@@ -1,6 +1,7 @@
 // @flow
 
 import React, { Suspense } from 'react';
+import { algebraic } from '../../Api/Utils';
 import { IndexToNine, Mutable, SudokuDigits, ZeroToNine, _Callback } from '../../Types';
 
 const Candidates = React.lazy(() => import('./Candidates'));
@@ -72,11 +73,15 @@ type CellState = Readonly<(
  * <Cell row={1} column={4} />
  */
 export default class Cell extends React.Component<CellProps, CellState> {
-   static labelAt(row: IndexToNine, column: IndexToNine) {
+   static labelAt (row: IndexToNine, column: IndexToNine) {
       return `Cell at row ${row + 1}, column ${column + 1}` as const
    }
 
-   constructor(props: CellProps) {
+   static title (row: IndexToNine, column: IndexToNine) {
+      return `${algebraic(row, column)}` // TODO: Add sudoku title
+   }
+
+   constructor (props: CellProps) {
       super(props)
 
       this.state = {
@@ -340,6 +345,7 @@ export default class Cell extends React.Component<CellProps, CellState> {
             <div
                className={className}
                role='button'
+               title={Cell.title(this.props.row, this.props.column)}
                aria-label={Cell.labelAt(this.props.row, this.props.column)}
                data-error={this.state.error ? "true" : undefined}
                data-active={this.state.active ? "true" : undefined}

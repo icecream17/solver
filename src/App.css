@@ -31,6 +31,9 @@
    width: fit-content;
    color: var(--text-color);
 
+   /* For the github-corner */
+   position: relative;
+
    display: grid;
    gap: 1rem;
    align-content: space-between;

@@ -10467,7 +10467,7 @@ resolve@^2.0.0-next.3:
   languageName: node
   linkType: hard
 
-"sanitize.css@npm:*":
+"sanitize.css@npm:*, sanitize.css@npm:^13.0.0":
   version: 13.0.0
   resolution: "sanitize.css@npm:13.0.0"
   checksum: a99ca77c4d135800a4a93c3555e5aa4a2eb040a833df716dbe9132e1f2086fbf9acdb8021a579f40dcf77166d2d50f3358b4b6121a247d26fed5a0e6f5af3bb7
@@ -10818,6 +10818,7 @@ resolve@^2.0.0-next.3:
     react: ^17.0.2
     react-dom: ^17.0.2
     react-scripts: ^5.0.0-next.47
+    sanitize.css: ^13.0.0
     source-map-explorer: ^2.5.2
     typescript: ^4.4.4
     web-vitals: ^2.1.2

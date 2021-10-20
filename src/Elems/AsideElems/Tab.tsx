@@ -1,17 +1,27 @@
 import React from "react";
+import { _Callback } from "../../Types";
 import Control from "../Control";
 
 type TabProps = Readonly<{
    index: number
+   focused: boolean
    selected: boolean
    title: string
+   whenFocused: _Callback
    whenSelected: (index: number) => void
 }>
 
 export default class Tab extends React.Component<TabProps> {
+   selfElement: HTMLButtonElement | null = null
    constructor (props: TabProps) {
       super(props)
       this.callbackIfNotSelected = this.callbackIfNotSelected.bind(this)
+   }
+
+   componentDidUpdate() {
+      if (this.props.focused) {
+         this.selfElement?.focus()
+      }
    }
 
    render () {
@@ -19,8 +29,10 @@ export default class Tab extends React.Component<TabProps> {
       return (
          <Control
             onClick={this.callbackIfNotSelected}
+            onFocus={this.props.whenFocused}
             className={className}
             role="tab"
+            innerRef={element => this.selfElement = element}
             aria-selected={this.props.selected}
          >{this.props.title}</Control>
       )

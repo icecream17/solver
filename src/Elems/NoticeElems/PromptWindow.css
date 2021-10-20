@@ -1,10 +1,11 @@
 
 .PromptWindow {
-   position: absolute;
+   position: fixed; /** prevent escape! Note that aria-modal is implicitly true */
    width: 100vw;
    height: 100vh;
    background-color: #7777;
    display: flex;
+   z-index: 4;
 }
 
 .PromptNotice {
@@ -24,6 +25,8 @@
    align-self: center;
    align-content: center;
    justify-content: center;
+   word-wrap: break-word;
+   word-break: break-all;
 }
 
 .PromptNotice > label {
@@ -42,7 +45,6 @@
 
 .PromptNotice > label > textarea {
    width: 100%;
-   box-sizing: border-box;
 }
 
 

@@ -11,5 +11,14 @@
 
 .Tab.unselected {
    border-style: outset;
-   background-color: rgb(85, 85, 85);
+   background-color: rgb(80, 80, 80);
+}
+
+.Tab.unselected:hover {
+   background-color: rgb(118, 118, 118);
+}
+
+.Tab.unselected:active {
+   background-color: rgb(55, 55, 55);
+   border-style: inset;
 }

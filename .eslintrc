@@ -1,6 +1,12 @@
 {
   "extends": [
     "eslint:recommended",
+    // "hardcore",
+    // "hardcore/react",
+    // "hardcore/react-testing-library",
+    // "hardcore/jest",
+    // "hardcore/fp",
+    // "hardcore/ts",
     "react-app",
     "react-app/jest",
     "plugin:flowtype/recommended",
@@ -10,9 +16,14 @@
     "plugin:testing-library/react",
     "plugin:react/recommended",
     "plugin:react-hooks/recommended",
+    "plugin:regexp/recommended",
+    "plugin:sonarjs/recommended",
     "plugin:@typescript-eslint/recommended",
     "plugin:@typescript-eslint/recommended-requiring-type-checking"
   ],
+  "env": {
+    "browser": true
+  },
   "parserOptions": {
     "project": "./tsconfig.json"
   },
@@ -24,6 +35,8 @@
     "testing-library",
     "react",
     "react-hooks",
+    "regexp",
+    "sonarjs",
     "@typescript-eslint"
   ],
   "reportUnusedDisableDirectives": true,
@@ -79,6 +92,8 @@
     "react/button-has-type": "warn",
     "react/prefer-read-only-props": "warn",
 
+    // TODO: fix errors
+    "sonarjs/cognitive-complexity": "off",
 
     "testing-library/await-fire-event": "warn",
     "testing-library/prefer-explicit-assert": "warn",

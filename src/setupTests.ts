@@ -14,7 +14,7 @@ declare global {
 window._inTestMode = true
 
 configure({
-   getElementError(message: string | null, container) {
+   getElementError(message: string | null, _container) {
       const error = new Error(message ?? undefined)
       error.name = 'TestingLibraryElementError'
       return error

@@ -157,7 +157,7 @@ export default class Cell extends React.Component<CellProps, CellState> {
       this.props.whenCellUnmounts(this)
    }
 
-   /** How many candidates are left */
+   /** How many candidates are left, this.state.candidates.length */
    get numCandidates() {
       return this.state.candidates.length as ZeroToNine
    }
@@ -181,11 +181,9 @@ export default class Cell extends React.Component<CellProps, CellState> {
 
          const newState = { candidates } as Mutable<CellState>
 
-         // Don't change previousCandidates if they already exist
-         if (prevState.explaining) {
-            if (prevState.previousCandidates === null) {
-               newState.previousCandidates = prevState.candidates
-            }
+         // Only change previousCandidates if they don't exist
+         if (prevState.explaining && prevState.previousCandidates === null) {
+            newState.previousCandidates = prevState.candidates
          }
 
          if (candidates.length === 0) {
@@ -302,35 +300,24 @@ export default class Cell extends React.Component<CellProps, CellState> {
 
       // Using a span for single digits
       // so that I can force cells to always be [css height: 1/9th]
-      if (this.state.pretend) { // Nothing special happens in this case
-         content = (
-            <Suspense fallback={loading}>
-               <Candidates data={this.state.candidates} classes={this.state.candidateClasses} />
-            </Suspense>
-         )
-      } else if (this.state.active) {
-         content = (
-            <Suspense fallback={loading}>
-               <Candidates data={this.state.candidates} classes={this.state.candidateClasses} />
-            </Suspense>
-         )
-      } else if (this.state.explaining && this.state.previousCandidates !== null) {
+      if (this.state.explaining && this.state.previousCandidates !== null) {
          content = (
             <Suspense fallback={loading}>
                <CandidatesDiff previous={this.state.previousCandidates} current={this.state.candidates} classes={this.state.candidateClasses} />
+            </Suspense>
+         )
+      } else if (this.state.showCandidates || this.state.active || this.state.pretend || (this.numCandidates > 1 && this.numCandidates !== 9)) {
+         // Also show candidates when editing a cell
+         // Also show candidates as fallback when numCandidates is in [2, 8]
+         content = (
+            <Suspense fallback={loading}>
+               <Candidates data={this.state.candidates} classes={this.state.candidateClasses} />
             </Suspense>
          )
       } else if (this.numCandidates === 0) {
          content = <span className="ugh tables"> 0 </span>
       } else if (this.numCandidates === 1) {
          content = <span className={`ugh tables digit-${this.state.candidates[0]}`}> {this.state.candidates[0]} </span>
-      } else if (this.state.showCandidates || this.state.candidates.length !== 9) {
-         // Now numCandidates > 1. This is a fallback if statement
-         content = (
-            <Suspense fallback={loading}>
-               <Candidates data={this.state.candidates} classes={this.state.candidateClasses} />
-            </Suspense>
-         )
       }
 
 

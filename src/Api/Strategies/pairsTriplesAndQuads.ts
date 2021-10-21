@@ -205,26 +205,24 @@ function eliminateUsingConjugateGroup(
       const groupIndex = toGroupIndex(conjugateList[0][0].position)
       const group = toGroup(sudoku, groupIndex)
 
-      for (const conjugate of conjugateList) {
-         let success = false
-         const conjugateCandidates = getCandidatesOfConjugate(conjugate)
+      // For each cell within group
+      for (const indexWithinGroup of INDICES_TO_NINE) {
+         const thisPosition = toPosition(indexWithinGroup, groupIndex)
+         const thisCandidates = group[indexWithinGroup]
 
-         for (const indexWithinGroup of INDICES_TO_NINE) {
-            const thisPosition = toPosition(indexWithinGroup, groupIndex)
-            // Make sure the cell is not in the conjugate
-            if (!conjugate.find(cell => cell.position === thisPosition)) {
-               // The cell now cannot have any of the candidates in the conjugate
-               if (group[indexWithinGroup].find(candidate => conjugateCandidates.includes(candidate))) {
-                  success = true
+         for (const conjugate of conjugateList) {
+            // If this cell is not in the conjugate
+            if (!conjugate.some(cell => cell.position === thisPosition)) {
+               const conjugateCandidates = getCandidatesOfConjugate(conjugate)
+
+               // The cell now cannot have any of tqhe candidates in the conjugate!!!
+               if (thisCandidates.some(candidate => conjugateCandidates.includes(candidate))) {
+                  successcount++ // Success!
                   colorConjugate(sudoku, conjugate)
                   sudoku.set(thisPosition.row, thisPosition.column).to(
-                     ...group[indexWithinGroup].filter(candidate => !conjugateCandidates.includes(candidate)))
+                     ...thisCandidates.filter(candidate => !conjugateCandidates.includes(candidate)))
                }
             }
-         }
-
-         if (success) {
-            successcount++
          }
       }
    }

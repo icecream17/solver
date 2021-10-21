@@ -20,6 +20,7 @@ type CandidatesProps = Readonly<{
  * Candidates are the possible digits of a cell.
  *
  * Be sure to update CandidatesDiff as well!
+ * TODO: Use grid since in this case data is not tabular
  */
 export default class Candidates extends React.Component<CandidatesProps> {
    constructor(props: CandidatesProps) {

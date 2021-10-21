@@ -124,7 +124,7 @@ export default class PureSudoku {
    import(representation: string) {
       representation = representation.trim().normalize()
       const representationWithoutWhitespace = representation.replaceAll(/\s/g, "")
-      const onlyDigitRepresentation = representation.replaceAll(/[^0-9]/g, "")
+      const onlyDigitRepresentation = representation.replaceAll(/\D/g, "")
 
       for (const testRepresentation of [representation, representationWithoutWhitespace, onlyDigitRepresentation] as const) {
          if (testRepresentation.length === 81) {
@@ -150,7 +150,7 @@ export default class PureSudoku {
          .filter(char => "123456789 ".includes(char))
          .join('')
          .trim()
-         .split(/\s+/g) // Could change `\s` to ` `
+         .split(/\s+/) // split ignores g flag
 
       if (gridRepresentation.length === 81) {
          this.importGrid(

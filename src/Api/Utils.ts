@@ -118,7 +118,7 @@ export function affects (row: IndexToNine, column: IndexToNine) {
    // this box
    for (const boxCellIndex of boxesCells[boxAt(row, column)]) {
       // different cell
-      if (boxCellIndex !== thisIndex) {
+      if (boxCellIndex !== thisIndex) { // eslint-disable-line sonarjs/no-collapsible-if --- Documentation so can't collapse
          // prevents duplicates
          // (there's no check for the row and column since they don't collide)
          if (!results.includes(boxCellIndex)) {

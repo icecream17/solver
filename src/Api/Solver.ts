@@ -73,10 +73,17 @@ export default class Solver {
    }
 
    updateCounters(success: boolean, isFinished: boolean) {
+      const _step = () => {
+         this.strategyIndex++
+         if (this.strategyIndex === STRATEGIES.length) {
+            this.strategyIndex = 0
+         }
+      }
+
       // Go back to the start when a strategy succeeds
       // (exception 1: if you're at the start go to 1 anyways)
       // (exception 1a: if the sudoku is finished don't go to 1)
-      // (exceotion 1b: always be at the start if erroring)
+      // (exception 1b: always be at the start if erroring)
       // (exception 2:
       //    After "check for solved" fails,
       //    skip "update candidates"
@@ -85,9 +92,7 @@ export default class Solver {
       //    If a strategy is skippable skip it
       // )
       if (success) {
-         for (let i = 0; i < this.skippable.length; i++) {
-            this.skippable[i] = false
-         }
+         this.skippable.fill(false)
       } else {
          this.skippable[this.strategyIndex] = true
       }
@@ -100,18 +105,12 @@ export default class Solver {
       } else if (this.strategyIndex === 0 && success === false) {
          this.strategyIndex = 2
       } else {
-         this.strategyIndex++
-         if (this.strategyIndex === STRATEGIES.length) {
-            this.strategyIndex = 0
-         }
+         _step()
       }
 
       // Exception 3
       while (this.skippable[this.strategyIndex] && this.strategyIndex !== 0) {
-         this.strategyIndex++
-         if (this.strategyIndex === STRATEGIES.length) {
-            this.strategyIndex = 0
-         }
+         _step()
       }
    }
 

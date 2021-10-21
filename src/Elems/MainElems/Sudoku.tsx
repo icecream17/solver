@@ -80,14 +80,12 @@ export default class Sudoku extends React.Component<SudokuProps> {
     * So this returns the <button> since that's what's actually important.
     */
    getCellElement(row: IndexToNine, column: IndexToNine): HTMLElement {
-      const result = this.getTableCellElement(row, column).children[0] as HTMLElement
-      return result
+      return this.getTableCellElement(row, column).children[0] as HTMLElement
    }
 
    /** Gets the cell _element_ at the row and column. */
    getTableCellElement(row: IndexToNine, column: IndexToNine): HTMLElement {
-      const result = this.getRowElement(row).children[column] as HTMLElement
-      return result
+      return this.getRowElement(row).children[column] as HTMLElement
    }
 
    /** Gets the row _element_ at the index provided */

@@ -4,7 +4,7 @@ import React from 'react';
 
 import './Sudoku.css'
 import Row from './Row';
-import { IndexToNine, GuaranteedConstructCallback, _Callback } from '../../Types';
+import { IndexToNine, _Callback } from '../../Types';
 import Cell, { keyboardMappings } from './Cell';
 
 export type BaseSudokuProps = Readonly<{
@@ -13,7 +13,7 @@ export type BaseSudokuProps = Readonly<{
    whenCellUpdates: _Callback
 }>
 
-type SudokuProps = BaseSudokuProps & GuaranteedConstructCallback
+type SudokuProps = BaseSudokuProps
 
 /**
  * The main sudoku!!!
@@ -30,7 +30,6 @@ export default class Sudoku extends React.Component<SudokuProps> {
       super(props)
 
       this.whenCellKeydown = this.whenCellKeydown.bind(this)
-      this.props.whenConstruct(this)
 
       this.tbodyElement = null
       this.setTbodyElement = (element: HTMLTableSectionElement | null) => this.tbodyElement = element

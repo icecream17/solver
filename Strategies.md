@@ -106,22 +106,37 @@ So the rest of the candidates in those *cells* are eliminated.
 
 ### X wing, Swordfish, and Jellyfish
 
-> n lines must have n of a candidate
-> and those n candidates must all be in different... crosslines (which are perpendicular to the original lines)
->
-> For example, 3 rows must have at least 3... sevens
-> those 3 sevens must also be in different columns
-> so those 3 sevens must be in 3 columns
->
-> Usually you don't know what those columns are,
-> but if you do \[know what those columns are],
-> then you can be certain that each of the 3 rows has a seven corresponding to the 3 columns
->
-> So, the rest of the 3 columns which are not part of the 3 rows _do not contain a seven_
->
-> In short
-> 3 lines correspond to 3 crosslines, crosslines - lines = not candidate
->
+Consider the rule that each (row, column, and box)... each group must have all digits 1-9.
+
+So how many 7s does one group have?
+
+Each group has one 7.
+
+So n non-intersecting groups have n of every candidate.
+
+And notice how if 3 rows have 3 sevens, those 3 sevens must also appear in 3 columns!
+
+So if you manage to limit n rows to n columns, the rest of those columns cannot have that candidate!
+
+```rust
+A..A..A..
+e  e  e
+e  e  e
+A..A..A..
+e  e  e
+e  e  e
+A..A..A..
+e  e  e
+e  e  e
+
+// So for example, these 3 rows have 3 "A"
+// ...which are all only 3 columns. So the 3 "A" in the 3 rows must be in the 3 columns
+// Therefore, the 3 columns must only have "A" in the 3 rows
+
+// 3 rows only in 3 columns -->
+//    3 columns only in 3 rows
+```
+
 > Also
 > n lines - n-1 lines = 1 line
 > If all of that 1 line sees a candidate, that candidate can be removed.
@@ -129,6 +144,97 @@ So the rest of the candidates in those *cells* are eliminated.
 Just see Hodoku's page on Basic Fish
 
 Basically, 3 lines only appears in 3 crosslines = the rest of the crosslines can be eliminated
+
+Now how do you detect this in code?
+
+A naive way is to do this:
+
+```rust
+loop: for row in rows
+  loop: for row2 in rows
+    loop: for row3 in rows
+      loop: for row4 in rows
+        if onlyInFourColumns(row, row2, row3, row4):
+          success!
+
+// and same for the columns
+```
+
+But that's obviously inefficient. An improvement would be:
+
+```rust
+loop: for row in rows
+  loop: for row2 in restOfRows
+    loop: for row3 in restOfRestOfRows
+      loop: for row4 in restOfRestOfRows
+```
+
+But notice that if `rows = [1, 2]`...
+
+```rust
+row: 1, row2: 2
+row: 2, row2: 1
+```
+
+So instead, we eliminate the loops altogether,
+and track what rows were added to the pattern.
+
+That way, `row` --> row1 then row2 then row3 then row4....
+  (goes in order)
+instead of `row` and `row2`
+  (not in order)
+
+```rust
+total1 // [row]
+total2 // [row, row2]
+total3 // [row, row2, row3]
+total4 // [row, row2, row3, row4]
+for row in rows:
+  update(row, total3, total4)
+  update(row, total2, total3)
+  update(row, total1, total2)
+  check(total4)
+
+fn update(row, total_n, total_n_plus_1):
+  for group in total_n:
+    add([row, ...group]).to(total_n_plus_1)
+
+// Where the following is equivalent:
+// total1 --> total1 + row
+// [row, row2, row3] --> [[row + row], [row + row2], [row + row3]]
+```
+
+"Why not just do..."
+
+```rust
+loop: for row in rows
+  loop: for row2 in greaterRows
+    loop: for row3 in greaterGreaterRows
+      loop: for row4 in greaterGreaterGreaterRows
+```
+
+Well... oh yeah. But whatever, I already wrote the function...
+
+```rust
+// 9 combinations * (time(3 * num_group * group.length) + check)
+1
+2
+3
+4
+5
+6
+7
+8
+9
+
+// 126 items (126 = 9 * 14) * check
+1234
+1235
+1236
+1237
+1238
+1239
+```
 
 ### Skyscraper
 

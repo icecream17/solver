@@ -4,6 +4,10 @@ Note: Many earlier versions are not specified, that's too much work.
 
 When a `@types` dependency updates, they almost always don't affect anything.
 
+## v0.26.2
+
+- (code) Speed up wing strategies and use 1 function for all of them. Saves like 0.5 kb.
+
 ## v0.26.1
 
 - (css) Use sanitize.css

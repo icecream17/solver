@@ -36,6 +36,7 @@ type AppState = {
  */
 class App extends React.Component<_UnusedProps, AppState> {
    sudoku: SudokuData
+   propsPassedDown: { whenCellMounts: (cell: Cell) => void; whenCellUnmounts: (cell: Cell) => void; whenCellUpdates: (cell: Cell, candidates: SudokuDigits[]) => void }
    constructor(props: _UnusedProps) {
       super(props)
 
@@ -67,6 +68,11 @@ class App extends React.Component<_UnusedProps, AppState> {
       this.whenCellUnmounts = this.whenCellUnmounts.bind(this)
       this.whenCellUpdates = this.whenCellUpdates.bind(this)
       this.finishNotice = this.finishNotice.bind(this)
+      this.propsPassedDown = {
+         whenCellMounts: this.whenCellMounts,
+         whenCellUnmounts: this.whenCellUnmounts,
+         whenCellUpdates: this.whenCellUpdates,
+      }
       window._custom = {
          alert: this.alert.bind(this),
          prompt: this.prompt.bind(this)
@@ -89,19 +95,13 @@ class App extends React.Component<_UnusedProps, AppState> {
          classNames.push("error")
       }
 
-      const propsPassedDown = {
-         whenCellMounts: this.whenCellMounts,
-         whenCellUnmounts: this.whenCellUnmounts,
-         whenCellUpdates: this.whenCellUpdates,
-      }
-
       return (
          <div className={classNames.join(' ')}>
             <header className="App-header">
                <Title />
                <Version />
             </header>
-            <Main propsPassedDown={propsPassedDown} />
+            <Main propsPassedDown={this.propsPassedDown} />
             <Aside sudoku={this.sudoku} />
 
             <GithubCorner />

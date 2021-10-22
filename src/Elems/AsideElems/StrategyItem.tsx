@@ -45,6 +45,8 @@ export default class StrategyItem extends React.Component<StrategyItemProps, Str
          disabled: false,
          isCurrentStrategy: false
       }
+
+      this.toggle = this.toggle.bind(this)
    }
 
    componentDidMount () {
@@ -82,7 +84,7 @@ export default class StrategyItem extends React.Component<StrategyItemProps, Str
          // eslint-disable-next-line jsx-a11y/label-has-for --- Obviously both nesting and id are associated
          <label htmlFor={ this.togglerId as string }>
             <StrategyTogglerLabel {...this.props} />
-            <StrategyToggler callback={this.toggle.bind(this)} id={this.togglerId as string} />
+            <StrategyToggler callback={this.toggle} id={this.togglerId as string} />
          </label>
       )
 

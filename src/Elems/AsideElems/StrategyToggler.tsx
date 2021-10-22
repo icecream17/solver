@@ -20,6 +20,8 @@ export default class StrategyToggler extends React.Component<StrategyTogglerProp
       this.state = {
          checked: true
       }
+
+      this.callback = this.callback.bind(this)
    }
 
    render() {
@@ -30,7 +32,7 @@ export default class StrategyToggler extends React.Component<StrategyTogglerProp
             id={this.props.id}
             type="checkbox"
             role="switch"
-            onChange={this.callback.bind(this)}
+            onChange={this.callback}
             checked={this.state.checked}
          />
       )

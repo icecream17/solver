@@ -13,8 +13,10 @@ type TabProps = Readonly<{
 
 export default class Tab extends React.Component<TabProps> {
    selfElement: HTMLButtonElement | null = null
+   setSelfElement: (element: HTMLButtonElement | null) => HTMLButtonElement | null;
    constructor (props: TabProps) {
       super(props)
+      this.setSelfElement = (element: HTMLButtonElement | null) => this.selfElement = element
       this.callbackIfNotSelected = this.callbackIfNotSelected.bind(this)
    }
 
@@ -32,7 +34,7 @@ export default class Tab extends React.Component<TabProps> {
             onFocus={this.props.whenFocused}
             className={className}
             role="tab"
-            innerRef={element => this.selfElement = element}
+            innerRef={this.setSelfElement}
             aria-selected={this.props.selected}
          >{this.props.title}</Control>
       )

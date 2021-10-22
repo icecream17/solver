@@ -4,7 +4,7 @@ import React from 'react';
 
 import './Sudoku.css'
 import Row from './Row';
-import { IndexToNine, PossibleConstructCallback, _Callback } from '../../Types';
+import { IndexToNine, GuaranteedConstructCallback, _Callback } from '../../Types';
 import Cell, { keyboardMappings } from './Cell';
 
 export type BaseSudokuProps = Readonly<{
@@ -13,7 +13,7 @@ export type BaseSudokuProps = Readonly<{
    whenCellUpdates: _Callback
 }>
 
-type SudokuProps = BaseSudokuProps & PossibleConstructCallback
+type SudokuProps = BaseSudokuProps & GuaranteedConstructCallback
 
 /**
  * The main sudoku!!!
@@ -25,15 +25,15 @@ type SudokuProps = BaseSudokuProps & PossibleConstructCallback
  */
 export default class Sudoku extends React.Component<SudokuProps> {
    tbodyElement: HTMLTableSectionElement | null;
+   setTbodyElement: (element: HTMLTableSectionElement | null) => HTMLTableSectionElement | null;
    constructor(props: SudokuProps) {
       super(props)
 
       this.whenCellKeydown = this.whenCellKeydown.bind(this)
-
-      /** See App.js - this if statement is anticipating future code changes */
-      this.props.whenConstruct?.(this)
+      this.props.whenConstruct(this)
 
       this.tbodyElement = null
+      this.setTbodyElement = (element: HTMLTableSectionElement | null) => this.tbodyElement = element
    }
 
    render() {
@@ -52,7 +52,7 @@ export default class Sudoku extends React.Component<SudokuProps> {
 
       return (
          <table className='Sudoku' id='Sudoku' title='Sudoku' aria-label='Sudoku'>
-            <tbody ref={elem => (this.tbodyElement = elem)}>
+            <tbody ref={this.setTbodyElement}>
                <Row {...getRepeatedProps()} />
                <Row {...getRepeatedProps()} />
                <Row {...getRepeatedProps()} />

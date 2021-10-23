@@ -64,7 +64,7 @@ export default class Aside extends React.Component<AsideProps, AsideState> {
       return (
          <section className="App-aside">
             <Tabs whenTabChange={this.whenTabChange} tabNames={tabNames} />
-            <div role="tabpanel" id="TabContent" tabIndex={-1}>{content}</div>
+            <div role="tabpanel" id="TabContent" aria-labelledby={`Tab${this.state.selectedTab}`} tabIndex={-1}>{content}</div>
          </section>
       );
    }

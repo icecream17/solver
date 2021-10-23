@@ -12,6 +12,6 @@ import StaticComponent from './StaticComponent';
  */
 export default class Version extends StaticComponent {
    render() {
-      return <span className="Version">v0.26.3</span>
+      return <span className="Version">v0.26.4</span>
    }
 }

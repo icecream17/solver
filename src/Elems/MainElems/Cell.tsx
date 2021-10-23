@@ -7,18 +7,6 @@ import { IndexToNine, Mutable, SudokuDigits, ZeroToNine, _Callback } from '../..
 const Candidates = React.lazy(() => import('./Candidates'));
 const CandidatesDiff = React.lazy(() => import('./CandidatesDiff'));
 
-// Maps keys to coords
-export const keyboardMappings = {
-   'ArrowUp': { vRow: -1, vColumn: 0 },
-   'KeyW': { vRow: -1, vColumn: 0 },
-   'ArrowLeft': { vRow: 0, vColumn: -1 },
-   'KeyA': { vRow: 0, vColumn: -1 },
-   'ArrowDown': { vRow: 1, vColumn: 0 },
-   'KeyS': { vRow: 1, vColumn: 0 },
-   'ArrowRight': { vRow: 0, vColumn: 1 },
-   'KeyD': { vRow: 0, vColumn: 1 },
-}
-
 export type BaseCellProps = Readonly<{
    row: IndexToNine
    column: IndexToNine
@@ -395,7 +383,7 @@ export default class Cell extends React.Component<CellProps, CellState> {
          const candidate = Number(event.key) as SudokuDigits
          this.toggleCandidate(candidate)
       } else if (['Backspace', 'Delete', 'Clear'].includes(event.key)) {
-         if (event.shiftKey) {
+         if (event.shiftKey || event.altKey) {
             this.setState({
                candidates: [1, 2, 3, 4, 5, 6, 7, 8, 9],
                showCandidates: false,
@@ -407,14 +395,10 @@ export default class Cell extends React.Component<CellProps, CellState> {
                error: true
             })
          }
-      } else if (event.key in keyboardMappings) {
-         // Keyboard controls
-         this.props.whenCellKeydown(this, event)
       } else if (event.key === 'Escape') {
          target.blur()
       } else {
-         // If nothing happens, don't do anything
-         return;
+         this.props.whenCellKeydown(this, event) // keyboard controls
       }
 
       // Something happened, (see "pretend" docs above)

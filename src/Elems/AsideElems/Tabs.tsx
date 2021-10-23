@@ -101,8 +101,8 @@ export default class Tabs extends React.Component<TabsProps, TabsState> {
    /** Keyboard support */
 
    whenKeyDown (event: React.KeyboardEvent) {
-      if (importantKeys.has(event.code)) { // @ts-expect-error Can't narrow
-         this.keysPressed.add(event.code)
+      if (importantKeys.has(event.key)) { // @ts-expect-error Can't narrow
+         this.keysPressed.add(event.key)
       }
 
       const movements = new Set<keyof typeof oppositeKeys>()
@@ -139,7 +139,7 @@ export default class Tabs extends React.Component<TabsProps, TabsState> {
             }
             throw new TypeError(`${[...movements].join(', ')} is invalid`)
          }, () => {
-            this.props.whenTabChange(this.state.selectedTab)
+            this.props.whenTabChange(this.state.selectedTab) // Tab didn't necessarily change
             if (tab) {
                this.changeToMainContent()
             }
@@ -153,9 +153,9 @@ export default class Tabs extends React.Component<TabsProps, TabsState> {
     * when Tab & when Focus --> focus selected tab
     */
    whenKeyUp (event: React.KeyboardEvent) {
-      this.keysPressed.delete(event.code)
+      this.keysPressed.delete(event.key)
 
-      if (event.code === "Tab") {
+      if (event.key === "Tab") {
          this.tabTime = Date.now()
          this.checkIfTabbedInto()
       }

@@ -4,6 +4,24 @@ Note: Many earlier versions are not specified, that's too much work.
 
 When a `@types` dependency updates, they almost always don't affect anything.
 
+## v0.26.4
+
+- (use, a11y) `Ctrl+Home` goes to the first cell and `Ctrl+End` goes to the last cell
+- (use, a11y) `Alt+{Remove}` now resets cells too (previously only `Shift+{Remove}`)
+- (bug, use, a11y) Use event.key instead of event.code
+- (a11y) Set aria-labelledby and aria-controls
+- (a11y) Set sudoku's role to grid
+
+## v0.26.3
+
+- (spd) Only `Array.from(stuff).sort` when needed
+- (spd) Make wing strategies skip lines with only 1 of such candidate
+- (spd) Bind or move functions where they won't be redeclared all the time
+- (code) Simplify keyboard code
+- (code) Change type of Cell#state.candidateClasses
+- (code) More linting and ternary
+- (code) Make typescript allow `Set#has`, `Set#delete`, and `Map#has` to be called by any type
+
 ## v0.26.2
 
 - (code) Speed up wing strategies and use 1 function for all of them. Saves like 0.5 kb.

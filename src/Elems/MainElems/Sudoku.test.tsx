@@ -5,13 +5,19 @@ import App from '../../App';
 import { IndexToNine } from '../../Types';
 import { getButtonCellElement, getTableCellElement } from './Sudoku.testUtils';
 
+function tryKey (keyboard: string, row: IndexToNine, column: IndexToNine) {
+   userEvent.keyboard(keyboard)
+   expect(getButtonCellElement(row, column)).toHaveFocus()
+}
+
 beforeEach(() => {
    render(<App />);
 })
 
 // The name === 'Sudoku' because aria-label === 'Sudoku'
+// The role === 'grid', which is more accurate since the table is interactive
 test('getting the sudoku table', () => {
-   expect(screen.getByRole('table', { name: 'Sudoku' })).toBeInTheDocument()
+   expect(screen.getByRole('grid', { name: 'Sudoku' })).toBeInTheDocument()
 })
 
 const cellTests = [
@@ -102,15 +108,17 @@ test("Resetting the candidates", () => {
    // Since the cell has all candidates, and is blurred, textcontent = ''
    expect(buttonCell).toHaveTextContent('')
 
+   // And now with the Alt key
    userEvent.click(buttonCell)
-   userEvent.keyboard('{Shift>}{Backspace}{/Shift}')
-   userEvent.keyboard('123')
+   userEvent.keyboard('{Backspace}123')
+   userEvent.keyboard('{Alt>}{Backspace}{/Alt}')
+   userEvent.keyboard('123') // And now subtract 123
    fireEvent.blur(buttonCell)
 
    expect(buttonCell).toHaveTextContent('456789')
 })
 
-test("Cell keyboard navigation", () => {
+test("Cell keyboard navigation: Arrows", () => {
    const cornerCell = getButtonCellElement(0, 8)
    userEvent.click(cornerCell)
 
@@ -119,12 +127,7 @@ test("Cell keyboard navigation", () => {
    userEvent.tab()
    expect(getButtonCellElement(1, 0)).toHaveFocus()
 
-   function tryKey(keyboard: string, row: IndexToNine, column: IndexToNine) {
-      userEvent.keyboard(keyboard)
-      expect(getButtonCellElement(row, column)).toHaveFocus()
-   }
-
-   tryKey('{ArrowLeft}', 1, 8)
+   tryKey('{ArrowLeft}', 1, 8) // Wraps around
    tryKey('{ArrowLeft}', 1, 7)
    tryKey('{ArrowUp}', 0, 7)
    tryKey('{ArrowUp}', 8, 7)
@@ -133,3 +136,12 @@ test("Cell keyboard navigation", () => {
    tryKey('{ArrowRight}', 0, 0)
 })
 
+test("Cell keyboard navigation: End / Home", () => {
+   const firstCell = getButtonCellElement(0, 0)
+   userEvent.click(firstCell)
+
+   tryKey('{End}', 0, 8) // End of row
+   tryKey('{Home}', 0, 0) // Start of row
+   tryKey('{Control>}{End}{/Control}', 8, 8) // Last cell
+   tryKey('{Control>}{Home}{/Control}', 0, 0) // First cell
+})

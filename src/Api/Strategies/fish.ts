@@ -109,8 +109,8 @@ export default function fish (size: 2 | 3 | 4, sudoku: PureSudoku) {
                }
 
 
-               _accum(line, possibleNLines, index, size, sumLines => {
-                  successcount += _innerWingLogic(candidate, candidateLocations, sudoku, sumLines, isRow, size) // eslint-disable-line no-loop-func
+               _accum(line, possibleNLines, index, size, sumLines => { // eslint-disable-line no-loop-func
+                  successcount += _innerWingLogic(candidate, candidateLocations, sudoku, sumLines, isRow, size)
                })
             }
          }

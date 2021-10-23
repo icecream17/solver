@@ -1,6 +1,6 @@
 {
   "name": "solver",
-  "version": "0.26.2",
+  "version": "0.26.3",
   "private": true,
   "homepage": "https://icecream17.github.io/solver",
   "dependencies": {
@@ -21,8 +21,10 @@
     "@types/react": "^17.0.30",
     "@types/react-dom": "^17.0.9",
     "eslint-plugin-jest-dom": "^3.9.2",
+    "eslint-plugin-react-perf": "^3.3.0",
     "eslint-plugin-regexp": "^1.4.1",
     "eslint-plugin-sonarjs": "^0.10.0",
+    "eslint-plugin-unicorn": "^37.0.1",
     "source-map-explorer": "^2.5.2"
   },
   "scripts": {

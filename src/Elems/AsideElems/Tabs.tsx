@@ -16,19 +16,28 @@ type TabsState = Readonly<{
 
 type TabsElement = HTMLDivElement | null
 
-const importantKeys = ["Tab", "ArrowLeft", "ArrowRight", "Home", "End"]
+const importantKeys = new Set(["Tab", "ArrowLeft", "ArrowRight", "Home", "End"] as const)
+const oppositeKeys = {
+   ArrowLeft: "ArrowRight",
+   ArrowRight: "ArrowLeft",
+   Home: "End",
+   End: "Home",
+} as const
 
 export default class Tabs extends React.Component<TabsProps, TabsState> {
    tabsElement: TabsElement = null;
    tabTime = -Infinity;
    focusTime = -Infinity;
-   keysPressed = new Set<string>();
+   keysPressed: typeof importantKeys = new Set();
+   setTabsElement: (element: TabsElement) => TabsElement;
    constructor (props: TabsProps) {
       super(props)
       this.state = {
          focusedTab: 0,
          selectedTab: 0,
       }
+
+      this.setTabsElement = (element: TabsElement) => this.tabsElement = element
 
       this.whenBlur = this.whenBlur.bind(this)
       this.whenFocus = this.whenFocus.bind(this)
@@ -75,7 +84,7 @@ export default class Tabs extends React.Component<TabsProps, TabsState> {
             className="Tabs"
             role="tablist"
             tabIndex={-1}
-            ref={(element: TabsElement) => this.tabsElement = element}
+            ref={this.setTabsElement}
             onBlur={this.whenBlur}
             onFocus={this.whenFocus}
             onKeyDown={this.whenKeyDown}
@@ -92,62 +101,43 @@ export default class Tabs extends React.Component<TabsProps, TabsState> {
    /** Keyboard support */
 
    whenKeyDown (event: React.KeyboardEvent) {
-      if (importantKeys.includes(event.code)) {
+      if (importantKeys.has(event.code)) { // @ts-expect-error Can't narrow
          this.keysPressed.add(event.code)
       }
 
-      let movement: '' | 'left' | 'right' | 'Home' | 'End' = ''
+      const movements = new Set<keyof typeof oppositeKeys>()
       let tab = false
       for (const key of this.keysPressed) {
-         if (key === 'ArrowRight') {
-            if (movement === 'left') {
-               movement = ''
-            } else if (movement === '') {
-               movement = 'right'
-            }
-         } else if (key === 'ArrowLeft') {
-            if (movement === 'right') {
-               movement = ''
-            } else if (movement === '') {
-               movement = 'left'
-            }
-         } else if (key === 'Home') {
-            if (movement === 'End') {
-               movement = ''
-            } else {
-               movement = 'Home'
-            }
-         } else if (key === 'End') {
-            if (movement === 'Home') {
-               movement = ''
-            } else {
-               movement = 'End'
-            }
-         } else if (key === 'Tab') {
+         if (key === 'Tab') {
             tab = true
+         } else if (movements.has(oppositeKeys[key])) {
+            movements.delete(oppositeKeys[key])
+         } else {
+            movements.add(key)
          }
       }
 
-      if (movement !== '') {
+      if (movements.size !== 0) {
          this.setState((state, props) => {
-            if (movement === 'left') {
+            // Precedence
+            if (movements.has('Home')) {
+               return { focusedTab: 0, selectedTab: 0 }
+            } else if (movements.has('End')) {
+               return { focusedTab: props.tabNames.length - 1, selectedTab: props.tabNames.length - 1 }
+            } else if (movements.has('ArrowLeft')) {
                let newTab = (state.focusedTab ?? 1) - 1
                if (newTab === -1) {
                   newTab += props.tabNames.length
                }
                return { focusedTab: newTab, selectedTab: newTab }
-            } else if (movement === 'right') {
+            } else if (movements.has('ArrowRight')) {
                let newTab = (state.focusedTab ?? props.tabNames.length - 1) + 1
                if (newTab === props.tabNames.length) {
                   newTab = 0
                }
                return { focusedTab: newTab, selectedTab: newTab }
-            } else if (movement === 'Home') {
-               return { focusedTab: 0, selectedTab: 0 }
-            } else if (movement === 'End') {
-               return { focusedTab: props.tabNames.length - 1, selectedTab: props.tabNames.length - 1 }
             }
-            throw new TypeError(`${movement} is invalid`)
+            throw new TypeError(`${[...movements].join(', ')} is invalid`)
          }, () => {
             this.props.whenTabChange(this.state.selectedTab)
             if (tab) {

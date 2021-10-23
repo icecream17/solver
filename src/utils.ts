@@ -75,13 +75,14 @@ export async function forComponentsToUpdate (): Promise<undefined> {
  * convertArrayToEnglishList(["1", undefined, "3"])
  */
 export function convertArrayToEnglishList<T extends string | number>(array: T[]) {
-   if (array.length === 0) {
-      throw TypeError("Array is empty!")
-   } else if (array.length === 1) {
-      return String(array[0])
-   } else if (array.length === 2) {
-      return `${array[0]} and ${array[1]}` as const
+   switch (array.length) {
+      case 0:
+         throw TypeError("Array is empty!")
+      case 1:
+         return String(array[0])
+      case 2:
+         return `${array[0]} and ${array[1]}` as const
+      default:
+         return `${array.slice(0, -1).join(', ')}, and ${array[array.length - 1]}` as const
    }
-
-   return `${array.slice(0, -1).join(', ')}, and ${array[array.length - 1]}` as const
 }

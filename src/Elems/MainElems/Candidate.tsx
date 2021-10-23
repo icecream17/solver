@@ -11,7 +11,7 @@ type CandidateProps = Readonly<{
 /**
  * A cell candidate
  */
-export default class Candidate extends React.Component<CandidateProps> {
+export default class Candidate extends React.PureComponent<CandidateProps> {
    render() {
       let thisClassName = "Candidate"
       if (typeof this.props.children === "string" || typeof this.props.children === "number") {

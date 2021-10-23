@@ -58,21 +58,37 @@ export type CellInfo = {
 export type _CellInfoList = CellInfo[]
 
 /**
- * Returns a sorted array of unique candidates in a conjugate
+ * Return a set of unique candidates in a conjugate
  */
 function getCandidatesOfConjugate(conjugate: _CellInfoList) {
    // Array from the values of a set
    // The set is the accumulated candidates
-   return Array.from(
-      conjugate.reduce(
-         (accum, currentCell) => {
-            for (const candidate of currentCell.candidates) {
-               accum.add(candidate)
-            }
-            return accum
-         }, new Set<SudokuDigits>()
-      )
-   ).sort()
+   return conjugate.reduce(
+      (accum, currentCell) => {
+         for (const candidate of currentCell.candidates) {
+            accum.add(candidate)
+         }
+         return accum
+      }, new Set<SudokuDigits>()
+   )
+}
+
+// Inner inner function to make things look nicer below
+function __errorHandling (conjugate: CellInfo[], invalidGroupCandidates: Set<SudokuDigits>) {
+   const invalidGroupNames = convertArrayToEnglishList(
+      conjugate.map(someCell => algebraic(someCell.position.row, someCell.position.column))
+   )
+   const invalidCandidateString = convertArrayToEnglishList(Array.from(invalidGroupCandidates).sort())
+
+   if (conjugate.length === 1) {
+      // Never happens since cells are filtered away
+      window._custom.alert(`The cell ${invalidGroupNames} has 0 possibilities!`, AlertType.ERROR)
+   } else if (invalidGroupCandidates.size === 1) {
+      // Never happens
+      window._custom.alert(`${invalidGroupNames}: ${conjugate.length} cells cannot share 1 candidate (${invalidCandidateString})!!!`, AlertType.ERROR)
+   } else {
+      window._custom.alert(`${invalidGroupNames}: ${conjugate.length} cells cannot share ${invalidGroupCandidates.size} candidates (${invalidCandidateString})!!!`, AlertType.ERROR)
+   }
 }
 
 /**
@@ -96,26 +112,6 @@ function findConjugatesOfGroup(
    indexToPosition: (index: IndexToNine) => CellID,
    maxSize = 4 as 2 | 3 | 4
 ) {
-
-   // Inner inner function to make things look nicer below
-   function __errorHandling(conjugate: CellInfo[]) {
-      const invalidGroupNames = convertArrayToEnglishList(
-         conjugate.map(someCell => algebraic(someCell.position.row, someCell.position.column))
-      )
-      const invalidGroupCandidates = getCandidatesOfConjugate(conjugate)
-      const invalidCandidateString = convertArrayToEnglishList(invalidGroupCandidates)
-
-      if (conjugate.length === 1) {
-         // Never happens since cells are filtered away
-         window._custom.alert(`The cell ${invalidGroupNames} has 0 possibilities!`, AlertType.ERROR)
-      } else if (invalidGroupCandidates.length === 1) {
-         // Never happens
-         window._custom.alert(`${invalidGroupNames}: ${conjugate.length} cells cannot share 1 candidate (${invalidCandidateString})!!!`, AlertType.ERROR)
-      } else {
-         window._custom.alert(`${invalidGroupNames}: ${conjugate.length} cells cannot share ${invalidGroupCandidates.length} candidates (${invalidCandidateString})!!!`, AlertType.ERROR)
-      }
-   }
-
    // 1. Filter the possible cells
    // Each possible cell must have 2 to maxSize candidates
    const possibleCells = [] as _CellInfoList
@@ -137,10 +133,10 @@ function findConjugatesOfGroup(
       const candidatesOfConjugate = getCandidatesOfConjugate(conjugate)
 
       // For example 3 cells needing 2 candidates = invalid.
-      if (conjugate.length > candidatesOfConjugate.length) {
-         __errorHandling(conjugate)
+      if (conjugate.length > candidatesOfConjugate.size) {
+         __errorHandling(conjugate, candidatesOfConjugate)
          return "ERROR!!!" as const
-      } else if (conjugate.length === candidatesOfConjugate.length) {
+      } else if (conjugate.length === candidatesOfConjugate.size) {
          // Found a conjugate!!!!!
          conjugates.push(conjugate)
       }
@@ -216,11 +212,11 @@ function eliminateUsingConjugateGroup(
                const conjugateCandidates = getCandidatesOfConjugate(conjugate)
 
                // The cell now cannot have any of tqhe candidates in the conjugate!!!
-               if (thisCandidates.some(candidate => conjugateCandidates.includes(candidate))) {
+               if (thisCandidates.some(candidate => conjugateCandidates.has(candidate))) {
                   successcount++ // Success!
                   colorConjugate(sudoku, conjugate)
                   sudoku.set(thisPosition.row, thisPosition.column).to(
-                     ...thisCandidates.filter(candidate => !conjugateCandidates.includes(candidate)))
+                     ...thisCandidates.filter(candidate => !conjugateCandidates.has(candidate)))
                }
             }
          }

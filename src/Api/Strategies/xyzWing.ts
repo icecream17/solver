@@ -47,7 +47,7 @@ export default function xyzWing (sudoku: PureSudoku) {
       const validAffectsCell = affectsBaseCell.filter(
          sees => cellsWithTwoCandidates.includes(sees) && sudoku.data[sees.row][sees.column].every(candidate => sudokubasecell.includes(candidate))
       )
-      const [valid1stWing, valid2ndWing] = validAffectsCell.reduce < [CellID[], CellID[]]>((accum, sees) => {
+      const [valid1stWing, valid2ndWing] = validAffectsCell.reduce<[CellID[], CellID[]]>((accum, sees) => {
          if (inSameBox(sees, basecell)) {
             accum[0].push(sees)
          } else {

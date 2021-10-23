@@ -1,20 +1,10 @@
 
 import React from 'react';
 
-const exampleUsage = `
-   Example 1:
-   <ExternalLink href="https://reactjs.org" content="Learn react"/>
-
-   Example 2:
-   <ExternalLink href="https://www.youtube.com/watch?v=dQw4w9WgXcQ" content={
-      What does <code>this</code> do?
-   }/>
-`
-
 type ExternalLinkProps = Readonly<{
-   children?: React.ReactNode
+   children: React.ReactNode
    className?: string
-   href?: string
+   href: string
    id?: string
 }>
 
@@ -32,17 +22,6 @@ type ExternalLinkProps = Readonly<{
  * /></ExternalLink>
  */
 export default class ExternalLink extends React.PureComponent<ExternalLinkProps> {
-   constructor (props: ExternalLinkProps) {
-      for (const requiredProperty of ["children", "href"] as const) {
-         if (!(requiredProperty in props)) {
-            throw TypeError(
-               `ExternalLink: Required property "${requiredProperty}" is missing\n${exampleUsage}`)
-         }
-      }
-
-      super(props)
-   }
-
    render() {
       let className = (this.props.className ?? "").trim()
       if (className === "") {

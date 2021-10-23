@@ -51,7 +51,7 @@ type CellState = Readonly<(
          explaining: true
          previousCandidates: null | SudokuDigits[]
          classes: null | string[]
-         candidateClasses: null | string[]
+         candidateClasses: null | Record<IndexToNine, string>
       } |
       {
          explaining: false
@@ -110,7 +110,7 @@ export default class Cell extends React.Component<CellProps, CellState> {
           * Used for styling - for example highlighting a candidate red
           *
           * Although the type is `string[] | null`, it's really
-          * `{ [key: SudokuDigits]: string } | null`
+          * `{ [key: IndexToNine]: string } | null`
           */
          candidateClasses: null,
 
@@ -240,13 +240,13 @@ export default class Cell extends React.Component<CellProps, CellState> {
             return null
          }
 
-         // Array of 10
-         const newCandidateClasses = state.candidateClasses ?? ['', '', '', '', '', '', '', '', '', '']
+         // Array of 9
+         const newCandidateClasses = state.candidateClasses ?? ['', '', '', '', '', '', '', '', '']
 
          const hasColorAlready = new RegExp(` ${color}( |$)`)
          for (const candidate of candidates) {
-            if (!hasColorAlready.test(newCandidateClasses[candidate])) {
-               newCandidateClasses[candidate] += ` ${color}`
+            if (!hasColorAlready.test(newCandidateClasses[candidate - 1 as IndexToNine])) {
+               newCandidateClasses[candidate - 1 as IndexToNine] += ` ${color}`
             }
          }
 

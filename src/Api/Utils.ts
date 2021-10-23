@@ -224,7 +224,7 @@ export function sharedInSets<T> (...sets: Set<T>[]) {
 export function assertGet<K, V> (map: Map<K, V>, key: K) {
    const value = map.get(key)
    if (value === undefined) {
-      throw ReferenceError("Map doesn't have this value / This error will never happen")
+      throw new ReferenceError("Map doesn't have this value / This error will never happen")
    }
 
    return value

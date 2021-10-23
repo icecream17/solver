@@ -5,7 +5,7 @@ import React from 'react'
 import Main from './Elems/Main'
 import Aside from './Elems/Aside'
 import SudokuData from './Api/Spaces/Sudoku'
-import { AlertType, NoticeInfo, NoticeType, PromptCallback, SudokuDigits, _UnusedProps } from './Types'
+import { AlertType, CouldAIsB, NoticeInfo, NoticeType, PromptCallback, SudokuDigits, _UnusedProps } from './Types'
 import NoticeWindow from './Elems/NoticeElems/NoticeWindow'
 import GithubCorner from './Elems/GithubCorner'
 import Cell from './Elems/MainElems/Cell'
@@ -18,6 +18,16 @@ declare global {
          alert: typeof App.prototype.alert
          prompt: typeof App.prototype.prompt
       }
+   }
+
+   interface Set<T> {
+      has (value: unknown): CouldAIsB<typeof value, T>
+      delete (value: unknown): CouldAIsB<typeof value, T>
+   }
+
+   // @eslint-disable-next-line @typescript-eslint/no-unused-vars --- I can't prefix this with an underscore, _typescript_
+   interface Map<K, V> {
+      has (key: unknown): CouldAIsB<typeof key, K>
    }
 }
 
@@ -129,36 +139,33 @@ class App extends React.Component<_UnusedProps, AppState> {
 
    alert (message: string, alertType = AlertType.INFO) {
       this.setState(state => {
-         const notices = state.notices.slice()
-         notices.push({
-            type: NoticeType.ALERT,
-            alertType,
-            message
-         })
-
-         return { notices }
+         return {
+            notices: [...state.notices, {
+               type: NoticeType.ALERT,
+               alertType,
+               message
+            }]
+         }
       })
    }
 
    prompt (title: string, message = "this default message shouldn't appear", defaultResponse = "", callback?: PromptCallback) {
       this.setState(state => {
-         const notices = state.notices.slice()
-         notices.push({
-            type: NoticeType.PROMPT,
-            title,
-            message,
-            defaultResponse,
-            callback
-         })
-
-         return { notices }
+         return {
+            notices: [...state.notices, {
+               type: NoticeType.PROMPT,
+               title,
+               message,
+               defaultResponse,
+               callback
+            }]
+         }
       })
    }
 
    finishNotice () {
       this.setState(state => {
-         const notices = state.notices.slice()
-         notices.shift()
+         const [, ...notices] = state.notices // Remove first notice
          return { notices }
       })
    }

@@ -2,6 +2,7 @@
 import React from 'react';
 import { SudokuDigits, _ReactProps } from '../../Types';
 import Candidate from './Candidate';
+import { _content } from './Candidates';
 
 type CandidatesDiffProps = Readonly<{
    previous: SudokuDigits[] | null
@@ -41,46 +42,39 @@ export default class CandidatesDiff extends React.Component<CandidatesDiffProps>
    }
 
    render() {
-      const content = (candidate: SudokuDigits) => {
-         if (this.hasCandidate(candidate)) {
-            return candidate
-         } else {
-            return <></>
-         }
-      }
-
-      const color = (candidate: SudokuDigits) => {
-         if (this.hasCandidate(candidate) !== this.hadCandidate(candidate)) {
-            if (this.hasCandidate(candidate)) {
-               return "added" // Candidate now added
-            } else {
-               return "eliminated" // Candidate now removed
-            }
-         } else {
-            return this.props.classes?.[candidate] ?? ""
-         }
-      }
-
       return (
          <table className="Candidates">
             <tbody>
                <tr>
-                  <Candidate index={0} className={color(1)}>{content(1)}</Candidate>
-                  <Candidate index={1} className={color(2)}>{content(2)}</Candidate>
-                  <Candidate index={2} className={color(3)}>{content(3)}</Candidate>
+                  <Candidate index={0} className={this._color(1)}>{_content(this, 1)}</Candidate>
+                  <Candidate index={1} className={this._color(2)}>{_content(this, 2)}</Candidate>
+                  <Candidate index={2} className={this._color(3)}>{_content(this, 3)}</Candidate>
                </tr>
                <tr>
-                  <Candidate index={3} className={color(4)}>{content(4)}</Candidate>
-                  <Candidate index={4} className={color(5)}>{content(5)}</Candidate>
-                  <Candidate index={5} className={color(6)}>{content(6)}</Candidate>
+                  <Candidate index={3} className={this._color(4)}>{_content(this, 4)}</Candidate>
+                  <Candidate index={4} className={this._color(5)}>{_content(this, 5)}</Candidate>
+                  <Candidate index={5} className={this._color(6)}>{_content(this, 6)}</Candidate>
                </tr>
                <tr>
-                  <Candidate index={6} className={color(7)}>{content(7)}</Candidate>
-                  <Candidate index={7} className={color(8)}>{content(8)}</Candidate>
-                  <Candidate index={8} className={color(9)}>{content(9)}</Candidate>
+                  <Candidate index={6} className={this._color(7)}>{_content(this, 7)}</Candidate>
+                  <Candidate index={7} className={this._color(8)}>{_content(this, 8)}</Candidate>
+                  <Candidate index={8} className={this._color(9)}>{_content(this, 9)}</Candidate>
                </tr>
             </tbody>
          </table>
+      )
+   }
+
+   _color (candidate: SudokuDigits) {
+      if (this.hasCandidate(candidate) === this.hadCandidate(candidate)) {
+         return this.props.classes?.[candidate] ?? ""
+      }
+
+      // Candidate has just been added or removed!
+      return (
+         this.hasCandidate(candidate)
+            ? "added"
+            : "eliminated"
       )
    }
 }

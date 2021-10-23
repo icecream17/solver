@@ -1,11 +1,11 @@
-import { ALL_CANDIDATES, IndexToNine, INDICES_TO_NINE, SudokuDigits, _Callback } from "../../Types";
+import { ALL_CANDIDATES, IndexToNine, INDICES_TO_NINE, SudokuDigits } from "../../Types";
 import PureSudoku from "../Spaces/PureSudoku";
 import { CellID } from "../Utils";
 import { colorGroup } from "../Utils.dependent";
 
 type PossibleNth = Readonly<{
-   lines: Set<CellID>[],
-   sumLines: Set<CellID>
+   lines: Set<CellID>[]
+   sumLines: Set<CellID> // Set of all cells in the lines
 }>
 
 function _innerWingLogic(
@@ -23,15 +23,11 @@ function _innerWingLogic(
       patternColumns.add(cell.column)
    }
 
-   const { patternLines, patternPendLines } =
+   // Undifferentiate rows and columns
+   const [patternLines, patternPendLines, lineProp, pendLineProp] =
       isRow
-         ? { patternLines: patternRows, patternPendLines: patternColumns }
-         : { patternLines: patternColumns, patternPendLines: patternRows }
-
-   const { lineProp, pendLineProp } =
-      isRow
-         ? { lineProp: "row", pendLineProp: "columns" } as const
-         : { lineProp: "column", pendLineProp: "rows" } as const
+         ? [patternRows, patternColumns, "row", "columns"] as const
+         : [patternColumns, patternRows, "column", "rows"] as const
 
    if (patternPendLines.size <= wingSize) {
       // Pattern finally identified!
@@ -55,13 +51,13 @@ function _innerWingLogic(
    return 0
 }
 
-
-// Optimization:
-// Say index = 7
-// Jellyfish (size 4) can't be made with only [6] + 7 8
-// But in can be made with [5 6] 7 8
+/**
+ * Updates the accumulated arrays and sets.
+ * If an accumulated array reaches the required amount of lines, callback()
+ */
 function _check (line: Set<CellID>, possibleNLines: PossibleNth[][], index: IndexToNine, size: 2 | 3 | 4, callback: (sumIthLines: Set<CellID>) => void) {
-   for (let i = possibleNLines.length - 1; i >= 0 && (9 - index >= size - i); i--) {
+   const optimization = Math.max(index + size - 9, 0) // Example: If index = 8, size = 2,
+   for (let i = possibleNLines.length - 1; i >= optimization; i--) {
       for (const ithLines of possibleNLines[i]) {
          const sumIthLines = new Set(ithLines.sumLines)
          line.forEach(cell => sumIthLines.add(cell))
@@ -99,34 +95,24 @@ export default function fish (size: 2 | 3 | 4, sudoku: PureSudoku) {
          const row = candidateLocations[candidate].rows[index]
          const column = candidateLocations[candidate].columns[index]
 
-         if (row.size <= size && row.size > 1) {
-            // Optimization:
-            // Say index = 6
-            // Jellyfish (size 4) can't be made with only 6 7 8
-            // But in can be made with 5 6 7 8
-            if (9 - index >= size) {
-               possibleNRows[0].push({
-                  lines: [row],
-                  sumLines: new Set(row)
+         for (const [line, isRow, possibleNLines] of [[row, true, possibleNRows] as const, [column, false, possibleNColumns] as const]) {
+            if (line.size <= size && line.size > 1) {
+               // Optimization:
+               // Say index = 6
+               // Jellyfish (size 4) can't be made with only 6 7 8
+               // But in can be made with 5 6 7 8
+               if (9 - index >= size) {
+                  possibleNLines[0].push({
+                     lines: [line],
+                     sumLines: new Set(line)
+                  })
+               }
+
+
+               _check(line, possibleNLines, index, size, sumLines => {
+                  successcount += _innerWingLogic(candidate, candidateLocations, sudoku, sumLines, isRow, size)
                })
             }
-
-            _check(row, possibleNRows, index, size, sumLines => {
-               successcount += _innerWingLogic(candidate, candidateLocations, sudoku, sumLines, true, size)
-            })
-         }
-
-         if (column.size <= size && column.size > 1) {
-            if (9 - index >= size) {
-               possibleNColumns[0].push({
-                  lines: [column],
-                  sumLines: new Set(column)
-               })
-            }
-
-            _check(column, possibleNColumns, index, size, sumLines => {
-               successcount += _innerWingLogic(candidate, candidateLocations, sudoku, sumLines, false, size)
-            })
          }
       }
    }

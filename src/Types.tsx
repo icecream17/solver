@@ -79,6 +79,10 @@ export type DontUseObject = Record<PropertyKey, unknown>
 export type _Callback = (...args: any[]) => void
 export type _Function = (...args: any[]) => any
 
+export type CouldAIsB<A, B> = A extends B
+   ? boolean
+   : (B extends A ? boolean : false)
+
 // // See https://github.com/microsoft/TypeScript/issues/14094#issuecomment-373782604
 // type Without<T, U> = { [P in Exclude<keyof T, keyof U>]?: never };
 // export type XOR<T, U> = (T | U) extends object ? (Without<T, U> & U) | (Without<U, T> & T) : T | U;

@@ -55,11 +55,7 @@ export default class PureSudoku {
       for (const row of this.data) {
          for (const cell of row) {
             for (const candidate of ALL_CANDIDATES) {
-               if (cell.includes(candidate)) {
-                  str += candidate
-               } else {
-                  str += "0"
-               }
+               str += cell.includes(candidate) ? candidate : "0"
             }
          }
       }

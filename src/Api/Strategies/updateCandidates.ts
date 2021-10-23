@@ -47,9 +47,9 @@ export default function updateCandidates(sudoku: PureSudoku) {
          success: true,
          successcount: updated
       } as const
-   } else {
-      return {
-         success: false
-      } as const
    }
+
+   return {
+      success: false
+   } as const
 }

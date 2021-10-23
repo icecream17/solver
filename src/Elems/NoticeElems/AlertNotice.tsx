@@ -12,13 +12,11 @@ type AlertProps = {
 
 export default class AlertNotice extends React.Component<AlertProps> {
    render () {
-      const text = [...this.props.message].map((character, index) => {
-         if (character === '\n') {
-            return <br key={index}></br>
-         } else {
-            return character
-         }
-      })
+      const text = [...this.props.message].map((character, index) => (
+         character === '\n'
+            ? <br key={index}></br>
+            : character
+      ))
       return (
          <div className={`AlertNotice ${this.props.type}`} role="status">
             <p>{text}</p>

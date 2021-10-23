@@ -55,7 +55,7 @@ function _innerWingLogic(
  * Updates the accumulated arrays and sets.
  * If an accumulated array reaches the required amount of lines, callback()
  */
-function _check (line: Set<CellID>, possibleNLines: PossibleNth[][], index: IndexToNine, size: 2 | 3 | 4, callback: (sumIthLines: Set<CellID>) => void) {
+function _accum (line: Set<CellID>, possibleNLines: PossibleNth[][], index: IndexToNine, size: 2 | 3 | 4, callback: (sumIthLines: Set<CellID>) => void) {
    const optimization = Math.max(index + size - 9, 0) // Example: If index = 8, size = 2,
    for (let i = possibleNLines.length - 1; i >= optimization; i--) {
       for (const ithLines of possibleNLines[i]) {
@@ -109,8 +109,8 @@ export default function fish (size: 2 | 3 | 4, sudoku: PureSudoku) {
                }
 
 
-               _check(line, possibleNLines, index, size, sumLines => {
-                  successcount += _innerWingLogic(candidate, candidateLocations, sudoku, sumLines, isRow, size)
+               _accum(line, possibleNLines, index, size, sumLines => {
+                  successcount += _innerWingLogic(candidate, candidateLocations, sudoku, sumLines, isRow, size) // eslint-disable-line no-loop-func
                })
             }
          }

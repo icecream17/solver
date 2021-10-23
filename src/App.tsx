@@ -25,7 +25,7 @@ declare global {
       delete (value: unknown): CouldAIsB<typeof value, T>
    }
 
-   // @eslint-disable-next-line @typescript-eslint/no-unused-vars --- I can't prefix this with an underscore, _typescript_
+   // eslint-disable-next-line @typescript-eslint/no-unused-vars --- I can't prefix this with an underscore, _typescript_
    interface Map<K, V> {
       has (key: unknown): CouldAIsB<typeof key, K>
    }

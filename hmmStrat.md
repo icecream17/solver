@@ -67,13 +67,10 @@ A1=1
 
 Ok, that's the end of the partial list.
 
-Obviously that's way too long!\
-Unless you're a computer.
+Wayy too long!\
+(Unless you're a computer.)
 
-Even if computers had the capacity to be bored, it would take 1 millisecond to process this list.\
-After all, it's not even 0.01 megabytes.
-The computers aren't gonna get bored.\
-And anyways, the list can be simplified as candidates are removed.
+But at least the list can be simplified as candidates are removed.
 
 Let's look at the Easter Monster sudoku
 

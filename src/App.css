@@ -26,13 +26,15 @@
 
 .App {
    background-color: var(--background-color);
-   min-height: 100vh;
-   min-width: 100vw;
-   width: fit-content;
    color: var(--text-color);
 
    /* For the github-corner */
    position: relative;
+
+   min-height: 100vh;
+   min-width: 100vw;
+   width: fit-content;
+   margin: 0;
 
    display: grid;
    gap: 1rem;

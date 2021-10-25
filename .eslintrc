@@ -41,7 +41,8 @@
     "regexp",
     "sonarjs",
     "@typescript-eslint",
-    "unicorn"
+    "unicorn",
+    "write-good-comments"
   ],
   "reportUnusedDisableDirectives": true,
   "rules": {
@@ -121,6 +122,9 @@
     "unicorn/prefer-spread": "off", // More explicit sometimes
     "unicorn/prevent-abbreviations": "off", // If you don't understand, see here: https://github.com/sindresorhus/eslint-plugin-unicorn/blob/main/rules/shared/abbreviations.js
     "unicorn/throw-new-error": "off",
+
+
+    "write-good-comments/write-good-comments": "off",
 
 
     // disabling base rules

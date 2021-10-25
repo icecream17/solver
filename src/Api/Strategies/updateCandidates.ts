@@ -1,11 +1,12 @@
 import { INDICES_TO_NINE } from "../../Types"
 import PureSudoku from "../Spaces/PureSudoku"
 import { SuccessError } from "../Types"
-import { affects, algebraic } from "../Utils"
+import { affects, algebraic, CellID } from "../Utils"
 
 // O(n^5)
 export default function updateCandidates(sudoku: PureSudoku) {
    let updated = 0
+   const newResults = new Set<CellID>()
 
    for (const i of INDICES_TO_NINE) {
       for (const j of INDICES_TO_NINE) {
@@ -16,10 +17,10 @@ export default function updateCandidates(sudoku: PureSudoku) {
             const solvedCandidate = sudoku.data[i][j][0]
 
             // Cell > Affects
-            for (const {row, column} of affects(i, j)) {
+            for (const id of affects(i, j)) {
 
                // Cell > Affects > Cell
-               const datacell = sudoku.data[row][column]
+               const datacell = sudoku.data[id.row][id.column]
                const tempIndex = datacell.indexOf(solvedCandidate)
 
                // If has candidate
@@ -29,13 +30,13 @@ export default function updateCandidates(sudoku: PureSudoku) {
                      return {
                         success: false,
                         successcount: SuccessError,
-                        message: `Both ${algebraic(i, j)} and ${algebraic(row, column)} must be ${solvedCandidate}`
+                        message: `Both ${algebraic(i, j)} and ${algebraic(id.row, id.column)} must be ${solvedCandidate}`
                      }
                   }
 
-                  updated++
                   datacell.splice(tempIndex, 1) // Deletes the candidate
-                  sudoku.set(row, column).to(...datacell) // Updates/renders the cell too
+                  newResults.add(id)
+                  updated++
                }
             }
          }
@@ -43,6 +44,10 @@ export default function updateCandidates(sudoku: PureSudoku) {
    }
 
    if (updated > 0) {
+      for (const {row, column} of newResults) {
+         sudoku.set(row, column).to(...sudoku.data[row][column]) // Don't run Cell#setState on every single candidate removal
+      }
+
       return {
          success: true,
          successcount: updated

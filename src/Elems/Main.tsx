@@ -9,9 +9,7 @@ type MainProps = Readonly<{
 }>
 
 /**
- * The "main" component, which is just the sudoku parts for now.
- *
- * Currently the parts are Coords and Sudoku
+ * The "main" component; same as Coords + Sudoku for now
  * TODO: Remove coords
  */
 class Main extends React.Component<MainProps> {

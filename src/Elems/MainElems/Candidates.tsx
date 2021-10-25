@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { IndexToNine, INDICES_TO_NINE, SudokuDigits, _ReactProps } from '../../Types';
+import { IndexToNine, SudokuDigits } from '../../Types';
 import Candidate from './Candidate';
 
 type CandidatesProps = Readonly<{
@@ -13,7 +13,7 @@ type CandidatesProps = Readonly<{
     * The classes added to each candidate (see {@link Cell#candidateClasses})
     */
    classes: string[] | null
-}> & _ReactProps
+}>
 
 type ThisHasCandidate = { hasCandidate (candidate: SudokuDigits): boolean }
 export function _content (self: ThisHasCandidate, candidate: SudokuDigits) {
@@ -32,20 +32,9 @@ export function _content (self: ThisHasCandidate, candidate: SudokuDigits) {
  * TODO: Use grid since in this case data is not tabular
  */
 export default class Candidates extends React.Component<CandidatesProps> {
-   repeatedProps: { readonly index: IndexToNine; readonly className: string; }[];
    constructor(props: CandidatesProps) {
       super(props)
       this.hasCandidate = this.hasCandidate.bind(this)
-      this.repeatedProps = INDICES_TO_NINE.map(index => ({
-         index,
-         className: this.props.classes?.[index] ?? ''
-      } as const))
-   }
-
-
-   /** How many candidates are left */
-   get numCandidates(): number {
-      return this.props.data.length
    }
 
    hasCandidate (candidate: SudokuDigits): boolean {
@@ -57,22 +46,29 @@ export default class Candidates extends React.Component<CandidatesProps> {
          <table className="Candidates">
             <tbody>
                <tr>
-                  <Candidate {...this.repeatedProps[0]}>{_content(this, 1)}</Candidate>
-                  <Candidate {...this.repeatedProps[1]}>{_content(this, 2)}</Candidate>
-                  <Candidate {...this.repeatedProps[2]}>{_content(this, 3)}</Candidate>
+                  <Candidate {...this.repeatedProps(0)}>{_content(this, 1)}</Candidate>
+                  <Candidate {...this.repeatedProps(1)}>{_content(this, 2)}</Candidate>
+                  <Candidate {...this.repeatedProps(2)}>{_content(this, 3)}</Candidate>
                </tr>
                <tr>
-                  <Candidate {...this.repeatedProps[3]}>{_content(this, 4)}</Candidate>
-                  <Candidate {...this.repeatedProps[4]}>{_content(this, 5)}</Candidate>
-                  <Candidate {...this.repeatedProps[5]}>{_content(this, 6)}</Candidate>
+                  <Candidate {...this.repeatedProps(3)}>{_content(this, 4)}</Candidate>
+                  <Candidate {...this.repeatedProps(4)}>{_content(this, 5)}</Candidate>
+                  <Candidate {...this.repeatedProps(5)}>{_content(this, 6)}</Candidate>
                </tr>
                <tr>
-                  <Candidate {...this.repeatedProps[6]}>{_content(this, 7)}</Candidate>
-                  <Candidate {...this.repeatedProps[7]}>{_content(this, 8)}</Candidate>
-                  <Candidate {...this.repeatedProps[8]}>{_content(this, 9)}</Candidate>
+                  <Candidate {...this.repeatedProps(6)}>{_content(this, 7)}</Candidate>
+                  <Candidate {...this.repeatedProps(7)}>{_content(this, 8)}</Candidate>
+                  <Candidate {...this.repeatedProps(8)}>{_content(this, 9)}</Candidate>
                </tr>
             </tbody>
          </table>
       )
+   }
+
+   repeatedProps(index: IndexToNine) {
+      return {
+         index,
+         className: this.props.classes?.[index] ?? ''
+      } as const
    }
 }

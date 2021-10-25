@@ -4,6 +4,7 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import deprecate from './deprecate';
+import ErrorNotice from './ErrorNotice';
 
 window.alert = deprecate(window.alert, "Use window._custom.alert instead")
 window.prompt = deprecate(window.prompt, "Use window._custom.prompt instead")
@@ -11,7 +12,9 @@ window.prompt = deprecate(window.prompt, "Use window._custom.prompt instead")
 // Render the app
 ReactDOM.render(
    <React.StrictMode>
-      <App />
+      <ErrorNotice>
+         <App />
+      </ErrorNotice>
    </React.StrictMode>,
    document.getElementById('root')
 );

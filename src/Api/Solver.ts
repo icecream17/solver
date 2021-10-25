@@ -22,10 +22,10 @@ export default class Solver {
    strategyIndex = 0
    latestStrategyItem: null | StrategyItem = null
 
-   /** When a strategyItem is about to unmount, the strategy item element is deleted. */
+   /** When a StrategyItem is about to unmount, it deletes its reference here */
    strategyItemElements: Array<StrategyItem | undefined> = []
 
-   /** Used so that when there are multiple steps at the same time, the latter steps can wait */
+   /** Later steps wait for earlier steps to finish. Implemented using callback and promises */
    whenStepHasFinished: _Callback[] = []
    isDoingStep = false
    stepsTodo = 0
@@ -40,7 +40,7 @@ export default class Solver {
    skippable = [] as boolean[]
 
    constructor(public sudoku: Sudoku) {
-      // These capitalized methods are used as handlers in StrategyControls, so they need to be bound beforehand.
+      // Bind the StrategyControl handlers which have capitzalized names
       this.Go = this.Go.bind(this)
       this.Step = this.Step.bind(this)
       this.Undo = this.Undo.bind(this)
@@ -52,8 +52,8 @@ export default class Solver {
    /**
     * !async
     *
-    * Called after the last strategy is done,
-    * and just before the first strategy is done.
+    * Called when starting a new {@link Solver.prototype.Go} of strategies, i.e. starting strategy 0.
+    * Resets the StrategyResults in practice.
     */
    resetStrategies() {
       const promises = [] as Array<Promise<undefined>>
@@ -73,10 +73,8 @@ export default class Solver {
    }
 
    updateCounters(success: boolean, isFinished: boolean) {
-      // Go back to the start when a strategy succeeds
+      // Go back to the start when a strategy succeeds, if erroring, or if finished
       // (exception 1: if you're at the start go to 1 anyways)
-      // (exception 1a: if the sudoku is finished don't go to 1)
-      // (exception 1b: always be at the start if erroring)
       // (exception 2:
       //    After "check for solved" fails,
       //    skip "update candidates"
@@ -90,9 +88,9 @@ export default class Solver {
          this.skippable[this.strategyIndex] = true
       }
 
-      // if exception (not 1) / 1a / 1b
-      // else if 2
-      // else <normal condition>
+      // if GoToStart
+      // else if Exception2
+      // else <normal condition + Exception1>
       if ((success && this.strategyIndex > 0) || this.erroring || isFinished) {
          this.strategyIndex = 0
       } else if (this.strategyIndex === 0 && success === false) {
@@ -114,15 +112,19 @@ export default class Solver {
       }
    }
 
-   // *async
+   /**
+    * *async
+    */
    setupCells() {
       const promises = [] as Promise<undefined>[]
 
       for (const row of this.sudoku.cells) {
          for (const cell of row) {
-            promises.push(new Promise(resolve => {
-               cell?.setExplainingToTrue(resolve) ?? resolve(undefined)
-            }))
+            if (cell != null) {
+               promises.push(new Promise(resolve => {
+                  cell.setExplainingToTrue(resolve)
+               }))
+            }
          }
       }
 
@@ -132,7 +134,7 @@ export default class Solver {
    /**
     * !async
     *
-    * Kind of a misnomer really.
+    * !misnomer
     *
     * For each cell, run {@link Cell#setExplainingToFalse}
     */
@@ -145,7 +147,7 @@ export default class Solver {
       await forComponentsToUpdate()
    }
 
-   private async StartStep () {
+   private async StartStep (): Promise<void> {
       await forComponentsToUpdate()
 
       this.isDoingStep = true
@@ -166,9 +168,9 @@ export default class Solver {
             "The code somehow can't find the Strategy Item", AlertType.ERROR
          )
 
-         // Only error if not null.
-         // Otherwise, this is only because the StrategyItem unloaded, e.g. when exiting the tab
-         //    (Really because of tests)
+         // If the StrategyItem unloaded, it's null, right?
+         // e.g. when exiting the tab
+         // esp. when finishing a test
          if (this.latestStrategyItem !== null) {
             this.latestStrategyItem = null
             console.error(`undefined strategyItemElement @${this.strategyIndex}`)
@@ -176,12 +178,10 @@ export default class Solver {
       } else {
          this.latestStrategyItem = this.strategyItemElements[this.strategyIndex] as StrategyItem
 
-         // Don't run strategy if it's disabled,
-         // instead move on to the next strategy
+         // Skip disabled strategies
          if (this.latestStrategyItem.state.disabled) {
             this.updateCounters(false, false)
-            this.isDoingStep = false // Set back in the next step
-            return this.Step() // Return other step promise
+            return await this.StartStep()
          }
 
          // Not disabled, so update state
@@ -226,11 +226,11 @@ export default class Solver {
    async Step(): Promise<void> {
       this.erroring = false
 
-      // Code for multiple steps at the same time
+      // Let's not do multiple steps at the same time
       if (this.isDoingStep) {
          this.stepsTodo++
 
-         // Wait for the current step to finish
+         // Wait for any previous steps to finish
          // After that, continue to the main code
          await new Promise(resolve => {
             this.whenStepHasFinished.push(resolve)
@@ -249,7 +249,7 @@ export default class Solver {
 
       await this.FinishStep(strategyResult)
 
-      // Code for multiple steps at the same time
+      // Do the next step if it's waiting for this one
       if (this.stepsTodo > 0) {
          this.stepsTodo--
          this.whenStepHasFinished[0]()
@@ -281,7 +281,7 @@ export default class Solver {
    async Import() {
       const result = await asyncPrompt("Import", "Enter digits or candidates")
       if (result === null || result === "") {
-         return; // Maybe do something else
+         return; // Don't import on cancel
       }
 
       await this.reset()
@@ -289,7 +289,7 @@ export default class Solver {
    }
 
    Export() {
-      window._custom.alert(this.sudoku._to81())
+      window._custom.alert(this.sudoku.to81())
       window._custom.alert(this.sudoku.to729())
    }
 

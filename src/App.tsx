@@ -29,11 +29,15 @@ declare global {
    interface Map<K, V> {
       has (key: unknown): CouldAIsB<typeof key, K>
    }
+
+   // eslint-disable-next-line @typescript-eslint/no-unused-vars --- I can't prefix this with an underscore, _typescript_
+   interface Array<T> {
+      slice(start?: number, end?: number): this
+   }
 }
 
 
 type AppState = {
-   error: boolean
    notices: NoticeInfo[]
 }
 
@@ -63,11 +67,6 @@ class App extends React.Component<_UnusedProps, AppState> {
       this.sudoku = new SudokuData()
       this.state = {
          /**
-          * If the App has caught an error
-          */
-         error: false,
-
-         /**
           * The queue of alert and prompt messages to be sent
           * Only 1 is displayed at a time
           */
@@ -94,19 +93,9 @@ class App extends React.Component<_UnusedProps, AppState> {
       window._custom.prompt = () => undefined;
    }
 
-   componentDidCatch (error: Error, errorInfo: React.ErrorInfo) {
-      console.error("App crashed", { error, errorInfo });
-      this.setState({ error: true })
-   }
-
    render () {
-      const classNames = ["App"]
-      if (this.state.error) {
-         classNames.push("error")
-      }
-
       return (
-         <div className={classNames.join(' ')}>
+         <div className="App">
             <header className="App-header">
                <Title />
                <Version />

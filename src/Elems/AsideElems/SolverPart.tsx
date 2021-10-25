@@ -54,7 +54,7 @@ export default class SolverPart extends React.Component<SolverPartProps> {
       this.children.list = list
    }
 
-   /** Called when a strategy is tried - see the Solver api */
+   /** Called when a strategy starts - see the Solver api */
    notify(strategyIndex: number, strategyResult: StrategyResult) {
       this.strategyItemStates[strategyIndex] = strategyResult
    }

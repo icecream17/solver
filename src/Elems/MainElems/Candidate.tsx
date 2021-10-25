@@ -1,12 +1,12 @@
 
 import './Candidate.css'
 import React from 'react';
-import { IndexToNine, _ReactProps } from '../../Types';
+import { IndexToNine } from '../../Types';
 
 type CandidateProps = Readonly<{
    index: IndexToNine
    className?: string
-}> & _ReactProps
+}>
 
 /**
  * A cell candidate

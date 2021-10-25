@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { IndexToNine, _ReactProps } from '../../Types';
+import { IndexToNine } from '../../Types';
 
 import Cell, { BaseCellProps } from './Cell';
 
@@ -8,7 +8,7 @@ import Cell, { BaseCellProps } from './Cell';
 type RowProps = Readonly<{
    index: IndexToNine
    propsPassedDown: Omit<BaseCellProps, "row" | "column">
-}> & _ReactProps
+}>
 
 /**
  * A row in a sudoku

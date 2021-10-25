@@ -64,10 +64,9 @@ export default class StrategyItem extends React.Component<StrategyItemProps, Str
       /**
        * a11y considerations:
        *
-       * I want the strategy toggler checkbox to be
-       * activatable by just clicking the whole text.
+       * I want the checkbox to be togglable by clicking any part of the text.
        *
-       * But the whole text isn't a good label.
+       * But the text itself isn't a good label;
        * A better label would be "toggle strategyName" instead of "strategyName"
        *
        * Also, "strategyName" should label the <li> rather than the checkbox
@@ -81,7 +80,7 @@ export default class StrategyItem extends React.Component<StrategyItemProps, Str
       }
 
       const togglerPart = this.props.required ? <></> : (
-         // eslint-disable-next-line jsx-a11y/label-has-for --- Obviously both nesting and id are associated
+         // eslint-disable-next-line jsx-a11y/label-has-for --- Both nesting and id are right there!!!!!
          <label htmlFor={ this.togglerId as string }>
             <StrategyTogglerLabel {...this.props} />
             <StrategyToggler callback={this.toggle} id={this.togglerId as string} />
@@ -96,10 +95,10 @@ export default class StrategyItem extends React.Component<StrategyItemProps, Str
          </li>
       )
 
-      // StrategyLabel is placed before StrategyToggler because
+      // StrategyLabel goes before StrategyToggler because
       // it makes sense a11y wise to put the text first
 
-      // And theoretically, the site both supports ltr and rtl
+      // And also because the site supports both ltr and rtl (hopefully)
    }
 
    toggle(_event: React.ChangeEvent) {

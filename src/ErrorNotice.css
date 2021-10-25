@@ -1,0 +1,9 @@
+
+.ErrorNotice {
+   font-family: var(--monospace);
+   white-space: pre;
+   padding: 1.5rem;
+   border: 3px solid red;
+   height: fit-content;
+   width: fit-content;
+}

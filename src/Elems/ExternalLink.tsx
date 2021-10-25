@@ -9,10 +9,11 @@ type ExternalLinkProps = Readonly<{
 }>
 
 /**
- * An external link.
- * Since the link is external it'll open up in a new tab.
+ * Opens in a new tab (external link, right?)
  *
- * It is required to have both the "content" and "href" props
+ * @requiredProps
+ * - children
+ * - href
  *
  * @example
  * <ExternalLink href="https://reactjs.org" content="Learn react"/>

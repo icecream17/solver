@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { SudokuDigits, _ReactProps } from '../../Types';
+import { SudokuDigits } from '../../Types';
 import Candidate from './Candidate';
 import { _content } from './Candidates';
 
@@ -8,11 +8,11 @@ type CandidatesDiffProps = Readonly<{
    previous: SudokuDigits[] | null
    current: SudokuDigits[]
    classes: string[] | null
-}> & _ReactProps
+}>
 
 /**
- * Based off of `Candidates`,
- * This adds css classes to show if one or more candidates were added or removed
+ * Based on `Candidates`,
+ * This adds css classes for any removed or added candidates.
  *
  * The css classes actually have precedence over the classes defined by strategies
  */
@@ -22,12 +22,6 @@ export default class CandidatesDiff extends React.Component<CandidatesDiffProps>
 
       this.hadCandidate = this.hadCandidate.bind(this)
       this.hasCandidate = this.hasCandidate.bind(this)
-   }
-
-
-   /** How many candidates are left */
-   get numCandidates(): number {
-      return this.props.current.length
    }
 
    hadCandidate(candidate: SudokuDigits): boolean {
@@ -65,12 +59,12 @@ export default class CandidatesDiff extends React.Component<CandidatesDiffProps>
       )
    }
 
+   /** Adds a css class for any new or deleted candidates */
    _color (candidate: SudokuDigits) {
       if (this.hasCandidate(candidate) === this.hadCandidate(candidate)) {
-         return this.props.classes?.[candidate] ?? ""
+         return this.props.classes?.[candidate - 1] ?? ""
       }
 
-      // Candidate has just been added or removed!
       return (
          this.hasCandidate(candidate)
             ? "added"

@@ -18,7 +18,7 @@ test('it imports', () => {
          console.debug(board)
       }
       expect(testSudoku.import(board).success).toBe(true)
-      expect(testSudoku._to81()).toBe(new PureSudoku(board)._to81())
+      expect(testSudoku.to81()).toBe(new PureSudoku(board).to81())
    }
 
    expect(testSudoku.import(`https://www.sudokuwiki.org/sudoku.htm?bd=000000001004060208070320400900018000005000600000540009008037040609080300100000000`).success).toBe(true)
@@ -62,11 +62,11 @@ test('getBox', () => {
    expect(testSudoku.getBox(2)[2]).toStrictEqual([1, 2, 3])
 })
 
-test('_to81', () => {
+test('to81', () => {
    const testSudoku = new PureSudoku()
    testSudoku.set(1, 2).to(3)
    const toSudoku = new PureSudoku()
-   expect(toSudoku.import(testSudoku._to81())).toStrictEqual({
+   expect(toSudoku.import(testSudoku.to81())).toStrictEqual({
       success: true,
       representationType: '81'
    })

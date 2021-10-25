@@ -10,10 +10,7 @@ export type StrategyLabelProps = Readonly<{
 }>
 
 /**
- * The text "labelling" or really naming, a strategy
- *
- * Really it's just the text inside the StrategyItem,
- * besides StrategyResult
+ * The text {labelling} (naming) [for] a strategy; inside such StrategyItem.
  */
 export default class StrategyLabel extends React.PureComponent<StrategyLabelProps> {
    render() {

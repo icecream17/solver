@@ -6,14 +6,14 @@
  */
 
 import React, { lazy, Suspense } from 'react'
-import { NoticeInfo, NoticeType, _ReactProps } from '../../Types';
+import { NoticeInfo, NoticeType } from '../../Types';
 const AlertNotice = lazy(() => import('./AlertNotice'));
 const PromptWindow = lazy(() => import('./PromptWindow'));
 
 type NoticeProps = Readonly<{
    todo: NoticeInfo[]
    whenFinish: () => void
-}> & _ReactProps
+}>
 
 /**
  * A general component which either renders nothing, an {@link AlertNotice},
@@ -44,8 +44,7 @@ export default class Notice extends React.Component<NoticeProps> {
             )
          default:
             console.error(nextTodo)
-            // @ts-expect-error TypeScript is now sure that nextTodo can't be anything. So `.type` doesn't exist, right?
-            throw new TypeError(`unknown todo type: ${String(nextTodo.type)}`)
+            throw new TypeError(`unknown todo type`)
       }
    }
 }

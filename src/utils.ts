@@ -3,7 +3,11 @@
  */
 
 /**
- * This function is used to wait for the components to update
+ * @example
+ * await forComponentsToUpdate()
+ *
+ * @description
+ * Do you want to wait for your components to update? Wow, look at this!
  *
  * This function simply returns `Promise<undefined>`.
  * When you await for that promise, the promise is added to the event stack:
@@ -11,8 +15,7 @@
  * 1. `setState` handlers
  * 2. `Promise<undefined>`
  *
- * So by the time the promise has been awaited,
- * the components have been updated.
+ * So by waiting for the promise to resolve, you wait for the components to update!
  *
  * Thanks to https://stackoverflow.com/q/47019199/12174015
  * and the answer at https://stackoverflow.com/a/47022453/12174015
@@ -65,7 +68,8 @@ export async function forComponentsToUpdate (): Promise<undefined> {
  * convertArrayToEnglishList("ABCDEFGHIJKLMNOPQRSTUVWXYZ".split(""))
  *
  * @description
- * This only expects a `string | number`, so this won't happen anyways.
+ * This function expects a `string | number`, so DON'T DO THIS!
+ * Just some interesting edge cases.
  *
  * @example
  * // "2 and undefined"
@@ -85,4 +89,12 @@ export function convertArrayToEnglishList<T extends string | number>(array: T[])
       default:
          return `${array.slice(0, -1).join(', ')}, and ${array[array.length - 1]}` as const
    }
+}
+
+export function arraysAreEqual(array1: unknown[], array2: unknown[]): boolean {
+   if (array1.length !== array2.length) {
+      return false
+   }
+
+   return array1.every((value, index) => array2[index] === value)
 }

@@ -4,6 +4,14 @@ Note: Many earlier versions are not specified, that's too much work.
 
 When a `@types` dependency updates, they almost always don't affect anything.
 
+## v0.26.5
+
+- (BUG, USE) Fix skipping a strategy
+- (BUG, USE) For some reason the candidates didn't highlight. Fixed that.
+- (ui) Lessen the impact of gigantic loadings.
+- (code) Rename `_to81` to `to81`
+- (docs) Slightly better docs in many files
+
 ## v0.26.4
 
 - (use, a11y) `Ctrl+Home` goes to the first cell and `Ctrl+End` goes to the last cell

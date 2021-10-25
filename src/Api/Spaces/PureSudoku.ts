@@ -27,9 +27,9 @@ export default class PureSudoku {
    }
 
    /**
-    * Currently for debugging
+    * Convert the sudoku into 81 digits, 0 for an unsolved cell
     */
-   _to81 () {
+   to81 () {
       let str = ""
       for (const row of this.data) {
          for (const cell of row) {
@@ -47,8 +47,7 @@ export default class PureSudoku {
    }
 
    /**
-    * Currently for debugging
-    * But also used in the "export" button
+    * Convert the sudoku into 729 candidates, 0 for an eliminated one
     */
    to729 () {
       let str = ""

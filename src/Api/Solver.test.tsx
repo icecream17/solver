@@ -62,3 +62,16 @@ test("After a strategy success, the index is 0 again", async () => {
    await waitFor(() => expect(currentStrategyIndex()).toBe(0))
    console.timeEnd('long test')
 })
+
+test("It skips over a disabled strategy", async () => {
+   await importBoard(BOARDS["Simple sudoku"])
+
+   userEvent.click(screen.getByRole("button", { name: "step" }))
+   await waitFor(() => expect(currentStrategyIndex()).toBe(0))
+
+   userEvent.click(screen.getByRole("switch", { name: "Toggle Update candidates" })) // See getTogglers in Aside.test.tsx
+
+   userEvent.click(screen.getByRole("button", { name: "step" }))
+   await waitFor(() => expect(currentStrategyIndex()).toBe(2)) // 0 indexing
+})
+

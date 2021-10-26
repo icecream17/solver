@@ -2414,10 +2414,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:^16.11.4":
-  version: 16.11.4
-  resolution: "@types/node@npm:16.11.4"
-  checksum: 96e08c0f8bb17601c18640a8eac61e2f236fe0c8a6b01a9221c10749157358fb29fdef4b5e264f72559e72f9830e6093f3ab5fef2df90afdad562ffa45ac534c
+"@types/node@npm:^16.11.6":
+  version: 16.11.6
+  resolution: "@types/node@npm:16.11.6"
+  checksum: 6e19634766ff589d3d2f361c2196b671f8f133cdadc5ad347a621c360d8994b6c4fbccfb2ad9c60c588c593831a96497c9c6b77d2b7e91be723384b94f6368e7
   languageName: node
   linkType: hard
 
@@ -2476,7 +2476,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/react@npm:^17.0.32":
+"@types/react@npm:^17.0.33":
   version: 17.0.33
   resolution: "@types/react@npm:17.0.33"
   dependencies:
@@ -11153,8 +11153,8 @@ resolve@^2.0.0-next.3:
     "@testing-library/react": ^12.1.2
     "@testing-library/user-event": ^13.5.0
     "@types/jest": ^27.0.2
-    "@types/node": ^16.11.4
-    "@types/react": ^17.0.32
+    "@types/node": ^16.11.6
+    "@types/react": ^17.0.33
     "@types/react-dom": ^17.0.10
     eslint-plugin-jest-dom: ^3.9.2
     eslint-plugin-react-perf: ^3.3.0

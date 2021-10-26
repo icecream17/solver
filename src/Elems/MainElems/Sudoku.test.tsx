@@ -89,7 +89,7 @@ test("Toggling every candidate", () => {
    const buttonCell = getButtonCellElement(0, 0)
    userEvent.click(buttonCell)
    userEvent.keyboard('123456789')
-   expect(buttonCell).toHaveTextContent('123456789') // Focused = showCandidates
+   expect(buttonCell).toHaveTextContent('123456789') // Focus --> Show candidates
 
    fireEvent.blur(buttonCell)
    expect(buttonCell).toHaveTextContent('') // Not focused + full = nothing shown

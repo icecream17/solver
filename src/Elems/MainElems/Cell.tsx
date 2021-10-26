@@ -42,7 +42,6 @@ type _TrackCandidateState =
 type CellState = Readonly<(
    {
       candidates: SudokuDigits[]
-      showCandidates: boolean
       error: boolean
    } & _UserDisplayState & _TrackCandidateState
 )>
@@ -102,17 +101,6 @@ export default class Cell extends React.Component<CellProps, CellState> {
           */
          candidateClasses: null,
 
-         /** Whether to show candidates
-           *
-           * This has no effect when there's 0 or 1 candidates -
-           * in those cases only a single digit is shown: 0 | 1 to 9
-           *
-           * `whenFocus` sets this to true
-           * `whenBlur` sets this to true when 1 < candidates < 9
-           * `shift+backspace` sets this to false
-           */
-         showCandidates: false,
-
          /** Whether the candidates array is empty */
          error: false,
 
@@ -122,10 +110,10 @@ export default class Cell extends React.Component<CellProps, CellState> {
          /**
           * This boolean controls pretending.
           *
-          * When an unbothered cell is focused, we pretend there are no candidates.
+          * When an unchanged cell is focused, we pretend there are no candidates.
           * This makes it _so_ much easier to fill in digits
           *
-          * Unbothered: showCandidates===false && numCandidates===9
+          * Unchanged: numCandidates===9
           */
          pretend: false
       }
@@ -151,7 +139,6 @@ export default class Cell extends React.Component<CellProps, CellState> {
    clearCandidates() {
       this.setState({
          candidates: [1, 2, 3, 4, 5, 6, 7, 8, 9],
-         showCandidates: false,
          error: false,
       })
 
@@ -170,13 +157,10 @@ export default class Cell extends React.Component<CellProps, CellState> {
          // Note: Edits can be undone by, well, undoing and setting back to previousCandidates
 
          if (candidates.length === 0) {
-            newState.showCandidates = false
             newState.error = true
          } else if (1 < candidates.length && candidates.length < 9) {
-            newState.showCandidates = true
             newState.error = false
          } else {
-            newState.showCandidates = false
             newState.error = false
          }
 
@@ -290,7 +274,7 @@ export default class Cell extends React.Component<CellProps, CellState> {
                <CandidatesDiff previous={this.state.previousCandidates} current={this.state.candidates} classes={this.state.candidateClasses} />
             </Suspense>
          )
-      } else if (this.state.showCandidates || this.state.active || this.state.pretend || (this.numCandidates > 1 && this.numCandidates !== 9)) {
+      } else if (this.state.active || this.state.pretend || (this.numCandidates > 1 && this.numCandidates < 9)) {
          // Also show candidates when editing a cell
          // Also show candidates as fallback when numCandidates is in [2, 8]
          content = (
@@ -330,32 +314,19 @@ export default class Cell extends React.Component<CellProps, CellState> {
    }
 
    whenFocus(_event?: React.FocusEvent) {
-      this.setState((state: CellState): CellState => {
-         const newState = {
-            active: true
-         } as Mutable<Partial<CellState>>
-
-         // See notes about state.pretend
-         if (state.showCandidates === false && this.numCandidates === 9) {
-            newState.pretend = true
-         }
-
-         return newState as CellState
-      })
+      this.setState(
+         state => ({
+            active: true,
+            pretend: state.candidates.length === 9
+         }) as const
+      )
    }
 
    whenBlur(_event?: React.FocusEvent) {
       this.props.whenNewCandidates(this, this.state.candidates)
-      this.setState((state: CellState): CellState => {
-         const newState = {
-            active: false,
-            pretend: false // See notes about state.pretend
-         } as Mutable<Partial<CellState>>
-
-         if (1 < state.candidates.length && state.candidates.length < 9) {
-            newState.showCandidates = true
-         }
-         return newState as CellState
+      this.setState({
+         active: false,
+         pretend: false // See notes about state.pretend
       })
    }
 
@@ -382,7 +353,6 @@ export default class Cell extends React.Component<CellProps, CellState> {
          if (event.shiftKey || event.altKey) {
             this.setState({
                candidates: [1, 2, 3, 4, 5, 6, 7, 8, 9],
-               showCandidates: false,
                error: false
             })
          } else {

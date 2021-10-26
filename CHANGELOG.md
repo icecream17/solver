@@ -4,6 +4,10 @@ Note: Many earlier versions are not specified, that's too much work.
 
 When a `@types` dependency updates, they almost always don't affect anything.
 
+# v0.26.6
+
+- (BUG, USE) For some reason solved cells sometimes weren't displayed as full digits, fix that.
+
 ## v0.26.5
 
 - (BUG, USE) Fix skipping a strategy

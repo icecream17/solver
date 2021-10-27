@@ -5387,8 +5387,8 @@ __metadata:
   linkType: hard
 
 "eslint-plugin-regexp@npm:^1.4.1":
-  version: 1.4.1
-  resolution: "eslint-plugin-regexp@npm:1.4.1"
+  version: 1.5.0
+  resolution: "eslint-plugin-regexp@npm:1.5.0"
   dependencies:
     comment-parser: ^1.1.2
     eslint-utils: ^3.0.0
@@ -5400,7 +5400,7 @@ __metadata:
     scslre: ^0.1.6
   peerDependencies:
     eslint: ">=6.0.0"
-  checksum: 8f3f3f88ab58f57598535a114b3022b2073fc4cd6230f43e1943981f4da54307051686f74135ef2aa6bc0534d025638174aa07f5dadcd11627a22b8e8efc7b0c
+  checksum: 5e73a24b3ff0ae4d2bd618f5f67a01da0dedd9a7469a34c38ea500d3abc9bbf3637362d913ccc2e6edee910c5a4bb01e7388a9c18ba205a64593cb272550dd25
   languageName: node
   linkType: hard
 

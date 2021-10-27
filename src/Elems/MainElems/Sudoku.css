@@ -10,7 +10,7 @@ table.Sudoku {
    --larger-border: calc(8 * var(--regular-border));
    --large-border: calc(var(--larger-border) / 3);
 
-   border: var(--larger-border) solid white;
+   border: var(--larger-border) solid var(--border-color);
    border-collapse: collapse;
    border-spacing: 0;
 
@@ -37,7 +37,7 @@ tr.Row {
 }
 
 tr.Row:nth-child(3n):not(:last-child) > td.Cell {
-   border-bottom: var(--large-border) solid white;
+   border-bottom: var(--large-border) solid var(--border-color);
 }
 
 td.Cell {
@@ -45,7 +45,7 @@ td.Cell {
    height: var(--cell-height); /* part of trying @[ref 1] */
    max-width: var(--cell-height);
    max-height: var(--cell-height);
-   border: var(--regular-border) solid white;
+   border: var(--regular-border) solid var(--border-color);
    border-spacing: 0;
    font-size: var(--cell-fontsize);
 
@@ -56,15 +56,12 @@ td.Cell {
 }
 
 td.Cell:nth-child(3n):not(:last-child) {
-   border-right: var(--large-border) solid white;
+   border-right: var(--large-border) solid var(--border-color);
 }
 
-[dir=rtl] td.Cell:nth-child(3n):not(:last-child) {
-   border-left: var(--large-border) solid white;
-}
-
+[dir=rtl] td.Cell:nth-child(3n):not(:last-child),
 td.Cell:nth-child(3n):not(:last-child):dir(rtl) {
-   border-left: var(--large-border) solid white;
+   border-left: var(--large-border) solid var(--border-color);
 }
 
 div.Cell {

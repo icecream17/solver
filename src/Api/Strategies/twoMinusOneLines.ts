@@ -5,10 +5,10 @@ import { colorGroup } from "../Utils.dependent";
 import { __incrementMapValue } from "./skyscraper";
 
 function __inLine(sumLines: Set<CellID>, eliminationPendLine: IndexToNine, pendLineProp: "column" | "row") {
-   const inLine = [] as CellID[]
+   const inLine = new Set<CellID>()
    for (const cell of sumLines) {
       if (cell[pendLineProp] === eliminationPendLine) {
-         inLine.push(cell)
+         inLine.add(cell)
       }
    }
 
@@ -51,7 +51,7 @@ export function _innerGroupSubtractionLogic(
       __incrementMapValue(patternColumns, cell.column)
    }
 
-   // How many line see a candidate
+   // How many lines see a candidate
    const patternPendLineElims = new Map<CellID, IndexToNine[]>()
    const patternPendLines = isRow ? patternColumns : patternRows
    const pendLineProp = isRow ? "column" : "row"
@@ -101,7 +101,7 @@ export function _innerGroupSubtractionLogic(
 
    if (successcount) {
       const nonExtraLineCells = __inLine(sumLines, nonExtraLine as IndexToNine, pendLineProp)
-      const extraCells = [...sumLines].filter(cell => !nonExtraLineCells.includes(cell))
+      const extraCells = [...sumLines].filter(cell => !nonExtraLineCells.has(cell))
       colorGroup(sudoku, extraCells, candidate, "orange")
       colorGroup(sudoku, nonExtraLineCells, candidate)
       return {
@@ -130,23 +130,18 @@ export default function twoMinusOneLines(sudoku: PureSudoku) {
 
          const check = []
          if (row.size < 2 + 4) { // 4 candidates of a row cannot share anything affects other than the row
-            check.push(row)
+            check.push([row, possibleRows] as const)
             possibleRows.push(row) // Marker 1
          }
 
          if (column.size < 2 + 4) {
-            check.push(column)
+            check.push([column, possibleColumns] as const)
             possibleColumns.push(column) // Marker 1
          }
 
          // line = row/column
          // pendLine = column/row
-         for (const line1 of check) {
-            const possibleLines =
-               line1 === row
-                  ? possibleRows
-                  : possibleColumns
-
+         for (const [line1, possibleLines] of check) {
             for (const line2 of possibleLines) {
                // Necessary because `Marker 1` happens before this
                if (line1 === line2) {

@@ -10,6 +10,14 @@ type validityResult = {
    message: string
 }
 
+function listOfMissingCandidatesIn (group: Set<SudokuDigits>) {
+   return convertArrayToEnglishList(
+      ALL_CANDIDATES.filter(
+         candidate => !group.has(candidate)
+      )
+   )
+}
+
 export default function checkValidity(sudoku: PureSudoku): validityResult {
    const solvedInColumns = [] as Array<Set<SudokuDigits>>
    const solvedInBoxes = [] as Array<Set<SudokuDigits>>
@@ -82,37 +90,25 @@ export default function checkValidity(sudoku: PureSudoku): validityResult {
       }
 
       if (candidatesInRow.size !== 9) {
-         const missingCandidates = ALL_CANDIDATES.filter(
-            candidate => !candidatesInRow.has(candidate)
-         )
-
          return {
             ok: false,
-            message: `Row ${ROW_NAMES[i]} has 0 possibilities for ${convertArrayToEnglishList(missingCandidates)}!!!`
+            message: `Row ${ROW_NAMES[i]} has 0 possibilities for ${listOfMissingCandidatesIn(candidatesInRow)}!!!`
          }
       }
    }
 
    for (let i = 0; i < 9; i++) {
       if (candidatesInColumns[i].size !== 9) {
-         const missingCandidates = ALL_CANDIDATES.filter(
-            candidate => !candidatesInColumns[i].has(candidate)
-         )
-
          return {
             ok: false,
-            message: `Column ${COLUMN_NAMES[i]} has 0 possibilities for ${convertArrayToEnglishList(missingCandidates)}!!!`
+            message: `Column ${COLUMN_NAMES[i]} has 0 possibilities for ${listOfMissingCandidatesIn(candidatesInColumns[i])}!!!`
          }
       }
 
       if (candidatesInBoxes[i].size !== 9) {
-         const missingCandidates = ALL_CANDIDATES.filter(
-            candidate => !candidatesInBoxes[i].has(candidate)
-         )
-
          return {
             ok: false,
-            message: `Box ${BOX_NAMES[i]} has 0 possibilities for ${convertArrayToEnglishList(missingCandidates)}!!!`
+            message: `Box ${BOX_NAMES[i]} has 0 possibilities for ${listOfMissingCandidatesIn(candidatesInBoxes[i])}!!!`
          }
       }
    }

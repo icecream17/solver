@@ -4,10 +4,11 @@ import { affects, CellID, sharedInArrays } from "../Utils";
 import { colorGroup } from "../Utils.dependent";
 
 export function __incrementMapValue<T extends Map<K, number>, K>(map: T, key: K) {
-   if (map.has(key)) {
-      map.set(key, (map.get(key) as number) + 1)
-   } else {
+   const value = map.get(key)
+   if (value === undefined) {
       map.set(key, 1)
+   } else {
+      map.set(key, value + 1)
    }
 }
 
@@ -18,30 +19,26 @@ export function _innerSkyscraperLogic(
    isRow: boolean,
    wingSize: number
 ) {
-   const patternRows = new Map<IndexToNine, number>()
-   const patternColumns = new Map<IndexToNine, number>()
-   for (const cell of sumLines) {
-      __incrementMapValue(patternRows, cell.row)
-      __incrementMapValue(patternColumns, cell.column)
-   }
-
-   const patternPendLines = isRow ? patternColumns : patternRows
+   const patternPendLines = new Map<IndexToNine, number>()
    const pendLineProp = isRow ? "column" : "row"
+   for (const cell of sumLines) {
+      __incrementMapValue(patternPendLines, cell[pendLineProp])
+   }
 
    if (patternPendLines.size === wingSize + 1) {
       for (const [eliminationPendLine, count] of patternPendLines) {
          if (count > 1) {
             const cellsNotInLine = [] as CellID[]
-            const notInLine = [] as CellID[][]
+            const affectsNotInLine = [] as CellID[][]
             for (const cell of sumLines) {
                if (cell[pendLineProp] !== eliminationPendLine) {
                   cellsNotInLine.push(cell)
-                  notInLine.push(affects(cell.row, cell.column))
+                  affectsNotInLine.push(affects(cell.row, cell.column))
                }
             }
 
             // shared = all extra see
-            const shared = sharedInArrays(...notInLine)
+            const shared = sharedInArrays(...affectsNotInLine)
 
             if (shared.size > 0) {
                let success = false
@@ -85,23 +82,18 @@ export default function skyscraper(sudoku: PureSudoku) {
 
          const check = []
          if (row.size < 3) {
-            check.push(row)
+            check.push([row, possibleRows] as const)
             possibleRows.push(row) // Marker 1
          }
 
          if (column.size < 3) {
-            check.push(column)
+            check.push([column, possibleColumns] as const)
             possibleColumns.push(column) // Marker 1
          }
 
          // line = row/column
          // pendLine = column/row
-         for (const line1 of check) {
-            const possibleLines =
-               line1 === row
-                  ? possibleRows
-                  : possibleColumns
-
+         for (const [line1, possibleLines] of check) {
             for (const line2 of possibleLines) {
                // Necessary because `Marker 1` happens before this
                if (line1 === line2) {

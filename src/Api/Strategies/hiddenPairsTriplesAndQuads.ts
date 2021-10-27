@@ -14,55 +14,30 @@ function getConjugateFromCandidates (cells: _CellInfoList, candidates: SudokuDig
    )
 }
 
+function __errorHandling (candidatesOfConjugate: SudokuDigits[], conjugate: CellInfo[]) {
+   const invalidCandidateString = convertArrayToEnglishList(candidatesOfConjugate)
 
-/**
- * Here, a "group" is a row, column, or box, but can be any group.
- *
- * Within that group, we're trying to find
- * n candidates which can only go in n cells.
- *
- * In Andrew Stuart's solver, this is equivalent to finding
- * hidden pairs, triples, and quads.
- *
- * See {@link hiddenPairsTriplesAndQuads}
- *
- * I think this is O(n^4)
- *
- * @param group - A group of cells. Generally a row, column, or box
- * @param indexToPosition - Takes the index of a cell within `group` and returns
- * the actual position of that cell. Used when displaying the invalid error.
- * @param maxSize - The maximum size of the conjugate. Default is 4.
- * (Not looking for conjugates of size 5 or more, since then there would be a
- * size 4 with the other cells by default. TODO better explanation)
- */
-function findHiddenConjugatesOfGroup(
-   group: TwoDimensionalArray<SudokuDigits>,
-   indexToPosition: (index: IndexToNine) => CellID,
-   maxSize = 4 as 2 | 3 | 4
-) {
-
-   function __errorHandling(candidatesOfConjugate: SudokuDigits[], conjugate: CellInfo[]) {
-      const invalidCandidateString = convertArrayToEnglishList(candidatesOfConjugate)
-
-      // To prevent errors in convertArrayToEnglishList
-      if (conjugate.length === 0) {
-         // A previous elimination must've caused this!
-         return ` has 0 possibilities for ${invalidCandidateString}!!!\n`
-      }
-      const invalidGroupNames = convertArrayToEnglishList(
-         conjugate.map(someCell => algebraic(someCell.position.row, someCell.position.column))
-      )
-
-      if (candidatesOfConjugate.length === 1) {
-         return ` has 0 possibilities for ${invalidCandidateString}!!!`
-      } else if (conjugate.length === 1) {
-         return `: ${candidatesOfConjugate.length} candidates (${invalidCandidateString}) all want to be in ${invalidGroupNames} which is impossible!!!`
-      } else {
-         return `: ${candidatesOfConjugate.length} candidates (${invalidCandidateString}) all want to be in ${conjugate.length} cells (${invalidGroupNames}) which is impossible!!!`
-      }
+   // To prevent errors in convertArrayToEnglishList
+   if (conjugate.length === 0) {
+      // A previous elimination must've caused this!
+      return ` has 0 possibilities for ${invalidCandidateString}!!!\n`
    }
+   const invalidGroupNames = convertArrayToEnglishList(
+      conjugate.map(someCell => algebraic(someCell.position.row, someCell.position.column))
+   )
 
-   function removeCandidate(candidate: SudokuDigits) {
+   if (candidatesOfConjugate.length === 1) {
+      return ` has 0 possibilities for ${invalidCandidateString}!!!`
+   } else if (conjugate.length === 1) {
+      return `: ${candidatesOfConjugate.length} candidates (${invalidCandidateString}) all want to be in ${invalidGroupNames} which is impossible!!!`
+   } else {
+      return `: ${candidatesOfConjugate.length} candidates (${invalidCandidateString}) all want to be in ${conjugate.length} cells (${invalidGroupNames}) which is impossible!!!`
+   }
+}
+
+function __filterPossibleCandidates (groupCopy: SudokuDigits[][], maxSize: number, possibleCandidates: Set<1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9>) {
+
+   function removeCandidate (candidate: SudokuDigits) {
       possibleCandidates.delete(candidate)
 
       for (const cell of groupCopy) {
@@ -70,12 +45,7 @@ function findHiddenConjugatesOfGroup(
       }
    }
 
-   // Copy the group
-   const groupCopy = group.map(cell => cell.slice())
-
-   // 1. Filter the possible candidates
    // a. Remove candidates that occur > maxSize times
-   const possibleCandidates = new Set([1, 2, 3, 4, 5, 6, 7, 8, 9] as const)
    const occurances = [] as number[]
    for (const candidate of possibleCandidates) {
       occurances[candidate] = groupCopy.filter(cell => cell.includes(candidate)).length
@@ -103,6 +73,40 @@ function findHiddenConjugatesOfGroup(
          }
       }
    }
+}
+
+/**
+ * Here, a "group" is a row, column, or box, but can be any group.
+ *
+ * Within that group, we're trying to find
+ * n candidates which can only go in n cells.
+ *
+ * In Andrew Stuart's solver, this is equivalent to finding
+ * hidden pairs, triples, and quads.
+ *
+ * See {@link hiddenPairsTriplesAndQuads}
+ *
+ * I think this is O(n^4)
+ *
+ * @param group - A group of cells. Generally a row, column, or box
+ * @param indexToPosition - Takes the index of a cell within `group` and returns
+ * the actual position of that cell. Used when displaying the invalid error.
+ * @param maxSize - The maximum size of the conjugate. Default is 4.
+ * (Not looking for conjugates of size 5 or more, since then there would be a
+ * size 4 with the other cells by default. TODO better explanation)
+ */
+function findHiddenConjugatesOfGroup(
+   group: TwoDimensionalArray<SudokuDigits>,
+   indexToPosition: (index: IndexToNine) => CellID,
+   maxSize = 4 as 2 | 3 | 4
+) {
+
+   // Copy the group
+   const groupCopy = group.map(cell => cell.slice())
+
+   // 1. Filter the possible candidates
+   const possibleCandidates = new Set([1, 2, 3, 4, 5, 6, 7, 8, 9] as const)
+   __filterPossibleCandidates(groupCopy, maxSize, possibleCandidates)
 
    // 2. Do the regular pairsTriplesAndQuads function
    //     a. Filter out cells that have too few candidates

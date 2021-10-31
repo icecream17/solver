@@ -10,8 +10,8 @@ import StaticComponent from './StaticComponent';
  * @example
  * <Version />
  */
-export default class Version extends StaticComponent {
-   render() {
-      return <span className="Version">v0.26.6</span>
-   }
+function Version() {
+   return <span className="Version">v0.26.6</span>
 }
+
+export default StaticComponent(Version)

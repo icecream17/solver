@@ -100,7 +100,7 @@ export default function fish (size: 2 | 3 | 4, sudoku: PureSudoku) {
                // Optimization:
                // Say index = 6
                // Jellyfish (size 4) can't be made with only 6 7 8
-               // But in can be made with 5 6 7 8
+               // But it can be with 5 6 7 8
                if (9 - index >= size) {
                   possibleNLines[0].push({
                      lines: [line],

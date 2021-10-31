@@ -28,7 +28,6 @@ export default class Solver {
    /** Later steps wait for earlier steps to finish. Implemented using callback and promises */
    whenStepHasFinished: _Callback[] = []
    isDoingStep = false
-   stepsTodo = 0
 
    /** Whether the most recent strategy has errored */
    erroring = false
@@ -226,15 +225,15 @@ export default class Solver {
    async Step(): Promise<void> {
       this.erroring = false
 
-      // Let's not do multiple steps at the same time
       if (this.isDoingStep) {
-         this.stepsTodo++
-
+         // Don't do this step yet
          // Wait for any previous steps to finish
          // After that, continue to the main code
          await new Promise(resolve => {
             this.whenStepHasFinished.push(resolve)
          });
+
+         this.whenStepHasFinished.shift()
       }
 
       // Main code
@@ -250,8 +249,7 @@ export default class Solver {
       await this.FinishStep(strategyResult)
 
       // Do the next step if it's waiting for this one
-      if (this.stepsTodo > 0) {
-         this.stepsTodo--
+      if (this.whenStepHasFinished.length > 0) {
          this.whenStepHasFinished[0]()
       }
    }
@@ -299,10 +297,11 @@ export default class Solver {
    }
 
    async reset() {
+      // BUG: Doesn't wait for steps to finish
       await this.resetCells()
       this.erroring = false
       this.memory = new StrategyMemory()
-      this.stepsTodo = 0
+      this.whenStepHasFinished = []
       this.strategyIndex = 0
       this.skippable = []
    }

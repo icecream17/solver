@@ -46,9 +46,15 @@ function __filterPossibleCandidates (groupCopy: SudokuDigits[][], maxSize: numbe
    }
 
    // a. Remove candidates that occur > maxSize times
-   const occurances = [] as number[]
+   const occurances = [-1, 0, 0, 0, 0, 0, 0, 0, 0, 0] as const as Record<SudokuDigits, number>
+
+   for (const cell of groupCopy) {
+      for (const candidate of cell) {
+         occurances[candidate]++
+      }
+   }
+
    for (const candidate of possibleCandidates) {
-      occurances[candidate] = groupCopy.filter(cell => cell.includes(candidate)).length
       if (occurances[candidate] > maxSize) {
          removeCandidate(candidate)
       }
@@ -108,8 +114,7 @@ function findHiddenConjugatesOfGroup(
    const possibleCandidates = new Set([1, 2, 3, 4, 5, 6, 7, 8, 9] as const)
    __filterPossibleCandidates(groupCopy, maxSize, possibleCandidates)
 
-   // 2. Do the regular pairsTriplesAndQuads function
-   //     a. Filter out cells that have too few candidates
+   //     c. Filter out cells that have too few candidates
    //        (No limit on max candidates)
    const possibleCells = [] as _CellInfoList
 
@@ -128,8 +133,8 @@ function findHiddenConjugatesOfGroup(
       return []
    }
 
-   // b. Now that the cells are filtered actually find the conjugates
-   // In this case we're finding n candidates that must be in n cells
+   // 2. Do the regular pairsTriplesAndQuads function.
+   // Time to find the conjugates, this time n candidates that must be in n cells
 
    maxSize = Math.min(maxSize, possibleCells.length, possibleCandidates.size) as 2 | 3 | 4
 
@@ -232,7 +237,7 @@ export default function hiddenPairsTriplesAndQuads(sudoku: PureSudoku) {
       return {
          success: false,
          successcount: SuccessError
-      }
+      } as const
    }
 
    for (const conjugate of result) {

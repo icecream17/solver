@@ -118,35 +118,51 @@ export default class Tabs extends React.Component<TabsProps, TabsState> {
       }
 
       if (movements.size !== 0) {
-         this.setState((state, props) => {
-            // Precedence
-            if (movements.has('Home')) {
-               return { focusedTab: 0, selectedTab: 0 }
-            } else if (movements.has('End')) {
-               return { focusedTab: props.tabNames.length - 1, selectedTab: props.tabNames.length - 1 }
-            } else if (movements.has('ArrowLeft')) {
-               let newTab = (state.focusedTab ?? 1) - 1
-               if (newTab === -1) {
-                  newTab += props.tabNames.length
-               }
-               return { focusedTab: newTab, selectedTab: newTab }
-            } else if (movements.has('ArrowRight')) {
-               let newTab = (state.focusedTab ?? props.tabNames.length - 1) + 1
-               if (newTab === props.tabNames.length) {
-                  newTab = 0
-               }
-               return { focusedTab: newTab, selectedTab: newTab }
+         for (const key of ['Home', 'End', 'ArrowLeft', 'ArrowRight'] as const) {
+            if (movements.has(key)) {
+               this.handleMovement(key, tab)
+               break
             }
-            throw new TypeError(`${[...movements].join(', ')} is invalid`)
-         }, () => {
-            this.props.whenTabChange(this.state.selectedTab) // Tab didn't necessarily change
-            if (tab) {
-               this.changeToMainContent()
-            }
-         })
+         }
       } else if (tab) {
          this.changeToMainContent()
       }
+   }
+
+   private handleMovement (movement: keyof typeof oppositeKeys, tab: boolean) {
+      let tabChanged = false
+      this.setState((state, props) => {
+         let newTab: number
+
+         if (movement === 'End')
+            newTab = props.tabNames.length - 1
+         else if (movement === 'Home' || state.focusedTab === null)
+            newTab = 0
+         else if (movement === 'ArrowLeft')
+            newTab = state.focusedTab === 0
+               ? props.tabNames.length - 1
+               : state.focusedTab - 1
+         else if (movement === 'ArrowRight')
+            newTab = state.focusedTab === props.tabNames.length - 1
+               ? 0
+               : state.focusedTab + 1
+         else
+            throw TypeError(`Impossible movement: $movement`)
+
+         if (state.selectedTab === newTab) {
+            tabChanged = true
+            return { focusedTab: newTab, selectedTab: newTab }
+         }
+
+         return null
+      }, () => {
+         if (tabChanged) {
+            this.props.whenTabChange(this.state.selectedTab)
+         }
+         if (tab) {
+            this.changeToMainContent()
+         }
+      })
    }
 
    /**

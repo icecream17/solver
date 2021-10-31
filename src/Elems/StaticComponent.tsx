@@ -1,5 +1,7 @@
 import React from "react";
 
-export default class StaticComponent extends React.Component {
-   shouldComponentUpdate () { return false }
+const alwaysEqual = () => true
+
+export default function StaticComponent <P> (func: React.FunctionComponent<P>) {
+   return React.memo(func, alwaysEqual)
 }

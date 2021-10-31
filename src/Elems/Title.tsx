@@ -8,8 +8,8 @@ import StaticComponent from './StaticComponent';
  * @example
  * <Title />
  */
-export default class Title extends StaticComponent {
-   render() {
-      return <h1 className='Title'>Sudoku solver</h1>
-   }
+function Title () {
+   return <h1 className='Title'>Sudoku solver</h1>
 }
+
+export default StaticComponent(Title)

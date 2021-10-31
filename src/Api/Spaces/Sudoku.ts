@@ -22,7 +22,7 @@ export default class Sudoku extends PureSudoku {
          to: async (...candidates: SudokuDigits[]) => {
             this.data[x][y] = candidates
 
-            // super calls set() before this.cells is set
+            // super calls set() before defining this.cells
             if (this.cells !== undefined) {
                await new Promise(resolve => {
                   this.cells[x][y]?.setCandidatesTo(candidates, () => resolve(undefined))
@@ -33,7 +33,7 @@ export default class Sudoku extends PureSudoku {
    }
 
    /**
-    * This is currently used for initialization, but could also be used for updating
+    * Used for initialization but could also update things
     * That's pretty complicated
     */
    addCell(cell: Cell) {

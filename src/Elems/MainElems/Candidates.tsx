@@ -1,4 +1,5 @@
 
+import "./Candidate.css"
 import React from 'react';
 import { IndexToNine, SudokuDigits } from '../../Types';
 import Candidate from './Candidate';

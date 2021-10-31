@@ -4,7 +4,15 @@ Note: Many earlier versions are not specified, that's too much work.
 
 When a `@types` dependency updates, they almost always don't affect anything.
 
-# v0.26.6
+## v0.27.0
+
+- (ui) Remove coords
+  - Note that cells have a title set for that.
+- (code) A few optimizations
+- (security) Prevent some forms of xss
+  - I don't think this really does much, but it does prevent eval.
+
+## v0.26.6
 
 - (BUG, USE) For some reason solved cells sometimes weren't displayed as full digits, fix that.
 

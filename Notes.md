@@ -121,10 +121,6 @@ To use:
 1. <https://reactjs.org/docs/test-utils.html>
 1. <https://reactjs.org/docs/context.html>
 
-## todo
-
-Idea: Remove coords
-
 ## List of bugs
 
 Putting them here so that I can add tests for them later.
@@ -135,10 +131,10 @@ Tests for discovered bugs are said to be useful by some source I can't remember 
     2. and also for a tooltip to display and be positioned
     3. and then the strategy statuses had to line up
 2. Cell updates:
-    1. Didn't trigger since the coords were blocking the way [fixed]
+    1. Didn't trigger since the coords were blocking the way [fixed] [NA]
     2. Then I discovered that `keypress` doesn't apply on `Backspace` [fixed]
     3. There's another bug here that I forgot [fixed?]
-    4. I also forgot to add the `Data` update on `Backsapce` [fixed]
+    4. I also forgot to add the `Data` update on `Backsapce` [fixed] [NA right now]
     5. And now, press backspace, press 5, and the text `this.state.candidates[0]` shows up
 
 ## a11y

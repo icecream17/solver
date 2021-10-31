@@ -2,25 +2,19 @@ import './Main.css'
 import React from 'react'
 
 import Sudoku, { BaseSudokuProps } from './MainElems/Sudoku'
-import Coords from './MainElems/Coords'
 
 type MainProps = Readonly<{
    propsPassedDown: BaseSudokuProps
 }>
 
 /**
- * The "main" component; same as Coords + Sudoku for now
- * TODO: Remove coords
+ * The "main" component
+ * (But only contains Sudoku)
  */
-class Main extends React.Component<MainProps> {
-   render() {
-      return (
-         <main className="App-main">
-            <Coords />
-            <Sudoku {...this.props.propsPassedDown} />
-         </main>
-      );
-   }
+export default function Main (props: MainProps) {
+   return (
+      <main className="App-main">
+         <Sudoku {...props.propsPassedDown} />
+      </main>
+   );
 }
-
-export default Main

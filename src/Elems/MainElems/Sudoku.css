@@ -6,10 +6,6 @@
 */
 
 table.Sudoku {
-   /* Border variables to make it look like a sudoku */
-   --larger-border: calc(8 * var(--regular-border));
-   --large-border: calc(var(--larger-border) / 3);
-
    border: var(--larger-border) solid var(--border-color);
    border-collapse: collapse;
    border-spacing: 0;

@@ -17,9 +17,7 @@ function seenByEnd (sudoku: PureSudoku, { row, column, digit }: CandidateID) {
 }
 
 /**
- * Checks if a loop actually eliminates anything
- *
- * @param endsConnect If ends don't connect, only eliminate from the ends
+ * Checks if a loop (or here, a chain) actually eliminates anything
  */
 function checkLoop (sudoku: PureSudoku, color1: CandidateID[], color2: CandidateID[]) {
    const color1End = color1[color1.length - 1] // TODO: Use .at when chromebook updates
@@ -70,7 +68,6 @@ export default function xyChain(sudoku: PureSudoku) {
     * Extremely similar to "findLoop" in xyLoop
     *
     * @param cell The cell just added to the loop
-    * @param start The first cell in the loop
     * @param next The next cell in the loop needs to have *this* candidate
     * @param end The last cell in the loop needs to have *this* candidate
     * @param color1 Used for coloring the candidate for display
@@ -78,7 +75,7 @@ export default function xyChain(sudoku: PureSudoku) {
     * @param loop The current built up loop
     * @returns false if failed, CellID[] is loop was found
     */
-   function findLoop(cell: CellID, start: CellID, next: SudokuDigits, end: SudokuDigits, color1: CandidateID[], color2: CandidateID[], loop: CellID[] = [cell]): ReturnType<typeof checkLoop> | false {
+   function findLoop(cell: CellID, next: SudokuDigits, end: SudokuDigits, color1: CandidateID[], color2: CandidateID[], loop: CellID[] = [cell]): ReturnType<typeof checkLoop> | false {
       // All cells AB sees with 2 candidates
       const validAffectsCell = __getFellowCWTC(cell).filter(fellow => cellIsValidLoop(sudoku, fellow, next, loop))
 
@@ -101,7 +98,7 @@ export default function xyChain(sudoku: PureSudoku) {
             }
          }
 
-         const result = findLoop(possibleNext, start, nextNext, end, color1, color2, loop)
+         const result = findLoop(possibleNext, nextNext, end, color1, color2, loop)
          if (result) {
             return result
          }
@@ -134,12 +131,12 @@ export default function xyChain(sudoku: PureSudoku) {
 
       // Start with candA
       // With a recursive function, add to the list until it fails or succeeds
-      const resultA = findLoop(cell, cell, candA, candB, color1, color2)
+      const resultA = findLoop(cell, candA, candB, color1, color2)
       if (resultA) {
          return resultA
       }
 
-      const resultB = findLoop(cell, cell, candB, candA, color2, color1)
+      const resultB = findLoop(cell, candB, candA, color2, color1)
       if (resultB) {
          return resultB
       }

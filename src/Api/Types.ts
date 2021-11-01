@@ -17,10 +17,10 @@ export type StrategyError = Readonly<{
    successcount: typeof SuccessError,
    message?: string
 }>
-export type Strategy = (
-   ((arg: PureSudoku) => StrategyResult) |
-   ((arg: PureSudoku, memory: StrategyMemory[number]) => StrategyResult)
-)
+
+export type PureStrategy = (arg: PureSudoku) => StrategyResult
+type StatefulStrategy = (arg: PureSudoku, memory: StrategyMemory[number]) => StrategyResult
+export type Strategy = PureStrategy | StatefulStrategy
 
 // Information strategies might want to know
 export class StrategyMemory extends Array {

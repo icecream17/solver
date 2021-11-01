@@ -34,6 +34,49 @@ export function highlightCell (sudoku: PureSudoku, cell: CellID, color = 'blue')
    }
 }
 
+function seenByColor (sudoku: PureSudoku, color: CandidateID[]) {
+   const seen = new Set<CandidateID>()
+   for (const { row, column, digit } of color) {
+      for (const cell of affects(row, column)) {
+         if (sudoku.data[cell.row][cell.column].includes(digit)) {
+            seen.add(id(cell.row, cell.column, digit))
+         }
+      }
+   }
+
+   return seen
+}
+
+/**
+ * Checks if a loop actually eliminates anything
+ *
+ * @param endsConnect If ends don't connect, only eliminate from the ends
+ */
+function checkLoop (sudoku: PureSudoku, color1: CandidateID[], color2: CandidateID[]) {
+   const seenByColor1 = seenByColor(sudoku, color1)
+   const seenByColor2 = seenByColor(sudoku, color2)
+   const seenByBoth = sharedInSets(seenByColor1, seenByColor2)
+
+   if (seenByBoth.size > 0) {
+      for (const candidate of color1) {
+         colorCandidate(sudoku, candidate)
+      }
+      for (const candidate of color2) {
+         colorCandidate(sudoku, candidate, "green")
+      }
+      for (const { row, column, digit } of seenByBoth) {
+         sudoku.remove(digit).at(row, column)
+      }
+
+      return {
+         success: true,
+         successcount: 1
+      } as const
+   }
+
+   return false
+}
+
 /**
  * Looking for a loop of cells
  *
@@ -47,77 +90,43 @@ export function highlightCell (sudoku: PureSudoku, cell: CellID, color = 'blue')
  * BCDEF....A
  */
 export default function xyLoop (sudoku: PureSudoku) {
-   function seenByColor(color: CandidateID[]) {
-      const seen = new Set<CandidateID>()
-      for (const {row, column, digit} of color) {
-         for (const cell of affects(row, column)) {
-            if (sudoku.data[cell.row][cell.column].includes(digit)) {
-               seen.add(id(cell.row, cell.column, digit))
-            }
-         }
-      }
-
-      return seen
-   }
-
-   /**
-    * Checks if a loop actually eliminates anything
-    *
-    * @param endsConnect If ends don't connect, only eliminate from the ends
-    */
-   function checkLoop(color1: CandidateID[], color2: CandidateID[]) {
-      const seenByColor1 = seenByColor(color1)
-      const seenByColor2 = seenByColor(color2)
-      const seenByBoth = sharedInSets(seenByColor1, seenByColor2)
-
-      if (seenByBoth.size > 0) {
-         for (const candidate of color1) {
-            colorCandidate(sudoku, candidate)
-         }
-         for (const candidate of color2) {
-            colorCandidate(sudoku, candidate, "green")
-         }
-         for (const {row, column, digit} of seenByBoth) {
-            sudoku.remove(digit).at(row, column)
-         }
-
-         return {
-            success: true,
-            successcount: 1
-         } as const
-      }
-
-      return false
-   }
-
    /**
     * The most important util
     *
-    * @param loop The current built up loop
-    * @param color1 Used for coloring the candidate for display
-    * @param color2 Used for coloring the candidate for display
+    * @param cell The cell just added to the loop
+    * @param start The first cell in the loop
     * @param next The next cell in the loop needs to have *this* candidate
     * @param end The last cell in the loop needs to have *this* candidate
+    * @param color1 Used for coloring the candidate for display
+    * @param color2 Used for coloring the candidate for display
+    * @param loop The current built up loop
     * @returns false if failed, CellID[] is loop was found
     */
-   function findLoop (cell: CellID, start: CellID, next: SudokuDigits, end: SudokuDigits, color1: CandidateID[], color2: CandidateID[], loop: CellID[] = [cell]): ReturnType<typeof checkLoop> | false {
+   function findLoop (
+      cell: CellID,
+      start: CellID,
+      next: SudokuDigits,
+      end: SudokuDigits,
+      color1: CandidateID[],
+      color2: CandidateID[],
+      loop: CellID[] = [cell]
+   ): ReturnType<typeof checkLoop> | false {
       // All cells AB sees with 2 candidates
       const validAffectsCell = __getFellowCWTC(cell).filter(fellow => cellIsValidLoop(sudoku, fellow, next, loop))
 
       for (const possibleNext of validAffectsCell) {
          const nextNext = sudoku.data[possibleNext.row][possibleNext.column].find(
             candidate => candidate !== next) as SudokuDigits
-         const nextNextId = id(possibleNext.row, possibleNext.column, nextNext)
 
          loop.push(possibleNext)
 
          // No parity check needed, AB BC CD --> ABC BCD
          color2.push(id(possibleNext.row, possibleNext.column, next))
-         color1.push(nextNextId)
+         color1.push(id(possibleNext.row, possibleNext.column, nextNext))
 
          const endsConnect = affects(start.row, start.column).includes(possibleNext)
          if (nextNext === end && endsConnect) {
-            const isLoopResult = checkLoop(color1, color2)
+            const isLoopResult = checkLoop(sudoku, color1, color2)
 
             if (isLoopResult) {
                return isLoopResult

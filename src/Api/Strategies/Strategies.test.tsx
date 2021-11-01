@@ -9,7 +9,7 @@ import checkForSolved from "./checkForSolved";
 import hiddenSingles from "./hiddenSingles";
 import updateCandidates from "./updateCandidates";
 import pairsTriplesAndQuads from "./pairsTriplesAndQuads";
-import { Strategy, StrategyMemory, SuccessError } from "../Types";
+import { PureStrategy, Strategy, StrategyMemory, SuccessError } from "../Types";
 import hiddenPairsTriplesAndQuads from "./hiddenPairsTriplesAndQuads";
 import intersectionRemoval from "./intersectionRemoval";
 import STRATEGIES from "./Strategies";
@@ -24,6 +24,22 @@ import twoMinusOneLines from "./twoMinusOneLines";
 import xyLoop from "./xyLoop";
 import xyChain from "./xyChain";
 import xyzWing from "./xyzWing";
+
+function setupSudoku (representation: string) {
+   const testSudoku = new PureSudoku(representation)
+   updateCandidates(testSudoku)
+   return testSudoku
+}
+
+/**
+ * Returns testSudoku as a side effect
+ * TODO: This is a bad function
+ */
+function testStrategy (representation: string, strategy: PureStrategy, shouldSucceed: boolean) {
+   const testSudoku = setupSudoku(representation)
+   expect(strategy(testSudoku).success).toBe(shouldSucceed)
+   return testSudoku
+}
 
 describe('strategies', () => {
    let solver: Solver;
@@ -198,8 +214,7 @@ describe('strategies', () => {
          render(<App />)
          jest.spyOn(window._custom, 'alert').mockImplementation()
 
-         const testSudoku = new PureSudoku()
-         testSudoku.import(`
+         const testSudoku = setupSudoku(`
             123456...
             456123...
             .........
@@ -210,7 +225,6 @@ describe('strategies', () => {
             .........
             .........
          `)
-         updateCandidates(testSudoku)
 
          expect(pairsTriplesAndQuads(testSudoku)).toStrictEqual({
             success: false,
@@ -225,8 +239,7 @@ describe('strategies', () => {
          // For example, say 4 cells have `1234`,
          // but 2 of those cells have `12`.
 
-         const testSudoku = new PureSudoku()
-         testSudoku.import(`
+         const testSudoku = testStrategy(`
             123......
             45.......
             .........
@@ -236,15 +249,12 @@ describe('strategies', () => {
             .........
             .........
             .........
-         `)
-         updateCandidates(testSudoku)
-         expect(pairsTriplesAndQuads(testSudoku).success).toBe(true)
+         `, pairsTriplesAndQuads, true)
          expect(testSudoku.data[2][0]).toStrictEqual([6, 7])
       })
 
       test('When 3 cells need 2 candidates', () => {
-         const testSudoku = new PureSudoku()
-         testSudoku.import(`
+         const testSudoku = setupSudoku(`
             123456...
             ......7..
             .........
@@ -255,15 +265,13 @@ describe('strategies', () => {
             .........
             .........
          `)
-         updateCandidates(testSudoku)
          expect(pairsTriplesAndQuads(testSudoku).successcount).toBe(SuccessError)
       })
    })
 
    describe('Hidden pairs, triples, and quads', () => {
       test('Example 1', () => {
-         const testSudoku = new PureSudoku()
-         testSudoku.import(`
+         const testSudoku = testStrategy(`
             .........
             ...78....
             78.......
@@ -273,16 +281,13 @@ describe('strategies', () => {
             .........
             .........
             .........
-         `)
-         updateCandidates(testSudoku)
-         expect(hiddenPairsTriplesAndQuads(testSudoku).success).toBe(true)
+         `, hiddenPairsTriplesAndQuads, true)
          expect(testSudoku.data[0][8]).toStrictEqual([7, 8])
          expect(testSudoku.data[8][8]).not.toStrictEqual([7, 8])
       })
 
       test('Example 2', () => {
-         const testSudoku = new PureSudoku()
-         testSudoku.import(`
+         const testSudoku = testStrategy(`
             .......3.
             ........7
             4........
@@ -292,16 +297,13 @@ describe('strategies', () => {
             2.......3
             .........
             .......7.
-         `)
-         updateCandidates(testSudoku)
-         expect(hiddenPairsTriplesAndQuads(testSudoku).success).toBe(true)
+         `, hiddenPairsTriplesAndQuads, true)
          expect(testSudoku.data[4][6]).toStrictEqual([3, 7])
          expect(testSudoku.data[5][0]).not.toStrictEqual([3, 7])
       })
 
       test('Example 3', () => {
-         const testSudoku = new PureSudoku()
-         testSudoku.import(`
+         const testSudoku = setupSudoku(`
             .....1.3.
             2........
             .65......
@@ -312,7 +314,6 @@ describe('strategies', () => {
             ..6...84.
             .........
          `)
-         updateCandidates(testSudoku)
          expect(hiddenPairsTriplesAndQuads(testSudoku).success).toBe(true)
          expect(hiddenPairsTriplesAndQuads(testSudoku).success).toBe(true)
          expect(hiddenPairsTriplesAndQuads(testSudoku).success).toBe(false)
@@ -320,8 +321,7 @@ describe('strategies', () => {
 
       // The only time no bug was discovered
       test('Example 4', () => {
-         const testSudoku = new PureSudoku()
-         testSudoku.import(`
+         testStrategy(`
             ...1234..
             .........
             .........
@@ -331,16 +331,13 @@ describe('strategies', () => {
             ..4......
             .........
             .........
-         `)
-         updateCandidates(testSudoku)
-         expect(hiddenPairsTriplesAndQuads(testSudoku).success).toBe(true)
+         `, hiddenPairsTriplesAndQuads, true)
       })
 
       // Unreal. Somehow every candidate in column 7 appears 2-4 times
       // The early eliminations do nothing
       test('Example 5', () => {
-         const testSudoku = new PureSudoku()
-         testSudoku.import(`
+         const testSudoku = new PureSudoku(`
             +-----------------+--------------+---------------+
             | 6    5    139   | 13  8   7    | 19   2   4    |
             | 278  28   1378  | 6   4   9    | 18   5   37   |
@@ -362,8 +359,7 @@ describe('strategies', () => {
       })
 
       test('Example 6 (should fail)', () => {
-         const testSudoku = new PureSudoku()
-         testSudoku.import(`
+         const testSudoku = setupSudoku(`
             .749.3...
             ....285..
             .........
@@ -374,15 +370,13 @@ describe('strategies', () => {
             .........
             .875.6..2
          `)
-         updateCandidates(testSudoku)
          expect(hiddenPairsTriplesAndQuads(testSudoku)).toStrictEqual({
             success: false
          })
       })
 
       test('Examples 7, 8, and 9 (should error)', () => {
-         const testSudoku = new PureSudoku()
-         testSudoku.import(`
+         const testSudoku = setupSudoku(`
             123......
             ...123...
             ......4..
@@ -393,7 +387,6 @@ describe('strategies', () => {
             .........
             .........
          `)
-         updateCandidates(testSudoku)
          expect(hiddenPairsTriplesAndQuads(testSudoku).successcount).toBe(SuccessError)
 
          testSudoku.import(`
@@ -428,8 +421,7 @@ describe('strategies', () => {
 
    describe('Intersection removal', () => {
       test('It works', () => {
-         const testSudoku = new PureSudoku()
-         testSudoku.import(`
+         const testSudoku = testStrategy(`
             123......
             .........
             ......4..
@@ -439,15 +431,12 @@ describe('strategies', () => {
             .........
             .........
             .........
-         `)
-         updateCandidates(testSudoku)
-         expect(intersectionRemoval(testSudoku).success).toBe(true)
+         `, intersectionRemoval, true)
          expect(testSudoku.data[1][3]).toStrictEqual([1, 2, 3, 5, 6, 7, 8, 9])
       })
 
       test('Box/line reduction', () => {
-         const testSudoku = new PureSudoku()
-         testSudoku.import(`
+         const testSudoku = testStrategy(`
             .........
             .........
             .........
@@ -457,17 +446,14 @@ describe('strategies', () => {
             .....5...
             .....6...
             ......4..
-         `)
-         updateCandidates(testSudoku)
-         expect(intersectionRemoval(testSudoku).success).toBe(true)
+         `, intersectionRemoval, true)
          expect(testSudoku.data[0][4]).toStrictEqual([1, 2, 3, 5, 6, 7, 8, 9])
       })
    });
 
    describe('X wing', () => {
       test('1', () => {
-         const testSudoku = new PureSudoku()
-         testSudoku.import(`
+         const testSudoku = testStrategy(`
             1........
             .........
             ...23..54
@@ -477,16 +463,13 @@ describe('strategies', () => {
             .........
             .........
             .........
-         `)
-         updateCandidates(testSudoku)
-         expect(xWing(testSudoku).success).toBe(true)
+         `, xWing, true)
          expect(testSudoku.data[5][2]).toStrictEqual([1])
          expect(testSudoku.data[7][5]).toStrictEqual([2, 3, 4, 5, 6, 7, 8, 9])
       })
 
       test('2', () => {
-         const testSudoku = new PureSudoku()
-         testSudoku.import(`
+         const testSudoku = testStrategy(`
             +----------------+--------------+--------------+
             | 2589 1   258   | 69  3   7    | 58  4   56   |
             | 4789 38  478   | 69  2   5    | 378 1   67   |
@@ -500,17 +483,14 @@ describe('strategies', () => {
             | 27   4   6     | 5   8   1    | 9   3   27   |
             | 258  258 1258  | 7   9   3    | 124 6   14   |
             +----------------+--------------+--------------+
-         `)
-         updateCandidates(testSudoku)
-         expect(xWing(testSudoku).success).toBe(true)
+         `, xWing, true)
          expect(checkValidity(testSudoku)).toStrictEqual({ ok: true as true })
       })
    })
 
    describe('Swordfish', () => {
       test('1', () => {
-         const testSudoku = new PureSudoku()
-         testSudoku.import(`
+         const testSudoku = testStrategy(`
             000000000
             100200300
             200300400
@@ -520,15 +500,12 @@ describe('strategies', () => {
             600700800
             000000000
             000000000
-         `)
-         updateCandidates(testSudoku)
-         expect(swordfish(testSudoku).success).toBe(true)
+         `, swordfish, true)
          expect(checkValidity(testSudoku)).toStrictEqual({ ok: true as true })
       })
 
       test('2', () => {
-         const testSudoku = new PureSudoku()
-         testSudoku.import(`
+         testStrategy(`
             +--------------+---------------+----------------+
             | 9   8   47   | 346 1   346   | 5   2   3467   |
             | 135 136 2    | 7   568 3468  | 9   68  3468   |
@@ -542,15 +519,11 @@ describe('strategies', () => {
             | 2   9   13   | 34  68  5     | 7   68  14     |
             | 18  7   5    | 468 2   1468  | 146 3   9      |
             +--------------+---------------+----------------+
-         `)
-         updateCandidates(testSudoku)
-         expect(swordfish(testSudoku).success).toBe(true)
+         `, swordfish, true)
       })
 
       test('3', () => {
-         const testSudoku = new PureSudoku()
-         testSudoku.import(boards["swordfish wow"])
-         updateCandidates(testSudoku)
+         const testSudoku = setupSudoku(boards["swordfish wow"])
          hiddenPairsTriplesAndQuads(testSudoku)
          expect(swordfish(testSudoku).success).toBe(true)
       })
@@ -558,8 +531,7 @@ describe('strategies', () => {
 
    describe('Jellyfish', () => {
       test('1', () => {
-         const testSudoku = new PureSudoku()
-         testSudoku.import(`
+         testStrategy(`
             +------------------+--------------+-------------------+
             | 3589  4   589    | 289 7   268  | 2569  1    2359   |
             | 1789  19  2      | 3   5   168  | 4679  469  79     |
@@ -573,17 +545,14 @@ describe('strategies', () => {
             | 159   8   1569   | 7   26  4    | 1259  3    1259   |
             | 79    2   679    | 568 1   3    | 589   59   4      |
             +------------------+--------------+-------------------+
-         `)
-         updateCandidates(testSudoku)
-         expect(jellyfish(testSudoku).success).toBe(true)
+         `, jellyfish, true)
       })
    })
 
 
    describe('Skyscraper', () => {
       test('1', () => {
-         const testSudoku = new PureSudoku()
-         testSudoku.import(`
+         testStrategy(`
             .........
             .........
             4.5.67..8
@@ -593,14 +562,11 @@ describe('strategies', () => {
             .2.......
             ......2..
             .........
-         `)
-         updateCandidates(testSudoku)
-         expect(skyscraper(testSudoku).success).toBe(true)
+         `, skyscraper, true)
       })
 
       test('2', () => {
-         const testSudoku = new PureSudoku()
-         testSudoku.import(`
+         testStrategy(`
             .4.......
             ......5..
             .8....6..
@@ -610,14 +576,11 @@ describe('strategies', () => {
             ....7....
             .........
             .1....2..
-         `)
-         updateCandidates(testSudoku)
-         expect(skyscraper(testSudoku).success).toBe(true)
+         `, skyscraper, true)
       })
 
       test('3', () => {
-         const testSudoku = new PureSudoku()
-         testSudoku.import(`
+         testStrategy(`
             .........
             ....4....
             ......4..
@@ -627,9 +590,7 @@ describe('strategies', () => {
             .........
             ...4.....
             ........9
-         `)
-         updateCandidates(testSudoku)
-         expect(skyscraper(testSudoku).success).toBe(false)
+         `, skyscraper, false)
       })
    })
 
@@ -666,8 +627,7 @@ describe('strategies', () => {
       })
 
       test('4', () => {
-         const testSudoku = new PureSudoku()
-         testSudoku.import(`
+         const testSudoku = setupSudoku(`
             +-----------+-------------+------------+
             | 35 69  2  | 8   579 4   | 79  3679 1 |
             | 35 19  4  | 179 6   159 | 2   379  8 |
@@ -683,7 +643,6 @@ describe('strategies', () => {
             +-----------+-------------+------------+
          `)
 
-         updateCandidates(testSudoku)
          expect(yWing(testSudoku).success).toBe(true)
          expect(yWing(testSudoku).success).toBe(true)
          expect(yWing(testSudoku).success).toBe(true)
@@ -694,8 +653,7 @@ describe('strategies', () => {
 
    describe('twoMinusOneLines', () => {
       test('1', () => {
-         const testSudoku = new PureSudoku()
-         testSudoku.import(`
+         const testSudoku = testStrategy(`
             ....23...
             ......1..
             .........
@@ -705,17 +663,14 @@ describe('strategies', () => {
             8........
             .........
             .........
-         `)
-         updateCandidates(testSudoku)
-         expect(twoMinusOneLines(testSudoku).success).toBe(true)
+         `, twoMinusOneLines, true)
          expect(testSudoku.data[0][0]).toContain(1)
       })
    })
 
    describe('xyLoop', () => {
       test('1', () => {
-         const testSudoku = new PureSudoku()
-         testSudoku.import(`
+         testStrategy(`
             .........
             ..8.4.1..
             .1.2.3.9.
@@ -725,21 +680,17 @@ describe('strategies', () => {
             .2.3.7.1.
             ..5.6.4..
             .........
-         `)
-         updateCandidates(testSudoku)
-         expect(xyLoop(testSudoku).success).toBe(true)
+         `, xyLoop, true)
       })
 
       test('2', () => {
-         const testSudoku = new PureSudoku()
-         testSudoku.import(`000000080020000000003006009003006000003400000100000000000050000000000700000400009003400000103400009003006009023006700000050000020000709000400009000000080120000000000050000100400009000000700000000080000400009020000009000006000003000000120000000003400000003400000020000000000000009000006000000050000000000080100000000000000700000000709000006000000000080003000700100000000003400700003400009020000000000050000000000709000050000100000000023000700000000080023400700003400009000006000000400009020000000003000009000400000100000000003000009000000080000000700000050000000006000000006000000000700003000009000050000020000000003000009100000000000400000000000080100000000000000080000050000000400000000000700000006000020000000000000009003000000`)
-         expect(xyLoop(testSudoku).success).toBe(true)
+         testStrategy(`000000080020000000003006009003006000003400000100000000000050000000000700000400009003400000103400009003006009023006700000050000020000709000400009000000080120000000000050000100400009000000700000000080000400009020000009000006000003000000120000000003400000003400000020000000000000009000006000000050000000000080100000000000000700000000709000006000000000080003000700100000000003400700003400009020000000000050000000000709000050000100000000023000700000000080023400700003400009000006000000400009020000000003000009000400000100000000003000009000000080000000700000050000000006000000006000000000700003000009000050000020000000003000009100000000000400000000000080100000000000000080000050000000400000000000700000006000020000000000000009003000000`,
+            xyLoop, true)
       })
 
       test('Not xy chain', () => {
-         const testSudoku = new PureSudoku()
-         testSudoku.import(`000006000003000000000400000000000700000000009020000000100000080100000080000050000020000000000000009000000080000050000100000000000006000000000700000400000003000000100000000000000700000050000003000080003000080000400000000006000000000009020000000000000780020450000100000700000006000003450000100050000103050080120000780000000009000000089020450000100006009023000009000000700100050009103050080120000080000406000003000000020450000100006709020000009000450000000000080100050000120000700000406000000050000000000080020000000000400000000006000000000700000000009003000000100000000000400000100000000003000000000000089000050080000050009020000000000006000000000700000000709000006000000000709100000000020000000003000000000400000000050000000000080`)
-         expect(xyLoop(testSudoku).success).toBe(false)
+         testStrategy(`000006000003000000000400000000000700000000009020000000100000080100000080000050000020000000000000009000000080000050000100000000000006000000000700000400000003000000100000000000000700000050000003000080003000080000400000000006000000000009020000000000000780020450000100000700000006000003450000100050000103050080120000780000000009000000089020450000100006009023000009000000700100050009103050080120000080000406000003000000020450000100006709020000009000450000000000080100050000120000700000406000000050000000000080020000000000400000000006000000000700000000009003000000100000000000400000100000000003000000000000089000050080000050009020000000000006000000000700000000709000006000000000709100000000020000000003000000000400000000050000000000080`,
+            xyLoop, false)
       })
    })
 
@@ -747,7 +698,6 @@ describe('strategies', () => {
       test('1', () => {
          const testSudoku = new PureSudoku()
          testSudoku.import(`000006000003000000000400000000000700000000009020000000100000080100000080000050000020000000000000009000000080000050000100000000000006000000000700000400000003000000100000000000000700000050000003000080003000080000400000000006000000000009020000000000000780020450000100000700000006000003450000100050000103050080120000780000000009000000089020450000100006009023000009000000700100050009103050080120000080000406000003000000020450000100006709020000009000450000000000080100050000120000700000406000000050000000000080020000000000400000000006000000000700000000009003000000100000000000400000100000000003000000000000089000050080000050009020000000000006000000000700000000709000006000000000709100000000020000000003000000000400000000050000000000080`)
-         updateCandidates(testSudoku)
          expect(xyChain(testSudoku).success).toBe(true)
       })
 

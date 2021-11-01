@@ -4,6 +4,52 @@ import { affects, assertGet, CandidateID, CellID, id, sharedInSets } from "../Ut
 import { getCellsWithNCandidates } from "../Utils.dependent";
 import { highlightCell, colorCandidate, cellIsValidLoop } from "./xyLoop";
 
+// Very similar to seenByColor in xyLoop
+function seenByEnd (sudoku: PureSudoku, { row, column, digit }: CandidateID) {
+   const seen = new Set<CandidateID>()
+   for (const cell of affects(row, column)) {
+      if (sudoku.data[cell.row][cell.column].includes(digit)) {
+         seen.add(id(cell.row, cell.column, digit))
+      }
+   }
+
+   return seen
+}
+
+/**
+ * Checks if a loop actually eliminates anything
+ *
+ * @param endsConnect If ends don't connect, only eliminate from the ends
+ */
+function checkLoop (sudoku: PureSudoku, color1: CandidateID[], color2: CandidateID[]) {
+   const color1End = color1[color1.length - 1] // TODO: Use .at when chromebook updates
+   const color2End = color2[0]
+   const seenByColor1 = seenByEnd(sudoku, color1End)
+   const seenByColor2 = seenByEnd(sudoku, color2End)
+   const seenByBoth = sharedInSets(seenByColor1, seenByColor2)
+
+   if (seenByBoth.size > 0) {
+      highlightCell(sudoku, id(color1End.row, color1End.column), "orange")
+      highlightCell(sudoku, id(color2End.row, color2End.column), "orange")
+
+      for (const candidate of color1) {
+         colorCandidate(sudoku, candidate)
+      }
+      for (const candidate of color2) {
+         colorCandidate(sudoku, candidate, "green")
+      }
+      for (const { row, column, digit } of seenByBoth) {
+         sudoku.remove(digit).at(row, column)
+      }
+
+      return {
+         success: true,
+         successcount: 1
+      } as const
+   }
+
+   return false
+}
 
 /**
  * Looking for a chain of cells
@@ -19,62 +65,17 @@ import { highlightCell, colorCandidate, cellIsValidLoop } from "./xyLoop";
  * Basically no matter what, one of the ends has candidate.
  */
 export default function xyChain(sudoku: PureSudoku) {
-   // Very similar to seenByColor in xyLoop
-   function seenByEnd ({ row, column, digit }: CandidateID) {
-      const seen = new Set<CandidateID>()
-      for (const cell of affects(row, column)) {
-         if (sudoku.data[cell.row][cell.column].includes(digit)) {
-            seen.add(id(cell.row, cell.column, digit))
-         }
-      }
-
-      return seen
-   }
-
-   /**
-    * Checks if a loop actually eliminates anything
-    *
-    * @param endsConnect If ends don't connect, only eliminate from the ends
-    */
-   function checkLoop(color1: CandidateID[], color2: CandidateID[]) {
-      const color1End = color1[color1.length - 1] // TODO: Use .at when chromebook updates
-      const color2End = color2[0]
-      const seenByColor1 = seenByEnd(color1End)
-      const seenByColor2 = seenByEnd(color2End)
-      const seenByBoth = sharedInSets(seenByColor1, seenByColor2)
-
-      if (seenByBoth.size > 0) {
-         highlightCell(sudoku, id(color1End.row, color1End.column), "orange")
-         highlightCell(sudoku, id(color2End.row, color2End.column), "orange")
-
-         for (const candidate of color1) {
-            colorCandidate(sudoku, candidate)
-         }
-         for (const candidate of color2) {
-            colorCandidate(sudoku, candidate, "green")
-         }
-         for (const { row, column, digit } of seenByBoth) {
-            sudoku.remove(digit).at(row, column)
-         }
-
-         return {
-            success: true,
-            successcount: 1
-         } as const
-      }
-
-      return false
-   }
-
    /**
     * The most important util
     * Extremely similar to "findLoop" in xyLoop
     *
-    * @param loop The current built up loop
-    * @param color1 Used for coloring the candidate for display
-    * @param color2 Used for coloring the candidate for display
+    * @param cell The cell just added to the loop
+    * @param start The first cell in the loop
     * @param next The next cell in the loop needs to have *this* candidate
     * @param end The last cell in the loop needs to have *this* candidate
+    * @param color1 Used for coloring the candidate for display
+    * @param color2 Used for coloring the candidate for display
+    * @param loop The current built up loop
     * @returns false if failed, CellID[] is loop was found
     */
    function findLoop(cell: CellID, start: CellID, next: SudokuDigits, end: SudokuDigits, color1: CandidateID[], color2: CandidateID[], loop: CellID[] = [cell]): ReturnType<typeof checkLoop> | false {
@@ -84,17 +85,16 @@ export default function xyChain(sudoku: PureSudoku) {
       for (const possibleNext of validAffectsCell) {
          const nextNext = sudoku.data[possibleNext.row][possibleNext.column].find(
             candidate => candidate !== next) as SudokuDigits
-         const nextNextId = id(possibleNext.row, possibleNext.column, nextNext)
 
          loop.push(possibleNext)
 
          // No parity check needed, AB BC CD --> ABC BCD
          color2.push(id(possibleNext.row, possibleNext.column, next))
-         color1.push(nextNextId)
+         color1.push(id(possibleNext.row, possibleNext.column, nextNext))
 
          if (nextNext === end) {
             // Don't care if ends connect
-            const isLoopResult = checkLoop(color1, color2)
+            const isLoopResult = checkLoop(sudoku, color1, color2)
 
             if (isLoopResult) {
                return isLoopResult

@@ -109,7 +109,7 @@ export default function skyscraper(sudoku: PureSudoku) {
          }
 
          if (column.size < 3) {
-            const result = _innerSkyscraperLogic(column, possibleColumns, candidate, sudoku, true)
+            const result = _innerSkyscraperLogic(column, possibleColumns, candidate, sudoku, false)
             if (result !== null) {
                return result
             }

@@ -63,8 +63,8 @@ When a `@types` dependency updates, they almost always don't affect anything.
 ## v0.25.0
 
 - (use) Tabs!
-  - !TODO: a11y (done in 0.26.1)
-  - !TODO: Tabpanel + Tabpanel aria (done in 0.26.1)
+  - to done: a11y (done in 0.26.1)
+  - to done: Tabpanel + Tabpanel aria (done in 0.26.1)
 - (ui) Remove data
   - TODO: More sudoku editing controls
 - (ui) Header is smaller

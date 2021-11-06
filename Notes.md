@@ -664,59 +664,10 @@ Cookies
 
 </details>
 
-And my page shows (with 2 cells having their candidates shown)
+And my page shows
 <details><summary>my page</summary>
 
-```txt
-Sudoku solver
-v0.2.0
-
-
-1 2 3
-4 5 6
-7 8 9
-
-
-1 2 3
-4 5 6
-7 8 9
-
-
-
-
-
-
-
-A
-B
-C
-D
-E
-F
-G
-H
-J
-1
-2
-3
-4
-5
-6
-7
-8
-9
-controls (todo)
-runstepundo
-strategies
-Check for solved
--
-Example strategy
--
-Example strategy 2
--
-Another Example strategy
--
-```
+`'Sudoku solverv0.27.0\n\t\n\t\n\t\n\t\n\t\n\t\n\t\n\t\n\n\n\t\n\t\n\t\n\t\n\t\n\t\n\t\n\t\n\n\n\t\n\t\n\t\n\t\n\t\n\t\n\t\n\t\n\n\n\t\n\t\n\t\n\t\n\t\n\t\n\t\n\t\n\n\n\t\n\t\n\t\n\t\n\t\n\t\n\t\n\t\n\n\n\t\n\t\n\t\n\t\n\t\n\t\n\t\n\t\n\n\n\t\n\t\n\t\n\t\n\t\n\t\n\t\n\t\n\n\n\t\n\t\n\t\n\t\n\t\n\t\n\t\n\t\n\n\n\t\n\t\n\t\n\t\n\t\n\t\n\t\n\t\nsolving tools\nstrats\nclearimportexport'`
 
 </details>
 

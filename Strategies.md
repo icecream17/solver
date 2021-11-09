@@ -8,10 +8,9 @@ I am not attempting to explain these strategies as much as document them.
 
 ### CheckForSolved
 
-This succeeds if there are new solved digits ("big digits").
+This succeeds if there are new solved digits ("big digits"). If the sudoku is completely filled in, it alerts "Finished!"
 
-Also used to check if the sudoku is invalid, like having 0 fours in a column,
-or 7 threes in a box.
+Also used to check if the sudoku is invalid, like having 0 fours in a column, or 7 threes in a box.
 
 ### UpdateCandidates
 
@@ -137,9 +136,10 @@ e  e  e
 //    3 columns only in 3 rows
 ```
 
-> Also
-> n lines - n-1 lines = 1 line
-> If all of that 1 line sees a candidate, that candidate can be removed.
+> Also each line is a "group" of all digits from 1 to 9
+> So if you subtract 3 columns from 5 rows, whatever's leftover must have at least 2 groups
+> When you're subtracting n-1 lines from n lines, the "extra" must have at least 1 of every digit.
+> If all of that extra sees a candidate, that candidate can be removed.
 
 Just see Hodoku's page on Basic Fish
 
@@ -258,7 +258,7 @@ The reason this is so easy is because
 
 It's just below "x wing" is the strategy list below.
 
-### Two string kite
+### Two string kite (todo)
 
 ```rust
    A2    |   B2
@@ -357,43 +357,50 @@ About that XY Loop stuff... yeah, XY Chain is special enough to get it's own fun
 
 ## TODO
 
-Here's a list of a bunch of strategies, with somewhat of a difficulty spectrum.
-
-Many strategies are more well known, but that doesn't change anything here - this is based on intrinsic difficulty.
+Here's a list of a bunch of strategies, ranked in order of how fast they currently are in my solver, and accompanied with some educated guesses on why they're slow/fast.
 
 "Has dual" just notes that it can happen twice with an almost similar setup (e.g. same base or something)
 
-A lot of this strategy ranking is me guessing.
+I'm as surprised with the results as you are - this is definitely not how easy it is for humans
 
-- [x] 1. Check for solved
-  - n
-- [x] 2. Hidden singles
+- [x] Y wing / XY wing / Bent triple (11.71)
+  - [] Has dual (multi coloring). There's also 3D medusa
+  - [] This limited form is a subset of X chains
+- [x] XY Chain (11.643)
+- [x] XYZ Wing (11.641)
+- [x] XY Loop (11.63)
+- [x] Update candidates (11.62)
+  - n^3 (n for each cell, n for each affects(cell), n for checking if affects(cell) contains that solved candidate)
+- [x] Hidden singles (11.28)
   - n^3 (n for each candidate, n for each group, n for each cell in group (checking single))
   - Easier than update candidates because humans
   - Despite this, hidden singles doesn't work if the candidates are not updated
-- [x] 3. Update candidates
-  - n^3 (n for each cell, n for each affects(cell), n for checking if affects(cell) contains that solved candidate)
-- [x] 4. Intersection Removal
-  - All candidates in a box see OR All candidates in a line see
-  - n^4 (n for each candidate, n^2 for box + line, n for each cell in (box - line) or (line - box))
-- [x] =5. Pairs, triples, and quads
-  - N cells have N candidates (and all see each other)
-  - n^5 (I have no idea how I did this. My code is quite big)
-- [x] =5. Hidden pairs, triples, and quads
-  - N candidates are in N cells (which all see each other)
-  - n^5 (Pretty much the same as the non hidden strategy.)
-- [x] 7. X wing (really a fish)
-  - 2 lines have a candidate in only 2 crosslines
-  - n^6 (see {fish note})
-- [x] 8. Skyscraper (Subset of wing/coloring)
+- [x] Check for solved (11.26)
+  - n
+  - But this also calls "checkValidity" which is about n^3
+- [x] Skyscraper (Subset of wing/coloring) (10.81)
   - 2 lines - 1 line = extra
   - n^6 ({fish note} - but instead I spend n^3 * {n counting pend lines, n^3 to get attacks(cell of line), n^3 per attacks to get shared} = n^6)
-- [x] 9. Swordfish
+- [x] X wing (really a fish) (10.64)
+  - 2 lines have a candidate in only 2 crosslines
+  - n^6 (see {fish note})
+  - I have no idea why skyscraper would be faster
+- [x] Swordfish (10.17)
   - 3 lines have a candidate in only 3 crosslines
   - n^6 (see {fish note})
-- [x] 10. Jellyfish
+- [x] Hidden pairs, triples, and quads (10.01)
+  - N candidates are in N cells (which all see each other)
+  - n^5 (Pretty much the same as the non hidden strategy.)
+- [x] Pairs, triples, and quads (9.51)
+  - N cells have N candidates (and all see each other)
+  - n^5 (I have no idea how I did this. My code is quite big)
+- [x] Intersection Removal (9.32)
+  - All candidates in a box see OR All candidates in a line see
+  - n^4 (n for each candidate, n^2 for box + line, n for each cell in (box - line) or (line - box))
+- [x] Jellyfish (8.99)
   - 4 lines have a candidate in only 4 crosslines
   - n^6 (see {fish note})
+- [x] Two minus one lines (8.14)
 
 > {wing note}: Instead of nesting loops for each line in a wing, I do the following:
 >
@@ -436,14 +443,10 @@ Unimplemented
 - [] 2-String Kite (Subset of coloring)
   - [] Has dual
 - [] Simple coloring
-- [] Y wing / XY wing / Bent triple
-  - [] Has dual (multi coloring). There's also 3D medusa
-  - [] This limited form is a subset of X chains
 - [] W wing
 - [] Empty Rectangle
   - [] Has dual
 - [] Empty Rectangle but as a Grouped Nice Loop
-- [] XYZ wing
 - [] WXYZ wing (basic)
 - [] WXYZ wing (extended)
 

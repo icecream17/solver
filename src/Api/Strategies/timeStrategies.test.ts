@@ -48,7 +48,7 @@ function makeSudoku () {
 }
 
 function* sudokus () {
-   for (let i = 0; i < 1_000_000; i++) {
+   while (true) {
       yield makeSudoku()
    }
 }
@@ -61,13 +61,21 @@ for (const Strategy of [fastestStrategyEvar, ...STRATEGIES]) {
    const start = Date.now()
    let solved = 0
    let finds = 0
+   let totalspeed = 0
+   let totaldeviation = 0
    random.reset()
    count = 0
    for (const sudoku of sudokus()) { // @ts-expect-error - bruh
       finds += Strategy(sudoku, { solved: 0 })?.successcount ?? 0
-
       solved++
-      if (Date.now() - start > 10_000) {
+      const oldtotalspeed = totalspeed
+      const timetaken = Date.now() - start
+      if (timetaken !== 0) {
+         totalspeed += solved / timetaken
+      }
+      totaldeviation += Math.abs(oldtotalspeed - totalspeed)
+      const averagedeviation = totaldeviation / solved
+      if (averagedeviation / solved < 0.0001 && timetaken > 100 && solved > 100) {
          break
       }
    }
@@ -80,6 +88,7 @@ for (const Strategy of [fastestStrategyEvar, ...STRATEGIES]) {
       `finds: ${finds}`,
       `sudoku: if calls take 1ms: ${solved / (finish + count - start)}`,
       `finds: if calls take 1ms: ${finds / (finish + count - start)}`,
+      `ln solved: ${Math.log(solved)}`
    ].join('\n'))
 }
 

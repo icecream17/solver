@@ -80,7 +80,6 @@ export default class StrategyItem extends React.Component<StrategyItemProps, Str
       }
 
       const togglerPart = this.props.required ? <></> : (
-         // eslint-disable-next-line jsx-a11y/label-has-for --- Both nesting and id are right there!!!!!
          <label htmlFor={ this.togglerId as string }>
             <StrategyTogglerLabel {...this.props} />
             <StrategyToggler callback={this.toggle} id={this.togglerId as string} />

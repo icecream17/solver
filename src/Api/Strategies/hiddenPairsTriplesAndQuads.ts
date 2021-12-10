@@ -10,7 +10,7 @@ import { CellInfo, colorConjugate, combinations, _CellInfoList } from "./pairsTr
  */
 function getConjugateFromCandidates (cells: _CellInfoList, candidates: SudokuDigits[]) {
    return cells.filter(cell =>
-      candidates.some(candidate => cell.candidates.includes(candidate))
+      candidates.some(candidate => cell.includes(candidate))
    )
 }
 

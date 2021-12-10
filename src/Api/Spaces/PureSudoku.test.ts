@@ -66,7 +66,7 @@ test('getBox', () => {
 
 test('getBoxGroup', () => {
    const testSudoku = new PureSudoku()
-   expect(testSudoku.getBoxGroup(7)[2].position).toBe(id(6, 1))
+   expect(testSudoku.getBoxGroup(7)[2].position).toBe(id(6, 5))
 })
 
 test('to81', () => {

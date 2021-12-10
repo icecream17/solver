@@ -6,6 +6,10 @@ function Cell (id: CellID, cell: SudokuDigits[]) {
    return Object.assign([], cell, { position: id })
 }
 
+/**
+ * Defines base sudoku methods
+ * Should I move these to utils?
+ */
 export default class PureSudoku {
    data: ThreeDimensionalArray<SudokuDigits>
    constructor(representation?: string) {
@@ -218,9 +222,11 @@ export default class PureSudoku {
    getGroups() {
       const groups = []
       for (const i of INDICES_TO_NINE) {
-         groups.push(this.data[i].map((cell, indexInRow) => Cell(id(i, indexInRow), cell)))
-         groups.push(this.data.map((row, indexOfRow) => Cell(id(indexOfRow, i), row[i])))
-         groups.push(this.getBoxGroup(i))
+         groups.push(
+            this.data[i].map((cell, indexInRow) => Cell(id(i, indexInRow), cell)),
+            this.data.map((row, indexOfRow) => Cell(id(indexOfRow, i), row[i])),
+            this.getBoxGroup(i)
+         )
       }
 
       return groups

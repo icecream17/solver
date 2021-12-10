@@ -3,7 +3,7 @@ import { ALL_CANDIDATES, IndexToNine, INDICES_TO_NINE, SudokuDigits, ThreeDimens
 import { boxAt, CellID, id, to9by9 } from "../Utils"
 
 function Cell (id: CellID, cell: SudokuDigits[]) {
-   return Object.assign([], cell, { position: id })
+   return Object.assign([] as SudokuDigits[], cell, { position: id })
 }
 
 /**

@@ -1,6 +1,6 @@
 // @flow
 
-import { AlertType, IndexToNine, INDICES_TO_NINE, SudokuDigits, TwoDimensionalArray } from "../../Types";
+import { AlertType, IndexToNine, INDICES_TO_NINE, SudokuDigits } from "../../Types";
 import { convertArrayToEnglishList } from "../../utils";
 import PureSudoku from "../Spaces/PureSudoku";
 import Sudoku from "../Spaces/Sudoku";

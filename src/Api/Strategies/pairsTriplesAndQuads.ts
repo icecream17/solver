@@ -51,10 +51,7 @@ export type CellInfo = {
    candidates: SudokuDigits[]
 }
 
-/**
- * Really just a conjugate
- * A conjugate is just a bunch of "cells"
- */
+/** Really just a conjugate */
 export type _CellInfoList = CellInfo[]
 
 /**
@@ -211,7 +208,7 @@ function eliminateUsingConjugateGroup(
             if (!conjugate.some(cell => cell.position === thisPosition)) {
                const conjugateCandidates = getCandidatesOfConjugate(conjugate)
 
-               // The cell now cannot have any of tqhe candidates in the conjugate!!!
+               // The cell now cannot have any of the candidates in the conjugate!!!
                if (thisCandidates.some(candidate => conjugateCandidates.has(candidate))) {
                   successcount++ // Success!
                   colorConjugate(sudoku, conjugate)

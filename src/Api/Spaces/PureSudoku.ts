@@ -2,6 +2,10 @@
 import { ALL_CANDIDATES, IndexToNine, INDICES_TO_NINE, SudokuDigits, ThreeDimensionalArray } from "../../Types"
 import { boxAt, CellID, id, to9by9 } from "../Utils"
 
+function Cell (id: CellID, cell: SudokuDigits[]) {
+   return Object.assign([], cell, { position: id })
+}
+
 export default class PureSudoku {
    data: ThreeDimensionalArray<SudokuDigits>
    constructor(representation?: string) {
@@ -197,6 +201,29 @@ export default class PureSudoku {
       const startRow = index - (index % 3) // / 3 * 3
       const startColumn = (index % 3) * 3
       return this.data.slice(startRow, startRow + 3).flatMap(row => row.slice(startColumn, startColumn + 3))
+   }
+
+   getBoxGroup(index: IndexToNine) {
+      const startRow = index - (index % 3)
+      const startColumn = (index % 3) * 3
+      return this.data
+         .slice(startRow, startRow + 3)
+         .flatMap(
+            (row, indexRow) => row.slice(startColumn, startColumn + 3).map(
+               (cell, indexCell) => Cell(id(startRow + indexRow, startColumn + indexCell), cell)
+            )
+         )
+   }
+
+   getGroups() {
+      const groups = []
+      for (const i of INDICES_TO_NINE) {
+         groups.push(this.data[i].map((cell, indexInRow) => Cell(id(i, indexInRow), cell)))
+         groups.push(this.data.map((row, indexOfRow) => Cell(id(indexOfRow, i), row[i])))
+         groups.push(this.getBoxGroup(i))
+      }
+
+      return groups
    }
 
    /**

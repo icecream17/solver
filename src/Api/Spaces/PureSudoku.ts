@@ -223,8 +223,8 @@ export default class PureSudoku {
       const groups = []
       for (const i of INDICES_TO_NINE) {
          groups.push(
-            this.data[i].map((cell, indexInRow as IndexToNine) => Cell(id(i, indexInRow), cell)),
-            this.data.map((row, indexOfRow as IndexToNine) => Cell(id(indexOfRow, i), row[i])),
+            this.data[i].map((cell, indexInRow) => Cell(id(i, indexInRow as IndexToNine), cell)),
+            this.data.map((row, indexOfRow) => Cell(id(indexOfRow as IndexToNine, i), row[i])),
             this.getBoxGroup(i)
          )
       }

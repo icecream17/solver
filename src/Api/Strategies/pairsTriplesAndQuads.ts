@@ -46,7 +46,7 @@ export function combinations<T>(array: T[], min = 1, max = array.length, current
    return _combinations
 }
 
-export type CellInfo = [] & SudokuDigits[] & { position: CellID }
+export type CellInfo = SudokuDigits[] & { position: CellID }
 
 /** Really just a conjugate */
 export type _CellInfoList = CellInfo[]

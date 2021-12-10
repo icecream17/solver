@@ -102,30 +102,23 @@ function __filterPossibleCandidates (groupCopy: SudokuDigits[][], maxSize: numbe
  * size 4 with the other cells by default. TODO better explanation)
  */
 function findHiddenConjugatesOfGroup(
-   group: TwoDimensionalArray<SudokuDigits>,
-   indexToPosition: (index: IndexToNine) => CellID,
+   group: Array<[] & SudokuDigits[] & { position: CellID }>,
    maxSize = 4 as 2 | 3 | 4
 ) {
 
-   // Copy the group
-   const groupCopy = group.map(cell => cell.slice())
-
    // 1. Filter the possible candidates
    const possibleCandidates = new Set([1, 2, 3, 4, 5, 6, 7, 8, 9] as const)
-   __filterPossibleCandidates(groupCopy, maxSize, possibleCandidates)
+   __filterPossibleCandidates(group, maxSize, possibleCandidates)
 
    //     c. Filter out cells that have too few candidates
    //        (No limit on max candidates)
    const possibleCells = [] as _CellInfoList
 
    for (let index: IndexToNine = 0; index < 9; index = index + 1 as IndexToNine) {
-      const candidates = groupCopy[index]
+      const candidates = group[index]
 
       if (1 < candidates.length) {
-         possibleCells.push({
-            position: indexToPosition(index),
-            candidates
-         })
+         possibleCells.push(candidates)
       }
    }
 
@@ -163,18 +156,19 @@ function findHiddenConjugatesOfGroup(
 
 function findHiddenConjugatesOfSudoku(sudoku: PureSudoku, maxSize = 4 as 2 | 3 | 4) {
    const conjugates = [] as _CellInfoList[]
+   const groups = sudoku.getGroups()
    for (const i of INDICES_TO_NINE) {
-      const resultRow = findHiddenConjugatesOfGroup(sudoku.data[i], index => id(i, index), maxSize)
+      const resultRow = findHiddenConjugatesOfGroup(groups[i * 3], maxSize)
       if (typeof resultRow === "string") {
          return `Row ${ROW_NAMES[i]}${resultRow}`
       }
 
-      const resultColumn = findHiddenConjugatesOfGroup(sudoku.getColumn(i), index => id(index, i), maxSize)
+      const resultColumn = findHiddenConjugatesOfGroup(groups[i * 3 + 1], maxSize)
       if (typeof resultColumn === "string") {
          return `Column ${COLUMN_NAMES[i]}${resultColumn}`
       }
 
-      const resultBox = findHiddenConjugatesOfGroup(sudoku.getBox(i), index => getIDFromIndexWithinBox(i, index), maxSize)
+      const resultBox = findHiddenConjugatesOfGroup(groups[i * 3 + 2], maxSize)
       if (typeof resultBox === "string") {
          return `Box ${BOX_NAMES[i]}${resultBox}`
       }

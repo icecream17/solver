@@ -102,7 +102,7 @@ function __filterPossibleCandidates (groupCopy: SudokuDigits[][], maxSize: numbe
  * size 4 with the other cells by default. TODO better explanation)
  */
 function findHiddenConjugatesOfGroup(
-   group: Array<[] & SudokuDigits[] & { position: CellID }>,
+   group: _CellInfoList,
    maxSize = 4 as 2 | 3 | 4
 ) {
 
@@ -143,9 +143,9 @@ function findHiddenConjugatesOfGroup(
 
          // Remove extra candidates - a conjugate was found!
          for (const cell of conjugate) {
-            cell.candidates = cell.candidates.filter(
+            Object.assign(cell, cell.filter(
                candidate => candidatesOfConjugate.includes(candidate)
-            )
+            ))
          }
       }
    }
@@ -241,8 +241,8 @@ export default function hiddenPairsTriplesAndQuads(sudoku: PureSudoku) {
          const actualCell = sudoku.data[conjugateCell.position.row][conjugateCell.position.column]
 
          // If different, replace
-         if (actualCell.some(candidate => !conjugateCell.candidates.includes(candidate))) {
-            sudoku.set(conjugateCell.position.row, conjugateCell.position.column).to(...conjugateCell.candidates)
+         if (actualCell.some(candidate => !conjugateCell.includes(candidate))) {
+            sudoku.set(conjugateCell.position.row, conjugateCell.position.column).to(...conjugateCell)
             colorConjugate(sudoku, conjugate, 'solved')
             success = true
          }

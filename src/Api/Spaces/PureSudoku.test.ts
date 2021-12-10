@@ -1,5 +1,6 @@
 import PureSudoku from "./PureSudoku"
 import BOARDS from "../boards"
+import { id } from "../Utils"
 
 test('it constructs', () => {
    expect(() => new PureSudoku()).not.toThrow()
@@ -60,6 +61,11 @@ test('getBox', () => {
    expect(testSudoku.getBox(6)[3]).toStrictEqual([1, 2, 3])
    testSudoku.set(0, 8).to(1, 2, 3)
    expect(testSudoku.getBox(2)[2]).toStrictEqual([1, 2, 3])
+})
+
+test('getBoxGroup', () => {
+   const testSudoku = new PureSudoku()
+   expect(testSudoku.getBoxGroup(7)[2].position).toBe(id(6, 1))
 })
 
 test('to81', () => {

@@ -214,7 +214,7 @@ export default class PureSudoku {
          .slice(startRow, startRow + 3)
          .flatMap(
             (row, indexRow) => row.slice(startColumn, startColumn + 3).map(
-               (cell, indexCell) => Cell(id(startRow + indexRow, startColumn + indexCell), cell)
+               (cell, indexCell) => Cell(id(startRow + indexRow as IndexToNine, startColumn + indexCell as IndexToNine), cell)
             )
          )
    }
@@ -223,8 +223,8 @@ export default class PureSudoku {
       const groups = []
       for (const i of INDICES_TO_NINE) {
          groups.push(
-            this.data[i].map((cell, indexInRow) => Cell(id(i, indexInRow), cell)),
-            this.data.map((row, indexOfRow) => Cell(id(indexOfRow, i), row[i])),
+            this.data[i].map((cell, indexInRow as IndexToNine) => Cell(id(i, indexInRow), cell)),
+            this.data.map((row, indexOfRow as IndexToNine) => Cell(id(indexOfRow, i), row[i])),
             this.getBoxGroup(i)
          )
       }

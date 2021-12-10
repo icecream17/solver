@@ -1,8 +1,8 @@
-import { AlertType, BOX_NAMES, COLUMN_NAMES, IndexToNine, INDICES_TO_NINE, ROW_NAMES, SudokuDigits, TwoDimensionalArray } from "../../Types";
+import { AlertType, BOX_NAMES, COLUMN_NAMES, IndexToNine, INDICES_TO_NINE, ROW_NAMES, SudokuDigits } from "../../Types";
 import { convertArrayToEnglishList } from "../../utils";
 import PureSudoku from "../Spaces/PureSudoku";
 import { SuccessError } from "../Types";
-import { algebraic, CellID, getIDFromIndexWithinBox, id, removeFromArray } from "../Utils";
+import { algebraic, removeFromArray } from "../Utils";
 import { CellInfo, colorConjugate, combinations, _CellInfoList } from "./pairsTriplesAndQuads";
 
 /**

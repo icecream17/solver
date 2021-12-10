@@ -188,7 +188,7 @@ function eliminateUsingConjugateGroup(
 
       // For each cell within group
       for (const indexWithinGroup of INDICES_TO_NINE) {
-         const thisPosition = toPosition(indexWithinGroup, groupIndex)	
+         const thisPosition = toPosition(indexWithinGroup, groupIndex)
          const thisCandidates = group[indexWithinGroup]
 
          for (const conjugate of conjugateList) {

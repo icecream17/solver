@@ -35,12 +35,12 @@ function __errorHandling (candidatesOfConjugate: SudokuDigits[], conjugate: Cell
    }
 }
 
-function __filterPossibleCandidates (groupCopy: CellGroup, maxSize: number, possibleCandidates: Set<1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9>) {
+function __filterPossibleCandidates (group: CellGroup, maxSize: number, possibleCandidates: Set<1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9>) {
 
    function removeCandidate (candidate: SudokuDigits) {
       possibleCandidates.delete(candidate)
 
-      for (const cell of groupCopy) {
+      for (const cell of group) {
          removeFromArray(candidate, cell)
       }
    }
@@ -48,7 +48,7 @@ function __filterPossibleCandidates (groupCopy: CellGroup, maxSize: number, poss
    // a. Remove candidates that occur > maxSize times
    const occurances = [-1, 0, 0, 0, 0, 0, 0, 0, 0, 0] as const as Record<SudokuDigits, number>
 
-   for (const cell of groupCopy) {
+   for (const cell of group) {
       for (const candidate of cell.candidates) {
          occurances[candidate]++
       }
@@ -65,9 +65,9 @@ function __filterPossibleCandidates (groupCopy: CellGroup, maxSize: number, poss
    let keepGoing = true
    while (keepGoing) {
       keepGoing = false
-      for (const cell of groupCopy) {
-         if (cell.length === 1) {
-            removeCandidate(cell[0])
+      for (const cell of group) {
+         if (cell.candidates.length === 1) {
+            removeCandidate(cell.candidates[0])
             keepGoing = true
          }
       }
@@ -239,7 +239,7 @@ export default function hiddenPairsTriplesAndQuads(sudoku: PureSudoku) {
          const actualCell = sudoku.data[conjugateCell.position.row][conjugateCell.position.column]
 
          // If different, replace
-         if (actualCell.some(candidate => !conjugateCell.includes(candidate))) {
+         if (actualCell.some(candidate => !conjugateCell.candidates.includes(candidate))) {
             sudoku.set(conjugateCell.position.row, conjugateCell.position.column).to(...conjugateCell.candidates)
             colorConjugate(sudoku, conjugate, 'solved')
             success = true

@@ -20,7 +20,7 @@ function seenByEnd (sudoku: PureSudoku, { row, column, digit }: CandidateID) {
  * Checks if a loop (or here, a chain) actually eliminates anything
  */
 function checkLoop (sudoku: PureSudoku, color1: CandidateID[], color2: CandidateID[]) {
-   const color1End = color1[color1.length - 1] // TODO: Use .at when chromebook updates
+   const color1End = color1[color1.length - 1]
    const color2End = color2[0]
    const seenByColor1 = seenByEnd(sudoku, color1End)
    const seenByColor2 = seenByEnd(sudoku, color2End)

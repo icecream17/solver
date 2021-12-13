@@ -145,7 +145,7 @@ export function colorConjugate(sudoku: PureSudoku, conjugate: CellGroup, color =
    }
 }
 
-function eliminateUsingConjugateGroup(
+function eliminateUsingConjugate(
    sudoku: PureSudoku,
    group: CellGroup,
    conjugate: CellGroup,
@@ -199,10 +199,10 @@ export default function pairsTriplesAndQuads(sudoku: PureSudoku) {
             successcount: SuccessError
          } as const
       }
-      conjugateGroups.push(conjugate)
+      conjugates.push(conjugate)
    }
 
-   const successcount = eliminateUsingConjugates(sudoku, groups, conjugateGroups)
+   const successcount = eliminateUsingConjugates(sudoku, groups, conjugates)
 
    if (successcount === 0) {
       return {

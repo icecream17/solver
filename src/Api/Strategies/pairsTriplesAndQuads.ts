@@ -46,20 +46,22 @@ export function combinations<T>(array: T[], min = 1, max = array.length, current
    return _combinations
 }
 
-export type CellInfo = SudokuDigits[] & { position: CellID }
+export type CellInfo = {
+   candidates: SudokuDigits[]
+   position: CellID
+}
 
-/** Really just a conjugate */
-export type _CellInfoList = CellInfo[]
+export type CellGroup = CellInfo[]
 
 /**
  * Return a set of unique candidates in a conjugate
  */
-function getCandidatesOfConjugate(conjugate: _CellInfoList) {
+function getCandidatesOfConjugate(conjugate: CellGroup) {
    // Array from the values of a set
    // The set is the accumulated candidates
    return conjugate.reduce(
       (accum, currentCell) => {
-         for (const candidate of currentCell) {
+         for (const candidate of currentCell.candidates) {
             accum.add(candidate)
          }
          return accum
@@ -68,7 +70,7 @@ function getCandidatesOfConjugate(conjugate: _CellInfoList) {
 }
 
 // Inner inner function to make things look nicer below
-function __errorHandling (conjugate: CellInfo[], invalidGroupCandidates: Set<SudokuDigits>) {
+function __errorHandling (conjugate: CellGroup, invalidGroupCandidates: Set<SudokuDigits>) {
    const invalidGroupNames = convertArrayToEnglishList(
       conjugate.map(someCell => algebraic(someCell.position.row, someCell.position.column))
    )
@@ -102,7 +104,7 @@ function __errorHandling (conjugate: CellInfo[], invalidGroupCandidates: Set<Sud
  * size 4 with the other cells by default. TODO better explanation)
  */
 function findConjugatesOfGroup(
-   group: _CellInfoList,
+   group: CellGroup,
    maxSize = 4 as 2 | 3 | 4
 ) {
    // 1. Filter the possible cells
@@ -110,7 +112,7 @@ function findConjugatesOfGroup(
    const possibleCells = group.filter(cell => 1 < cell.length && cell.length <= maxSize)
 
    // 2. Now that the cells are filtered actually find the conjugates
-   const conjugates = [] as _CellInfoList[]
+   const conjugates = [] as CellGroup[]
    for (const conjugate of combinations(possibleCells, 2, maxSize)) {
       const candidatesOfConjugate = getCandidatesOfConjugate(conjugate)
 
@@ -131,79 +133,40 @@ function findConjugatesOfGroup(
 // Idea for hidden:
 // For each candidate find squares
 
-// maxSize must not be 1, or else it would include solved cells
-// O(n^5)
-function findConjugatesOfSudoku(sudoku: PureSudoku, maxSize = 4 as 2 | 3 | 4) {
-   const resultRows = [] as Array<Exclude<ReturnType<typeof findConjugatesOfGroup>, "ERROR!!!">>
-   const resultColumns = [] as Array<Exclude<ReturnType<typeof findConjugatesOfGroup>, "ERROR!!!">>
-   const resultBoxes = [] as Array<Exclude<ReturnType<typeof findConjugatesOfGroup>, "ERROR!!!">>
-   const groups = sudoku.getGroups()
-   for (const i of INDICES_TO_NINE) {
-      const resultRow = findConjugatesOfGroup(groups[i*3], maxSize)
-      if (resultRow === "ERROR!!!") {return "ERROR!!!"}
-
-      const resultColumn = findConjugatesOfGroup(groups[i*3 + 1], maxSize)
-      if (resultColumn === "ERROR!!!") {return "ERROR!!!"}
-
-      const resultBox = findConjugatesOfGroup(groups[i*3 + 2], maxSize)
-      if (resultBox === "ERROR!!!") {return "ERROR!!!"}
-
-      resultRows.push(resultRow)
-      resultColumns.push(resultColumn)
-      resultBoxes.push(resultBox)
-   }
-
-   return [resultRows, resultColumns, resultBoxes] as const
-}
-
 /**
  * Colors a conjugate, see Cell#highlight
  */
-export function colorConjugate(sudoku: PureSudoku, conjugate: _CellInfoList, color = 'blue') {
+export function colorConjugate(sudoku: PureSudoku, conjugate: CellGroup, color = 'blue') {
    if (sudoku instanceof Sudoku) {
       for (const cell of conjugate) {
          const element = sudoku.cells[cell.position.row][cell.position.column]
-         element?.highlight(cell, color)
+         element?.highlight(cell.candidates, color)
       }
    }
 }
 
 function eliminateUsingConjugateGroup(
    sudoku: PureSudoku,
-   conjugateGroup: _CellInfoList[][],
-   toGroupIndex: (id: CellID) => IndexToNine,
-   toGroup: (sudoku: PureSudoku, index: IndexToNine) => SudokuDigits[][],
-   toPosition: (indexInGroup: IndexToNine, indexOfGroup: IndexToNine) => CellID,
+   group: CellGroup,
+   conjugate: CellGroup,
 ) {
 
    let successcount = 0;
-   for (const conjugateList of conjugateGroup) {
-      if (conjugateList.length === 0) {
-         continue
-      }
+   const conjugateCandidates = getCandidatesOfConjugate(conjugate)
 
-      // First conjugate's first cell
-      const groupIndex = toGroupIndex(conjugateList[0][0].position)
-      const group = toGroup(sudoku, groupIndex)
+   // For each cell within group
+   for (const cell of group) {
+      const { position: thisPosition, candidates: thisCandidates } = cell
 
-      // For each cell within group
-      for (const indexWithinGroup of INDICES_TO_NINE) {
-         const thisPosition = toPosition(indexWithinGroup, groupIndex)
-         const thisCandidates = group[indexWithinGroup]
+      // If this cell is not in the conjugate
+      if (!conjugate.some(cell => cell.position === thisPosition)) {
 
-         for (const conjugate of conjugateList) {
-            // If this cell is not in the conjugate
-            if (!conjugate.some(cell => cell.position === thisPosition)) {
-               const conjugateCandidates = getCandidatesOfConjugate(conjugate)
-
-               // The cell now cannot have any of the candidates in the conjugate!!!
-               if (thisCandidates.some(candidate => conjugateCandidates.has(candidate))) {
-                  successcount++ // Success!
-                  colorConjugate(sudoku, conjugate)
-                  sudoku.set(thisPosition.row, thisPosition.column).to(
-                     ...thisCandidates.filter(candidate => !conjugateCandidates.has(candidate)))
-               }
-            }
+         // The cell now cannot have any of the candidates in the conjugate!!!
+         if (thisCandidates.some(candidate => conjugateCandidates.has(candidate))) {
+            successcount++ // Success!
+            colorConjugate(sudoku, conjugate)
+            sudoku.set(thisPosition.row, thisPosition.column).to(
+               ...thisCandidates.filter(candidate => !conjugateCandidates.has(candidate)))
          }
       }
    }
@@ -212,47 +175,34 @@ function eliminateUsingConjugateGroup(
 }
 
 
-function eliminateUsingConjugateGroups(sudoku: PureSudoku, conjugateGroups: readonly [_CellInfoList[][], _CellInfoList[][], _CellInfoList[][]]) {
-   const [resultRows, resultColumns, resultBoxes] = conjugateGroups
+function eliminateUsingConjugates(sudoku: PureSudoku, groups: CellGroup[], conjugates: CellGroup[]) {
 
    let successcount = 0;
-   successcount += eliminateUsingConjugateGroup(
-      sudoku,
-      resultRows,
-      (id) => id.row,
-      (sudoku, rowIndex) => sudoku.data[rowIndex],
-      (column, row) => id(row, column)
-   )
-   successcount += eliminateUsingConjugateGroup(
-      sudoku,
-      resultColumns,
-      (id) => id.column,
-      (sudoku, columnIndex) => sudoku.getColumn(columnIndex),
-      (row, column) => id(row, column)
-   )
-   successcount += eliminateUsingConjugateGroup(
-      sudoku,
-      resultBoxes,
-      (id) => boxAt(id.row, id.column),
-      (sudoku, boxIndex) => sudoku.getBox(boxIndex),
-      (indexInBox, boxIndex) => getIDFromIndexWithinBox(boxIndex, indexInBox)
-   )
+   for (let i = 0; i < groups.length; i++) {
+      if (conjugates[i].length > 0) {
+         successcount += eliminateUsingConjugate(sudoku, groups[i], conjugates[i])
+      }
+   }
 
    return successcount
 }
 
 // Math.max(O(n^5), O(n^5))
 export default function pairsTriplesAndQuads(sudoku: PureSudoku) {
-   const conjugateGroups = findConjugatesOfSudoku(sudoku)
-
-   if (conjugateGroups === "ERROR!!!") {
-      return {
-         success: false,
-         successcount: SuccessError
-      } as const
+   const groups = sudoku.getGroups()
+   const conjugates = []
+   for (const group of groups) {
+      const conjugate = findConjugatesOfGroup(group)
+      if (conjugate === "ERROR!!!") {
+         return {
+            success: false,
+            successcount: SuccessError
+         } as const
+      }
+      conjugateGroups.push(conjugate)
    }
 
-   const successcount = eliminateUsingConjugateGroups(sudoku, conjugateGroups)
+   const successcount = eliminateUsingConjugates(sudoku, groups, conjugateGroups)
 
    if (successcount === 0) {
       return {

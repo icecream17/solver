@@ -3,14 +3,14 @@ import { convertArrayToEnglishList } from "../../utils";
 import PureSudoku from "../Spaces/PureSudoku";
 import { SuccessError } from "../Types";
 import { algebraic, removeFromArray } from "../Utils";
-import { CellInfo, colorConjugate, combinations, _CellInfoList } from "./pairsTriplesAndQuads";
+import { CellInfo, colorConjugate, combinations, CellGroup } from "./pairsTriplesAndQuads";
 
 /**
  * Returns an array of all the cells which contain at least one of the candidates
  */
-function getConjugateFromCandidates (cells: _CellInfoList, candidates: SudokuDigits[]) {
+function getConjugateFromCandidates (cells: CellGroup, candidates: SudokuDigits[]) {
    return cells.filter(cell =>
-      candidates.some(candidate => cell.includes(candidate))
+      candidates.some(candidate => cell.candidates.includes(candidate))
    )
 }
 
@@ -35,7 +35,7 @@ function __errorHandling (candidatesOfConjugate: SudokuDigits[], conjugate: Cell
    }
 }
 
-function __filterPossibleCandidates (groupCopy: SudokuDigits[][], maxSize: number, possibleCandidates: Set<1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9>) {
+function __filterPossibleCandidates (groupCopy: CellGroup, maxSize: number, possibleCandidates: Set<1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9>) {
 
    function removeCandidate (candidate: SudokuDigits) {
       possibleCandidates.delete(candidate)
@@ -49,7 +49,7 @@ function __filterPossibleCandidates (groupCopy: SudokuDigits[][], maxSize: numbe
    const occurances = [-1, 0, 0, 0, 0, 0, 0, 0, 0, 0] as const as Record<SudokuDigits, number>
 
    for (const cell of groupCopy) {
-      for (const candidate of cell) {
+      for (const candidate of cell.candidates) {
          occurances[candidate]++
       }
    }
@@ -102,7 +102,7 @@ function __filterPossibleCandidates (groupCopy: SudokuDigits[][], maxSize: numbe
  * size 4 with the other cells by default. TODO better explanation)
  */
 function findHiddenConjugatesOfGroup(
-   group: _CellInfoList,
+   group: CellGroup,
    maxSize = 4 as 2 | 3 | 4
 ) {
 
@@ -112,13 +112,11 @@ function findHiddenConjugatesOfGroup(
 
    //     c. Filter out cells that have too few candidates
    //        (No limit on max candidates)
-   const possibleCells = [] as _CellInfoList
+   const possibleCells = [] as CellGroup
 
-   for (let index: IndexToNine = 0; index < 9; index = index + 1 as IndexToNine) {
-      const candidates = group[index]
-
-      if (1 < candidates.length) {
-         possibleCells.push(candidates)
+   for (const cell of group) {
+      if (1 < cell.candidates.length) {
+         possibleCells.push(cell)
       }
    }
 
@@ -143,9 +141,9 @@ function findHiddenConjugatesOfGroup(
 
          // Remove extra candidates - a conjugate was found!
          for (const cell of conjugate) {
-            Object.assign(cell, cell.filter(
+            cell.candidates = cell.candidates.filter(
                candidate => candidatesOfConjugate.includes(candidate)
-            ))
+            )
          }
       }
    }
@@ -155,7 +153,7 @@ function findHiddenConjugatesOfGroup(
 
 
 function findHiddenConjugatesOfSudoku(sudoku: PureSudoku, maxSize = 4 as 2 | 3 | 4) {
-   const conjugates = [] as _CellInfoList[]
+   const conjugates = [] as CellGroup[]
    const groups = sudoku.getGroups()
    for (const i of INDICES_TO_NINE) {
       const resultRow = findHiddenConjugatesOfGroup(groups[i * 3], maxSize)
@@ -242,7 +240,7 @@ export default function hiddenPairsTriplesAndQuads(sudoku: PureSudoku) {
 
          // If different, replace
          if (actualCell.some(candidate => !conjugateCell.includes(candidate))) {
-            sudoku.set(conjugateCell.position.row, conjugateCell.position.column).to(...conjugateCell)
+            sudoku.set(conjugateCell.position.row, conjugateCell.position.column).to(...conjugateCell.candidates)
             colorConjugate(sudoku, conjugate, 'solved')
             success = true
          }

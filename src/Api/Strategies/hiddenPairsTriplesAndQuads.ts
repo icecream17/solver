@@ -1,4 +1,4 @@
-import { AlertType, BOX_NAMES, COLUMN_NAMES, IndexToNine, INDICES_TO_NINE, ROW_NAMES, SudokuDigits } from "../../Types";
+import { AlertType, BOX_NAMES, COLUMN_NAMES, INDICES_TO_NINE, ROW_NAMES, SudokuDigits } from "../../Types";
 import { convertArrayToEnglishList } from "../../utils";
 import PureSudoku from "../Spaces/PureSudoku";
 import { SuccessError } from "../Types";

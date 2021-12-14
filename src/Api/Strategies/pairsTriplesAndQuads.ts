@@ -172,12 +172,11 @@ function eliminateUsingConjugate(
 }
 
 
-function eliminateUsingConjugates(sudoku: PureSudoku, groups: CellGroup[], conjugates: CellGroup[]) {
-
+function eliminateUsingConjugates(sudoku: PureSudoku, groups: CellGroup[], conjugatesOfGroup: CellGroup[][]) {
    let successcount = 0;
-   for (let i = 0; i < groups.length; i++) { // eslint-disable-line unicorn/no-for-loop --- It's used
-      if (conjugates[i].length > 0) {
-         successcount += eliminateUsingConjugate(sudoku, groups[i], conjugates[i])
+   for (const [i, group] of groups.entries()) {
+      for (const conjugate of conjugatesOfGroup[i]) {
+         successcount += eliminateUsingConjugate(sudoku, group, conjugate)
       }
    }
 
@@ -187,7 +186,7 @@ function eliminateUsingConjugates(sudoku: PureSudoku, groups: CellGroup[], conju
 // Math.max(O(n^5), O(n^5))
 export default function pairsTriplesAndQuads(sudoku: PureSudoku) {
    const groups = sudoku.getGroups()
-   const conjugates = []
+   const conjugatesOfGroup = []
    for (const group of groups) {
       const conjugate = findConjugatesOfGroup(group)
       if (conjugate === "ERROR!!!") {
@@ -196,10 +195,10 @@ export default function pairsTriplesAndQuads(sudoku: PureSudoku) {
             successcount: SuccessError
          } as const
       }
-      conjugates.push(conjugate)
+      conjugatesOfGroup.push(conjugate)
    }
 
-   const successcount = eliminateUsingConjugates(sudoku, groups, conjugates)
+   const successcount = eliminateUsingConjugates(sudoku, groups, conjugatesOfGroup)
 
    if (successcount === 0) {
       return {

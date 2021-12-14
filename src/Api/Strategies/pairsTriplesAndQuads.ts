@@ -109,7 +109,7 @@ function findConjugatesOfGroup(
 ) {
    // 1. Filter the possible cells
    // Each possible cell must have from 2 to maxSize candidates
-   const possibleCells = group.filter(cell => 1 < cell.length && cell.length <= maxSize)
+   const possibleCells = group.filter(cell => 1 < cell.candidates.length && cell.candidates.length <= maxSize)
 
    // 2. Now that the cells are filtered actually find the conjugates
    const conjugates = [] as CellGroup[]

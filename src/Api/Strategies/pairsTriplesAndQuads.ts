@@ -1,11 +1,11 @@
 // @flow
 
-import { AlertType, IndexToNine, INDICES_TO_NINE, SudokuDigits } from "../../Types";
+import { AlertType, SudokuDigits } from "../../Types";
 import { convertArrayToEnglishList } from "../../utils";
 import PureSudoku from "../Spaces/PureSudoku";
 import Sudoku from "../Spaces/Sudoku";
 import { SuccessError } from "../Types";
-import { algebraic, boxAt, CellID, getIDFromIndexWithinBox, id } from "../Utils";
+import { algebraic, CellID } from "../Utils";
 
 /**
  * Gets the unique combinations of an array\

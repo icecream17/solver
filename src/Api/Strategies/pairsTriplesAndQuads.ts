@@ -154,19 +154,16 @@ function eliminateUsingConjugate(
    let successcount = 0;
    const conjugateCandidates = getCandidatesOfConjugate(conjugate)
 
-   // For each cell within group
    for (const cell of group) {
-      const { position: thisPosition, candidates: thisCandidates } = cell
-
       // If this cell is not in the conjugate
-      if (!conjugate.some(cell => cell.position === thisPosition)) {
+      if (!conjugate.some(jCell => jCell.position === cell.position)) {
 
          // The cell now cannot have any of the candidates in the conjugate!!!
-         if (thisCandidates.some(candidate => conjugateCandidates.has(candidate))) {
+         const nonConjugateCandidates = cell.candidates.filter(candidate => !conjugateCandidates.has(candidate))
+         if (cell.candidates.length !== nonConjugateCandidates.length) { // If has any...
             successcount++ // Success!
             colorConjugate(sudoku, conjugate)
-            sudoku.set(thisPosition.row, thisPosition.column).to(
-               ...thisCandidates.filter(candidate => !conjugateCandidates.has(candidate)))
+            sudoku.set(cell.position.row, cell.position.column).to(...nonConjugateCandidates)
          }
       }
    }
@@ -178,7 +175,7 @@ function eliminateUsingConjugate(
 function eliminateUsingConjugates(sudoku: PureSudoku, groups: CellGroup[], conjugates: CellGroup[]) {
 
    let successcount = 0;
-   for (let i = 0; i < groups.length; i++) {
+   for (let i = 0; i < groups.length; i++) { // eslint-disable-line unicorn/no-for-loop --- It's used
       if (conjugates[i].length > 0) {
          successcount += eliminateUsingConjugate(sudoku, groups[i], conjugates[i])
       }

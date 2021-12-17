@@ -122,6 +122,7 @@ function findConjugatesOfGroup(
          })
       }
    }
+
    // 2. Now that the cells are filtered actually find the conjugates
    const conjugates = [] as CellGroup[]
    for (const conjugate of combinations(possibleCells, 2, maxSize)) {

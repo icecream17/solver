@@ -1,8 +1,8 @@
-import { AlertType, BOX_NAMES, COLUMN_NAMES, INDICES_TO_NINE, ROW_NAMES, SudokuDigits } from "../../Types";
+import { AlertType, BOX_NAMES, COLUMN_NAMES, IndexToNine, INDICES_TO_NINE, ROW_NAMES, SudokuDigits, TwoDimensionalArray } from "../../Types";
 import { convertArrayToEnglishList } from "../../utils";
 import PureSudoku from "../Spaces/PureSudoku";
 import { SuccessError } from "../Types";
-import { algebraic, removeFromArray } from "../Utils";
+import { algebraic, CellID, getIDFromIndexWithinBox, id, removeFromArray } from "../Utils";
 import { CellInfo, colorConjugate, combinations, CellGroup } from "./pairsTriplesAndQuads";
 
 /**
@@ -35,21 +35,21 @@ function __errorHandling (candidatesOfConjugate: SudokuDigits[], conjugate: Cell
    }
 }
 
-function __filterPossibleCandidates (group: CellGroup, maxSize: number, possibleCandidates: Set<SudokuDigits>) {
+function __filterPossibleCandidates (groupCopy: SudokuDigits[][], maxSize: number, possibleCandidates: Set<SudokuDigits>) {
 
    function removeCandidate (candidate: SudokuDigits) {
       possibleCandidates.delete(candidate)
 
-      for (const cell of group) {
-         removeFromArray(candidate, cell.candidates)
+      for (const cell of groupCopy) {
+         removeFromArray(candidate, cell)
       }
    }
 
    // a. Remove candidates that occur > maxSize times
    const occurances = [-1, 0, 0, 0, 0, 0, 0, 0, 0, 0] as const as Record<SudokuDigits, number>
 
-   for (const cell of group) {
-      for (const candidate of cell.candidates) {
+   for (const cell of groupCopy) {
+      for (const candidate of cell) {
          occurances[candidate]++
       }
    }
@@ -67,9 +67,9 @@ function __filterPossibleCandidates (group: CellGroup, maxSize: number, possible
    let keepGoing = true
    while (keepGoing) {
       keepGoing = false
-      for (const cell of group) {
-         if (cell.candidates.length === 1) {
-            removeCandidate(cell.candidates[0])
+      for (const cell of groupCopy) {
+         if (cell.length === 1) {
+            removeCandidate(cell[0])
             keepGoing = true
          }
       }
@@ -104,25 +104,34 @@ function __filterPossibleCandidates (group: CellGroup, maxSize: number, possible
  * size 4 with the other cells by default. TODO better explanation)
  */
 function findHiddenConjugatesOfGroup(
-   group: CellGroup,
+   group: TwoDimensionalArray<SudokuDigits>,
+   indexToPosition: (index: IndexToNine) => CellID,
    maxSize = 4 as 2 | 3 | 4
 ) {
-
-   // copy arrays before changing them
-   for (const cell of group) {
-      cell.candidates = cell.candidates.slice()
-   }
+   // Copy the group
+   const groupCopy = group.map(cell => cell.slice())
 
    // 1. Filter the possible candidates (return if error)
    const possibleCandidates = new Set([1, 2, 3, 4, 5, 6, 7, 8, 9] as const)
-   const __result = __filterPossibleCandidates(group, maxSize, possibleCandidates)
+   const __result = __filterPossibleCandidates(groupCopy, maxSize, possibleCandidates)
    if (typeof __result === "string") {
       return __result
    }
 
    //     c. Filter out cells that have too few candidates
    //        (No limit on max candidates)
-   const possibleCells = group.filter(cell => 1 < cell.candidates.length)
+   const possibleCells = [] as CellGroup
+
+   for (let index: IndexToNine = 0; index < 9; index = index + 1 as IndexToNine) {
+      const candidates = groupCopy[index]
+
+      if (1 < candidates.length) {
+         possibleCells.push({
+            position: indexToPosition(index),
+            candidates
+         })
+      }
+   }
 
    if (possibleCandidates.size < 2 || possibleCells.length < 2) {
       return []
@@ -145,7 +154,7 @@ function findHiddenConjugatesOfGroup(
 
       // e.g.: 3 candidates must be in 2 cells
       if (candidatesOfConjugate.length > conjugate.length) {
-         return __errorHandling([...candidatesOfConjugate], conjugate)
+         return __errorHandling(candidatesOfConjugate, conjugate)
       } else if (candidatesOfConjugate.length === conjugate.length) {
          // Filter extra candidates - a conjugate was found!
          const filteredConjugate = conjugate.map(cell => ({
@@ -173,19 +182,18 @@ function findHiddenConjugatesOfGroup(
 
 function findHiddenConjugatesOfSudoku(sudoku: PureSudoku, maxSize = 4 as 2 | 3 | 4) {
    const conjugates = [] as CellGroup[]
-   const groups = sudoku.getGroups()
    for (const i of INDICES_TO_NINE) {
-      const resultRow = findHiddenConjugatesOfGroup(groups[i * 3], maxSize)
+      const resultRow = findHiddenConjugatesOfGroup(sudoku.data[i], index => id(i, index), maxSize)
       if (typeof resultRow === "string") {
          return `Row ${ROW_NAMES[i]}${resultRow}`
       }
 
-      const resultColumn = findHiddenConjugatesOfGroup(groups[i * 3 + 1], maxSize)
+      const resultColumn = findHiddenConjugatesOfGroup(sudoku.getColumn(i), index => id(index, i), maxSize)
       if (typeof resultColumn === "string") {
          return `Column ${COLUMN_NAMES[i]}${resultColumn}`
       }
 
-      const resultBox = findHiddenConjugatesOfGroup(groups[i * 3 + 2], maxSize)
+      const resultBox = findHiddenConjugatesOfGroup(sudoku.getBox(i), index => getIDFromIndexWithinBox(i, index), maxSize)
       if (typeof resultBox === "string") {
          return `Box ${BOX_NAMES[i]}${resultBox}`
       }

@@ -145,7 +145,7 @@ function findHiddenConjugatesOfGroup(
 
       // e.g.: 3 candidates must be in 2 cells
       if (candidatesOfConjugate.length > conjugate.length) {
-         return __errorHandling([...candidatesOfConjugate], conjugate)
+         return __errorHandling(candidatesOfConjugate, conjugate)
       } else if (candidatesOfConjugate.length === conjugate.length) {
          // Filter extra candidates - a conjugate was found!
          const filteredConjugate = conjugate.map(cell => ({

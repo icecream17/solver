@@ -1,6 +1,5 @@
 import PureSudoku from "./PureSudoku"
 import BOARDS from "../boards"
-import { id } from "../Utils"
 
 test('it constructs', () => {
    expect(() => new PureSudoku()).not.toThrow()

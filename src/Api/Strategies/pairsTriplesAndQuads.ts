@@ -166,6 +166,18 @@ function findConjugatesOfSudoku(sudoku: PureSudoku, maxSize = 4 as 2 | 3 | 4) {
    return [resultRows, resultColumns, resultBoxes] as const
 }
 
+/**
+ * Colors a conjugate, see Cell#highlight
+ */
+export function colorConjugate(sudoku: PureSudoku, conjugate: CellGroup, color = 'blue') {
+   if (sudoku instanceof Sudoku) {
+      for (const cell of conjugate) {
+         const element = sudoku.cells[cell.position.row][cell.position.column]
+         element?.highlight(cell.candidates, color)
+      }
+   }
+}
+
 function eliminateUsingConjugateGroup(
    sudoku: PureSudoku,
    conjugateGroup: CellGroup[][],
@@ -207,18 +219,6 @@ function eliminateUsingConjugateGroup(
    }
 
    return successcount
-}
-
-/**
- * Colors a conjugate, see Cell#highlight
- */
-export function colorConjugate(sudoku: PureSudoku, conjugate: CellGroup, color = 'blue') {
-   if (sudoku instanceof Sudoku) {
-      for (const cell of conjugate) {
-         const element = sudoku.cells[cell.position.row][cell.position.column]
-         element?.highlight(cell.candidates, color)
-      }
-   }
 }
 
 function eliminateUsingConjugateGroups(sudoku: PureSudoku, conjugateGroups: readonly [CellGroup[][], CellGroup[][], CellGroup[][]]) {

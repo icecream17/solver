@@ -14,10 +14,11 @@ test('it imports', () => {
    expect(testSudoku.data[4][2]).toStrictEqual([1, 2, 3, 4, 5, 6, 7, 8, 9])
 
    for (const board of Object.values(BOARDS)) {
-      if (!testSudoku.import(board).success) {
+      const importSuccess = testSudoku.import(board).success
+      if (!importSuccess) {
          console.debug(board)
       }
-      expect(testSudoku.import(board).success).toBe(true)
+      expect(importSuccess).toBe(true)
       expect(testSudoku.to81()).toBe(new PureSudoku(board).to81())
    }
 

@@ -47,17 +47,16 @@ export function combinations<T>(array: T[], min = 1, max = array.length, current
 }
 
 export type CellInfo = {
-   position: CellID
    candidates: SudokuDigits[]
+   position: CellID
 }
 
-/** Really just a conjugate */
-export type _CellInfoList = CellInfo[]
+export type CellGroup = CellInfo[]
 
 /**
  * Return a set of unique candidates in a conjugate
  */
-function getCandidatesOfConjugate(conjugate: _CellInfoList) {
+function getCandidatesOfConjugate(conjugate: CellGroup) {
    // Array from the values of a set
    // The set is the accumulated candidates
    return conjugate.reduce(
@@ -71,7 +70,7 @@ function getCandidatesOfConjugate(conjugate: _CellInfoList) {
 }
 
 // Inner inner function to make things look nicer below
-function __errorHandling (conjugate: CellInfo[], invalidGroupCandidates: Set<SudokuDigits>) {
+function __errorHandling (conjugate: CellGroup, invalidGroupCandidates: Set<SudokuDigits>) {
    const invalidGroupNames = convertArrayToEnglishList(
       conjugate.map(someCell => algebraic(someCell.position.row, someCell.position.column))
    )
@@ -110,8 +109,8 @@ function findConjugatesOfGroup(
    maxSize = 4 as 2 | 3 | 4
 ) {
    // 1. Filter the possible cells
-   // Each possible cell must have 2 to maxSize candidates
-   const possibleCells = [] as _CellInfoList
+   // Each possible cell must have from 2 to maxSize candidates
+   const possibleCells = [] as CellGroup
 
    for (const index of INDICES_TO_NINE) {
       const candidates = group[index]
@@ -125,7 +124,7 @@ function findConjugatesOfGroup(
    }
 
    // 2. Now that the cells are filtered actually find the conjugates
-   const conjugates = [] as _CellInfoList[]
+   const conjugates = [] as CellGroup[]
    for (const conjugate of combinations(possibleCells, 2, maxSize)) {
       const candidatesOfConjugate = getCandidatesOfConjugate(conjugate)
 
@@ -171,7 +170,7 @@ function findConjugatesOfSudoku(sudoku: PureSudoku, maxSize = 4 as 2 | 3 | 4) {
 /**
  * Colors a conjugate, see Cell#highlight
  */
-export function colorConjugate(sudoku: PureSudoku, conjugate: _CellInfoList, color = 'blue') {
+export function colorConjugate(sudoku: PureSudoku, conjugate: CellGroup, color = 'blue') {
    if (sudoku instanceof Sudoku) {
       for (const cell of conjugate) {
          const element = sudoku.cells[cell.position.row][cell.position.column]
@@ -182,7 +181,7 @@ export function colorConjugate(sudoku: PureSudoku, conjugate: _CellInfoList, col
 
 function eliminateUsingConjugateGroup(
    sudoku: PureSudoku,
-   conjugateGroup: _CellInfoList[][],
+   conjugateGroup: CellGroup[][],
    toGroupIndex: (id: CellID) => IndexToNine,
    toGroup: (sudoku: PureSudoku, index: IndexToNine) => SudokuDigits[][],
    toPosition: (indexInGroup: IndexToNine, indexOfGroup: IndexToNine) => CellID,
@@ -223,8 +222,7 @@ function eliminateUsingConjugateGroup(
    return successcount
 }
 
-
-function eliminateUsingConjugateGroups(sudoku: PureSudoku, conjugateGroups: readonly [_CellInfoList[][], _CellInfoList[][], _CellInfoList[][]]) {
+function eliminateUsingConjugateGroups(sudoku: PureSudoku, conjugateGroups: readonly [CellGroup[][], CellGroup[][], CellGroup[][]]) {
    const [resultRows, resultColumns, resultBoxes] = conjugateGroups
 
    let successcount = 0;

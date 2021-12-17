@@ -2,6 +2,10 @@
 import { ALL_CANDIDATES, IndexToNine, INDICES_TO_NINE, SudokuDigits, ThreeDimensionalArray } from "../../Types"
 import { boxAt, CellID, id, to9by9 } from "../Utils"
 
+/**
+ * Defines base sudoku methods
+ * Should I move these to utils?
+ */
 export default class PureSudoku {
    data: ThreeDimensionalArray<SudokuDigits>
    constructor(representation?: string) {

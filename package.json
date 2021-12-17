@@ -34,7 +34,7 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "test-with-coverage": "npm test -- --coverage"
+    "test-with-coverage": "yarn test --coverage"
   },
   "browserslist": {
     "production": [

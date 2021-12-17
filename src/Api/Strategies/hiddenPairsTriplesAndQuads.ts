@@ -35,7 +35,7 @@ function __errorHandling (candidatesOfConjugate: SudokuDigits[], conjugate: Cell
    }
 }
 
-function __filterPossibleCandidates (group: CellGroup, maxSize: number, possibleCandidates: Set<1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9>) {
+function __filterPossibleCandidates (group: CellGroup, maxSize: number, possibleCandidates: Set<SudokuDigits>) {
 
    function removeCandidate (candidate: SudokuDigits) {
       possibleCandidates.delete(candidate)
@@ -57,11 +57,13 @@ function __filterPossibleCandidates (group: CellGroup, maxSize: number, possible
    for (const candidate of possibleCandidates) {
       if (occurances[candidate] > maxSize) {
          removeCandidate(candidate)
+      } else if (occurances[candidate] === 0) {
+         return `There is nowhere to put ${candidate}!` as const
       }
    }
 
    // b. Remove candidates that are alone in a cell
-   //    Also maxSize become possibleCandidates.size
+   //    maxSize is now possibleCandidates.size
    let keepGoing = true
    while (keepGoing) {
       keepGoing = false
@@ -111,19 +113,16 @@ function findHiddenConjugatesOfGroup(
       cell.candidates = cell.candidates.slice()
    }
 
-   // 1. Filter the possible candidates
+   // 1. Filter the possible candidates (return if error)
    const possibleCandidates = new Set([1, 2, 3, 4, 5, 6, 7, 8, 9] as const)
-   __filterPossibleCandidates(group, maxSize, possibleCandidates)
+   const __result = __filterPossibleCandidates(group, maxSize, possibleCandidates)
+   if (typeof __result === "string") {
+      return __result
+   }
 
    //     c. Filter out cells that have too few candidates
    //        (No limit on max candidates)
-   const possibleCells = [] as CellGroup
-
-   for (const cell of group) {
-      if (1 < cell.candidates.length) {
-         possibleCells.push(cell)
-      }
-   }
+   const possibleCells = group.filter(cell => 1 < cell.candidates.length)
 
    if (possibleCandidates.size < 2 || possibleCells.length < 2) {
       return []
@@ -135,21 +134,36 @@ function findHiddenConjugatesOfGroup(
    maxSize = Math.min(maxSize, possibleCells.length, possibleCandidates.size) as 2 | 3 | 4
 
    const conjugates = []
+   const conjugateCands = [] // Only used in one location
+
    for (const candidatesOfConjugate of combinations(Array.from(possibleCandidates), 2, maxSize)) {
       const conjugate = getConjugateFromCandidates(possibleCells, candidatesOfConjugate)
 
-      // e.g.: 3 candidates must be in 2 cells
-      if (conjugate.length < candidatesOfConjugate.length) {
-         return __errorHandling(candidatesOfConjugate, conjugate)
-      } else if (conjugate.length === candidatesOfConjugate.length) {
-         conjugates.push(conjugate)
+      // if (candidatesOfConjugate.some(candidate => conjugate.every(cell => !cell.candidates.includes(candidate)))) {
+      //    throw new TypeError(JSON.stringify([group, conjugate, candidatesOfConjugate]))
+      // }
 
-         // Remove extra candidates - a conjugate was found!
-         for (const cell of conjugate) {
-            cell.candidates = cell.candidates.filter(
+      // e.g.: 3 candidates must be in 2 cells
+      if (candidatesOfConjugate.length > conjugate.length) {
+         return __errorHandling([...candidatesOfConjugate], conjugate)
+      } else if (candidatesOfConjugate.length === conjugate.length) {
+         // Filter extra candidates - a conjugate was found!
+         const filteredConjugate = conjugate.map(cell => ({
+            candidates: cell.candidates.filter(
                candidate => candidatesOfConjugate.includes(candidate)
-            )
+            ),
+            position: cell.position,
+         }))
+
+         // Check if this conjugate exactly overlaps a previous one
+         // If so, error just like above
+         for (const [i, prevConjugate] of conjugates.entries()) {
+            if (prevConjugate.length === conjugate.length && prevConjugate.every(cell => conjugate.some(cell2 => cell.position === cell2.position))) {
+               return __errorHandling([...new Set(candidatesOfConjugate.concat(conjugateCands[i]))], conjugate)
+            }
          }
+         conjugates.push(filteredConjugate)
+         conjugateCands.push(candidatesOfConjugate)
       }
    }
 

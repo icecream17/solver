@@ -64,11 +64,6 @@ test('getBox', () => {
    expect(testSudoku.getBox(2)[2]).toStrictEqual([1, 2, 3])
 })
 
-test('getBoxGroup', () => {
-   const testSudoku = new PureSudoku()
-   expect(testSudoku.getBoxGroup(7)[2].position).toBe(id(6, 5))
-})
-
 test('to81', () => {
    const testSudoku = new PureSudoku()
    testSudoku.set(1, 2).to(3)

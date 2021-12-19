@@ -17,7 +17,7 @@ export default class Sudoku extends PureSudoku {
       ]
    }
 
-   /*override*/ set(x: IndexToNine, y: IndexToNine) {
+   override set(x: IndexToNine, y: IndexToNine) {
       return {
          to: async (...candidates: SudokuDigits[]) => {
             this.data[x][y] = candidates

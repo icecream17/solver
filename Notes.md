@@ -96,7 +96,7 @@ I would like to have an outline around the github-corner to fix that purple prob
 1. Shift+\<Delete> just resets a cell
 1. Using IDs to identify elements since that's what IDs are for
 1. Current IDs:
-    1. Edit: Outdated 
+    1. Edit: Outdated
     1. `root` in `index`
     1. `Aside` in `App`
     1. `Data` in `App > Main`
@@ -110,6 +110,7 @@ I would like to have an outline around the github-corner to fix that purple prob
 1. Maybe rename "element" to "react component"
 1. Use beforeEach when rendering in every test!!!!
 1. Tests: Arrange Act Assert
+1. 5µs lost per byte
 
 To use:
 

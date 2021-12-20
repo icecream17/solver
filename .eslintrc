@@ -50,6 +50,7 @@
   "reportUnusedDisableDirectives": true,
   "rules": {
     "no-alert": "error", // It's deprecated
+    "no-return-await": "warn",
     "prefer-arrow-callback": "warn",
     "prefer-const": "warn",
     "prefer-numeric-literals": "warn",

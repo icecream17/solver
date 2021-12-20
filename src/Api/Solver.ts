@@ -180,7 +180,7 @@ export default class Solver {
          // Skip disabled strategies
          if (this.latestStrategyItem.state.disabled) {
             this.updateCounters(false, false)
-            return await this.StartStep()
+            return this.StartStep()
          }
 
          // Not disabled, so update state

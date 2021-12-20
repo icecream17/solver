@@ -6,17 +6,33 @@
 
 A simple sudoku solver I made. This is inspired by <https://sudokuwiki.org/>.
 
+## how to install / starting development
+
+Install the latest node which comes with npm.
+
+Try `npm -i npm@latest` to update - if not recognized find stackoverflow about adding node to path.
+
+`npm -i yarn`
+
+`yarn`
+
+Congrats! You've installed all the depedencies!
+
+You can try the current dev code with `yarn start`
+
 ## file structure
 
 Hopefully the folders are helpful and the code is clear enough.\
 If you have any feedback feel free to post an issue or something.
 
-Idea: Separate this repo into 4 packages:
+For example, the actual code is in `src\`, and the strategies are in `src\Api\Strategies`.
 
-1. core
+### Idea: Separate this repo into 4 packages
+
+1. core / shared stuff
 2. sudoku (and related react components)
 3. solver api
-4. website
+4. website (all combined together)
 
 Plus, at some point I'd want to support variants: <https://github.com/dclamage/SudokuSolver>
 

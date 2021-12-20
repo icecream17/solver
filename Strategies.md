@@ -355,7 +355,7 @@ Edit: See XY Chain
 
 About that XY Loop stuff... yeah, XY Chain is special enough to get it's own function now.
 
-## TODO
+## Strategy speed
 
 Here's a list of a bunch of strategies, ranked in order of how fast they currently are in my solver, and accompanied with some educated guesses on why they're slow/fast.
 
@@ -363,44 +363,51 @@ Here's a list of a bunch of strategies, ranked in order of how fast they current
 
 I'm as surprised with the results as you are - this is definitely not how easy it is for humans
 
-- [x] Y wing / XY wing / Bent triple (11.71)
+Ranking is ln random sudokus proccessed per ms.
+So strategies that error or finish early get an advantage.
+
+Some easy strategies find all instances within a sudoku = much slower
+
+Tries: 2
+
+- [x] Y wing / XY wing / Bent triple (11.71 - 11.77)
   - [] Has dual (multi coloring). There's also 3D medusa
   - [] This limited form is a subset of X chains
-- [x] XY Chain (11.643)
-- [x] XYZ Wing (11.641)
-- [x] XY Loop (11.63)
-- [x] Update candidates (11.62)
+- [x] XY Loop (11.63 - 11.76)
+- [x] Update candidates (11.62 - 11.76)
   - n^3 (n for each cell, n for each affects(cell), n for checking if affects(cell) contains that solved candidate)
-- [x] Hidden singles (11.28)
+- [x] XYZ Wing (11.64 - 11.73)
+- [x] XY Chain (11.64 - 11.71)
+- [x] Hidden singles (11.28 - 11.46)
   - n^3 (n for each candidate, n for each group, n for each cell in group (checking single))
   - Easier than update candidates because humans
   - Despite this, hidden singles doesn't work if the candidates are not updated
-- [x] Check for solved (11.26)
+- [x] Check for solved (11.26 - 11.36)
   - n
   - But this also calls "checkValidity" which is about n^3
-- [x] Skyscraper (Subset of wing/coloring) (10.81)
+- [x] Skyscraper (Subset of wing/coloring) (10.81 - 10.92)
   - 2 lines - 1 line = extra
   - n^6 ({fish note} - but instead I spend n^3 * {n counting pend lines, n^3 to get attacks(cell of line), n^3 per attacks to get shared} = n^6)
-- [x] X wing (really a fish) (10.64)
+- [x] X wing (really a fish) (10.64 - 10.84)
   - 2 lines have a candidate in only 2 crosslines
   - n^6 (see {fish note})
   - I have no idea why skyscraper would be faster
-- [x] Swordfish (10.17)
+- [x] Swordfish (10.17 - 10.33)
   - 3 lines have a candidate in only 3 crosslines
   - n^6 (see {fish note})
-- [x] Hidden pairs, triples, and quads (10.01)
+- [x] Hidden pairs, triples, and quads (10.01 - 10.26)
   - N candidates are in N cells (which all see each other)
   - n^5 (Pretty much the same as the non hidden strategy.)
-- [x] Pairs, triples, and quads (9.51)
+- [x] Pairs, triples, and quads (9.51 - 9.61)
   - N cells have N candidates (and all see each other)
   - n^5 (I have no idea how I did this. My code is quite big)
-- [x] Intersection Removal (9.32)
+- [x] Intersection Removal (9.32 - 9.41)
   - All candidates in a box see OR All candidates in a line see
   - n^4 (n for each candidate, n^2 for box + line, n for each cell in (box - line) or (line - box))
-- [x] Jellyfish (8.99)
+- [x] Jellyfish (8.99 - 9.11)
   - 4 lines have a candidate in only 4 crosslines
   - n^6 (see {fish note})
-- [x] Two minus one lines (8.14)
+- [x] Two minus one lines (8.14 - 8.15)
 
 > {wing note}: Instead of nesting loops for each line in a wing, I do the following:
 >
@@ -437,6 +444,8 @@ I'm as surprised with the results as you are - this is definitely not how easy i
 > (for each crossline) and (for each cell of line) and (for checking if that cell has that candidate)
 >
 > So in total, n^5 for each candidate, or n^6
+
+## TODO
 
 Unimplemented
 
@@ -539,16 +548,18 @@ e     | e     |
 ### Wow
 
 ```rust
-A     |   E   | B
-  B   |   E   |   A
-E E E |   e   | E E E
+A     | E E E | B
+  B   | E E E |   A
+E E E | e e e | E E E
 ------+-------+------
-  N   |   E   | A
-N     |   E   |   B
-      |       |
+  N   |       | A
+N     |       |   B
+      | - - - |
 
 // "e" is eliminated since if all "E" was removed there would be an invalid loop
 // Not sure how this could be detected
+
+// Dashes are there by default if loop is by box
 
    | 999 |
 89 | 789 | e

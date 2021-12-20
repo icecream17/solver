@@ -107,7 +107,6 @@ function findHiddenConjugatesOfGroup(
    group: CellGroup,
    maxSize = 4 as 2 | 3 | 4
 ) {
-
    // copy arrays before changing them
    for (const cell of group) {
       cell.candidates = cell.candidates.slice()

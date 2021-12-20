@@ -1,0 +1,52 @@
+
+# TODO
+
+## Strategies
+
+[ ] Two string kite
+[ ] Simple coloring
+[ ] W wing
+[ ] Finned swordfish
+[ ] Fireworks
+[ ] Empty rectangle
+[ ] Empty rectangle but as a Grouped Nice Loop
+[ ] Coloring with >1 candidate (3d Medusa)
+[ ] More wings?
+[ ] Sue-de-coq
+[ ] Exocet
+[ ] Wow
+
+## Features
+
+[ ] Better cell highlighting/selection (And set aria-selected and aria-multiselectable)
+[ ] Better cell navigation
+[ ] Better sudoku api
+
+[ ] More sudoku editing controls
+> depends on:
+>
+> Better cell highlighting
+> Better sudoku api
+
+[ ] Sudoku titles
+[ ] Sudoku info, like the author and date
+
+## Unimportant
+
+[ ] Fix tabs.test.tsx
+[ ] Fix sonar-js/cognitive-complexity errors
+   [ ] checkValidity
+   [ ] fish
+   [ ] hiddenPairsTriplesAndQuads
+   [ ] hiddenSingles
+   [ ] intersectionRemoval
+   [ ] pairsTriplesAndQuads
+   [ ] skyscraper x2
+   [ ] twoMinusOneLines
+   [ ] updateCandidates
+   [ ] xyChain
+   [ ] xyLoop
+   [ ] xyzWing
+   [ ] yWing
+[ ] Better comments
+   [ ] Better explanation for hiddenPairs... and pairs...

@@ -171,7 +171,6 @@ function eliminateUsingConjugate(
    return successcount
 }
 
-
 function eliminateUsingConjugates(sudoku: PureSudoku, groups: CellGroup[], conjugatesOfGroup: CellGroup[][]) {
    let successcount = 0;
    for (const [i, group] of groups.entries()) {

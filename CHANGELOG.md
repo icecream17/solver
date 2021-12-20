@@ -4,6 +4,15 @@ Note: Many earlier versions are not specified, that's too much work.
 
 When a `@types` dependency updates, they almost always don't affect anything.
 
+## v0.27.1
+
+- (use) Don't support Internet Explorer 11
+- (use) Improve errors on hiddenPairsTriplesAndQuads
+- (code) Some strategy/test simplfying
+- (docs) Improve and update readme and strategies and notes and changelog todo documentation
+- (deps) Very unimportant updates but at least I now get to use typescript `override`
+- (css) Use `@supports selector` to check whether `:dir(rtl)` is supported
+
 ## v0.27.0
 
 - (ui) Remove coords

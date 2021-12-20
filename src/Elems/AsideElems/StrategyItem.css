@@ -42,35 +42,38 @@
    height: var(--item-height);
 }
 
-/* TODO: Use @supports */
-.StrategyList:dir(rtl) {
-   padding-left: initial;
-   padding-right: calc(2rem + var(--item-height));
+@supports selector(:dir(rtl)) {
+   .StrategyList:dir(rtl) {
+      padding-left: initial;
+      padding-right: calc(2rem + var(--item-height));
+   }
+
+   .StrategyItem:dir(rtl) {
+      padding-left: initial;
+      padding-right: var(--padding);
+   }
+
+   .StrategyToggler:dir(rtl) {
+      left: initial;
+      right: -1rem;
+   }
 }
 
-[dir=rtl] .StrategyList {
-   padding-left: initial;
-   padding-right: calc(2rem + var(--item-height));
-}
+@supports not selector(:dir(rtl)) {
+   [dir=rtl] .StrategyList {
+      padding-left: initial;
+      padding-right: calc(2rem + var(--item-height));
+   }
 
-.StrategyItem:dir(rtl) {
-   padding-left: initial;
-   padding-right: var(--padding);
-}
+   [dir=rtl] .StrategyItem {
+      padding-left: initial;
+      padding-right: var(--padding);
+   }
 
-[dir=rtl] .StrategyItem {
-   padding-left: initial;
-   padding-right: var(--padding);
-}
-
-.StrategyToggler:dir(rtl) {
-   left: initial;
-   right: -1rem;
-}
-
-[dir=rtl] .StrategyToggler {
-   left: initial;
-   right: -1rem;
+   [dir=rtl] .StrategyToggler {
+      left: initial;
+      right: -1rem;
+   }
 }
 
 /* Label structure: Name Status */

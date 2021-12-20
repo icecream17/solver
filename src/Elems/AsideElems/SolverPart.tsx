@@ -13,7 +13,6 @@ type SolverPartProps = Readonly<{
 
 /**
  * The solver part of the sudoku solver
- * TODO: Change to tab system. Sudoku controls vs strategy controls
  */
 export default class SolverPart extends React.Component<SolverPartProps> {
    children: {

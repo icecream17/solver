@@ -116,6 +116,7 @@ export default class Sudoku extends React.Component<SudokuProps> {
    /**
     * Keyboard controls as described by https://w3c.github.io/aria-practices/#grid
     * TODO: https://www.w3.org/TR/wai-aria-practices-1.1/#kbd_roving_tabindex
+    * Edit: I'm not sure if I should actually follow that section
     */
    whenCellKeydown(cell: Cell, event: React.KeyboardEvent) {
       // Use default behavior when tabbing

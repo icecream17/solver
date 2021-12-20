@@ -355,7 +355,7 @@ Edit: See XY Chain
 
 About that XY Loop stuff... yeah, XY Chain is special enough to get it's own function now.
 
-## TODO
+## Strategy speed
 
 Here's a list of a bunch of strategies, ranked in order of how fast they currently are in my solver, and accompanied with some educated guesses on why they're slow/fast.
 
@@ -444,6 +444,8 @@ Tries: 2
 > (for each crossline) and (for each cell of line) and (for checking if that cell has that candidate)
 >
 > So in total, n^5 for each candidate, or n^6
+
+## TODO
 
 Unimplemented
 
@@ -546,16 +548,18 @@ e     | e     |
 ### Wow
 
 ```rust
-A     |   E   | B
-  B   |   E   |   A
-E E E |   e   | E E E
+A     | E E E | B
+  B   | E E E |   A
+E E E | e e e | E E E
 ------+-------+------
-  N   |   E   | A
-N     |   E   |   B
-      |       |
+  N   |       | A
+N     |       |   B
+      | - - - |
 
 // "e" is eliminated since if all "E" was removed there would be an invalid loop
 // Not sure how this could be detected
+
+// Dashes are there by default if loop is by box
 
    | 999 |
 89 | 789 | e

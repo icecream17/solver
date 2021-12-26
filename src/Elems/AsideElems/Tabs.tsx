@@ -178,7 +178,7 @@ export default class Tabs extends React.Component<TabsProps, TabsState> {
    }
 
    whenTabFocused () {
-      this.setState({ focusedTab: this.state.selectedTab })
+      this.setState(prevState => ({ focusedTab: prevState.selectedTab }))
       if (this.focusTime === null) {
          this.focusTime = Date.now()
       }

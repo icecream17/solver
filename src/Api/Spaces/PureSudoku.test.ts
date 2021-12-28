@@ -66,7 +66,10 @@ test('getBox', () => {
 
 test('getBoxGroup', () => {
    const testSudoku = new PureSudoku()
-   expect(testSudoku.getBoxGroup(7)[2].position).toBe(id(6, 5))
+   const cellData = testSudoku.data.map((row, indexOfRow) =>
+      row.map((cell, indexInRow) => Cell(id(indexOfRow as IndexToNine, indexInRow as IndexToNine), cell))
+   )
+   expect(testSudoku.getBoxGroup(7, cellData)[2].position).toBe(id(6, 5))
 })
 
 test('to81', () => {

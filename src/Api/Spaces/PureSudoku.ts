@@ -218,7 +218,7 @@ export default class PureSudoku {
 
    getGroups() {
       const groups = []
-      const cellData = this.data.map((row, indexOfRow) => 
+      const cellData = this.data.map((row, indexOfRow) =>
          row.map((cell, indexInRow) => Cell(id(indexOfRow as IndexToNine, indexInRow as IndexToNine), cell)
       )
 

@@ -1,6 +1,7 @@
 import PureSudoku from "./PureSudoku"
 import BOARDS from "../boards"
 import { id } from "../Utils"
+import { IndexToNine } from "../../Types"
 
 test('it constructs', () => {
    expect(() => new PureSudoku()).not.toThrow()

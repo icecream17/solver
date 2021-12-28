@@ -48,29 +48,6 @@ export default class Solver {
       this.Clear = this.Clear.bind(this)
    }
 
-   /**
-    * !async
-    *
-    * Called when starting a new {@link Solver.prototype.Go} of strategies, i.e. starting strategy 0.
-    * Resets the StrategyResults in practice.
-    */
-   resetStrategies() {
-      const promises = [] as Array<Promise<undefined>>
-      for (const strategyElement of this.strategyItemElements) {
-         if (strategyElement === undefined) {
-            console.warn(`undefined strategyItemElement @resetStrategies`)
-            continue;
-         }
-
-         promises.push(asyncSetState(strategyElement, {
-            success: null,
-            successcount: null
-         }))
-      }
-
-      return Promise.allSettled(promises)
-   }
-
    updateCounters(success: boolean, isFinished: boolean) {
       // Go back to the start when a strategy succeeds, if erroring, or if finished
       // (exception 1: if you're at the start go to 1 anyways)
@@ -146,49 +123,77 @@ export default class Solver {
       await forComponentsToUpdate()
    }
 
+   /**
+    * !async
+    *
+    * Called when starting a new {@link Solver.prototype.Go} of strategies, i.e. starting strategy 0.
+    * Resets the StrategyResults in practice.
+    */
+   resetStrategies () {
+      const promises = [] as Array<Promise<undefined>>
+      for (const strategyElement of this.strategyItemElements) {
+         if (strategyElement === undefined) {
+            console.warn(`undefined strategyItemElement @resetStrategies`)
+            continue;
+         }
+
+         promises.push(asyncSetState(strategyElement, {
+            success: null,
+            successcount: null
+         }))
+      }
+
+      return Promise.allSettled(promises)
+   }
+
+   /**
+    * Returns a boolean, "done"
+    */
+   private async goToNextStrategyItem() {
+      if (this.latestStrategyItem !== null) {
+         await asyncSetState(this.latestStrategyItem, { isCurrentStrategy: false })
+         this.latestStrategyItem = null
+      }
+
+      const __currentStrategyItem = this.strategyItemElements[this.strategyIndex]
+      if (__currentStrategyItem === undefined) {
+         // Happens during tests or when closing the tab
+         window._custom.alert(
+            "The code somehow can't find the Strategy Item", AlertType.ERROR
+         )
+      } else {
+         // Skip disabled strategies
+         // If disabled go on to the next one
+         if (__currentStrategyItem.state.disabled) {
+            this.updateCounters(false, false)
+            return false
+         }
+
+         // Not disabled, so update state
+         this.latestStrategyItem = __currentStrategyItem
+         this.latestStrategyItem.setState({ isCurrentStrategy: true })
+         await forComponentsToUpdate()
+      }
+
+      return true
+   }
+
    private async StartStep (): Promise<void> {
       await forComponentsToUpdate()
 
       this.isDoingStep = true
 
-      // See resetStrategies documentation
-      if (this.strategyIndex === 0) {
-         await this.resetStrategies()
-         await this.resetCells()
-      }
-
-      // strategyItem UI - update lastStrategyItem
-      if (this.latestStrategyItem !== null) {
-         await asyncSetState(this.latestStrategyItem, { isCurrentStrategy: false })
-      }
-
-      if (this.strategyItemElements[this.strategyIndex] === undefined) {
-         window._custom.alert(
-            "The code somehow can't find the Strategy Item", AlertType.ERROR
-         )
-
-         // If the StrategyItem unloaded, it's null, right?
-         // e.g. when exiting the tab
-         // esp. when finishing a test
-         if (this.latestStrategyItem !== null) {
-            this.latestStrategyItem = null
-            console.error(`undefined strategyItemElement @${this.strategyIndex}`)
-         }
-      } else {
-         this.latestStrategyItem = this.strategyItemElements[this.strategyIndex] as StrategyItem
-
-         // Skip disabled strategies
-         if (this.latestStrategyItem.state.disabled) {
-            this.updateCounters(false, false)
-            return this.StartStep()
+      // This could theoretically go on forever, but right now the first
+      // strategy cannot be disabled. TODO: Better solution
+      do {
+         // See resetStrategies documentation
+         if (this.strategyIndex === 0) {
+            await this.resetStrategies()
+            await this.resetCells()
          }
 
-         // Not disabled, so update state
-         this.latestStrategyItem.setState({
-            isCurrentStrategy: true
-         })
-         await forComponentsToUpdate()
-      }
+         // strategyItem UI - update lastStrategyItem
+      } while (!await this.goToNextStrategyItem())
 
       // Set cells to strategy mode
       await this.setupCells()

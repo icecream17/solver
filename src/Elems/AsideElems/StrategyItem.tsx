@@ -9,13 +9,13 @@ import Solver from '../../Api/Solver';
 import StrategyTogglerLabel from './StrategyTogglerLabel';
 
 export type StrategyItemProps = StrategyLabelProps & Readonly<{
-   solver: Solver,
+   solver: Solver
    index: number
    required?: true | 'true'
 }>
 
 export type StrategyItemState = StrategyStatusProps & Readonly<{
-   disabled: boolean,
+   disabled: boolean
    isCurrentStrategy: boolean
 }>
 

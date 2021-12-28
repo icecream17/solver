@@ -20,14 +20,11 @@ export default class StrategyList extends React.Component<StrategyListProps> {
 
    render() {
       let index = 0
-      function getIndex () {
-         return index++
-      }
 
       const getRepeatedProps = () => {
          return {
             solver: this.props.solver,
-            index: getIndex()
+            index: index++
          }
       }
 

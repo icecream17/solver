@@ -210,24 +210,22 @@ export default class PureSudoku {
       return this.data.slice(startRow, startRow + 3).flatMap(row => row.slice(startColumn, startColumn + 3))
    }
 
-   getBoxGroup(index: IndexToNine) {
+   getBoxGroup<T>(index: IndexToNine, data: T[][]) {
       const startRow = index - (index % 3)
       const startColumn = (index % 3) * 3
-      return this.data
-         .slice(startRow, startRow + 3)
-         .flatMap(
-            (row, indexRow) => row.slice(startColumn, startColumn + 3).map(
-               (cell, indexCell) => Cell(id(startRow + indexRow as IndexToNine, startColumn + indexCell as IndexToNine), cell)
-            )
-         )
+      return data.slice(startRow, startRow + 3).flatMap(row => row.slice(startColumn, startColumn + 3))
    }
 
    getGroups() {
       const groups = []
+      const cellData = this.data.map((row, indexOfRow) => 
+         row.map((cell, indexInRow) => Cell(id(indexOfRow as IndexToNine, indexInRow as IndexToNine), cell)
+      )
+
       for (const i of INDICES_TO_NINE) {
          groups.push(
-            this.data[i].map((cell, indexInRow) => Cell(id(i, indexInRow as IndexToNine), cell)),
-            this.data.map((row, indexOfRow) => Cell(id(indexOfRow as IndexToNine, i), row[i])),
+            cellData[i],
+            cellData.map(row => row[i]),
             this.getBoxGroup(i)
          )
       }

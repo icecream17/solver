@@ -226,7 +226,7 @@ export default class PureSudoku {
          groups.push(
             cellData[i],
             cellData.map(row => row[i]),
-            this.getBoxGroup(i)
+            this.getBoxGroup(i, cellData)
          )
       }
 

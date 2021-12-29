@@ -1,9 +1,9 @@
 import { AlertType, BOX_NAMES, COLUMN_NAMES, INDICES_TO_NINE, ROW_NAMES, SudokuDigits } from "../../Types";
 import { convertArrayToEnglishList } from "../../utils";
 import PureSudoku from "../Spaces/PureSudoku";
-import { SuccessError } from "../Types";
+import { CellGroup, CellInfo, SuccessError } from "../Types";
 import { algebraic, removeFromArray } from "../Utils";
-import { CellInfo, colorConjugate, combinations, CellGroup } from "./pairsTriplesAndQuads";
+import { colorConjugate, combinations } from "./pairsTriplesAndQuads";
 
 /**
  * Returns an array of all the cells which contain at least one of the candidates

@@ -4,8 +4,8 @@ import { AlertType, SudokuDigits } from "../../Types";
 import { convertArrayToEnglishList } from "../../utils";
 import PureSudoku from "../Spaces/PureSudoku";
 import Sudoku from "../Spaces/Sudoku";
-import { SuccessError } from "../Types";
-import { algebraic, CellID } from "../Utils";
+import { CellGroup, SuccessError } from "../Types";
+import { algebraic } from "../Utils";
 
 /**
  * Gets the unique combinations of an array\
@@ -45,13 +45,6 @@ export function combinations<T>(array: T[], min = 1, max = array.length, current
 
    return _combinations
 }
-
-export type CellInfo = {
-   candidates: SudokuDigits[]
-   position: CellID
-}
-
-export type CellGroup = CellInfo[]
 
 /**
  * Return a set of unique candidates in a conjugate

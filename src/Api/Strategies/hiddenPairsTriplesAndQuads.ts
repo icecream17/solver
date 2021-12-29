@@ -107,10 +107,11 @@ function findHiddenConjugatesOfGroup(
    group: CellGroup,
    maxSize = 4 as 2 | 3 | 4
 ) {
-   // copy arrays before changing them
-   for (const cell of group) {
-      cell.candidates = cell.candidates.slice()
-   }
+   // copy cell objects and arrays before changing them
+   group = group.map(cell => ({
+      position: cell.position,
+      candidates: cell.candidates.slice()
+   }))
 
    // 1. Filter the possible candidates (return if error)
    const possibleCandidates = new Set([1, 2, 3, 4, 5, 6, 7, 8, 9] as const)

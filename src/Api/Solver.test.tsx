@@ -6,7 +6,7 @@ import { getButtonCellElement } from "../Elems/MainElems/Sudoku.testUtils";
 import BOARDS from "./boards";
 import { importBoard, visuallyCurrentStrategy, currentStrategyIndex, switchTab } from "../testUtils";
 
-jest.setTimeout(7000);
+jest.setTimeout(17000);
 
 beforeEach(() => {
    render(<App />);

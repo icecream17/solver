@@ -1,5 +1,7 @@
 import PureSudoku from "./PureSudoku"
 import BOARDS from "../boards"
+import { id } from "../Utils"
+import { IndexToNine } from "../../Types"
 
 test('it constructs', () => {
    expect(() => new PureSudoku()).not.toThrow()
@@ -61,6 +63,16 @@ test('getBox', () => {
    expect(testSudoku.getBox(6)[3]).toStrictEqual([1, 2, 3])
    testSudoku.set(0, 8).to(1, 2, 3)
    expect(testSudoku.getBox(2)[2]).toStrictEqual([1, 2, 3])
+})
+
+test('getBoxGroup', () => {
+   const testSudoku = new PureSudoku()
+   const cellData = testSudoku.data.map((row, indexOfRow) =>
+      row.map((cell, indexInRow) => ({
+         position: id(indexOfRow as IndexToNine, indexInRow as IndexToNine)
+      }))
+   )
+   expect(testSudoku.getBoxGroup(7, cellData)[2].position).toBe(id(6, 5))
 })
 
 test('to81', () => {

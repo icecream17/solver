@@ -19,6 +19,11 @@ export type StrategyItemState = StrategyStatusProps & Readonly<{
    isCurrentStrategy: boolean
 }>
 
+type StrategyResult = {
+   success: boolean
+   successcount: number | null
+}
+
 /**
  * The strategy element
  *
@@ -46,18 +51,27 @@ export default class StrategyItem extends React.Component<StrategyItemProps, Str
          isCurrentStrategy: false
       }
 
+      this.reset = this.reset.bind(this)
       this.toggle = this.toggle.bind(this)
+      this.whenStepFinished = this.whenStepFinished.bind(this)
    }
 
-   componentDidMount () {
-      this.props.solver.strategyItemElements[this.props.index] = this
+   componentDidMount() {
+      this.props.solver.eventRegistry.addEventListener('step finish', this.whenStepFinished)
+      this.props.solver.eventRegistry.addEventListener('new turn', this.reset)
    }
 
    componentWillUnmount() {
-      if (this.props.solver.latestStrategyItem === this) {
-         this.props.solver.latestStrategyItem = null
+      this.props.solver.eventRegistry.removeEventListener('step finish', this.whenStepFinished)
+      this.props.solver.eventRegistry.removeEventListener('new turn', this.reset)
+   }
+
+   whenStepFinished({success, successcount}: StrategyResult, index: number) {
+      if (index === this.props.index) {
+         this.setState({ success, successcount, isCurrentStrategy: true })
+      } else {
+         this.setState({ isCurrentStrategy: false })
       }
-      delete this.props.solver.strategyItemElements[this.props.index]
    }
 
    render() {
@@ -101,6 +115,12 @@ export default class StrategyItem extends React.Component<StrategyItemProps, Str
    }
 
    toggle(_event: React.ChangeEvent) {
-      this.setState(state => ({ disabled: !state.disabled }))
+      this.setState(state => ({ disabled: !state.disabled }), () => {
+         this.props.solver.disabled[this.props.index] = this.state.disabled
+      })
+   }
+
+   reset() {
+      this.setState({ success: null, successcount: null })
    }
 }

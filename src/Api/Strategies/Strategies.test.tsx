@@ -48,7 +48,6 @@ describe('strategies', () => {
       solver = Object.create(Solver) as Solver
       solver.strategyIndex = 0
       solver.memory = new StrategyMemory()
-      solver.strategyItemElements = []
    })
 
    test.each([...STRATEGIES.entries()])('$variable.name fails on an empty sudoku', (index: number, strategy: Strategy) => {

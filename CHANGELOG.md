@@ -4,6 +4,12 @@ Note: Many earlier versions are not specified, that's too much work.
 
 When a `@types` dependency updates, they almost always don't affect anything.
 
+## v0.27.2
+
+- (deps) **I will only note major dependency updates** - not including devDependencies.
+- (code) groups Api
+- (code) Separate StrategyItem and Solver!!!!!
+
 ## v0.27.1
 
 - (use) Don't support Internet Explorer 11

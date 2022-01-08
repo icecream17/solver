@@ -1,17 +1,12 @@
 import asyncPrompt from "../asyncPrompt"
-import StrategyItem from "../Elems/AsideElems/StrategyItem"
-import { AlertType, _Callback } from "../Types"
+import { _Callback } from "../Types"
 import { forComponentsToUpdate } from "../utils"
 import STRATEGIES from "./Strategies/Strategies"
 import Sudoku from "./Spaces/Sudoku"
 import { SuccessError, StrategyMemory } from "./Types"
-import React from "react"
+import EventRegistry from "../eventRegistry"
 
-function asyncSetState<T extends React.Component>(component: T, state: Readonly<Parameters<T["setState"]>[0]>) {
-   return new Promise<undefined>(resolve => {
-      component.setState(state, () => resolve(undefined))
-   })
-}
+type SolverEvents = 'new turn' | 'step finish'
 
 /**
  * A strategy is skippable if
@@ -20,10 +15,6 @@ function asyncSetState<T extends React.Component>(component: T, state: Readonly<
  */
 export default class Solver {
    strategyIndex = 0
-   latestStrategyItem: null | StrategyItem = null
-
-   /** When a StrategyItem is about to unmount, it deletes its reference here */
-   strategyItemElements: Array<StrategyItem | undefined> = []
 
    /** Later steps wait for earlier steps to finish. Implemented using callback and promises */
    whenStepHasFinished: _Callback[] = []
@@ -37,6 +28,12 @@ export default class Solver {
 
    /** Whether a strategy is skippable */
    skippable = [] as boolean[]
+
+   /** Which strategies are disabled */
+   disabled = [] as boolean[]
+
+   /** Used to reset + update the StrategyItems */
+   eventRegistry = new EventRegistry<SolverEvents>()
 
    constructor(public sudoku: Sudoku) {
       // Bind the StrategyControl handlers which have capitzalized names
@@ -124,55 +121,12 @@ export default class Solver {
    }
 
    /**
-    * !async
-    *
-    * Called when starting a new {@link Solver.prototype.Go} of strategies, i.e. starting strategy 0.
-    * Resets the StrategyResults in practice.
-    */
-   resetStrategies () {
-      const promises = [] as Array<Promise<undefined>>
-      for (const strategyElement of this.strategyItemElements) {
-         if (strategyElement === undefined) {
-            console.warn(`undefined strategyItemElement @resetStrategies`)
-            continue;
-         }
-
-         promises.push(asyncSetState(strategyElement, {
-            success: null,
-            successcount: null
-         }))
-      }
-
-      return Promise.allSettled(promises)
-   }
-
-   /**
     * Returns a boolean, "done"
     */
-   private async goToNextStrategyItem() {
-      if (this.latestStrategyItem !== null) {
-         await asyncSetState(this.latestStrategyItem, { isCurrentStrategy: false })
-         this.latestStrategyItem = null
-      }
-
-      const __currentStrategyItem = this.strategyItemElements[this.strategyIndex]
-      if (__currentStrategyItem === undefined) {
-         // Happens during tests or when closing the tab
-         window._custom.alert(
-            "The code somehow can't find the Strategy Item", AlertType.ERROR
-         )
-      } else {
-         // Skip disabled strategies
-         // If disabled go on to the next one
-         if (__currentStrategyItem.state.disabled) {
-            this.updateCounters(false, false)
-            return false
-         }
-
-         // Not disabled, so update state
-         this.latestStrategyItem = __currentStrategyItem
-         this.latestStrategyItem.setState({ isCurrentStrategy: true })
-         await forComponentsToUpdate()
+   private goToNextStrategyItem() {
+      if (this.disabled[this.strategyIndex]) {
+         this.updateCounters(false, false)
+         return false
       }
 
       return true
@@ -186,14 +140,13 @@ export default class Solver {
       // This could theoretically go on forever, but right now the first
       // strategy cannot be disabled. TODO: Better solution
       do {
-         // See resetStrategies documentation
          if (this.strategyIndex === 0) {
-            await this.resetStrategies()
+            this.eventRegistry.notify('new turn')
             await this.resetCells()
          }
 
          // strategyItem UI - update lastStrategyItem
-      } while (!await this.goToNextStrategyItem())
+      } while (!this.goToNextStrategyItem())
 
       // Set cells to strategy mode
       await this.setupCells()
@@ -208,18 +161,15 @@ export default class Solver {
          await this.resetCells()
       }
 
-      // strategyItem UI - update lastStrategyItem state
-      if (this.latestStrategyItem !== null) {
-         if (strategyResult.successcount === SuccessError) {
-            this.erroring = true
-         }
-         this.latestStrategyItem.setState(strategyResult)
-         await forComponentsToUpdate()
+      if (strategyResult.successcount === SuccessError) {
+         this.erroring = true
       }
 
-      this.updateCounters(strategyResult.success, strategyResult.successcount === 81)
+      // notify the strategyItem UI
+      this.eventRegistry.notify('step finish', strategyResult, this.strategyIndex)
       await forComponentsToUpdate()
 
+      this.updateCounters(strategyResult.success, strategyResult.successcount === 81)
       this.isDoingStep = false
    }
 

@@ -33,3 +33,9 @@
    background-color: hsl(39, 80%, 70%); /* orange - 20 sat + 20 lig */
    color: black;
 }
+
+/* Halfway between the styles in blue and green */
+.Cell.blue.green,
+.Candidate.blue.green {
+   background-color: #8ecec2;
+}

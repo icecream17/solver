@@ -4,7 +4,12 @@ Note: Many earlier versions are not specified, that's too much work.
 
 When a `@types` dependency updates, they almost always don't affect anything.
 
-## v0.28.0
+## v0.28.1
+
+- (use) Support importing sudoku representations in grid+`.` form
+- (css) Style candidates that are both blue and green
+
+## v0.28.0 (unpublished)
 
 - (use) Add 2-string kite
 

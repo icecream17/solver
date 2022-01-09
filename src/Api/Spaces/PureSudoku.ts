@@ -131,8 +131,9 @@ export default class PureSudoku {
       representation = representation.trim().normalize()
       const representationWithoutWhitespace = representation.replaceAll(/\s/g, "")
       const onlyDigitRepresentation = representation.replaceAll(/\D/g, "")
+      const oneToNineOrDot = representation.replaceAll(/[^.1-9]/g, "")
 
-      for (const testRepresentation of [representation, representationWithoutWhitespace, onlyDigitRepresentation] as const) {
+      for (const testRepresentation of [representation, representationWithoutWhitespace, onlyDigitRepresentation, oneToNineOrDot] as const) {
          if (testRepresentation.length === 81) {
             this.import81(testRepresentation)
             return {

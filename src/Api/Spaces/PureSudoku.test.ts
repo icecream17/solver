@@ -68,7 +68,7 @@ test('getBox', () => {
 test('getBoxGroup', () => {
    const testSudoku = new PureSudoku()
    const cellData = testSudoku.data.map((row, indexOfRow) =>
-      row.map((cell, indexInRow) => ({
+      row.map((_cell, indexInRow) => ({
          position: id(indexOfRow as IndexToNine, indexInRow as IndexToNine)
       }))
    )

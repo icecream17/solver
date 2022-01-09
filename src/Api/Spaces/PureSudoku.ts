@@ -278,7 +278,7 @@ export default class PureSudoku {
     * Removes a candidate at a cell
     *
     * @example
-    * (new PureSudoku()).toggle(7).at(3, 5)
+    * (new PureSudoku()).remove(7).at(3, 5)
     */
    remove(candidate: SudokuDigits) {
       // Using an arrow function here to use `this`

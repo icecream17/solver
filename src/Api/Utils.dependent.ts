@@ -4,10 +4,10 @@
  * Might want to run `madge --circular --extensions ts ./src` after importing from here
  */
 
-import { SudokuDigits, INDICES_TO_NINE } from "../Types";
+import { SudokuDigits, INDICES_TO_NINE, IndexToNine } from "../Types";
 import PureSudoku from "./Spaces/PureSudoku";
 import Sudoku from "./Spaces/Sudoku";
-import { CellID, id } from "./Utils";
+import { CandidateID, CellID, id } from "./Utils";
 
 /**
  * Colors a group of cells' candidates, see {@link Cell#highlight}
@@ -25,6 +25,23 @@ export function colorGroup (sudoku: PureSudoku, group: Iterable<CellID>, candida
       }
    }
 }
+
+/**
+ * Same as {@link colorGroup}, but this time with a specific candidate
+ */
+export function colorCandidateF (sudoku: PureSudoku, row: IndexToNine, column: IndexToNine, digit: SudokuDigits, color = 'blue') {
+   if (sudoku instanceof Sudoku) {
+      sudoku.cells[row][column]?.highlight([digit], color)
+   }
+}
+
+/**
+ * Same as {@link colorGroup}, but this time with a specific candidate
+ */
+export function colorCandidate (sudoku: PureSudoku, { row, column, digit }: CandidateID, color = 'blue') {
+   colorCandidateF(sudoku, row, column, digit, color)
+}
+
 
 export function getCellsWithNCandidates (sudoku: PureSudoku, N: number) {
    const cellsWithNCandidates = [] as CellID[]

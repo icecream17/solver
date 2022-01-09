@@ -699,3 +699,14 @@ TIL
 You can use `this` in static class methods. (<https://discord.com/channels/508357248330760243/740274647899308052/844777609082568714>)
 
 Only declare an inherited property if you're overriding it. (<https://github.com/microsoft/TypeScript/issues/44178>)
+
+## abbreviations
+
+```rust
+col = column
+min = minimum
+str = string
+args = arguments
+cand = candidate
+char = character
+```

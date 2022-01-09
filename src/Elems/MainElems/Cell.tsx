@@ -31,12 +31,14 @@ type _TrackCandidateState =
       previousCandidates: SudokuDigits[]
       classes: null | string[]
       candidateClasses: null | (Record<IndexToNine, string> & string[])
+      highlighted: boolean
    } |
    {
       explaining: false
       previousCandidates: null
       classes: null
       candidateClasses: null
+      highlighted: false
    }
 
 type CellState = Readonly<(
@@ -115,7 +117,12 @@ export default class Cell extends React.Component<CellProps, CellState> {
           *
           * Unchanged: numCandidates===9
           */
-         pretend: false
+         pretend: false,
+
+         /**
+          * Whether a candidate is being highlighted
+          */
+         highlighted: false,
       }
 
       this.whenFocus = this.whenFocus.bind(this)
@@ -218,7 +225,8 @@ export default class Cell extends React.Component<CellProps, CellState> {
          }
 
          return {
-            candidateClasses: newCandidateClasses
+            candidateClasses: newCandidateClasses,
+            highlighted: true,
          }
       })
    }
@@ -250,6 +258,7 @@ export default class Cell extends React.Component<CellProps, CellState> {
          previousCandidates: null,
          classes: null,
          candidateClasses: null,
+         highlighted: false,
       }, callback)
    }
 
@@ -274,7 +283,7 @@ export default class Cell extends React.Component<CellProps, CellState> {
                <CandidatesDiff previous={this.state.previousCandidates} current={this.state.candidates} classes={this.state.candidateClasses} />
             </Suspense>
          )
-      } else if (this.state.active || this.state.pretend || (this.numCandidates > 1 && this.numCandidates < 9)) {
+      } else if (this.state.active || this.state.highlighted || (this.numCandidates > 1 && this.numCandidates < 9)) {
          // Also show candidates when editing a cell
          // Also show candidates as fallback when numCandidates is in [2, 8]
          content = (

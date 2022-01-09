@@ -1,8 +1,8 @@
 import { SudokuDigits } from "../../Types";
 import PureSudoku from "../Spaces/PureSudoku";
 import { affects, assertGet, CandidateID, CellID, id, sharedInSets } from "../Utils";
-import { getCellsWithNCandidates } from "../Utils.dependent";
-import { highlightCell, colorCandidate, cellIsValidLoop } from "./xyLoop";
+import { colorCandidate, getCellsWithNCandidates } from "../Utils.dependent";
+import { highlightCell, cellIsValidLoop } from "./xyLoop";
 
 // Very similar to seenByColor in xyLoop
 function seenByEnd (sudoku: PureSudoku, { row, column, digit }: CandidateID) {

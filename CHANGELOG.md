@@ -4,6 +4,10 @@ Note: Many earlier versions are not specified, that's too much work.
 
 When a `@types` dependency updates, they almost always don't affect anything.
 
+## v0.28.0
+
+- (use) Add 2-string kite
+
 ## v0.27.2
 
 - (deps) **I will only note major dependency updates** - not including devDependencies.

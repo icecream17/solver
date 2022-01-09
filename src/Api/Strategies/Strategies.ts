@@ -9,6 +9,7 @@ import pairsTriplesAndQuads from "./pairsTriplesAndQuads";
 import skyscraper from "./skyscraper";
 import swordfish from "./swordfish";
 import twoMinusOneLines from "./twoMinusOneLines";
+import twoStringKite from "./twoStringKite";
 import updateCandidates from "./updateCandidates";
 import xWing from "./xWing";
 import xyChain from "./xyChain";
@@ -28,6 +29,7 @@ const STRATEGIES = [
    swordfish,
    jellyfish,
    skyscraper,
+   twoStringKite,
    yWing,
    twoMinusOneLines,
    xyzWing,

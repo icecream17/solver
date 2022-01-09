@@ -1,14 +1,7 @@
 import { ALL_CANDIDATES, IndexToNine, INDICES_TO_NINE, SudokuDigits } from "../../Types"
 import PureSudoku from "../Spaces/PureSudoku"
-import Sudoku from "../Spaces/Sudoku"
 import { boxAt } from "../Utils"
-
-function colorCandidate(sudoku: PureSudoku, row: IndexToNine, column: IndexToNine, candidate: SudokuDigits, color = 'blue') {
-   if (sudoku instanceof Sudoku) {
-      const element = sudoku.cells[row][column]
-      element?.highlight([candidate], color)
-   }
-}
+import { colorCandidateF } from "../Utils.dependent"
 
 /**
  * The state for a candidate in a group
@@ -90,7 +83,7 @@ export default function hiddenSingles(sudoku: PureSudoku) {
             if (cell !== false && cell !== undefined) {
                successcount++
                sudoku.set(cell.row, cell.column).to(candidate)
-               colorCandidate(sudoku, cell.row, cell.column, candidate, 'solved')
+               colorCandidateF(sudoku, cell.row, cell.column, candidate, 'solved')
             }
          }
       }

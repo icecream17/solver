@@ -2,7 +2,7 @@ import { SudokuDigits } from "../../Types";
 import PureSudoku from "../Spaces/PureSudoku";
 import Sudoku from "../Spaces/Sudoku";
 import { affects, assertGet, CandidateID, CellID, id, removeFromArray, sharedInSets } from "../Utils";
-import { getCellsWithNCandidates } from "../Utils.dependent";
+import { colorCandidate, getCellsWithNCandidates } from "../Utils.dependent";
 
 /**
  * next = has
@@ -15,22 +15,11 @@ export function cellIsValidLoop (sudoku: PureSudoku, sees: CellID, has: SudokuDi
 }
 
 /**
- * Same as {@link colorGroup}, but this time with a specific candidate
- */
-export function colorCandidate (sudoku: PureSudoku, {row, column, digit}: CandidateID, color = 'blue') {
-   if (sudoku instanceof Sudoku) {
-      const element = sudoku.cells[row][column]
-      element?.highlight([digit], color)
-   }
-}
-
-/**
  * Colors a group of cells', see {@link Cell#highlight}
  */
-export function highlightCell (sudoku: PureSudoku, cell: CellID, color = 'blue') {
+export function highlightCell (sudoku: PureSudoku, {row, column}: CellID, color = 'blue') {
    if (sudoku instanceof Sudoku) {
-      const element = sudoku.cells[cell.row][cell.column]
-      element?.addClass(color)
+      sudoku.cells[row][column]?.addClass(color)
    }
 }
 

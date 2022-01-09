@@ -76,7 +76,12 @@ export default class StrategyList extends React.Component<StrategyListProps> {
             />
             <StrategyItem
                name='Skyscraper'
-               href='http://hodoku.sourceforge.net/en/tech_sdp.php#sk'
+               href='https://www.sudopedia.org/wiki/Skyscraper'
+               {...getRepeatedProps()}
+            />
+            <StrategyItem
+               name='Two string kite'
+               href='https://www.sudopedia.org/wiki/2-String_Kite'
                {...getRepeatedProps()}
             />
             <StrategyItem

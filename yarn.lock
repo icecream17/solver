@@ -6639,12 +6639,12 @@ __metadata:
   linkType: hard
 
 "eslint-plugin-write-good-comments@npm:^0.1.3":
-  version: 0.1.3
-  resolution: "eslint-plugin-write-good-comments@npm:0.1.3"
+  version: 0.1.4
+  resolution: "eslint-plugin-write-good-comments@npm:0.1.4"
   dependencies:
     requireindex: ~1.1.0
     write-good: ^1.0.8
-  checksum: 7f32f6942cc73ddc0374d8a69de50907a29aee217dd011afccd0946ac922131604c0ff36ccf48b3e389205c8b6ee4551936ca13c6ad363d54a350fc8a9775b9c
+  checksum: 73e6e307356816ed13b4387b7c87dea505e95038454694a9332a9213305c1b03b39054ebf4458d7ff873d0c2fec83955ed4d09166e76944c07fd66cbbe645729
   languageName: node
   linkType: hard
 

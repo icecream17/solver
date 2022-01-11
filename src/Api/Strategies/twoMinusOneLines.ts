@@ -129,12 +129,12 @@ export default function twoMinusOneLines(sudoku: PureSudoku) {
          const column = candidateLocations[candidate].columns[index]
 
          const check = []
-         if (row.size < 2 + 4) { // 4 candidates of a row cannot share anything affects other than the row
+         if (row.size <= 4) { // 4 cells of a row cannot share anything affects other than the row
             check.push([row, possibleRows] as const)
             possibleRows.push(row) // Marker 1
          }
 
-         if (column.size < 2 + 4) {
+         if (column.size <= 4) {
             check.push([column, possibleColumns] as const)
             possibleColumns.push(column) // Marker 1
          }

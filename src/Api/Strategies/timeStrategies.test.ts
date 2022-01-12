@@ -1,5 +1,6 @@
 
-import { ALL_CANDIDATES, INDICES_TO_NINE, SuccessError, SudokuDigits } from '../../Types';
+import { ALL_CANDIDATES, INDICES_TO_NINE, SudokuDigits } from '../../Types';
+import { SuccessError } from '../Types';
 import PureSudoku from '../Spaces/PureSudoku';
 import STRATEGIES from './Strategies';
 

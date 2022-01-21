@@ -13796,9 +13796,9 @@ typescript@^4.4.4:
   linkType: hard
 
 "web-vitals@npm:^2.1.2":
-  version: 2.1.3
-  resolution: "web-vitals@npm:2.1.3"
-  checksum: 6d5d961b5e7eb5a3b0c4b05c9692b8765f469be9bc2c077331dbc3f2f38bf9bd5cbb4d1cad9129dfd7ce454c00a442851ce42c235f27678fd07e962bce4ac12e
+  version: 2.1.4
+  resolution: "web-vitals@npm:2.1.4"
+  checksum: 03d3f47dbf55c3dce07beb0ff5de8ddd52e2d0a53a8df5c84e7a16dda93543341d67231fa79b1d9772b091419af4ec0fd395b8bcf451a0e26846e3f76b3d0efc
   languageName: node
   linkType: hard
 

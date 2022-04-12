@@ -1,10 +1,10 @@
-import { screen } from "@testing-library/react";
+import { act, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
+import asyncPrompt from "./asyncPrompt";
 import { forComponentsToUpdate } from "./utils";
 
 export async function importBoard(text: string) {
    userEvent.click(screen.getByRole("button", { name: "import" }))
-   await forComponentsToUpdate()
    userEvent.type(await screen.findByRole("textbox", { name: "Enter digits or candidates" }), text)
    userEvent.click(screen.getByRole("button", { name: "Submit" }))
    await forComponentsToUpdate()
@@ -29,4 +29,18 @@ export function currentStrategyIndex() {
 
 export function switchTab (name: string) {
    userEvent.click(screen.getByRole("tab", { name }))
+}
+
+export function customAlert (...args: Parameters<typeof window._custom.alert>) {
+   act(() => window._custom.alert(...args))
+}
+
+// export function customPrompt (...args: Parameters<typeof window._custom.prompt>) {
+//    act(() => window._custom.prompt(...args))
+// }
+
+export async function customAsyncPrompt (...args: Parameters<typeof asyncPrompt>) {
+   return await new Promise<ReturnType<typeof asyncPrompt>>(resolve => {
+      act(() => resolve(asyncPrompt(...args)))
+   })
 }

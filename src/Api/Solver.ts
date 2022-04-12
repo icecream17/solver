@@ -5,6 +5,7 @@ import STRATEGIES from "./Strategies/Strategies"
 import Sudoku from "./Spaces/Sudoku"
 import { SuccessError, StrategyMemory } from "./Types"
 import EventRegistry from "../eventRegistry"
+import Cell from "../Elems/MainElems/Cell"
 
 type SolverEvents = 'new turn' | 'step finish'
 
@@ -85,17 +86,14 @@ export default class Solver {
       }
    }
 
-   /**
-    * *async
-    */
-   setupCells() {
+   private __promisifyCellMethod<T extends keyof Cell>(methodName: T) {
       const promises = [] as Promise<undefined>[]
 
       for (const row of this.sudoku.cells) {
          for (const cell of row) {
             if (cell != null) {
                promises.push(new Promise(resolve => {
-                  cell.setExplainingToTrue(resolve)
+                  cell[methodName](resolve)
                }))
             }
          }
@@ -106,18 +104,20 @@ export default class Solver {
 
    /**
     * !async
+    */
+   setupCells() {
+      return this.__promisifyCellMethod("setExplainingToTrue")
+   }
+
+   /**
+    * !async
     *
     * !misnomer
     *
     * For each cell, run {@link Cell#setExplainingToFalse}
     */
-   async resetCells() {
-      for (const row of this.sudoku.cells) {
-         for (const cell of row) {
-            cell?.setExplainingToFalse()
-         }
-      }
-      await forComponentsToUpdate()
+   resetCells() {
+      return this.__promisifyCellMethod("setExplainingToFalse")
    }
 
    /**

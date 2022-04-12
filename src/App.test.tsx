@@ -1,8 +1,7 @@
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import App from './App';
-import asyncPrompt from './asyncPrompt';
-import { switchTab } from './testUtils';
+import { customAlert, customAsyncPrompt, switchTab } from './testUtils';
 import { AlertType } from './Types';
 import { forComponentsToUpdate } from './utils';
 
@@ -27,7 +26,7 @@ test("Strategy sections exist", () => {
 
 test("The alert system", async () => {
    const testText = "42 tnhbtxlvp320ajq6lcpy" // random string
-   window._custom.alert(testText)
+   customAlert(testText)
    expect(await screen.findByText(testText)).toBeInTheDocument()
 
    const closeButton = screen.getByRole('button', { name: 'Ok' })
@@ -36,7 +35,7 @@ test("The alert system", async () => {
    expect(closeButton).not.toBeInTheDocument()
 
    // Alert type
-   window._custom.alert(testText, AlertType.ERROR)
+   customAlert(testText, AlertType.ERROR)
    const closeButton2 = await screen.findByRole('button', { name: 'Ok' })
    expect(closeButton2.parentElement).toHaveClass(AlertType.ERROR)
    userEvent.click(closeButton2)
@@ -47,7 +46,7 @@ test("The prompt system", async () => {
    const testText = "42 tnhbtxlvp320ajq6lcpy" // random string
 
    // Cancel
-   const promptPromise = asyncPrompt(testTitle, testText)
+   const promptPromise = customAsyncPrompt(testTitle, testText)
 
    // --- But first check that the title / description is there
    expect(await screen.findByText(testTitle)).toBeInTheDocument()
@@ -60,7 +59,7 @@ test("The prompt system", async () => {
    expect(promptPromise).resolves.toBeNull()
 
    // Submit
-   const promptPromise2 = asyncPrompt(testTitle, testText)
+   const promptPromise2 = customAsyncPrompt(testTitle, testText)
    await forComponentsToUpdate()
    const inputElement = screen.getByRole('textbox', { name: testText }) as HTMLInputElement
    const submitButton = screen.getByRole('button', { name: 'Submit' })
@@ -70,7 +69,7 @@ test("The prompt system", async () => {
    expect(promptPromise2).resolves.toBe(testText)
 
    // Submit with default result
-   const promptPromise3 = asyncPrompt(testTitle, testText, testText)
+   const promptPromise3 = customAsyncPrompt(testTitle, testText, testText)
    await forComponentsToUpdate()
    const inputElementAgain = screen.getByRole('textbox', { name: testText }) as HTMLInputElement
    const submitButtonAgain = screen.getByRole('button', { name: 'Submit' })

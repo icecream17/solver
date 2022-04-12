@@ -3,9 +3,9 @@ import React from 'react';
 type ControlProps = Readonly<{
    className?: string
    name?: string
-
+   children?: React.ReactNode
    onClick: React.MouseEventHandler // required
-   innerRef?: React.LegacyRef<HTMLButtonElement> | undefined; // ref shenanigans
+   innerRef?: React.LegacyRef<HTMLButtonElement> | undefined // ref shenanigans
 }> & React.ButtonHTMLAttributes<HTMLButtonElement>
 
 /**

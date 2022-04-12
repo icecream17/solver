@@ -58,7 +58,6 @@ export type NoticeInfo = {
 ////////////
 // React types
 
-export type _ReactProps = typeof React.Component.prototype.props
 export type _UnusedProps = typeof React.Component.prototype.props
 
 
@@ -73,12 +72,11 @@ export type Mutable<T> = {
    -readonly [P in keyof T]: T[P];
 }
 
-export type DontUseObject = Record<PropertyKey, unknown>
-
 // See https://github.com/microsoft/TypeScript/issues/41225
 export type _Callback = (...args: any[]) => void
 export type _Function = (...args: any[]) => any
 
+// Used to fix types in App.tsx
 export type CouldAIsB<A, B> = A extends B
    ? boolean
    : (B extends A ? boolean : false)
@@ -87,12 +85,8 @@ export type CouldAIsB<A, B> = A extends B
 // type Without<T, U> = { [P in Exclude<keyof T, keyof U>]?: never };
 // export type XOR<T, U> = (T | U) extends object ? (Without<T, U> & U) | (Without<U, T> & T) : T | U;
 
-////////////
-// whenConstruct types
-export type PossibleConstructCallback = Readonly<{
-   whenConstruct?: _Callback
-}>
-
+// // whenConstruct
+// TODO: Rename to WhenConstructCallback or something
 export type GuaranteedConstructCallback = Readonly<{
    whenConstruct: _Callback
 }>

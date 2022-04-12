@@ -6,6 +6,7 @@ import { IndexToNine } from '../../Types';
 type CandidateProps = Readonly<{
    index: IndexToNine
    className?: string
+   children?: React.ReactNode
 }>
 
 /**

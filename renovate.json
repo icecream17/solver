@@ -3,5 +3,9 @@
     ":automergeMinor",
     "config:base"
   ],
+  "packageRules": [{
+    "matchPackagePatterns": ["react"],
+    "groupName": "react"
+  }],
   "rangeStrategy": "update-lockfile"
 }

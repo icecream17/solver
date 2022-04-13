@@ -5,7 +5,6 @@ import STRATEGIES from "./Strategies/Strategies"
 import Sudoku from "./Spaces/Sudoku"
 import { SuccessError, StrategyMemory } from "./Types"
 import EventRegistry from "../eventRegistry"
-import Cell from "../Elems/MainElems/Cell"
 
 type SolverEvents = 'new turn' | 'step finish'
 
@@ -86,7 +85,7 @@ export default class Solver {
       }
    }
 
-   private __promisifyCellMethod<T extends keyof Cell>(methodName: T) {
+   private __promisifyCellMethod<T>(methodName: T & ("setExplainingToTrue" | "setExplainingToFalse")) {
       const promises = [] as Promise<undefined>[]
 
       for (const row of this.sudoku.cells) {

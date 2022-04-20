@@ -231,7 +231,7 @@ export default class Solver {
    }
 
    async Import() {
-      const result = await asyncPrompt("Import", "Enter digits or candidates", undefined)
+      const result = await asyncPrompt("Import", "Enter digits or candidates")
       if (result === null || result === "") {
          return; // Don't import on cancel
       }

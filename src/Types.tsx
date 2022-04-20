@@ -46,11 +46,13 @@ export type NoticeInfo = {
    type: NoticeType.ALERT
    alertType: AlertType
    message: string
+   cssCls?: string
 } | {
    type: NoticeType.PROMPT
    title: string
    message: string
    defaultResponse: string
+   cssCls?: string
    callback?: PromptCallback
 }
 

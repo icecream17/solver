@@ -8,6 +8,7 @@ type AlertProps = {
    whenFinish: () => void
    message: string
    type: AlertType
+   cssCls?: string
 }
 
 export default class AlertNotice extends React.Component<AlertProps> {
@@ -19,7 +20,7 @@ export default class AlertNotice extends React.Component<AlertProps> {
       ))
       return (
          <div className={`AlertNotice ${this.props.type}`} role="status">
-            <p>{text}</p>
+            <p className={this.props.cssCls}>{text}</p>
             <Control className="AlertOk" onClick={this.props.whenFinish}>Ok</Control>
          </div>
       )

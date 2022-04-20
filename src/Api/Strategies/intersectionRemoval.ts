@@ -19,14 +19,13 @@ export default function intersectionRemoval(sudoku: PureSudoku) {
    }
 
 
-   // The comments will say "row" instead of "group2" but it could also be "column"
    function _innerTwoGroupLogic(
       candidate: SudokuDigits,
       boxLocations: Set<CellID>,
       group2Locations: Set<CellID>,
    ) {
       // boxDiff is a copy of boxLocations
-      const boxDiff = new Set(boxLocations) // Box locations not in row
+      const boxDiff = new Set(boxLocations) // Box locations not in line
       const group2Diff = new Set<CellID>() // Row locations not in box
 
       for (const group2Location of group2Locations) {
@@ -37,7 +36,7 @@ export default function intersectionRemoval(sudoku: PureSudoku) {
          }
       }
 
-      // In (row and box), but not (rest of box)
+      // In (line and box), but not (rest of box)
       if (boxDiff.size === 0 && group2Diff.size !== 0) {
          successcount++
          colorGroup(sudoku, boxLocations, candidate)
@@ -46,7 +45,7 @@ export default function intersectionRemoval(sudoku: PureSudoku) {
          }
       }
 
-      // In (row and box), but not (rest of row)
+      // In (line and box), but not (rest of line)
       if (group2Diff.size === 0 && boxDiff.size !== 0) {
          successcount++
          colorGroup(sudoku, group2Locations, candidate)

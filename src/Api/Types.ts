@@ -22,7 +22,8 @@ export type StrategyError = Readonly<{
 
 export type PureStrategy = (arg: PureSudoku) => StrategyResult
 type StatefulStrategy = (arg: PureSudoku, memory: StrategyMemory[number]) => StrategyResult
-export type Strategy = PureStrategy | StatefulStrategy
+// eslint-disable-next-line @typescript-eslint/ban-types -- `Function` is only used for the `name` property
+export type Strategy = Function & (PureStrategy | StatefulStrategy)
 
 // Group types
 export type CellInfo = {

@@ -231,7 +231,7 @@ export default class Solver {
    }
 
    async Import() {
-      const result = await asyncPrompt("Import", "Enter digits or candidates")
+      const result = await asyncPrompt("Import", "Enter digits or candidates", undefined)
       if (result === null || result === "") {
          return; // Don't import on cancel
       }
@@ -241,8 +241,8 @@ export default class Solver {
    }
 
    Export() {
-      window._custom.alert(this.sudoku.to81())
-      window._custom.alert(this.sudoku.to729())
+      window._custom.alert(this.sudoku.to81(), undefined, "monospace")
+      window._custom.alert(this.sudoku.to729(), undefined, "monospace")
    }
 
    async Clear() {

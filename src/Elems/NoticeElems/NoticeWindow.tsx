@@ -33,7 +33,7 @@ export default class Notice extends React.Component<NoticeProps> {
          case NoticeType.ALERT:
             return (
                <Suspense fallback={loading}>
-                  <AlertNotice type={nextTodo.alertType} message={nextTodo.message} whenFinish={this.props.whenFinish} />
+                  <AlertNotice {...nextTodo} type={nextTodo.alertType} message={nextTodo.message} whenFinish={this.props.whenFinish} />
                </Suspense>
             )
          case NoticeType.PROMPT:

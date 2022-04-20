@@ -1,6 +1,6 @@
 {
   "name": "solver",
-  "version": "0.28.1",
+  "version": "0.28.3",
   "private": true,
   "homepage": "https://icecream17.github.io/solver",
   "dependencies": {
@@ -34,6 +34,7 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
+    "time-strats": "yarn test --testPathPattern time",
     "test-with-coverage": "yarn test --coverage"
   },
   "browserslist": {

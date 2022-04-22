@@ -34,11 +34,6 @@ declare global {
    interface Array<T> {
       slice(start?: number, end?: number): this
    }
-
-   // PureSudoku#copy
-   interface ObjectConstructor {
-      setPrototypeOf<T, P>(o: T, proto: P & (object | null)): typeof proto & T;
-   }
 }
 
 

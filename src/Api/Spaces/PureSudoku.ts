@@ -37,17 +37,6 @@ export default class PureSudoku {
       return new this(representation) as InstanceType<T>
    }
 
-   /// Returns true if every cell has only 1 candidate remaining
-   isDone (): this is { data: [SudokuDigits][][] } {
-      return this.data.every(row => row.every(cell => cell.length === 1))
-   }
-
-   /// Makes a copy of the sudoku - currently unused
-   // copy () {
-   //    const c = Object.setPrototypeOf({ data: this.data.map(row => row.slice()) }, PureSudoku.prototype)
-   //    return c as this
-   // }
-
    /**
     * Convert the sudoku into 81 digits, 0 for an unsolved cell
     */

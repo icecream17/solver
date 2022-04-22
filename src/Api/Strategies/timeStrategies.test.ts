@@ -28,13 +28,14 @@ function main () {
    const already = new Set<string>()
    const todo = mtBoards.map((repr, i) => ({ repr, i }))
    const solved = new Set<number>()
+   const strats = [fastestStrategyEvar, ...STRATEGIES]
    for (const { repr, i } of todo) {
       // Storing the representation instead of the sudoku to save memory
       // Can you believe it? A need to save memory in a dev environment
       // But this would've copied the sudoku anyways.
       // So it's probably more efficient timewise as well.
       const sudoku = new PureSudoku(repr)
-      for (const Strategy of [fastestStrategyEvar, ...STRATEGIES]) {
+      for (const Strategy of strats) {
          results[Strategy.name] ??= {
             processed: 0,
             finds: 0,
@@ -58,7 +59,8 @@ function main () {
          } else {
             results[Strategy.name].finds += successcount
             if (successcount > 0) {
-               if (sudoku.isDone()) {
+               const isDone = sudoku.data.every(row => row.every(cell => cell.length === 1))
+               if (isDone) {
                   solved.add(i)
                } else {
                   const representation = sudoku.to729()
@@ -103,7 +105,7 @@ function main () {
 
 // This test takes about 1600 s, so only enable in special circumstances
 // Enabling now since this is the first time, but the next commit will disable.
-const shouldTime = false
+const shouldTime = Date.now() < 1650642500000
 if (shouldTime) {
    main()
 }

@@ -27,11 +27,6 @@ test('it imports', () => {
    expect(testSudoku.import(`https://www.sudokuwiki.org/sudoku.htm?bd=000000001004060208070320400900018000005000600000540009008037040609080300100000000`).success).toBe(true)
 })
 
-test('is done', () => {
-   const testSudoku = new PureSudoku(BOARDS["Solved board"])
-   expect(testSudoku.isDone()).toBe(true)
-})
-
 test('setting a candidate', () => {
    const testSudoku = new PureSudoku()
    testSudoku.set(3, 1).to(4, 1, 5, 9, 2, 6)

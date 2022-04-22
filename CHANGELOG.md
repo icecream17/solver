@@ -4,6 +4,13 @@ Note: Many earlier versions are not specified, that's too much work.
 
 When a `@types` dependency updates, they almost always don't affect anything.
 
+## v0.28.3
+
+- (use) Export with "." instead of "0" for eliminated candidates
+  - Makes it easier to distinguish
+- (ui, use) Display export in monospace
+- (tests) Yet another timeStrategies rewrite
+
 ## v0.28.2
 
 - (use) Simplify browserslist, instead of selecting browsers, select what browsers support.

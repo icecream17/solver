@@ -9,6 +9,7 @@ body {
    -moz-osx-font-smoothing: grayscale;
 }
 
+.monospace,
 code {
    font-family: var(--monospace);
 }

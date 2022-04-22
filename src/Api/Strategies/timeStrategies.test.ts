@@ -1,8 +1,8 @@
 
-import { ALL_CANDIDATES, INDICES_TO_NINE, SudokuDigits } from '../../Types';
 import { SuccessError } from '../Types';
 import PureSudoku from '../Spaces/PureSudoku';
 import STRATEGIES from './Strategies';
+import mtBoards from '../mtBoards';
 
 function main () {
    const old = window._custom
@@ -11,106 +11,101 @@ function main () {
       prompt() {}
    }
 
-   const random = (() => {
-      let current = 0
-      let times = 0
-      const random = function () {
-         current += 0.538463141592653589793
-         current *= times++
-         return (current %= 1)
-      }
-      random.reset = () => {
-         current = 0
-         times = 0
-      }
-      return random
-   })()
-
-   let count = 0
-   function makeSudoku () {
-      const sudoku = new PureSudoku()
-      for (const row of INDICES_TO_NINE) {
-         for (const column of INDICES_TO_NINE) {
-            const candidates = [] as SudokuDigits[]
-            for (const candidate of ALL_CANDIDATES) {
-               if (random() > random()) {
-                  candidates.push(candidate)
-               }
-            }
-            sudoku.set(row, column).to(...candidates)
-         }
-      }
-
-      const old2 = sudoku.set.bind(sudoku)
-      sudoku.set = (row, column) => {
-         count++
-         return old2(row, column)
-      }
-      return sudoku
-   }
-
-   function* sudokus () {
-      while (true) {
-         yield makeSudoku()
-      }
-   }
-
    function fastestStrategyEvar (_sudoku: PureSudoku, _options: { solved: 0 }) {
       return { success: false } as const
    }
 
-   for (const Strategy of [fastestStrategyEvar, ...STRATEGIES]) {
-      const start = Date.now()
-      let solved = 0
-      let finds = 0
-      let errors = 0
-      let totalspeed = 0
-      let totaldeviation = 0
-      random.reset()
-      count = 0
-      for (const sudoku of sudokus()) { // @ts-expect-error - bruh
+   const results = {} as Record<string, {
+      processed: number
+      finds: number
+      errors: number
+      totalspeed: number
+      totaldeviation: number
+      timetaken: number
+   }>
+
+   let done = 0
+   const already = new Set<string>()
+   const todo = mtBoards.map((repr, i) => ({ repr, i }))
+   const solved = new Set<number>()
+   const strats = [fastestStrategyEvar, ...STRATEGIES]
+   for (const { repr, i } of todo) {
+      // Storing the representation instead of the sudoku to save memory
+      // Can you believe it? A need to save memory in a dev environment
+      // But this would've copied the sudoku anyways.
+      // So it's probably more efficient timewise as well.
+      const sudoku = new PureSudoku(repr)
+      for (const Strategy of strats) {
+         results[Strategy.name] ??= {
+            processed: 0,
+            finds: 0,
+            errors: 0,
+            get totalspeed() {return this.processed / this.timetaken},
+            totaldeviation: 0,
+            timetaken: 0,
+         }
+         const start = Date.now()
+
+         // Do strategy
+         // @ts-expect-error - bruh
          const {successcount = 0} = Strategy(sudoku, { solved: 0 })
+
+         // Update process / error
+         done++
+         results[Strategy.name].processed++
          if (successcount === SuccessError) {
-            errors++
+            // console.log(Strategy.name, "errored with", copy.to729())
+            results[Strategy.name].errors++
          } else {
-            finds += successcount
+            results[Strategy.name].finds += successcount
+            if (successcount > 0) {
+               const isDone = sudoku.data.every(row => row.every(cell => cell.length === 1))
+               if (isDone) {
+                  solved.add(i)
+               } else {
+                  const representation = sudoku.to729()
+                  if (!already.has(representation)) {
+                     already.add(representation)
+                     todo.push({ repr: representation, i })
+                  }
+               }
+            }
          }
 
-         solved++
-         const oldtotalspeed = totalspeed
+         // Update speed
+         const oldtotalspeed = results[Strategy.name].totalspeed
          const timetaken = Date.now() - start
-         if (timetaken !== 0) {
-            totalspeed += solved / timetaken
-         }
-         totaldeviation += Math.abs(oldtotalspeed - totalspeed)
-         const averagedeviation = totaldeviation / solved
-         if (averagedeviation / solved < 0.0001 && timetaken > 100 && solved > 100) {
-            break
+         results[Strategy.name].timetaken += timetaken
+         results[Strategy.name].totaldeviation += Math.abs(oldtotalspeed - results[Strategy.name].totalspeed)
+         // const averagedeviation = results[Strategy.name].totaldeviation / results[Strategy.name].processed
+         // if (averagedeviation / results[Strategy.name].processed < 0.0001 && timetaken > 100 && results[Strategy.name].processed > 100) {
+         //    break
+         // }
+
+         if (done % 0x1000 === 0) {
+            // unless there's a bug, done is at most 1465*12^729 = <790 digits>
+            // In practice, it currently finishes at (done: 5081776)
+            console.log({
+               solved: solved.size,
+               loops: done / 0x1000,
+               done,
+               total: todo.length * (STRATEGIES.length + 1),
+               todo: todo.length * (STRATEGIES.length + 1) - done,
+               progress: (100 * done / (todo.length * (STRATEGIES.length + 1))).toPrecision(7),
+            })
          }
       }
-      const finish = Date.now()
-      console.log([
-         `${Strategy.name} did ${solved} sudokus in ${finish - start}ms`,
-         `sudokus per ms: ${solved / (finish - start)}`,
-         `finds per ms: ${finds / (finish - start)}`,
-         `errors per ms: ${errors / (finish - start)}`,
-         `set calls: ${count}`,
-         `finds: ${finds}`,
-         `errors: ${errors}`,
-         `set ratio: ${count / solved}`,
-         `find ratio: ${finds / solved}`,
-         `error ratio: ${errors / solved}`,
-         `sudoku: if calls take 1ms: ${solved / (finish + count - start)}`,
-         `finds: if calls take 1ms: ${finds / (finish + count - start)}`,
-         `errors: if errors take 1ms: ${errors / (finish + count - start)}`,
-         `ln solved: ${Math.log(solved)}`
-      ].join('\n'))
    }
+
+   console.log(done)
+   console.log(results)
 
    window._custom = old
 }
 
-const shouldTime = true
+// This test takes about 1600 s, so only enable in special circumstances
+// Enabling now since this is the first time, but the next commit will disable.
+const shouldTime = Date.now() < 1650642500000
 if (shouldTime) {
    main()
 }

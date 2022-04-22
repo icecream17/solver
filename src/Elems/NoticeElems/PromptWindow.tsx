@@ -12,6 +12,7 @@ type PromptWindowProps = {
    message: string,
    defaultResponse: string,
    callback?: PromptCallback,
+   cssCls?: string,
 }
 
 export default class PromptWindow extends React.Component<PromptWindowProps> {
@@ -32,7 +33,7 @@ export default class PromptWindow extends React.Component<PromptWindowProps> {
                <label htmlFor="PromptMessageBox">
                   <p id="PromptMessage">{this.props.message}</p>
                   {/* eslint-disable-next-line jsx-a11y/no-autofocus --- https://github.com/jsx-eslint/eslint-plugin-jsx-a11y/issues/816 */}
-                  <textarea id="PromptMessageBox" autoFocus={true} ref={this.setInputElement} defaultValue={this.props.defaultResponse} rows={9} />
+                  <textarea id="PromptMessageBox" autoFocus={true} ref={this.setInputElement} defaultValue={this.props.defaultResponse} rows={9} className={this.props.cssCls} />
                </label>
                <Control className="PromptCancel" onClick={this.cancel}>Cancel</Control>
                <Control className="PromptSubmit" onClick={this.submit}>Submit</Control>

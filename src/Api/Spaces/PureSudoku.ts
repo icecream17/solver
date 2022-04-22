@@ -58,14 +58,16 @@ export default class PureSudoku {
    }
 
    /**
-    * Convert the sudoku into 729 candidates, 0 for an eliminated one
+    * Same as to81 but every cell is represented by
+    * its candidates. No newlines.
+    * Missing candidates are represented by "."
     */
    to729 () {
       let str = ""
       for (const row of this.data) {
          for (const cell of row) {
             for (const candidate of ALL_CANDIDATES) {
-               str += cell.includes(candidate) ? candidate : "0"
+               str += cell.includes(candidate) ? candidate : "."
             }
          }
       }

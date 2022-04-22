@@ -126,19 +126,20 @@ class App extends React.Component<_UnusedProps, AppState> {
    // 1. User isn't absolutely blocked
    // 2. No more `not implemented` errors in tests
 
-   alert (message: string, alertType = AlertType.INFO) {
+   alert (message: string, alertType = AlertType.INFO, cssCls = '') {
       this.setState(state => {
          return {
             notices: [...state.notices, {
                type: NoticeType.ALERT,
                alertType,
-               message
+               message,
+               cssCls
             }]
          }
       })
    }
 
-   prompt (title: string, message = "this default message shouldn't appear", defaultResponse = "", callback?: PromptCallback) {
+   prompt (title: string, message = "this default message shouldn't appear", defaultResponse = "", callback?: PromptCallback, cssCls = '') {
       this.setState(state => {
          return {
             notices: [...state.notices, {
@@ -146,7 +147,8 @@ class App extends React.Component<_UnusedProps, AppState> {
                title,
                message,
                defaultResponse,
-               callback
+               callback,
+               cssCls
             }]
          }
       })

@@ -241,8 +241,8 @@ export default class Solver {
    }
 
    Export() {
-      window._custom.alert(this.sudoku.to81())
-      window._custom.alert(this.sudoku.to729())
+      window._custom.alert(this.sudoku.to81(), undefined, "monospace")
+      window._custom.alert(this.sudoku.to729(), undefined, "monospace")
    }
 
    async Clear() {

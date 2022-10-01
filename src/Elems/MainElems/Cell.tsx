@@ -305,7 +305,10 @@ export default class Cell extends React.Component<CellProps, CellState> {
       // 2. tabIndex for focusability
       //    ="0" because of a11y thing
       return (
-         <td className={className}>
+         <td
+            className={className}
+            aria-selected={this.state.active ? "true" : undefined}
+         >
             <div
                className={className}
                role='button'

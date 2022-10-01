@@ -40,7 +40,9 @@
   "browserslist": {
     "production": [
       "supports prefers-color-scheme",
-      "supports private-class-fields",
+      "not ios_saf < 14.5",
+      "not safari < 14.1",
+      "not firefox < 90",
       "not dead"
     ],
     "development": [

@@ -4,6 +4,13 @@ Note: Many earlier versions are not specified, that's too much work.
 
 When a `@types` dependency updates, they almost always don't affect anything.
 
+## v0.28.4
+
+- (ui) darken selection color slightly
+- (a11y) add `aria-selected` inside the cell buttons
+- (deps) sonarjs to 0.15.0, yarn 3.2.3, github-pages 3.0.0, update browserslist
+  - Note that estree does not officially support the new version of Typescript (4.8.4)
+
 ## v0.28.3
 
 - (use) Export with "." instead of "0" for eliminated candidates

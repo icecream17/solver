@@ -147,7 +147,7 @@ export default class Tabs extends React.Component<TabsProps, TabsState> {
                ? 0
                : state.focusedTab + 1
          else
-            throw TypeError(`Impossible movement: $movement`)
+            throw TypeError(`Impossible movement: ${movement}`)
 
          if (state.selectedTab === newTab) {
             tabChanged = true

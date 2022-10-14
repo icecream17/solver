@@ -7,6 +7,5 @@
     "matchPackagePatterns": ["react"],
     "groupName": "react"
   }],
-  "rangeStrategy": "update-lockfile",
-  "separateMajorMinor": false
+  "rangeStrategy": "update-lockfile"
 }

@@ -96,17 +96,12 @@ function __filterPossibleCandidates (group: CellGroup, maxSize: number, possible
  *
  * I think this is O(n^4)
  *
- * @param group - A group of cells. Generally a row, column, or box
- * @param indexToPosition - Takes the index of a cell within `group` and returns
- * the actual position of that cell. Used when displaying the invalid error.
+ * @param group - A group of cells. Generally a row, column, or box.
  * @param maxSize - The maximum size of the conjugate. Default is 4.
  * (Not looking for conjugates of size 5 or more, since then there would be a
  * size 4 with the other cells by default. TODO better explanation)
  */
-function findHiddenConjugatesOfGroup(
-   group: CellGroup,
-   maxSize = 4 as 2 | 3 | 4
-) {
+function findHiddenConjugatesOfGroup(group: CellGroup, maxSize = 4 as 2 | 3 | 4) {
    // copy cell objects and arrays before changing them
    group = group.map(cell => ({
       position: cell.position,
@@ -147,13 +142,7 @@ function findHiddenConjugatesOfGroup(
       if (candidatesOfConjugate.length > conjugate.length) {
          return __errorHandling(candidatesOfConjugate, conjugate)
       } else if (candidatesOfConjugate.length === conjugate.length) {
-         // Filter extra candidates - a conjugate was found!
-         const filteredConjugate = conjugate.map(cell => ({
-            candidates: cell.candidates.filter(
-               candidate => candidatesOfConjugate.includes(candidate)
-            ),
-            position: cell.position,
-         }))
+         // A conjugate was found!!
 
          // Check if this conjugate exactly overlaps a previous one
          // If so, error just like above
@@ -162,6 +151,15 @@ function findHiddenConjugatesOfGroup(
                return __errorHandling([...new Set(candidatesOfConjugate.concat(conjugateCands[i]))], conjugate)
             }
          }
+
+         // Filter extra candidates
+         const filteredConjugate = conjugate.map(cell => ({
+            candidates: cell.candidates.filter(
+               candidate => candidatesOfConjugate.includes(candidate)
+            ),
+            position: cell.position,
+         }))
+
          conjugates.push(filteredConjugate)
          conjugateCands.push(candidatesOfConjugate)
       }
@@ -258,7 +256,8 @@ export default function hiddenPairsTriplesAndQuads(sudoku: PureSudoku) {
          const actualCell = sudoku.data[conjugateCell.position.row][conjugateCell.position.column]
 
          // If different, replace
-         if (actualCell.some(candidate => !conjugateCell.candidates.includes(candidate))) {
+         // Note: Candidates are only ever removed so just check lengths
+         if (actualCell.length !== conjugateCell.length) {
             sudoku.set(conjugateCell.position.row, conjugateCell.position.column).to(...conjugateCell.candidates)
             colorConjugate(sudoku, conjugate, 'solved')
             success = true

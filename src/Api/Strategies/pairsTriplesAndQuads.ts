@@ -90,16 +90,11 @@ function __errorHandling (conjugate: CellGroup, invalidGroupCandidates: Set<Sudo
  * naked pairs, triples, and quads.
  *
  * @param group - A group of cells. Generally a row, column, or box
- * @param indexToPosition - Takes the index of a cell within `group` and returns
- * the actual position of that cell. Used when displaying the invalid error.
  * @param maxSize - The maximum size of the conjugate. Default is 4.
  * (Not looking for conjugates of size 5 or more, since then there would be a
  * size 4 with the other cells by default. TODO better explanation)
  */
-function findConjugatesOfGroup(
-   group: CellGroup,
-   maxSize = 4 as 2 | 3 | 4
-) {
+function findConjugatesOfGroup(group: CellGroup, maxSize = 4 as 2 | 3 | 4) {
    // 1. Filter the possible cells
    // Each possible cell must have from 2 to maxSize candidates
    const possibleCells = group.filter(cell => 1 < cell.candidates.length && cell.candidates.length <= maxSize)

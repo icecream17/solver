@@ -38,7 +38,9 @@ export default class PureSudoku {
    }
 
    /**
-    * Convert the sudoku into 81 digits, 0 for an unsolved cell
+    * Convert the sudoku into 81 digits
+    * "0" = a cell with no candidates
+    * "." = an unsolved cell
     */
    to81 () {
       let str = ""
@@ -107,11 +109,8 @@ export default class PureSudoku {
             const candidateData = (
                representation.slice(totalIndex * 9, totalIndex * 9 + 9)
                   .split('')
-                  .map(
-                     candidate => "123456789".includes(candidate)
-                        ? Number(candidate) as SudokuDigits
-                        : null
-                  ).filter(candidate => candidate !== null)
+                  .filter(candidate => "123456789".includes(candidate))
+                  .map(candidate => Number(candidate) as SudokuDigits)
             ) as SudokuDigits[]
 
             totalIndex++

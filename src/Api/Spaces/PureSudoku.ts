@@ -111,7 +111,7 @@ export default class PureSudoku {
                   .split('')
                   .filter(candidate => "123456789".includes(candidate))
                   .map(candidate => Number(candidate) as SudokuDigits)
-            ) as SudokuDigits[]
+            )
 
             totalIndex++
             this.set(i, j).to(...candidateData)

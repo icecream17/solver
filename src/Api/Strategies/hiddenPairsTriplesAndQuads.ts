@@ -257,7 +257,7 @@ export default function hiddenPairsTriplesAndQuads(sudoku: PureSudoku) {
 
          // If different, replace
          // Note: Candidates are only ever removed so just check lengths
-         if (actualCell.length !== conjugateCell.candidates.length) {
+         if (actualCell.length > conjugateCell.candidates.length) {
             sudoku.set(conjugateCell.position.row, conjugateCell.position.column).to(...conjugateCell.candidates)
             colorConjugate(sudoku, conjugate, 'solved')
             success = true

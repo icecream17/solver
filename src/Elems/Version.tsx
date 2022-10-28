@@ -10,7 +10,7 @@ import StaticComponent from './StaticComponent';
  * <Version />
  */
 function Version () {
-   return <span className="Version">v0.29.0</span>
+   return <span className="Version">v0.29.1</span>
 }
 
 export default StaticComponent(Version)

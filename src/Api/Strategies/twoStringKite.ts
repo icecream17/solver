@@ -1,15 +1,13 @@
 import { ALL_CANDIDATES, SudokuDigits } from "../../Types";
-import PureSudoku from "../Spaces/PureSudoku";
+import PureSudoku, { CandidateLocations } from "../Spaces/PureSudoku";
 import { CellID } from "../Utils";
 import { colorCandidateF } from "../Utils.dependent";
-
-type CandidateInfo = ReturnType<typeof PureSudoku.prototype.getCandidateLocations>[SudokuDigits]
 
 /**
  * Checks if two cells create a two string kite
  * Maybe these checkers could be symbolized as matchers
  */
-function check(cell1: CellID, cell2: CellID, candidate: SudokuDigits, candLocations: CandidateInfo, sudoku: PureSudoku) {
+function check(cell1: CellID, cell2: CellID, candidate: SudokuDigits, candLocations: CandidateLocations, sudoku: PureSudoku) {
    /* eslint-disable sonarjs/no-collapsible-if -- It's clearer */
    if (cell1.row === cell2.row || cell1.column === cell2.column) {
       return 0

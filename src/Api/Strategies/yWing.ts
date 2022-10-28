@@ -1,7 +1,7 @@
 import { SudokuDigits } from "../../Types";
 import PureSudoku from "../Spaces/PureSudoku";
 import { affects, assertGet, CellID, sharedInArrays } from "../Utils";
-import { getCellsWithNCandidates, colorGroup } from "../Utils.dependent";
+import { getCellsWithNCandidates, colorGroup, removeCandidateFromCells } from "../Utils.dependent";
 
 /**
  * The AC cell has A but not B
@@ -52,24 +52,14 @@ export default function yWing (sudoku: PureSudoku) {
                   assertGet(affectsCWTC, AC), assertGet(affectsCWTC, BC)
                )
 
-               if (sharedEffects.size > 0) {
-                  let success = false
-                  for (const cell of sharedEffects) {
-                     if (sudoku.data[cell.row][cell.column].includes(candC)) {
-                        sudoku.remove(candC).at(cell.row, cell.column)
-                        success = true
-                     }
-                  }
-
-                  if (success) {
-                     colorGroup(sudoku, [cell, AC], candA)
-                     colorGroup(sudoku, [cell, BC], candB, "green")
-                     colorGroup(sudoku, [AC, BC], candC, "orange")
-                     return {
-                        success: true,
-                        successcount: 1
-                     } as const
-                  }
+               if (removeCandidateFromCells(sudoku, candC, sharedEffects)) {
+                  colorGroup(sudoku, [cell, AC], candA)
+                  colorGroup(sudoku, [cell, BC], candB, "green")
+                  colorGroup(sudoku, [AC, BC], candC, "orange")
+                  return {
+                     success: true,
+                     successcount: 1
+                  } as const
                }
             }
          }

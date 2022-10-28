@@ -95,6 +95,11 @@ export default class StrategyList extends React.Component<StrategyListProps> {
                {...getRepeatedProps()}
             />
             <StrategyItem
+               name='W wing'
+               href='http://sudopedia.enjoysudoku.com/W-Wing.html'
+               {...getRepeatedProps()}
+            />
+            <StrategyItem
                name='XYZ wing'
                href='http://hodoku.sourceforge.net/en/tech_wings.php#xyz'
                {...getRepeatedProps()}

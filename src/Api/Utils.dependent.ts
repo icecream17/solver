@@ -56,3 +56,20 @@ export function getCellsWithNCandidates (sudoku: PureSudoku, N: number) {
    return cellsWithNCandidates
 }
 
+/**
+ * Removes a {@param candidate} from multiple {@param cells}
+ * if that candidate exists.
+ *
+ * Returns true if any candidates were eliminated
+ */
+export function removeCandidateFromCells(sudoku: PureSudoku, candidate: SudokuDigits, cells: Iterable<CellID>) {
+   // Should this return early if there are no cells?
+   let success = false
+   for (const {row, column} of cells) {
+      if (sudoku.data[row][column].includes(candidate)) {
+         sudoku.remove(candidate).at(row, column)
+         success = true
+      }
+   }
+   return success
+}

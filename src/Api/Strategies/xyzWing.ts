@@ -1,7 +1,7 @@
 import { SudokuDigits } from "../../Types";
 import PureSudoku from "../Spaces/PureSudoku";
 import { affects, assertGet, boxAt, CellID, sharedInArrays } from "../Utils";
-import { getCellsWithNCandidates } from "../Utils.dependent";
+import { getCellsWithNCandidates, removeCandidateFromCells } from "../Utils.dependent";
 import { highlightCell } from "./xyLoop";
 
 /* TODO: When finished move to Utils */
@@ -77,15 +77,7 @@ export default function xyzWing (sudoku: PureSudoku) {
                   assertGet(affectsCW2C, wing2)
                )
 
-               let success = false
-               for (const cell of affectsAll) {
-                  if (sudoku.data[cell.row][cell.column].includes(sharedCandidate)) {
-                     sudoku.remove(sharedCandidate).at(cell.row, cell.column)
-                     success = true
-                  }
-               }
-
-               if (success) {
+               if (removeCandidateFromCells(sudoku, sharedCandidate, affectsAll)) {
                   highlightCell(sudoku, wing1)
                   highlightCell(sudoku, wing2)
                   highlightCell(sudoku, basecell, 'orange')

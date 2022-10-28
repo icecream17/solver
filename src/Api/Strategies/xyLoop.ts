@@ -15,7 +15,8 @@ export function cellIsValidLoop (sudoku: PureSudoku, sees: CellID, has: SudokuDi
 }
 
 /**
- * Colors a group of cells', see {@link Cell#highlight}
+ * Highlights a cell, see {@link Cell#highlight}
+ * Default background is blue.
  */
 export function highlightCell (sudoku: PureSudoku, {row, column}: CellID, color = 'blue') {
    if (sudoku instanceof Sudoku) {

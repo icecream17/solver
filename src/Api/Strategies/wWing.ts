@@ -1,0 +1,92 @@
+import { INDICES_TO_NINE, SudokuDigits } from "../../Types";
+import PureSudoku, { CandidateLocations } from "../Spaces/PureSudoku";
+import { affects, assertGet, CellID, id, sharedInArrays } from "../Utils";
+import { colorGroup, removeCandidateFromCells } from "../Utils.dependent";
+
+function checkPair(
+    cellA: CellID,
+    cellB: CellID,
+    sudokuCellA: SudokuDigits[],
+    affectsCW2C: Map<CellID, CellID[]>,
+    candidateLocations: CandidateLocations[],
+    sudoku: PureSudoku,
+) {
+    const affectsA = assertGet(affectsCW2C, cellA)
+    const affectsB = assertGet(affectsCW2C, cellB)
+    const affectsAB = sharedInArrays(affectsA, affectsB)
+
+    for (const [index, candidateA] of sudokuCellA.entries()) {
+        const candidateB = sudokuCellA[1 - index]
+
+        // check for a row, column, or box
+        // which has two cells: an affectsA and an affectsB
+        for (const prop of ["rows", "columns", "boxes"] as const) {
+            for (const group of candidateLocations[candidateA][prop]) {
+                if (group.size === 2) {
+                    const cellxA = affectsA.find(cell => group.has(cell))
+                    const cellxB = affectsB.find(cell => group.has(cell))
+
+                    // eslint-disable-next-line sonarjs/no-collapsible-if -- line too long
+                    if (cellxA !== cellxB && cellxA !== undefined && cellxB !== undefined) {
+                        // check for shared cells containing the other candidate
+                        if (removeCandidateFromCells(sudoku, candidateB, affectsAB)) {
+                            colorGroup(sudoku, [cellA, cellB, cellxA, cellxB], candidateA, "green")
+                            colorGroup(sudoku, [cellA, cellB], candidateB)
+                            return true
+                        }
+                    }
+                }
+            }
+        }
+    }
+    return false
+}
+
+/**
+ * http://sudopedia.enjoysudoku.com/W-Wing.html
+ *
+ * @example
+ * If the As are strongly linked (and ABs see As)
+ * then A can be eliminated in the shared AB cells
+ * ```
+ * x  x  x  |       AB | A
+ *       AB | x  x  x  | A
+ * ```
+ */
+export default function wWing (sudoku: PureSudoku) {
+    const found = new Map<number, CellID[]>()
+    // Delay calculations
+    const affectsCW2C = new Map<CellID, CellID[]>()
+    let candidateLocations
+
+    for (const row of INDICES_TO_NINE) {
+        for (const column of INDICES_TO_NINE) {
+            const cell = sudoku.data[row][column]
+            if (cell.length === 2) {
+                const numericID = cell[0] * 10 + cell[1]
+                const equivs = found.get(numericID)
+                const cid = id(row, column)
+                affectsCW2C.set(cid, affects(row, column))
+                if (equivs === undefined) {
+                    found.set(numericID, [cid])
+                } else {
+                    candidateLocations = sudoku.getCandidateLocations()
+                    for (const cell2 of equivs) {
+                        const success = checkPair(cid, cell2, cell, affectsCW2C, candidateLocations, sudoku)
+                        if (success) {
+                            return {
+                                success,
+                                successcount: 1
+                            } as const
+                        }
+                    }
+                    equivs.push(cid)
+                }
+            }
+        }
+    }
+
+    return {
+        success: false
+    } as const
+}

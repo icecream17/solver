@@ -25,6 +25,7 @@ import xyLoop from "./xyLoop";
 import xyChain from "./xyChain";
 import xyzWing from "./xyzWing";
 import twoStringKite from "./twoStringKite";
+import wWing from "./wWing";
 
 function setupSudoku (representation: string) {
    const testSudoku = new PureSudoku(representation)
@@ -731,6 +732,27 @@ describe('strategies', () => {
       })
    })
 
+   describe('wWing', () => {
+      test('1', () => {
+         const testSudoku = new PureSudoku()
+         testSudoku.import(boards["w wing"])
+         updateCandidates(testSudoku)
+
+         // These are necessary because they allow a certain bug to happen
+         // where row 6 has only two 2s
+         intersectionRemoval(testSudoku)
+         pairsTriplesAndQuads(testSudoku)
+
+         // Necessary so that 279 -> 27
+         xWing(testSudoku)
+
+         expect(wWing(testSudoku).success).toBe(true)
+
+         // Check for bug
+         expect(testSudoku.data[5][3]).toContain(7)
+      })
+   })
+
    describe('xyzWing', () => {
       test('1', () => {
          const testSudoku = new PureSudoku()
@@ -761,6 +783,12 @@ describe('strategies', () => {
          testSudoku.import(`123456780123456780123456789123456780123456780123456780123456789123456780123456780123456780123456780123456780123456789123456789123456789123456789123456789123456789123456789123456780123456780123456789123456789123456789123456789123456789123456789123456780123456789123456789123456789123456789123456789123456789123456789123456789123456780123456789123456789123456789123456789123456789123456789123456789123456789123456780123456789123456789123456789123456789123456789123456789123456789123456789123456789123456789123456789123456789123456789123456789123456789123456789123456789123456780123456789123456789123456789123456789123456789123456789123456789123456789123456780123456789123456789123456789123456789123456789123456789123456789123456789`)
          expect(twoStringKite(testSudoku).success).toBe(true)
          expect(testSudoku.data[6][6]).not.toContain(9)
+      })
+
+      test('double two string kite', () => {
+         const testSudoku = new PureSudoku()
+         testSudoku.import(`.......8....4.67.9.....67.9.2..........4.6.......5......34.67....3..6..91.........2.45.7...2.4567.9.....67.91...............8...3.........4567...2..56..9.2.4.67..1.........2.456.....3.........4.6.........7..........9.......8..2..56....2.4.6........6.....3.........4............8..2.......1................9......7......5........5.7......5.7.........8.........9..3..6......4......2.......1..........3..6...........91.........2.........3..6.......5..........7....3..6......4............8..2.4..7...2.4.67......5......34.............9.......8.1.........23..6....234.67...2.4......2.4...891.......9......7..1.34..........6.....345.....23.5..8..234.......3.........4.678.1....67......5....1..4......2..........4.67.......6.8.........9`)
+         expect(twoStringKite(testSudoku).successcount).toBe(2)
       })
    })
 })

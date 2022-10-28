@@ -1,7 +1,7 @@
 import { ALL_CANDIDATES, IndexToNine, INDICES_TO_NINE, SudokuDigits } from "../../Types";
 import PureSudoku from "../Spaces/PureSudoku";
 import { affects, CellID, sharedInArrays } from "../Utils";
-import { colorGroup } from "../Utils.dependent";
+import { colorGroup, removeCandidateFromCells } from "../Utils.dependent";
 
 export function __incrementMapValue<T extends Map<K, number>, K>(map: T, key: K) {
    const value = map.get(key)
@@ -40,23 +40,13 @@ function _innerInnerSkyscraperLogic(
             // shared = all extra see
             const shared = sharedInArrays(...affectsNotInLine)
 
-            if (shared.size > 0) {
-               let success = false
-               for (const cell of shared) {
-                  if (sudoku.data[cell.row][cell.column].includes(candidate)) {
-                     sudoku.remove(candidate).at(cell.row, cell.column)
-                     success = true
-                  }
-               }
-
-               if (success) {
-                  colorGroup(sudoku, sumLines, candidate)
-                  colorGroup(sudoku, cellsNotInLine, candidate, "orange")
-                  return {
-                     success: true,
-                     successcount: 1
-                  } as const
-               }
+            if (removeCandidateFromCells(sudoku, candidate, shared)) {
+               colorGroup(sudoku, sumLines, candidate)
+               colorGroup(sudoku, cellsNotInLine, candidate, "orange")
+               return {
+                  success: true,
+                  successcount: 1
+               } as const
             }
          }
       }

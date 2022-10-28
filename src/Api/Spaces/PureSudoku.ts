@@ -2,6 +2,12 @@
 import { ALL_CANDIDATES, IndexToNine, INDICES_TO_NINE, SudokuDigits, ThreeDimensionalArray } from "../../Types"
 import { boxAt, CellID, id, to9by9 } from "../Utils"
 
+export type CandidateLocations = {
+   rows: Set<CellID>[]
+   columns: Set<CellID>[]
+   boxes: Set<CellID>[]
+}
+
 function Cell (id: CellID, cell: SudokuDigits[]) {
    return {
       candidates: cell,
@@ -238,21 +244,28 @@ export default class PureSudoku {
    /**
     * Returns the candidate locations of the sudoku
     *
-    * Returns: [undefined, candidate1Data, candidate2Data, ...]
+    * @misnomer
+    * getCandidatesLocations
     *
-    * candidateNData: {
+    * @example
+    *
+    * ```ts
+    * sudoku.getCandidatesLocations()[candidate].rows[5]
+    * // > Set<CellID>
+    * // set of cells with that candidate
+    * ```
+    *
+    * Return type is an array of
+    * ```
+    * CandidateLocations: {
     *    rows: [Set<CellID> for each index]
     *    columns: [Set<CellID> for each index]
     *    boxes: [Set<CellID> for each index]
     * }
-    *
+    * ```
     */
-   getCandidateLocations() {
-      const candidateLocations = [undefined] as [undefined, ...({
-         rows: Set<CellID>[]
-         columns: Set<CellID>[]
-         boxes: Set<CellID>[]
-      })[]]
+   getCandidateLocations(): CandidateLocations[] {
+      const candidateLocations = [] as CandidateLocations[]
 
       for (const candidate of ALL_CANDIDATES) {
          candidateLocations[candidate] = {

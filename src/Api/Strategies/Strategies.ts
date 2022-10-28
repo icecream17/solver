@@ -11,6 +11,7 @@ import swordfish from "./swordfish";
 import twoMinusOneLines from "./twoMinusOneLines";
 import twoStringKite from "./twoStringKite";
 import updateCandidates from "./updateCandidates";
+import wWing from "./wWing";
 import xWing from "./xWing";
 import xyChain from "./xyChain";
 import xyLoop from "./xyLoop";
@@ -32,6 +33,7 @@ const STRATEGIES = [
    twoStringKite,
    yWing,
    twoMinusOneLines,
+   wWing,
    xyzWing,
    xyLoop,
    xyChain,

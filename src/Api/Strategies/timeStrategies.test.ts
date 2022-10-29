@@ -83,7 +83,7 @@ function main () {
          // }
 
          if (done % 0x1000 === 0) {
-            // unless there's a bug, done is at most 1465*12^729 = <790 digits>
+            // unless there's a bug, done is at most 1465*18^729 = <919 digits>
             // In practice, it currently finishes at (done: 5081776)
             console.log({
                solved: solved.size,

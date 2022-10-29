@@ -170,6 +170,33 @@ export function getIDFromIndexWithinBox(indexOfBox: IndexToNine, indexInBox: Ind
    return id(boxRow * 3 + withinRow as IndexToNine, boxColumn * 3 + withinColumn as IndexToNine)
 }
 
+export function groupInfo(type: "rows" | "columns" | "boxes", cells: CellID[]) {
+   let groupIndex: IndexToNine
+   let cellsInGroup
+   switch (type) {
+      case "rows": {
+         groupIndex = cells[0].row
+         cellsInGroup = new Set(INDICES_TO_NINE.map(indice => id(groupIndex, indice)))
+         break
+      }
+      case "columns": {
+         groupIndex = cells[0].column
+         cellsInGroup = new Set(INDICES_TO_NINE.map(indice => id(indice, groupIndex)))
+         break
+      }
+      case "boxes": {
+         groupIndex = boxAt(cells[0].row, cells[0].column)
+         cellsInGroup = new Set(INDICES_TO_NINE.map(indice => getIDFromIndexWithinBox(groupIndex, indice)))
+         break
+      }
+   }
+   const cellsNotInSubgroup = new Set(cellsInGroup)
+   for (const cell of cells) {
+      cellsNotInSubgroup.delete(cell)
+   }
+   return [groupIndex, cellsInGroup, cellsNotInSubgroup] as const
+}
+
 /**
  * Removes an {@param element} from an {@param array}
  */
@@ -219,6 +246,34 @@ export function sharedInSets<T> (...sets: Set<T>[]) {
    }
 
    return shared
+}
+
+// Set union? Would be uesd in pairCoversGroupd
+
+export function setDifference<T> (setA: Iterable<T>, setB: Iterable<T>) {
+   const result = new Set(setA)
+   for (const val of setB) {
+      result.delete(val)
+   }
+   return result
+}
+
+export function isSubset<T>(setA: Iterable<T>, setB: Set<T>) {
+   for (const val of setA) {
+      if (!setB.has(val)) {
+         return false
+      }
+   }
+   return true
+}
+
+export function isSubarray<T>(arrayA: Iterable<T>, arrayB: T[]) {
+   for (const val of arrayA) {
+      if (!arrayB.includes(val)) {
+         return false
+      }
+   }
+   return true
 }
 
 export function assertGet<K, V> (map: Map<K, V>, key: K) {

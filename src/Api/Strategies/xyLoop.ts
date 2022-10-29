@@ -1,6 +1,5 @@
 import { SudokuDigits } from "../../Types";
 import PureSudoku from "../Spaces/PureSudoku";
-import Sudoku from "../Spaces/Sudoku";
 import { affects, assertGet, CandidateID, CellID, id, removeFromArray, sharedInSets } from "../Utils";
 import { colorCandidate, getCellsWithNCandidates } from "../Utils.dependent";
 
@@ -12,16 +11,6 @@ import { colorCandidate, getCellsWithNCandidates } from "../Utils.dependent";
 export function cellIsValidLoop (sudoku: PureSudoku, sees: CellID, has: SudokuDigits, loop: CellID[]) {
    const cell = sudoku.data[sees.row][sees.column]
    return cell.includes(has) && !loop.includes(sees)
-}
-
-/**
- * Highlights a cell, see {@link Cell#highlight}
- * Default background is blue.
- */
-export function highlightCell (sudoku: PureSudoku, {row, column}: CellID, color = 'blue') {
-   if (sudoku instanceof Sudoku) {
-      sudoku.cells[row][column]?.addClass(color)
-   }
 }
 
 function seenByColor (sudoku: PureSudoku, color: CandidateID[]) {

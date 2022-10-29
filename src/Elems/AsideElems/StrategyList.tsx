@@ -105,6 +105,11 @@ export default class StrategyList extends React.Component<StrategyListProps> {
                {...getRepeatedProps()}
             />
             <StrategyItem
+               name='Pair covers group'
+               href='https://github.com/icecream17/solver/wiki/Pair-covers-group/'
+               {...getRepeatedProps()}
+            />
+            <StrategyItem
                name='XY Ring (Loop)'
                href='https://youtu.be/OUKwjVs4MsY'
                {...getRepeatedProps()}

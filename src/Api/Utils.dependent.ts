@@ -10,6 +10,29 @@ import Sudoku from "./Spaces/Sudoku";
 import { CandidateID, CellID, id } from "./Utils";
 
 /**
+ * Highlights a cell, see {@link Cell#highlight}
+ * Default background is blue.
+ */
+export function highlightCell (sudoku: PureSudoku, {row, column}: CellID, color = 'blue') {
+   if (sudoku instanceof Sudoku) {
+      sudoku.cells[row][column]?.addClass(color)
+   }
+}
+
+
+/**
+ * Highlights a cell, see {@link Cell#highlight}
+ * Default background is blue.
+ */
+export function highlightGroup (sudoku: PureSudoku, group: Iterable<CellID>, color = 'blue') {
+   if (sudoku instanceof Sudoku) {
+      for (const {row, column} of group) {
+         sudoku.cells[row][column]?.addClass(color)
+      }
+   }
+}
+
+/**
  * Colors a group of cells' candidates, see {@link Cell#highlight}
  *
  * The precedence for colors is:
@@ -72,4 +95,13 @@ export function removeCandidateFromCells(sudoku: PureSudoku, candidate: SudokuDi
       }
    }
    return success
+}
+
+export function wouldRemoveCandidateFromCells(sudoku: PureSudoku, candidate: SudokuDigits, cells: Iterable<CellID>) {
+   for (const { row, column } of cells) {
+      if (sudoku.data[row][column].includes(candidate)) {
+         return true
+      }
+   }
+   return false
 }

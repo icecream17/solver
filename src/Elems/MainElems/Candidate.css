@@ -34,6 +34,16 @@
    color: black;
 }
 
+.Cell.salmon {
+   background-color: salmon;
+   color: black;
+}
+
+.Cell.orange.salmon {
+   background-color: hsl(23, 87%, 71%);
+   color: black;
+}
+
 /* Halfway between the styles in blue and green */
 .Cell.blue.green,
 .Candidate.blue.green {

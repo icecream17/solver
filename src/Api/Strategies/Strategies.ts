@@ -5,6 +5,7 @@ import hiddenPairsTriplesAndQuads from "./hiddenPairsTriplesAndQuads";
 import hiddenSingles from "./hiddenSingles";
 import intersectionRemoval from "./intersectionRemoval";
 import jellyfish from "./jellyfish";
+import pairCoversGroup from "./pairCoversGroup";
 import pairsTriplesAndQuads from "./pairsTriplesAndQuads";
 import skyscraper from "./skyscraper";
 import swordfish from "./swordfish";
@@ -35,6 +36,7 @@ const STRATEGIES = [
    twoMinusOneLines,
    wWing,
    xyzWing,
+   pairCoversGroup,
    xyLoop,
    xyChain,
 ] as const

@@ -1,8 +1,7 @@
 import { SudokuDigits } from "../../Types";
 import PureSudoku from "../Spaces/PureSudoku";
 import { affects, assertGet, boxAt, CellID, sharedInArrays } from "../Utils";
-import { getCellsWithNCandidates, removeCandidateFromCells } from "../Utils.dependent";
-import { highlightCell } from "./xyLoop";
+import { getCellsWithNCandidates, highlightCell, removeCandidateFromCells } from "../Utils.dependent";
 
 /* TODO: When finished move to Utils */
 function inSameBox(cellA: CellID, cellB: CellID) {

@@ -4,6 +4,11 @@ Note: Many earlier versions are not specified, that's too much work.
 
 When a `@types` dependency updates, they almost always don't affect anything.
 
+## v0.30.0
+
+- (use) pairCoversGroup
+- (use) wWing now tries both candidates AB and candidates BA on the same pattern
+
 ## v0.29.1
 
 - (bug, use) fix how hiddenPairsTriplesAndQuads would add candidates back when

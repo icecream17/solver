@@ -3,10 +3,11 @@ import PureSudoku, { CandidateLocations } from "../Spaces/PureSudoku";
 import { affects, assertGet, CellID, id, sharedInArrays } from "../Utils";
 import { colorGroup, removeCandidateFromCells } from "../Utils.dependent";
 
-function checkPair(
+function _checkPair(
     cellA: CellID,
     cellB: CellID,
-    sudokuCellA: SudokuDigits[],
+    candidateA: SudokuDigits,
+    candidateB: SudokuDigits,
     affectsCW2C: Map<CellID, CellID[]>,
     candidateLocations: CandidateLocations[],
     sudoku: PureSudoku,
@@ -15,45 +16,50 @@ function checkPair(
     const affectsB = assertGet(affectsCW2C, cellB)
     const affectsAB = sharedInArrays(affectsA, affectsB)
 
-    for (const [index, candidateA] of sudokuCellA.entries()) {
-        const candidateB = sudokuCellA[1 - index]
+    // check for a row, column, or box
+    // which has two cells: an affectsA and an affectsB
+    for (const prop of ["rows", "columns", "boxes"] as const) {
+        for (const group of candidateLocations[candidateA][prop]) {
+            if (group.size === 2) {
+                const cellxA = affectsA.find(cell => group.has(cell))
+                const cellxB = affectsB.find(cell => group.has(cell))
 
-        // check for a row, column, or box
-        // which has two cells: an affectsA and an affectsB
-        for (const prop of ["rows", "columns", "boxes"] as const) {
-            for (const group of candidateLocations[candidateA][prop]) {
-                if (group.size === 2) {
-                    const cellxA = affectsA.find(cell => group.has(cell))
-                    const cellxB = affectsB.find(cell => group.has(cell))
-
-                    // eslint-disable-next-line sonarjs/no-collapsible-if -- line too long
-                    if (cellxA !== cellxB && cellxA !== undefined && cellxB !== undefined) {
-                        // check for shared cells containing the other candidate
-                        if (removeCandidateFromCells(sudoku, candidateB, affectsAB)) {
-                            colorGroup(sudoku, [cellA, cellB, cellxA, cellxB], candidateA, "green")
-                            colorGroup(sudoku, [cellA, cellB], candidateB)
-                            return true
-                        }
+                // eslint-disable-next-line sonarjs/no-collapsible-if -- line too long
+                if (cellxA !== cellxB && cellxA !== undefined && cellxB !== undefined) {
+                    // check for shared cells containing the other candidate
+                    if (removeCandidateFromCells(sudoku, candidateB, affectsAB)) {
+                        colorGroup(sudoku, [cellA, cellB, cellxA, cellxB], candidateA, "green")
+                        colorGroup(sudoku, [cellA, cellB], candidateB)
+                        return 1
                     }
                 }
             }
         }
     }
-    return false
+    return 0
+}
+
+function checkPair(
+    cellA: CellID,
+    cellB: CellID,
+    candidateA: SudokuDigits,
+    candidateB: SudokuDigits,
+    affectsCW2C: Map<CellID, CellID[]>,
+    candidateLocations: CandidateLocations[],
+    sudoku: PureSudoku,
+) {
+    return _checkPair(cellA, cellB, candidateA, candidateB, affectsCW2C, candidateLocations, sudoku) +
+        _checkPair(cellA, cellB, candidateB, candidateA, affectsCW2C, candidateLocations, sudoku)
 }
 
 /**
- * http://sudopedia.enjoysudoku.com/W-Wing.html
+ * Calls {@param callback} with all pairs of cells
+ * whose two candidates are equal
  *
- * @example
- * If the As are strongly linked (and ABs see As)
- * then A can be eliminated in the shared AB cells
- * ```
- * x  x  x  |       AB | A
- *       AB | x  x  x  | A
- * ```
+ * NOTE: You must call another function with (candidateA, candidateB)
+ * and (candidateB, candidateA)
  */
-export default function wWing (sudoku: PureSudoku) {
+export function wWingBase (sudoku: PureSudoku, callback: typeof checkPair) {
     const found = new Map<number, CellID[]>()
     // Delay calculations
     const affectsCW2C = new Map<CellID, CellID[]>()
@@ -70,13 +76,15 @@ export default function wWing (sudoku: PureSudoku) {
                 if (equivs === undefined) {
                     found.set(numericID, [cid])
                 } else {
-                    candidateLocations = sudoku.getCandidateLocations()
+                    candidateLocations ??= sudoku.getCandidateLocations()
                     for (const cell2 of equivs) {
-                        const success = checkPair(cid, cell2, cell, affectsCW2C, candidateLocations, sudoku)
-                        if (success) {
+                        const [candidateA, candidateB] = cell
+                        const successcount =
+                            callback(cid, cell2, candidateA, candidateB, affectsCW2C, candidateLocations, sudoku)
+                        if (successcount) {
                             return {
-                                success,
-                                successcount: 1
+                                success: true,
+                                successcount
                             } as const
                         }
                     }
@@ -89,4 +97,19 @@ export default function wWing (sudoku: PureSudoku) {
     return {
         success: false
     } as const
+}
+
+/**
+ * http://sudopedia.enjoysudoku.com/W-Wing.html
+ *
+ * @example
+ * If the As are strongly linked (and ABs see As)
+ * then A can be eliminated in the shared AB cells
+ * ```
+ * x  x  x  |       AB | A
+ *       AB | x  x  x  | A
+ * ```
+ */
+export default function wWing (sudoku: PureSudoku) {
+    return wWingBase(sudoku, checkPair)
 }

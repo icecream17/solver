@@ -8,9 +8,9 @@ A simple sudoku solver I made. This is inspired by <https://sudokuwiki.org/>.
 
 ## how to install / starting development
 
-Install the latest node which comes with npm.
+[Install node](https://nodejs.org/), it comes with npm.
 
-Try `npm -i npm@latest` to update - if not recognized find stackoverflow about adding node to path.
+Try `npm -i npm@latest` to update npm - if there's a "not recognized" error, search stackoverflow about adding node to path.
 
 `npm -i yarn`
 

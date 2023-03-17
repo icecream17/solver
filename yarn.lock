@@ -2603,6 +2603,24 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@eslint-community/eslint-utils@npm:^4.2.0":
+  version: 4.2.1
+  resolution: "@eslint-community/eslint-utils@npm:4.2.1"
+  dependencies:
+    eslint-visitor-keys: ^3.3.0
+  peerDependencies:
+    eslint: ^6.0.0 || ^7.0.0 || >=8.0.0
+  checksum: b9378735cc987c17e40eb029c1bb279c47c5ac443fafa89528c0a006ec495272cc904fc9e6025ed19e7cdbed278bbb330cfe5372c33f7d3f3b269721172f212d
+  languageName: node
+  linkType: hard
+
+"@eslint-community/regexpp@npm:^4.4.0":
+  version: 4.4.0
+  resolution: "@eslint-community/regexpp@npm:4.4.0"
+  checksum: 2d127af0c752b80e8a782eacfe996a86925d21de92da3ffc6f9e615e701145e44a62e26bdd88bfac2cd76779c39ba8d9875a91046ec5e7e5f23cb647c247ea6a
+  languageName: node
+  linkType: hard
+
 "@eslint/eslintrc@npm:^1.0.5":
   version: 1.0.5
   resolution: "@eslint/eslintrc@npm:1.0.5"
@@ -6670,20 +6688,20 @@ __metadata:
   linkType: hard
 
 "eslint-plugin-regexp@npm:^1.5.0":
-  version: 1.12.0
-  resolution: "eslint-plugin-regexp@npm:1.12.0"
+  version: 1.13.0
+  resolution: "eslint-plugin-regexp@npm:1.13.0"
   dependencies:
+    "@eslint-community/eslint-utils": ^4.2.0
+    "@eslint-community/regexpp": ^4.4.0
     comment-parser: ^1.1.2
-    eslint-utils: ^3.0.0
     grapheme-splitter: ^1.0.4
     jsdoctypeparser: ^9.0.0
     refa: ^0.9.0
     regexp-ast-analysis: ^0.5.1
-    regexpp: ^3.2.0
     scslre: ^0.1.6
   peerDependencies:
     eslint: ">=6.0.0"
-  checksum: 64a3f94568742602d7b906353e23eee1e0c5f24b9c38bd29510615a2d1045bf1b39e1a7ed5f782975d2300843dce3822ce6b643b7e7e18ad40dec0372f82addc
+  checksum: 395c1783f0d268701f9f12cca09f2fe55de8c43feb706fc6bf1878741ba32e2e946949bb9e2fba2856ee182ba32fb6886f30dcceee429a3312ce4d4d957d8be6
   languageName: node
   linkType: hard
 
@@ -6783,6 +6801,13 @@ __metadata:
   version: 3.1.0
   resolution: "eslint-visitor-keys@npm:3.1.0"
   checksum: fd2d613bb315bc549068ca97771d868437fb60c8f13ef8d6d54669773ff53f814b759fa9e57966f15e4c50a5f5e11c6ba47060b8f201f9776311f6c5d5c11b70
+  languageName: node
+  linkType: hard
+
+"eslint-visitor-keys@npm:^3.3.0":
+  version: 3.3.0
+  resolution: "eslint-visitor-keys@npm:3.3.0"
+  checksum: d59e68a7c5a6d0146526b0eec16ce87fbf97fe46b8281e0d41384224375c4e52f5ffb9e16d48f4ea50785cde93f766b0c898e31ab89978d88b0e1720fbfb7808
   languageName: node
   linkType: hard
 

@@ -1,7 +1,7 @@
 import asyncPrompt from "../asyncPrompt"
 import EventRegistry from "../eventRegistry"
+import { AlertType } from "../Types"
 import { forComponentsToUpdate } from "../utils"
-import { _Callback } from "../Types"
 import Sudoku from "./Spaces/Sudoku"
 import STRATEGIES from "./Strategies/Strategies"
 import { SuccessError, StrategyMemory } from "./Types"
@@ -167,7 +167,7 @@ export default class Solver {
       // "check for solved" can return -1 without being an error
       // if the user edits the sudoku
       const errored = !strategyResult.success && strategyResult.successcount === SuccessError
-      const solved = numberOfCellsWithNCandidates(sudoku, 1) === 81
+      const solved = numberOfCellsWithNCandidates(this.sudoku, 1) === 81
       if (solved) {
          window._custom.alert("Finished! :D", AlertType.SUCCESS)
       }
@@ -187,7 +187,7 @@ export default class Solver {
          // Don't do this step yet
          // Wait for any previous steps to finish
          // After that, continue to the main code
-         const stop = await new Promise(resolve => {
+         const stop = await new Promise<boolean>(resolve => {
             this.whenStepHasFinished.push(resolve)
          })
 

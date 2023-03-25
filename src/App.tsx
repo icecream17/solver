@@ -67,7 +67,7 @@ class App extends React.Component<_UnusedProps, AppState> {
        * ```
        */
       this.sudoku = new SudokuData()
-      this.solver = new Solver(this.props.sudoku)
+      this.solver = new Solver(this.sudoku)
       this.state = {
          /**
           * The queue of alert and prompt messages to be sent

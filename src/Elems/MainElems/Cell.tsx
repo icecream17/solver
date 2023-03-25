@@ -1,12 +1,12 @@
 // @flow
 
-import React, { Suspense } from 'react';
+import React from 'react';
 import { algebraic } from '../../Api/Utils';
-import { IndexToNine, Mutable, SudokuDigits, ZeroToNine, _Callback } from '../../Types';
+import { IndexToNine, SudokuDigits, ZeroToNine, _Callback } from '../../Types';
 import { arraysAreEqual } from '../../utils';
 
-const Candidates = React.lazy(() => import('./Candidates'));
-const CandidatesDiff = React.lazy(() => import('./CandidatesDiff'));
+import Candidates from './Candidates';
+import CandidatesDiff from './CandidatesDiff';
 
 export type BaseCellProps = Readonly<{
    row: IndexToNine
@@ -159,19 +159,11 @@ export default class Cell extends React.Component<CellProps, CellState> {
             return prevState
          }
 
-         const newState = { candidates } as Mutable<CellState>
-
          // Note: Edits can be undone by, well, undoing and setting back to previousCandidates
-
-         if (candidates.length === 0) {
-            newState.error = true
-         } else if (1 < candidates.length && candidates.length < 9) {
-            newState.error = false
-         } else {
-            newState.error = false
+         return {
+            candidates,
+            error: candidates.length === 0
          }
-
-         return newState
       }, callback)
    }
 
@@ -185,16 +177,9 @@ export default class Cell extends React.Component<CellProps, CellState> {
             candidates.add(candidate)
          }
 
-         if (candidates.size === 0) {
-            return {
-               candidates: [],
-               error: true
-            }
-         }
-
          return {
             candidates: [...candidates],
-            error: false
+            error: candidates.size === 0
          }
       })
    }
@@ -273,24 +258,15 @@ export default class Cell extends React.Component<CellProps, CellState> {
 
    render() {
       let content = <></>;
-      const loading = <span className="Loading">loading</span>
 
       // Using a span for single digits
       // so that I can force cells to always be [css height: 1/9th]
       if (this.state.explaining && !arraysAreEqual(this.state.previousCandidates.sort(), this.state.candidates.sort())) {
-         content = (
-            <Suspense fallback={loading}>
-               <CandidatesDiff previous={this.state.previousCandidates} current={this.state.candidates} classes={this.state.candidateClasses} />
-            </Suspense>
-         )
+         content = <CandidatesDiff previous={this.state.previousCandidates} current={this.state.candidates} classes={this.state.candidateClasses} />
       } else if (this.state.active || this.state.highlighted || (this.numCandidates > 1 && this.numCandidates < 9)) {
          // Also show candidates when editing a cell
          // Also show candidates as fallback when numCandidates is in [2, 8]
-         content = (
-            <Suspense fallback={loading}>
-               <Candidates data={this.state.candidates} classes={this.state.candidateClasses} />
-            </Suspense>
-         )
+         content = <Candidates data={this.state.candidates} classes={this.state.candidateClasses} />
       } else if (this.numCandidates === 0) {
          content = <span className="ugh tables"> 0 </span>
       } else if (this.numCandidates === 1) {

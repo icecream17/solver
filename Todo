@@ -16,6 +16,10 @@
 [ ] Exocet
 [ ] Wow
 
+## Code
+
+[ ] Migrate undo functionality completely to the solver
+
 ## Features
 
 [ ] Better cell highlighting/selection (And set aria-selected and aria-multiselectable)

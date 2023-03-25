@@ -1,11 +1,13 @@
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import Solver from '../Api/Solver';
 import Sudoku from '../Api/Spaces/Sudoku';
 import { switchTab } from '../testUtils';
 import Aside from './Aside';
 
 beforeEach(() => {
-   render(<Aside sudoku={new Sudoku()} />);
+   const sudoku = new Sudoku()
+   render(<Aside sudoku={sudoku} solver={new Solver(sudoku)} />);
 })
 
 function getTogglers () {

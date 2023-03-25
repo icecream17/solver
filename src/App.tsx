@@ -5,6 +5,7 @@ import React from 'react'
 import Main from './Elems/Main'
 import Aside from './Elems/Aside'
 import SudokuData from './Api/Spaces/Sudoku'
+import Solver from './Api/Solver'
 import { AlertType, CouldAIsB, NoticeInfo, NoticeType, PromptCallback, SudokuDigits, _UnusedProps } from './Types'
 import NoticeWindow from './Elems/NoticeElems/NoticeWindow'
 import GithubCorner from './Elems/GithubCorner'
@@ -50,6 +51,7 @@ type AppState = {
  */
 class App extends React.Component<_UnusedProps, AppState> {
    sudoku: SudokuData
+   solver: Solver
    propsPassedDown: { whenCellMounts: (cell: Cell) => void; whenCellUnmounts: (cell: Cell) => void; whenCellUpdates: (cell: Cell, candidates: SudokuDigits[]) => void }
    constructor(props: _UnusedProps) {
       super(props)
@@ -65,6 +67,7 @@ class App extends React.Component<_UnusedProps, AppState> {
        * ```
        */
       this.sudoku = new SudokuData()
+      this.solver = new Solver(this.sudoku)
       this.state = {
          /**
           * The queue of alert and prompt messages to be sent
@@ -101,7 +104,7 @@ class App extends React.Component<_UnusedProps, AppState> {
                <Version />
             </header>
             <Main propsPassedDown={this.propsPassedDown} />
-            <Aside sudoku={this.sudoku} />
+            <Aside sudoku={this.sudoku} solver={this.solver} />
 
             <GithubCorner />
             <NoticeWindow todo={this.state.notices} whenFinish={this.finishNotice} />
@@ -119,6 +122,7 @@ class App extends React.Component<_UnusedProps, AppState> {
 
    whenCellUpdates (cell: Cell, candidates: SudokuDigits[]) {
       this.sudoku.data[cell.props.row][cell.props.column] = candidates
+      this.solver.skippable.fill(false)
    }
 
 

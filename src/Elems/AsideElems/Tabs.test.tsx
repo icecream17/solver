@@ -8,12 +8,14 @@ import Aside from "../Aside";
 import Sudoku from '../../Api/Spaces/Sudoku';
 import userEvent from '@testing-library/user-event';
 import { switchTab } from '../../testUtils';
+import Solver from '../../Api/Solver';
 
 beforeEach(() => {
+   const sudoku = new Sudoku()
    render(
       <div>
          <textarea data-testid="dummy-focusable"></textarea>
-         <Aside sudoku={new Sudoku()} />
+         <Aside sudoku={sudoku} solver={new Solver(sudoku)} />
       </div>
    );
 })

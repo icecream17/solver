@@ -1,6 +1,7 @@
 import { AlertType, NUMBER_OF_CELLS } from "../../Types"
 import PureSudoku from "../Spaces/PureSudoku"
 import { StrategyMemory, SuccessError } from "../Types"
+import { numberOfCellsWithNCandidates } from "../Utils.dependent"
 import checkValidity from "./checkValidity"
 
 export default function checkForSolved(sudoku: PureSudoku, memory: StrategyMemory[0]) {
@@ -23,17 +24,8 @@ export default function checkForSolved(sudoku: PureSudoku, memory: StrategyMemor
       throw TypeError(`impossible amount of memory.solved - got ${memory.solved}`)
    }
 
-   let totalSolved = 0
-   for (const row of sudoku.data) {
-      for (const cellCandidates of row) {
-         if (cellCandidates.length === 1) {
-            totalSolved++
-         }
-      }
-   }
-
+   const totalSolved = numberOfCellsWithNCandidates(sudoku, 1)
    if (totalSolved === NUMBER_OF_CELLS) {
-      window._custom.alert("Finished! :D", AlertType.SUCCESS)
       memory.solved = NUMBER_OF_CELLS
       return {
          success: true,

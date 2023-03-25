@@ -19,7 +19,6 @@ export function highlightCell (sudoku: PureSudoku, {row, column}: CellID, color 
    }
 }
 
-
 /**
  * Highlights a cell, see {@link Cell#highlight}
  * Default background is blue.
@@ -65,6 +64,18 @@ export function colorCandidate (sudoku: PureSudoku, { row, column, digit }: Cand
    colorCandidateF(sudoku, row, column, digit, color)
 }
 
+export function numberOfCellsWithNCandidates (sudoku: PureSudoku, N: number) {
+   const cellsWithNCandidates = 0
+   for (const row of INDICES_TO_NINE) {
+      for (const column of INDICES_TO_NINE) {
+         if (sudoku.data[row][column].length === N) {
+            cellsWithNCandidates++
+         }
+      }
+   }
+
+   return cellsWithNCandidates
+}
 
 export function getCellsWithNCandidates (sudoku: PureSudoku, N: number) {
    const cellsWithNCandidates = [] as CellID[]

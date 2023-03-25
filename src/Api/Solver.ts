@@ -1,17 +1,17 @@
 import asyncPrompt from "../asyncPrompt"
-import { _Callback } from "../Types"
-import { forComponentsToUpdate } from "../utils"
-import STRATEGIES from "./Strategies/Strategies"
-import Sudoku from "./Spaces/Sudoku"
-import { SuccessError, StrategyMemory } from "./Types"
 import EventRegistry from "../eventRegistry"
+import { forComponentsToUpdate } from "../utils"
+import { _Callback } from "../Types"
+import Sudoku from "./Spaces/Sudoku"
+import STRATEGIES from "./Strategies/Strategies"
+import { SuccessError, StrategyMemory } from "./Types"
+import { numberOfCellsWithNCandidates } from "./Utils.dependent"
 
 type SolverEvents = 'new turn' | 'step finish'
 
 /**
- * A strategy is skippable if
- * 1. It failed
- * 2. It's retried with no changes
+ * Keeps track of the solving strategies, and also implements a few commands
+ * (Step, Go, Import, Export, Clear).
  */
 export default class Solver {
    strategyIndex = 0
@@ -20,16 +20,16 @@ export default class Solver {
    whenStepHasFinished: _Callback[] = []
    isDoingStep = false
 
-   /** Whether the most recent strategy has errored */
-   erroring = false
-
    /** Information strategies keep across calls */
    memory = new StrategyMemory()
 
-   /** Whether a strategy is skippable */
+   /**
+    * Whether a strategy is logically skippable (disabled does not apply).
+    * Right now, all strategies are skippable if they're retried with no changes to the sudoku.
+    */
    skippable = [] as boolean[]
 
-   /** Which strategies are disabled */
+   /** Which strategies are disabled (used by StrategyItems) */
    disabled = [] as boolean[]
 
    /** Used to reset + update the StrategyItems */
@@ -45,35 +45,35 @@ export default class Solver {
       this.Clear = this.Clear.bind(this)
    }
 
-   updateCounters(success: boolean, isFinished: boolean) {
-      // Go back to the start when a strategy succeeds, if erroring, or if finished
-      // (exception 1: if you're at the start go to 1 anyways)
-      // (exception 2:
-      //    After "check for solved" fails,
-      //    skip "update candidates"
-      // )
-      // (expection 3:
-      //    If a strategy is skippable skip it
-      // )
-      if (success) {
+   updateCounters(success: boolean, errored: boolean, solved: boolean) {
+      if (success || errored || solved) {
+         // Go back to the start when a strategy succeeds, errors,
+         // (or the sudoku is solved, because the user edited it or smth idk)
+         this.strategyIndex = 0
+
          this.skippable.fill(false)
-      } else {
+
+         // errored or solved
+         if (!success) {
+            return
+         }
+      }
+
+      // Usually what happens here is that the strategy fails,
+      // and is skipped. Which is practically the same as doing one step.
+
+      // Exception: "check for solved" isn't really a strategy
+      // This sneakily skips strategy 1 ("update candidates") iff "check for solved" failed
+      if (this.strategyIndex === 0) {
+         this.strategyIndex = 1
+         this.skippable[0] = true // shouldn't matter, but set for clarity
+      }
+
+      if (!success) {
          this.skippable[this.strategyIndex] = true
       }
 
-      // if GoToStart
-      // else if Exception2
-      // else <normal condition + Exception1>
-      if ((success && this.strategyIndex > 0) || this.erroring || isFinished) {
-         this.strategyIndex = 0
-      } else if (this.strategyIndex === 0 && success === false) {
-         this.strategyIndex = 2
-      } else {
-         this.__step()
-      }
-
-      // Exception 3
-      while (this.skippable[this.strategyIndex] && this.strategyIndex !== 0) {
+      while ((this.skippable[this.strategyIndex] || this.disabled[this.strategyIndex]) && this.strategyIndex !== 0) {
          this.__step()
       }
    }
@@ -120,15 +120,15 @@ export default class Solver {
    }
 
    /**
-    * Returns a boolean, "done"
+    * Returns a boolean: "success" as in went to next strategy
     */
-   private goToNextStrategyItem() {
+   private goToNextStrategyIfDisabled() {
       if (this.disabled[this.strategyIndex]) {
-         this.updateCounters(false, false)
-         return false
+         this.updateCounters(false, false, false)
+         return true
       }
 
-      return true
+      return false
    }
 
    private async StartStep (): Promise<void> {
@@ -138,14 +138,14 @@ export default class Solver {
 
       // This could theoretically go on forever, but right now the first
       // strategy cannot be disabled. TODO: Better solution
+
+      // If current strat is disabled, go to first non-disabled strat.
       do {
          if (this.strategyIndex === 0) {
             this.eventRegistry.notify('new turn')
             await this.resetCells()
          }
-
-         // strategyItem UI - update lastStrategyItem
-      } while (!this.goToNextStrategyItem())
+      } while (this.goToNextStrategyIfDisabled())
 
       // Set cells to strategy mode
       await this.setupCells()
@@ -160,15 +160,17 @@ export default class Solver {
          await this.resetCells()
       }
 
-      if (strategyResult.successcount === SuccessError) {
-         this.erroring = true
-      }
-
       // notify the strategyItem UI
       this.eventRegistry.notify('step finish', strategyResult, this.strategyIndex)
       await forComponentsToUpdate()
 
-      this.updateCounters(strategyResult.success, strategyResult.successcount === 81)
+      // "check for solved" can return -1 without being an error
+      // if the user edits the sudoku
+      const errored = !strategyResult.success && strategyResult.successcount === SuccessError
+      const solved = numberOfCellsWithNCandidates(sudoku, 1) === 81
+
+      window._custom.alert("Finished! :D", AlertType.SUCCESS)
+      this.updateCounters(strategyResult.success, errored, strategyResult.successcount === 81)
       this.isDoingStep = false
    }
 
@@ -177,13 +179,11 @@ export default class Solver {
 
    // Originally Promise<undefined>
    async Step(): Promise<void> {
-      this.erroring = false
-
       if (this.isDoingStep) {
          // Don't do this step yet
          // Wait for any previous steps to finish
          // After that, continue to the main code
-         await new Promise(resolve => {
+         const keepGoing = await new Promise(resolve => {
             this.whenStepHasFinished.push(resolve)
          });
 
@@ -203,8 +203,9 @@ export default class Solver {
       await this.FinishStep(strategyResult)
 
       // Do the next step if it's waiting for this one
+      // NOTE: Might want to absorb step if success???
       if (this.whenStepHasFinished.length > 0) {
-         this.whenStepHasFinished[0]()
+         this.whenStepHasFinished[0](true)
       }
    }
 
@@ -253,7 +254,7 @@ export default class Solver {
    async reset() {
       // BUG: Doesn't wait for steps to finish
       await this.resetCells()
-      this.erroring = false
+      this.eventRegistry.notify('new turn')
       this.memory = new StrategyMemory()
       this.whenStepHasFinished = []
       this.strategyIndex = 0

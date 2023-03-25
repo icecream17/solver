@@ -77,9 +77,6 @@ describe('strategies', () => {
       })
 
       test('succeeds when sudoku is finished', () => {
-         render(<App />)
-         jest.spyOn(window._custom, 'alert').mockImplementation()
-
          const testSudoku = PureSudoku.fromRepresentation(testBoards["Solved board"])
 
          {
@@ -100,10 +97,6 @@ describe('strategies', () => {
             })
             expect(solver.memory[0].solved).toBe(NUMBER_OF_CELLS)
          }
-
-         expect(window._custom.alert).toHaveBeenCalledTimes(2)
-
-         jest.restoreAllMocks()
       })
 
       // solver.solved is set in the beforeEach

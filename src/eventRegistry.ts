@@ -1,4 +1,4 @@
-type Listener= (...args: any[]) => void
+type Listener = (...args: any[]) => void
 
 /**
  * A class for event handling

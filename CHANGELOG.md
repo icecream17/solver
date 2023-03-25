@@ -4,6 +4,21 @@ Note: Many earlier versions are not specified, that's too much work.
 
 When a `@types` dependency updates, they almost always don't affect anything.
 
+## v0.30.1
+
+- (ui) When a strategy errors or solves, stop instead of going to "Check for solved"
+- (bug) Fix theoretical bug where a skipped disabled strategy becomes undisabled, but the
+  solver thinks the strategy was already done so skips it the second time. This is a true
+  edge case scenario because the only way I can imagine a strategy being done twice is some
+  undo shenanigans.
+- (bug) Fix theoretical bug where if the successcount was -1, it was interpreted as an error.
+  This could theoretically happen if the user deletes a solved cell. "check for solved" then
+  succeeds because the amount solved changes by -1. This is intentional and not an error.
+  There are two properties that represented success, the property that was visualized did not
+  have the bug, and did not say "Error". Instead there's a subtle requirement to press "Step"
+  twice for "check for solved". This was fixed by only having 1 property.
+- (bug) Fix how the strategy wouldn't be retried when clicking step after a manual edit.
+
 ## v0.30.0
 
 - (use) pairCoversGroup
@@ -58,7 +73,7 @@ When a `@types` dependency updates, they almost always don't affect anything.
 - (use) Don't support Internet Explorer 11
 - (use) Improve errors on hiddenPairsTriplesAndQuads
 - (code) Some strategy/test simplfying
-- (docs) Improve and update readme and strategies and notes and changelog todo documentation
+- (docs) Improve and update readme and strategies and notes and changelog to do documentation
 - (deps) Very unimportant updates but at least I now get to use typescript `override`
 - (css) Use `@supports selector` to check whether `:dir(rtl)` is supported
 

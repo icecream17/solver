@@ -14,7 +14,8 @@ import Control from './Control'
 import Solver from '../Api/Solver'
 
 type AsideProps = Readonly<{
-   sudoku: SudokuData
+   sudoku: SudokuData,
+   solver: Solver,
 }>
 
 type AsideState = Readonly<{
@@ -28,15 +29,12 @@ const tabNames = ["solving tools", "strats"]
  * Currently a window of tabs
  */
 export default class Aside extends React.Component<AsideProps, AsideState> {
-   solver: Solver
    constructor (props: AsideProps) {
       super(props)
 
       this.state = {
          selectedTab: 0
       }
-
-      this.solver = new Solver(this.props.sudoku)
 
       this.whenTabChange = this.whenTabChange.bind(this)
    }
@@ -45,13 +43,13 @@ export default class Aside extends React.Component<AsideProps, AsideState> {
       let content: JSX.Element
       if (this.state.selectedTab === 0) {
          content = <>
-            <Control onClick={this.solver.Clear} name="clear" />
-            <Control onClick={this.solver.Import} name="import" />
-            <Control onClick={this.solver.Export} name="export" />
+            <Control onClick={this.props.solver.Clear} name="clear" />
+            <Control onClick={this.props.solver.Import} name="import" />
+            <Control onClick={this.props.solver.Export} name="export" />
          </>
       } else if (this.state.selectedTab === 1) {
          content =
-            <SolverPart sudoku={this.props.sudoku} solver={this.solver} />
+            <SolverPart sudoku={this.props.sudoku} solver={this.props.solver} />
       } else {
          throw new ReferenceError(`unknown Selected tab index: ${this.state.selectedTab}`)
       }

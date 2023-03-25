@@ -449,10 +449,10 @@ Tries: 2
 
 Unimplemented
 
-- [] 2-String Kite (Subset of coloring)
-  - [] Has dual
+- [x] 2-String Kite (Subset of coloring)
+  - [x] Has dual
 - [] Simple coloring
-- [] W wing
+- [x] W wing
 - [] Empty Rectangle
   - [] Has dual
 - [] Empty Rectangle but as a Grouped Nice Loop

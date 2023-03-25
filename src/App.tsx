@@ -65,6 +65,7 @@ class App extends React.Component<_UnusedProps, AppState> {
        * ```
        */
       this.sudoku = new SudokuData()
+      this.solver = new Solver(this.props.sudoku)
       this.state = {
          /**
           * The queue of alert and prompt messages to be sent
@@ -101,7 +102,7 @@ class App extends React.Component<_UnusedProps, AppState> {
                <Version />
             </header>
             <Main propsPassedDown={this.propsPassedDown} />
-            <Aside sudoku={this.sudoku} />
+            <Aside sudoku={this.sudoku} solver={this.solver} />
 
             <GithubCorner />
             <NoticeWindow todo={this.state.notices} whenFinish={this.finishNotice} />
@@ -119,6 +120,7 @@ class App extends React.Component<_UnusedProps, AppState> {
 
    whenCellUpdates (cell: Cell, candidates: SudokuDigits[]) {
       this.sudoku.data[cell.props.row][cell.props.column] = candidates
+      this.solver.skippable.fill(false)
    }
 
 

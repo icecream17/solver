@@ -159,19 +159,11 @@ export default class Cell extends React.Component<CellProps, CellState> {
             return prevState
          }
 
-         const newState = { candidates } as Mutable<CellState>
-
          // Note: Edits can be undone by, well, undoing and setting back to previousCandidates
-
-         if (candidates.length === 0) {
-            newState.error = true
-         } else if (1 < candidates.length && candidates.length < 9) {
-            newState.error = false
-         } else {
-            newState.error = false
+         return {
+            candidates,
+            error: candidates.length === 0
          }
-
-         return newState
       }, callback)
    }
 
@@ -185,16 +177,9 @@ export default class Cell extends React.Component<CellProps, CellState> {
             candidates.add(candidate)
          }
 
-         if (candidates.size === 0) {
-            return {
-               candidates: [],
-               error: true
-            }
-         }
-
          return {
             candidates: [...candidates],
-            error: false
+            error: candidates.size === 0
          }
       })
    }

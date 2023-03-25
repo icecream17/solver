@@ -46,7 +46,7 @@ export default class Solver {
    }
 
    updateCounters (success: boolean, errored: boolean, solved: boolean) {
-      if (success || errored || solved) {
+      if ((success && this.strategyIndex !== 0) || errored || solved) {
          // Go back to the start when a strategy succeeds, errors,
          // (or the sudoku is solved, because the user edited it or smth idk)
          this.strategyIndex = 0
@@ -63,9 +63,8 @@ export default class Solver {
       // and is skipped. Which is practically the same as doing one step.
 
       // Exception: "check for solved" isn't really a strategy
-      // This sneakily skips strategy 1 ("update candidates") iff "check for solved" failed
-      if (this.strategyIndex === 0) {
-         this.strategyIndex = 1
+      else if (this.strategyIndex === 0) {
+         this.strategyIndex = 1 // sneaky, next if statement will skip "update candidates" iff "check for solved" failed
          this.skippable[0] = true // shouldn't matter, but set for clarity
       }
 

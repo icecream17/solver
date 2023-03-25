@@ -4,8 +4,12 @@ Note: Many earlier versions are not specified, that's too much work.
 
 When a `@types` dependency updates, they almost always don't affect anything.
 
-## v0.30.1
+## v0.31.0
 
+- (ui) Do not lazy load anything
+  - I will add back this later. A better experience is loading things silently but ahead of time.
+  - 100% of the time, loading cells will be done. A better candidate is the strategies, or in the
+    future, the settings page.
 - (ui) When a strategy errors or solves, stop instead of going to "Check for solved"
 - (bug) Fix theoretical bug where a skipped disabled strategy becomes undisabled, but the
   solver thinks the strategy was already done so skips it the second time. This is a true

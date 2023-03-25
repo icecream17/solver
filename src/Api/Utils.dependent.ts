@@ -65,7 +65,7 @@ export function colorCandidate (sudoku: PureSudoku, { row, column, digit }: Cand
 }
 
 export function numberOfCellsWithNCandidates (sudoku: PureSudoku, N: number) {
-   const cellsWithNCandidates = 0
+   let cellsWithNCandidates = 0
    for (const row of INDICES_TO_NINE) {
       for (const column of INDICES_TO_NINE) {
          if (sudoku.data[row][column].length === N) {

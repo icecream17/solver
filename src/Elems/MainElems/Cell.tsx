@@ -2,7 +2,7 @@
 
 import React, { Suspense } from 'react';
 import { algebraic } from '../../Api/Utils';
-import { IndexToNine, Mutable, SudokuDigits, ZeroToNine, _Callback } from '../../Types';
+import { IndexToNine, SudokuDigits, ZeroToNine, _Callback } from '../../Types';
 import { arraysAreEqual } from '../../utils';
 
 const Candidates = React.lazy(() => import('./Candidates'));

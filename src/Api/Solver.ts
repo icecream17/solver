@@ -17,7 +17,7 @@ export default class Solver {
    strategyIndex = 0
 
    /** Later steps wait for earlier steps to finish. Implemented using callback and promises */
-   whenStepHasFinished: _Callback[] = []
+   whenStepHasFinished: ((stop: boolean) => void)[] = []
    isDoingStep = false
 
    /** Information strategies keep across calls */
@@ -45,7 +45,7 @@ export default class Solver {
       this.Clear = this.Clear.bind(this)
    }
 
-   updateCounters(success: boolean, errored: boolean, solved: boolean) {
+   updateCounters (success: boolean, errored: boolean, solved: boolean) {
       if (success || errored || solved) {
          // Go back to the start when a strategy succeeds, errors,
          // (or the sudoku is solved, because the user edited it or smth idk)
@@ -85,7 +85,7 @@ export default class Solver {
       }
    }
 
-   private __promisifyCellMethod<T>(methodName: T & ("setExplainingToTrue" | "setExplainingToFalse")) {
+   private __promisifyCellMethod<T> (methodName: T & ("setExplainingToTrue" | "setExplainingToFalse")) {
       const promises = [] as Promise<undefined>[]
 
       for (const row of this.sudoku.cells) {
@@ -104,7 +104,7 @@ export default class Solver {
    /**
     * !async
     */
-   setupCells() {
+   setupCells () {
       return this.__promisifyCellMethod("setExplainingToTrue")
    }
 
@@ -115,14 +115,14 @@ export default class Solver {
     *
     * For each cell, run {@link Cell#setExplainingToFalse}
     */
-   resetCells() {
+   resetCells () {
       return this.__promisifyCellMethod("setExplainingToFalse")
    }
 
    /**
     * Returns a boolean: "success" as in went to next strategy
     */
-   private goToNextStrategyIfDisabled() {
+   private goToNextStrategyIfDisabled () {
       if (this.disabled[this.strategyIndex]) {
          this.updateCounters(false, false, false)
          return true
@@ -174,22 +174,29 @@ export default class Solver {
 
       this.updateCounters(strategyResult.success, errored, solved)
       this.isDoingStep = false
+
+      return errored || solved
    }
 
    // This is a big function.
    // Each comment labels a group of code that does something
 
    // Originally Promise<undefined>
-   async Step(): Promise<void> {
+   async Step (): Promise<void> {
       if (this.isDoingStep) {
          // Don't do this step yet
          // Wait for any previous steps to finish
          // After that, continue to the main code
-         const keepGoing = await new Promise(resolve => {
+         const stop = await new Promise(resolve => {
             this.whenStepHasFinished.push(resolve)
-         });
+         })
 
          this.whenStepHasFinished.shift()
+
+         if (stop) {
+            this.whenStepHasFinished[0]?.(stop)
+            return
+         }
       }
 
       // Main code
@@ -202,23 +209,20 @@ export default class Solver {
          successcount: "successcount" in _strategyResult ? _strategyResult.successcount ?? null : null
       }
 
-      await this.FinishStep(strategyResult)
+      const stop = await this.FinishStep(strategyResult)
 
       // Do the next step if it's waiting for this one
-      // NOTE: Might want to absorb step if success???
-      if (this.whenStepHasFinished.length > 0) {
-         this.whenStepHasFinished[0](true)
-      }
+      this.whenStepHasFinished[0]?.(stop)
    }
 
    /** Does "Step" until it reaches the end or a strategy succeeds */
-   async Go() {
+   async Go () {
       do {
          await this.Step()
       } while (this.strategyIndex !== 0)
    }
 
-   async Undo() {
+   async Undo () {
       if (this.sudoku === null) return;
       for (const row of this.sudoku.cells) {
          for (const cell of row) {
@@ -233,7 +237,7 @@ export default class Solver {
       await forComponentsToUpdate()
    }
 
-   async Import() {
+   async Import () {
       const result = await asyncPrompt("Import", "Enter digits or candidates")
       if (result === null || result === "") {
          return; // Don't import on cancel
@@ -243,17 +247,17 @@ export default class Solver {
       this.sudoku.import(result)
    }
 
-   Export() {
+   Export () {
       window._custom.alert(this.sudoku.to81(), undefined, "monospace")
       window._custom.alert(this.sudoku.to729(), undefined, "monospace")
    }
 
-   async Clear() {
+   async Clear () {
       this.sudoku.clear()
       await this.reset()
    }
 
-   async reset() {
+   async reset () {
       // BUG: Doesn't wait for steps to finish
       await this.resetCells()
       this.eventRegistry.notify('new turn')

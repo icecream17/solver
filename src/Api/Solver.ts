@@ -168,9 +168,11 @@ export default class Solver {
       // if the user edits the sudoku
       const errored = !strategyResult.success && strategyResult.successcount === SuccessError
       const solved = numberOfCellsWithNCandidates(sudoku, 1) === 81
+      if (solved) {
+         window._custom.alert("Finished! :D", AlertType.SUCCESS)
+      }
 
-      window._custom.alert("Finished! :D", AlertType.SUCCESS)
-      this.updateCounters(strategyResult.success, errored, strategyResult.successcount === 81)
+      this.updateCounters(strategyResult.success, errored, solved)
       this.isDoingStep = false
    }
 

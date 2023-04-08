@@ -83,7 +83,7 @@ export function convertArrayToEnglishList<T extends string | number>(array: T[])
       case 0:
          throw TypeError("Array is empty!")
       case 1:
-         return String(array[0])
+         return `${array[0]}` as const
       case 2:
          return `${array[0]} and ${array[1]}` as const
       default:

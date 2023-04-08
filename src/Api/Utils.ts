@@ -190,10 +190,7 @@ export function groupInfo(type: "rows" | "columns" | "boxes", cells: CellID[]) {
          break
       }
    }
-   const cellsNotInSubgroup = new Set(cellsInGroup)
-   for (const cell of cells) {
-      cellsNotInSubgroup.delete(cell)
-   }
+   const cellsNotInSubgroup = setDifference(cellsInGroup, cells)
    return [groupIndex, cellsInGroup, cellsNotInSubgroup] as const
 }
 
@@ -217,9 +214,10 @@ export function removeFromArray<T> (element: T, array: T[]) {
  * notInLine.sort((a, b) => a.length - b.length) // Smallest length
  * const shared = sharedInArrays(...notInLine)
  */
-export function sharedInArrays<T>(...arrays: T[][]) {
-   arrays = arrays.sort((a, b) => a.length - b.length) // Optimization
-   const shared = new Set<T>(arrays[0])
+export function sharedInArrays<T>(...arrays: [Iterable<T>, ...T[][]]): Set<T>;
+export function sharedInArrays<T>(first: Iterable<T>, ...arrays: T[][]) {
+   arrays.sort((a, b) => a.length - b.length) // Optimization
+   const shared = new Set<T>(first)
    for (const element of shared) {
       for (const array of arrays) {
          if (!array.includes(element)) {
@@ -234,9 +232,10 @@ export function sharedInArrays<T>(...arrays: T[][]) {
 /**
  * Very similar to {@link sharedInArrays}
  */
-export function sharedInSets<T> (...sets: Set<T>[]) {
-   sets = sets.sort((a, b) => a.size - b.size) // Optimization
-   const shared = new Set<T>(sets[0])
+export function sharedInSets<T>(...sets: [Iterable<T>, ...Set<T>[]]): Set<T>;
+export function sharedInSets<T> (first: Iterable<T>, ...sets: Set<T>[]) {
+   sets.sort((a, b) => a.size - b.size) // Optimization
+   const shared = new Set<T>(first)
    for (const element of shared) {
       for (const set of sets) {
          if (!set.has(element)) {
@@ -250,6 +249,7 @@ export function sharedInSets<T> (...sets: Set<T>[]) {
 
 // Set union? Would be uesd in pairCoversGroupd
 
+/** Return a new set of the elements in {@setA} not in {@setB} */
 export function setDifference<T> (setA: Iterable<T>, setB: Iterable<T>) {
    const result = new Set(setA)
    for (const val of setB) {
@@ -258,6 +258,7 @@ export function setDifference<T> (setA: Iterable<T>, setB: Iterable<T>) {
    return result
 }
 
+/** Returns whether {@param setA} is a subset of {@param setB} */
 export function isSubset<T>(setA: Iterable<T>, setB: Set<T>) {
    for (const val of setA) {
       if (!setB.has(val)) {

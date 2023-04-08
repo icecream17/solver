@@ -1,5 +1,6 @@
 import { INDICES_TO_NINE, SudokuDigits } from "../../Types";
 import PureSudoku, { CandidateLocations } from "../Spaces/PureSudoku";
+import { SuccessError } from "../Types";
 import { affects, assertGet, CellID, id, sharedInArrays } from "../Utils";
 import { colorGroup, removeCandidateFromCells } from "../Utils.dependent";
 
@@ -47,7 +48,7 @@ function checkPair(
     affectsCW2C: Map<CellID, CellID[]>,
     candidateLocations: CandidateLocations[],
     sudoku: PureSudoku,
-) {
+): number | string {
     return _checkPair(cellA, cellB, candidateA, candidateB, affectsCW2C, candidateLocations, sudoku) +
         _checkPair(cellA, cellB, candidateB, candidateA, affectsCW2C, candidateLocations, sudoku)
 }
@@ -81,7 +82,13 @@ export function wWingBase (sudoku: PureSudoku, callback: typeof checkPair) {
                         const [candidateA, candidateB] = cell
                         const successcount =
                             callback(cid, cell2, candidateA, candidateB, affectsCW2C, candidateLocations, sudoku)
-                        if (successcount) {
+                        if (typeof successcount === "string") {
+                            return {
+                                success: false,
+                                successcount: SuccessError,
+                                message: successcount
+                            }
+                        } else if (successcount) {
                             return {
                                 success: true,
                                 successcount

@@ -1,9 +1,10 @@
-import { SudokuDigits } from "../../Types";
+import { BOX_NAMES, COLUMN_NAMES, ROW_NAMES, SudokuDigits } from "../../Types";
 import PureSudoku, { CandidateLocations } from "../Spaces/PureSudoku";
 import { affects, assertGet, CellID, groupInfo, isSubarray, isSubset, setDifference, sharedInArrays, sharedInSets } from "../Utils";
-import { colorGroup, highlightGroup, removeCandidateFromCells, wouldRemoveCandidateFromCells } from "../Utils.dependent";
+import { colorGroup, highlightGroup, removeCandidateFromCells } from "../Utils.dependent";
 import { wWingBase } from "./wWing";
 
+// TODO: Return information on what kind of success types there are
 function _checkPair(
     cellA: CellID,
     cellB: CellID,
@@ -15,72 +16,131 @@ function _checkPair(
 ) {
     const affectsA = assertGet(affectsCW2C, cellA)
     const affectsB = assertGet(affectsCW2C, cellB)
-    const affectsAB = sharedInArrays(affectsA, affectsB)
+    const affectsAandB = sharedInArrays(affectsA, affectsB)
     const affectsEitherAorB = new Set(affectsA.concat(affectsB))
 
-    const type2 = new Map<string, () => Set<CellID>>()
-    let success = false
+    let success = 0
     for (const prop of ["rows", "columns", "boxes"] as const) {
-        for (const group of candidateLocations[candidateA][prop]) {
-            // Check if all members of a group that have some candidate
-            // see either A or B
-            if (group.size !== 0 && isSubset(group, affectsEitherAorB)) {
+        for (const group_A of candidateLocations[candidateA][prop]) {
+            //     ^ group [sees A or B] [has A or B]
+            // Avoid eliminating everything
+            if (group_A.size === 0) {
+                const [groupIndex] = groupInfo(prop, [...group_A])
+                switch (prop) {
+                    case "rows":
+                        window._custom.alert(`Row ${ROW_NAMES[groupIndex]} has no possibilities for ${candidateA} !`)
+                        break
+                    case "columns":
+                        window._custom.alert(`Column ${COLUMN_NAMES[groupIndex]} has no possibilities for ${candidateA} !`)
+                        break
+                    case "boxes":
+                        window._custom.alert(`Box ${BOX_NAMES[groupIndex]} has no possibilities for ${candidateA} !`)
+                        break
+                }
+                return "error"
+            }
+
+            // Condition 2: The two cells see all cells in the group that have A.
+            if (isSubset(group_A, affectsEitherAorB)) {
                 // Elimination type A
-                const _groupArr = [...group]
-                const [groupIndex, allOfGroup, remaining] = groupInfo(prop, _groupArr)
+                const [, allOfGroup, remaining] = groupInfo(prop, [...group_A])
+
+                // Strategy does not work when X or Y is in the group
+                if (allOfGroup.has(cellA) || allOfGroup.has(cellB)) {
+                    continue
+                }
 
                 // check for shared cells containing the other candidate
-                if (removeCandidateFromCells(sudoku, candidateB, affectsAB)) {
+                if (removeCandidateFromCells(sudoku, candidateB, affectsAandB)) {
                     highlightGroup(sudoku, remaining, "orange")
                     colorGroup(sudoku, [cellA, cellB], candidateA, "green")
                     colorGroup(sudoku, [cellA, cellB], candidateB)
-                    success = true
+                    success++
                 }
 
-                // Elimination type B
-                const eliminateFrom = new Set<CellID>()
+                // Group + sees A or B
+                // const groupA = sharedInSets(affectsA, group_A) // <
+                // const groupB = sharedInSets(affectsB, group_A)
 
-                const groupA = sharedInArrays(affectsA, _groupArr)
-                const groupB = sharedInArrays(affectsB, _groupArr)
+                // Group + sees A or B + has A or B
+                const group_B = [...allOfGroup].filter(cell => sudoku.data[cell.row][cell.column].includes(candidateB))
+                const groupAA = sharedInSets(affectsA, group_A)
+                const groupAB = sharedInArrays(affectsA, group_B)
+                // const groupBA = [...groupB].filter(cell => sudoku.data[cell.row][cell.column].includes(candidateA))
+                // const groupBB = [...groupB].filter(cell => sudoku.data[cell.row][cell.column].includes(candidateB))
 
-                for (const aA of setDifference(affectsA, allOfGroup)) {
-                    let affectsaA = affectsCW2C.get(aA)
-                    if (affectsaA === undefined) {
-                        affectsaA = affects(aA.row, aA.column)
-                        affectsCW2C.set(aA, affectsaA)
-                    }
-                    if (isSubarray(groupA, affectsaA)) {
-                        eliminateFrom.add(aA)
+                // Affects A or B + Not in G
+                const aAnG = setDifference(affectsA, allOfGroup)
+
+                const xSeesY = affectsA.includes(cellB)
+                const cond3 = isSubset(group_B, affectsEitherAorB)
+
+                // We have
+                // Z sees X, Z not in GXA (groupAA), X = A or B, Y = A or B
+                //
+                // Elim B0
+                // Z = B --> X = A --> GX != A
+                //
+                // Elim B and C    (Z sees GXA) + cond 2
+                // Z = A --> GXA != A --> GY = A --> Y != A
+                //
+                // Elim B                      cond 3
+                // Z = A --> X = B --> GX != B --> GY = B --> Y != B
+                //
+                // Elim C          (X sees Y)
+                // Z = A --> X = B --> Y = A
+                if (xSeesY || cond3) {
+                    for (const z of aAnG) {
+                        if (z === cellA || z === cellB) {
+                            continue
+                        }
+
+                        let affectsZ = affectsCW2C.get(z)
+                        if (affectsZ === undefined) {
+                            affectsZ = affects(z.row, z.column)
+                            affectsCW2C.set(z, affectsZ)
+                        }
+
+                        if (isSubarray(groupAA, affectsZ) && removeCandidateFromCells(sudoku, candidateA, [z])) {
+                            highlightGroup(sudoku, remaining, "orange")
+                            colorGroup(sudoku, [cellA, cellB], candidateA, "green")
+                            colorGroup(sudoku, [cellA, cellB], candidateB)
+                            success++
+                        }
                     }
                 }
 
-                for (const aB of setDifference(affectsB, allOfGroup)) {
-                    let affectsaB = affectsCW2C.get(aB)
-                    if (affectsaB === undefined) {
-                        affectsaB = affects(aB.row, aB.column)
-                        affectsCW2C.set(aB, affectsaB)
-                    }
-                    if (isSubarray(groupB, affectsaB)) {
-                        eliminateFrom.add(aB)
+                // Elim B2       Z sees X + Z sees GXB + cond 2 + cond 3
+                // Z = B --> X = A --> GX != A --> GY = A --> Y != A
+                // Z = B --> GXB != B --> GY = B --> Y != B
+                if (cond3) {
+                    for (const z of aAnG) {
+                        if (z === cellA || z === cellB) {
+                            continue
+                        }
+
+                        let affectsZ = affectsCW2C.get(z)
+                        if (affectsZ === undefined) {
+                            affectsZ = affects(z.row, z.column)
+                            affectsCW2C.set(z, affectsZ)
+                        }
+
+                        if (isSubarray(groupAB, affectsZ) && removeCandidateFromCells(sudoku, candidateB, [z])) {
+                            highlightGroup(sudoku, remaining, "salmon")
+                            colorGroup(sudoku, [cellA, cellB], candidateA, "green")
+                            colorGroup(sudoku, [cellA, cellB], candidateB)
+                            success++
+                        }
                     }
                 }
 
-                // check for shared cells containing the other candidate
-                if (wouldRemoveCandidateFromCells(sudoku, candidateB, eliminateFrom)) {
-                    type2.set(`${prop}${groupIndex}`, () => {
-                        removeCandidateFromCells(sudoku, candidateB, eliminateFrom)
-                        colorGroup(sudoku, [cellA, cellB], candidateA, "green")
-                        colorGroup(sudoku, [cellA, cellB], candidateB)
-                        return remaining
-                    })
-                }
                 if (success) {
-                    return [success, type2] as const
+                    return success
                 }
             }
         }
     }
-    return [false, type2] as const
+    return success
 }
 
 function checkPair(
@@ -94,17 +154,14 @@ function checkPair(
 ) {
     const result1 = _checkPair(cellA, cellB, candidateA, candidateB, affectsCW2C, candidateLocations, sudoku)
     const result2 = _checkPair(cellA, cellB, candidateB, candidateA, affectsCW2C, candidateLocations, sudoku)
+    const result3 = _checkPair(cellB, cellA, candidateA, candidateB, affectsCW2C, candidateLocations, sudoku)
+    const result4 = _checkPair(cellB, cellA, candidateB, candidateA, affectsCW2C, candidateLocations, sudoku)
 
-    /* @ts-expect-error -- Allow booleans */ // eslint-disable-next-line @typescript-eslint/restrict-plus-operands -- Allow booleans
-    const successcount = (result1[0] + result2[0]) as number
-    const sharedKeys = sharedInArrays([...result1[1].keys()], [...result2[1].keys()])
-    for (const key of sharedKeys) {
-        const remaining1 = assertGet(result1[1], key)()
-        const remaining2 = assertGet(result2[1], key)()
-        highlightGroup(sudoku, sharedInSets(remaining1, remaining2), "orange")
+    if (result1 === "error" || result2 === "error" || result3 === "error" || result4 === "error") {
+        return "error"
     }
 
-    return successcount + sharedKeys.size
+    return result1 + result2 + result3 + result4
 }
 
 /**

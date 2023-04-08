@@ -4,6 +4,12 @@ Note: Many earlier versions are not specified, that's too much work.
 
 When a `@types` dependency updates, they almost always don't affect anything.
 
+## v0.32.0
+
+- (fix) Subtle bugs in pairCoversGroup causing incorrect eliminators
+- (use) pairCoversGroup extension when the pair sees each other
+- (code) Typescript v5 is necessary for tuple overload
+
 ## v0.31.0
 
 - (ui) Do not lazy load anything

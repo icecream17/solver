@@ -6772,13 +6772,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint-plugin-write-good-comments@npm:^0.1.3":
-  version: 0.1.4
-  resolution: "eslint-plugin-write-good-comments@npm:0.1.4"
+"eslint-plugin-write-good-comments@npm:^0.2.0":
+  version: 0.2.0
+  resolution: "eslint-plugin-write-good-comments@npm:0.2.0"
   dependencies:
     requireindex: ~1.1.0
     write-good: ^1.0.8
-  checksum: 73e6e307356816ed13b4387b7c87dea505e95038454694a9332a9213305c1b03b39054ebf4458d7ff873d0c2fec83955ed4d09166e76944c07fd66cbbe645729
+  checksum: b3672a4d628980a7c38a14ceef861a1c8307aa025483af55f1b718f23193e0a90061b3b8aa75e7ae441ae918bc2e8d02f1ecb9f3aebcf912c94ab79d45fe4c9f
   languageName: node
   linkType: hard
 
@@ -12691,7 +12691,7 @@ resolve@^2.0.0-next.3:
     eslint-plugin-regexp: ^1.5.0
     eslint-plugin-sonarjs: ^0.19.0
     eslint-plugin-unicorn: ^40.1.0
-    eslint-plugin-write-good-comments: ^0.1.3
+    eslint-plugin-write-good-comments: ^0.2.0
     react: ^17.0.2
     react-dom: ^17.0.2
     react-scripts: ^5.0.0

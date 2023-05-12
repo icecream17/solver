@@ -23,11 +23,16 @@ export default class Candidate extends React.PureComponent<CandidateProps> {
          thisClassName += ` ${this.props.className}`
       }
 
+      const label =
+         this.props.className?.split(/\s+/).includes("added") ? "added candidate" :
+         this.props.className?.split(/\s+/).includes("eliminated") ? "eliminated candidate" : "candidate"
+
       return (
-         <td
+         <span
             className={thisClassName}
             data-index={this.props.index}
-         >{this.props.children}</td>
+            aria-label={label}
+         >{this.props.children}</span>
       )
    }
 }

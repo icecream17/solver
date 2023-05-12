@@ -4,6 +4,11 @@ Note: Many earlier versions are not specified, that's too much work.
 
 When a `@types` dependency updates, they almost always don't affect anything.
 
+## v0.33.0
+
+- (a11y) Theoretically, screen readers can tell now that a candidate is eliminated (or rarely, added).
+- (a11y) Use `p`, `span`, and `layout: grid` instead of `table` et al.
+
 ## v0.32.0
 
 - (fix) Subtle bugs in pairCoversGroup causing incorrect eliminators

@@ -59,7 +59,7 @@ Note that these commands go to the other side when reaching the end {`P2`},
 as if the sudoku were a torus rather than a square. e.g.: at the end of a row,
 pressing <kbd>Right Arrow</kbd> will go to the start of the row.
 
-The aria link above says to _stop_ at the end, but ugh.
+**The aria link above says to _stop_ at the end, but ugh.**
 
 Going to the end seems somewhat useful though, so I'll have these commands {`P3`}:
 
@@ -110,12 +110,40 @@ Finally, the commands that increase the selection size {`P2`}:
 - <kbd>Backspace</kbd> or <kbd>Clear</kbd> or <kbd>Delete</kbd> Clears all candidates of the cell
 - <kbd>Shift</kbd>+(above) Adds all candidates back to the cell
 
-This is getting too much
+### Holding multiple keys at the same time (unsolved)
 
-And don't forget about mobile users!
+User action | What the code sees
+------------|-------------------
+press key   | `keydown` with `repeat: false`
+hold key    | `keydown` with `repeat: true` every few ms
+release key | `keyup`
 
-random idea: select candidates of cell, then backspace or control+d etc etc
+Importantly, in those `repeat: true` events, only one key out of all the keys pressed can be placed in the `key` attribute, so the browser just picks one.
 
-helpful: lock digits
+This causes a bug where the user holds two keys at once, say <kbd>Up Arrow</kbd> and <kbd>Left Arrow</kbd>. The browser sends two "press key" events so there's an initial "up" and "left" action. But then, the browser sends "hold key" events with only <kbd>Up Arrow</kbd> in the `key` attribute. So the code will just do "up" actions, and never do an "up+left".
 
-todo
+One way to fix this bug is to keep track of what keys are held and what keys are released. However, this causes another bug.
+
+An element can only receive `key` events when it is focused. So when a user holds <kbd>Up Arrow</kbd>, and clicks outside the sudoku, the sudoku does not have focus. The user can release the <kbd>Up Arrow</kbd> and the code would never know. Then when the user focuses the sudoku and presses <kbd>Left Arrow</kbd>, the code will still think <kbd>Up Arrow</kbd> is being held, resulting in an "up+left" action when the user only did "up".
+
+A solution is to keep track of being focused as well. But there are ways to release keys while still having the element focused, such as right-clicking or clicking outside the document.
+
+### Mobile users
+
+On mobile, users can't use keyboard commands. So there will have to be something like an _on screen keyboard_.
+
+The core commands needed are:
+
+1. Candidate changing
+2. Setting a cell to a single candidate
+3. Resetting the contents of a cell (could be anything)
+4. Clearing the contents of a cell (can't be anything)
+
+Another useful tool is to **lock digits**: instead of (selecting a cell and clicking the number), one can (select a number then click all the cells).
+
+### Ending
+
+Here are a few more ideas:
+
++ <kbd>Control</kbd>+<kbd>D</kbd> which in the Atom Editor is like a "Select All that match". This is done in Cracking the Cryptic's sudoku by double-clicking.
++ Selecting the _candidates_ of a cell.

@@ -44,25 +44,17 @@ export default class Candidates extends React.Component<CandidatesProps> {
 
    render() {
       return (
-         <table className="Candidates">
-            <tbody>
-               <tr>
-                  <Candidate {...this.repeatedProps(0)}>{_content(this, 1)}</Candidate>
-                  <Candidate {...this.repeatedProps(1)}>{_content(this, 2)}</Candidate>
-                  <Candidate {...this.repeatedProps(2)}>{_content(this, 3)}</Candidate>
-               </tr>
-               <tr>
-                  <Candidate {...this.repeatedProps(3)}>{_content(this, 4)}</Candidate>
-                  <Candidate {...this.repeatedProps(4)}>{_content(this, 5)}</Candidate>
-                  <Candidate {...this.repeatedProps(5)}>{_content(this, 6)}</Candidate>
-               </tr>
-               <tr>
-                  <Candidate {...this.repeatedProps(6)}>{_content(this, 7)}</Candidate>
-                  <Candidate {...this.repeatedProps(7)}>{_content(this, 8)}</Candidate>
-                  <Candidate {...this.repeatedProps(8)}>{_content(this, 9)}</Candidate>
-               </tr>
-            </tbody>
-         </table>
+         <p className="Candidates" aria-label="Candidates">
+            <Candidate {...this.repeatedProps(0)}>{_content(this, 1)}</Candidate>
+            <Candidate {...this.repeatedProps(1)}>{_content(this, 2)}</Candidate>
+            <Candidate {...this.repeatedProps(2)}>{_content(this, 3)}</Candidate>
+            <Candidate {...this.repeatedProps(3)}>{_content(this, 4)}</Candidate>
+            <Candidate {...this.repeatedProps(4)}>{_content(this, 5)}</Candidate>
+            <Candidate {...this.repeatedProps(5)}>{_content(this, 6)}</Candidate>
+            <Candidate {...this.repeatedProps(6)}>{_content(this, 7)}</Candidate>
+            <Candidate {...this.repeatedProps(7)}>{_content(this, 8)}</Candidate>
+            <Candidate {...this.repeatedProps(8)}>{_content(this, 9)}</Candidate>
+         </p>
       )
    }
 

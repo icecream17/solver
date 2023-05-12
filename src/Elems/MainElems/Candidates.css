@@ -1,32 +1,25 @@
 
 /* Moved from Sudoku.css */
 
-table.Candidates {
-   /* Also the width */
-   --candidate-height: calc(100% / 3);
-
+p.Candidates {
+   margin: 0;
    padding: 2pt;
    width: 100%;
    height: 100%;
-   table-layout: fixed; /* [ref 1] */
 
-   border-collapse: separate;
-   empty-cells: show;
+   display: grid;
+   grid-template-columns: repeat(3, 1fr);
+   grid-template-rows: repeat(3, 1fr);
    font-size: 1rem;
 }
 
-td.Candidate {
+span.Candidate {
    padding: 0;
-   line-height: 0;
+   line-height: normal;
 
-   height: var(--candidate-height);
-   width: var(--candidate-height);
    font-size: var(--candidate-fontsize);
    text-align: center;
-   color: inherit; /*
-      If the cell is highlighted, such a class would also affect the candidates
-      But if the candidate is highlighted that takes css precedence.
-   */
+   color: inherit;
 
    /* [ref 1] */
    overflow: hidden;

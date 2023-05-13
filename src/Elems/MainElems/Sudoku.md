@@ -110,7 +110,20 @@ Finally, the commands that increase the selection size {`P2`}:
 - <kbd>Backspace</kbd> or <kbd>Clear</kbd> or <kbd>Delete</kbd> Clears all candidates of the cell
 - <kbd>Shift</kbd>+(above) Adds all candidates back to the cell
 
-### Holding multiple keys at the same time (unsolved)
+### Mobile users
+
+On mobile, users can't use keyboard commands. So there will have to be something like an _on screen keyboard_.
+
+The core commands needed are:
+
+1. Candidate changing
+2. Setting a cell to a single candidate
+3. Resetting the contents of a cell (could be anything)
+4. Clearing the contents of a cell (can't be anything)
+
+Another useful tool is to **lock digits**: instead of (selecting a cell and clicking the number), one can (select a number then click all the cells).
+
+### Holding multiple keys at the same time
 
 User action | What the code sees
 ------------|-------------------
@@ -128,18 +141,19 @@ An element can only receive `key` events when it is focused. So when a user hold
 
 A solution is to keep track of being focused as well. But there are ways to release keys while still having the element focused, such as right-clicking or clicking outside the document.
 
-### Mobile users
+#### Solution
 
-On mobile, users can't use keyboard commands. So there will have to be something like an _on screen keyboard_.
+Remember the _on screen keyboard_ for mobile? Well, let's have "up, down, left, right" commands.
 
-The core commands needed are:
+When the code thinks that <kbd>Example</kbd> is being held even though it's not, the user can see this in the on-screen-keyboard.
 
-1. Candidate changing
-2. Setting a cell to a single candidate
-3. Resetting the contents of a cell (could be anything)
-4. Clearing the contents of a cell (can't be anything)
+Then the user can either click the button or press+release the key again.
 
-Another useful tool is to **lock digits**: instead of (selecting a cell and clicking the number), one can (select a number then click all the cells).
+#### Strategy
+
+1. Implement multi-selection to separate focus and selection.
+2. Implement mobile on-screen-keyboard.
+3. Keep track of keys to allow diagonal movements.
 
 ### Ending
 

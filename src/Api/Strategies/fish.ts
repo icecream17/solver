@@ -26,8 +26,8 @@ function _innerWingLogic(
    // Undifferentiate rows and columns
    const [patternLines, patternPendLines, lineProp, pendLineProp] =
       isRow
-         ? [patternRows, patternColumns, "row", "columns"] as const
-         : [patternColumns, patternRows, "column", "rows"] as const
+         ? [patternRows, patternColumns, "row", "column"] as const
+         : [patternColumns, patternRows, "column", "row"] as const
 
    if (patternPendLines.size <= wingSize) {
       // Pattern finally identified!
@@ -92,8 +92,8 @@ export default function fish (size: 2 | 3 | 4, sudoku: PureSudoku) {
       }
 
       for (const index of INDICES_TO_NINE) {
-         const row = candidateLocations[candidate].rows[index]
-         const column = candidateLocations[candidate].columns[index]
+         const row = candidateLocations[candidate].row[index]
+         const column = candidateLocations[candidate].column[index]
 
          for (const [line, isRow, possibleNLines] of [[row, true, possibleNRows] as const, [column, false, possibleNColumns] as const]) {
             if (line.size <= size && line.size > 1) {
@@ -107,7 +107,6 @@ export default function fish (size: 2 | 3 | 4, sudoku: PureSudoku) {
                      sumLines: new Set(line)
                   })
                }
-
 
                _accum(line, possibleNLines, index, size, sumLines => { // eslint-disable-line no-loop-func
                   successcount += _innerWingLogic(candidate, candidateLocations, sudoku, sumLines, isRow, size)

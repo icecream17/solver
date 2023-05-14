@@ -1,6 +1,6 @@
 // @flow
 
-import { AlgebraicName, BoxName, BOX_NAMES, COLUMN_NAMES, IndexTo81, IndexToNine, INDICES_TO_NINE, ROW_NAMES, SudokuDigits, ThreeDimensionalArray, TwoDimensionalArray } from "../Types";
+import { AlgebraicName, BoxName, BOX_NAMES, COLUMN_NAMES, IndexTo81, IndexToNine, INDICES_TO_NINE, ROW_NAMES, SudokuDigits, ThreeDimensionalArray, TwoDimensionalArray, GrpTyp } from "../Types";
 
 export function algebraic (row: IndexToNine, column: IndexToNine): AlgebraicName {
    return `${ROW_NAMES[row]}${COLUMN_NAMES[column]}` as const
@@ -170,23 +170,23 @@ export function getIDFromIndexWithinBox(indexOfBox: IndexToNine, indexInBox: Ind
    return id(boxRow * 3 + withinRow as IndexToNine, boxColumn * 3 + withinColumn as IndexToNine)
 }
 
-export function groupInfo(type: "rows" | "columns" | "boxes", cells: CellID[]) {
+export function groupInfo(type: GrpTyp, cells: CellID[]) {
    let groupIndex: IndexToNine
    let cellsInGroup
    switch (type) {
-      case "rows": {
+      case "row": {
          groupIndex = cells[0].row
-         cellsInGroup = new Set(INDICES_TO_NINE.map(indice => id(groupIndex, indice)))
+         cellsInGroup = INDICES_TO_NINE.map(indice => id(groupIndex, indice))
          break
       }
-      case "columns": {
+      case "column": {
          groupIndex = cells[0].column
-         cellsInGroup = new Set(INDICES_TO_NINE.map(indice => id(indice, groupIndex)))
+         cellsInGroup = INDICES_TO_NINE.map(indice => id(indice, groupIndex))
          break
       }
-      case "boxes": {
+      case "box": {
          groupIndex = boxAt(cells[0].row, cells[0].column)
-         cellsInGroup = new Set(INDICES_TO_NINE.map(indice => getIDFromIndexWithinBox(groupIndex, indice)))
+         cellsInGroup = INDICES_TO_NINE.map(indice => getIDFromIndexWithinBox(groupIndex, indice))
          break
       }
    }

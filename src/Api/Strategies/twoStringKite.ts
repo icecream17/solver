@@ -13,8 +13,8 @@ function check(cell1: CellID, cell2: CellID, candidate: SudokuDigits, candLocati
       return 0
    }
 
-   const sameRowAsCell1 = candLocations.rows[cell1.row]
-   const sameColAsCell2 = candLocations.columns[cell2.column]
+   const sameRowAsCell1 = candLocations.row[cell1.row]
+   const sameColAsCell2 = candLocations.column[cell2.column]
    if (sameRowAsCell1.size === 2 && sameColAsCell2.size === 2) {
       // Looks big nesting but not really
       for (const cell1B of sameRowAsCell1) {
@@ -46,7 +46,7 @@ export default function twoStringKite(sudoku: PureSudoku) {
    const candidateLocations = sudoku.getCandidateLocations()
 
    for (const candidate of ALL_CANDIDATES) {
-      for (const box of candidateLocations[candidate].boxes) {
+      for (const box of candidateLocations[candidate].box) {
          if (box.size === 2) {
             const [cell1, cell2] = box
             const successcount =

@@ -13,9 +13,9 @@ export default function intersectionRemoval(sudoku: PureSudoku) {
       removeFromArray(candidate, newCandidates)
       sudoku.set(cellID.row, cellID.column).to(...newCandidates)
 
-      candidateLocations[candidate].rows[cellID.row].delete(cellID)
-      candidateLocations[candidate].columns[cellID.column].delete(cellID)
-      candidateLocations[candidate].boxes[boxAt(cellID.row, cellID.column)].delete(cellID)
+      candidateLocations[candidate].row[cellID.row].delete(cellID)
+      candidateLocations[candidate].column[cellID.column].delete(cellID)
+      candidateLocations[candidate].box[boxAt(cellID.row, cellID.column)].delete(cellID)
    }
 
 
@@ -61,11 +61,11 @@ export default function intersectionRemoval(sudoku: PureSudoku) {
    for (const candidate of ALL_CANDIDATES) {
       // Boxes vs Rows (and) Boxes vs Columns
       for (const box of INDICES_TO_NINE) {
-         const boxLocations = candidateLocations[candidate].boxes[box]
+         const boxLocations = candidateLocations[candidate].box[box]
 
          for (const groupIndex of INDICES_TO_NINE) {
-            const rowLocations = candidateLocations[candidate].rows[groupIndex]
-            const columnLocations = candidateLocations[candidate].columns[groupIndex]
+            const rowLocations = candidateLocations[candidate].row[groupIndex]
+            const columnLocations = candidateLocations[candidate].column[groupIndex]
 
             if (boxLocations.size < 4 || rowLocations.size < 4) {
                _innerTwoGroupLogic(candidate, boxLocations, rowLocations)

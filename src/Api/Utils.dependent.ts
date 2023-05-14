@@ -20,7 +20,7 @@ export function highlightCell (sudoku: PureSudoku, {row, column}: CellID, color 
 }
 
 /**
- * Highlights a cell, see {@link Cell#highlight}
+ * Highlights multiple cells, see {@link Cell#highlight}
  * Default background is blue.
  */
 export function highlightGroup (sudoku: PureSudoku, group: Iterable<CellID>, color = 'blue') {

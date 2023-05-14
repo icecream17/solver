@@ -1,12 +1,8 @@
 // @flow
-import { ALL_CANDIDATES, IndexToNine, INDICES_TO_NINE, SudokuDigits, ThreeDimensionalArray } from "../../Types"
+import { ALL_CANDIDATES, GrpTyp, IndexToNine, INDICES_TO_NINE, SudokuDigits, ThreeDimensionalArray } from "../../Types"
 import { boxAt, CellID, id, to9by9 } from "../Utils"
 
-export type CandidateLocations = {
-   rows: Set<CellID>[]
-   columns: Set<CellID>[]
-   boxes: Set<CellID>[]
-}
+export type CandidateLocations = Record<GrpTyp, Set<CellID>[]>
 
 function Cell (id: CellID, cell: SudokuDigits[]) {
    return {
@@ -269,9 +265,9 @@ export default class PureSudoku {
 
       for (const candidate of ALL_CANDIDATES) {
          candidateLocations[candidate] = {
-            rows: [new Set<CellID>(), new Set<CellID>(), new Set<CellID>(), new Set<CellID>(), new Set<CellID>(), new Set<CellID>(), new Set<CellID>(), new Set<CellID>(), new Set<CellID>()],
-            columns: [new Set<CellID>(), new Set<CellID>(), new Set<CellID>(), new Set<CellID>(), new Set<CellID>(), new Set<CellID>(), new Set<CellID>(), new Set<CellID>(), new Set<CellID>()],
-            boxes: [new Set<CellID>(), new Set<CellID>(), new Set<CellID>(), new Set<CellID>(), new Set<CellID>(), new Set<CellID>(), new Set<CellID>(), new Set<CellID>(), new Set<CellID>()]
+            row: [new Set<CellID>(), new Set<CellID>(), new Set<CellID>(), new Set<CellID>(), new Set<CellID>(), new Set<CellID>(), new Set<CellID>(), new Set<CellID>(), new Set<CellID>()],
+            column: [new Set<CellID>(), new Set<CellID>(), new Set<CellID>(), new Set<CellID>(), new Set<CellID>(), new Set<CellID>(), new Set<CellID>(), new Set<CellID>(), new Set<CellID>()],
+            box: [new Set<CellID>(), new Set<CellID>(), new Set<CellID>(), new Set<CellID>(), new Set<CellID>(), new Set<CellID>(), new Set<CellID>(), new Set<CellID>(), new Set<CellID>()]
          }
       }
 
@@ -279,9 +275,9 @@ export default class PureSudoku {
          for (const column of INDICES_TO_NINE) {
             const cellID = id(row, column)
             for (const candidate of this.data[row][column]) {
-               candidateLocations[candidate].rows[row].add(cellID)
-               candidateLocations[candidate].columns[column].add(cellID)
-               candidateLocations[candidate].boxes[boxAt(row, column)].add(cellID)
+               candidateLocations[candidate].row[row].add(cellID)
+               candidateLocations[candidate].column[column].add(cellID)
+               candidateLocations[candidate].box[boxAt(row, column)].add(cellID)
             }
          }
       }

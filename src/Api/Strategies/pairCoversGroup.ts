@@ -1,4 +1,4 @@
-import { BOX_NAMES, COLUMN_NAMES, ROW_NAMES, SudokuDigits } from "../../Types";
+import { GRP_TYPS, SudokuDigits, GRP_NAMES } from "../../Types";
 import PureSudoku, { CandidateLocations } from "../Spaces/PureSudoku";
 import { affects, assertGet, CellID, groupInfo, isSubarray, isSubset, setDifference, sharedInArrays, sharedInSets } from "../Utils";
 import { colorGroup, highlightGroup, removeCandidateFromCells } from "../Utils.dependent";
@@ -20,23 +20,13 @@ function _checkPair(
     const affectsEitherAorB = new Set(affectsA.concat(affectsB))
 
     let success = 0
-    for (const prop of ["rows", "columns", "boxes"] as const) {
+    for (const prop of GRP_TYPS) {
         for (const group_A of candidateLocations[candidateA][prop]) {
             //     ^ group [sees A or B] [has A or B]
             // Avoid eliminating everything
             if (group_A.size === 0) {
                 const [groupIndex] = groupInfo(prop, [...group_A])
-                switch (prop) {
-                    case "rows":
-                        window._custom.alert(`Row ${ROW_NAMES[groupIndex]} has no possibilities for ${candidateA} !`)
-                        break
-                    case "columns":
-                        window._custom.alert(`Column ${COLUMN_NAMES[groupIndex]} has no possibilities for ${candidateA} !`)
-                        break
-                    case "boxes":
-                        window._custom.alert(`Box ${BOX_NAMES[groupIndex]} has no possibilities for ${candidateA} !`)
-                        break
-                }
+                window._custom.alert(`${prop} ${GRP_NAMES[prop][groupIndex]} has no possibilities for ${candidateA} !`)
                 return "error"
             }
 
@@ -46,7 +36,7 @@ function _checkPair(
                 const [, allOfGroup, remaining] = groupInfo(prop, [...group_A])
 
                 // Strategy does not work when X or Y is in the group
-                if (allOfGroup.has(cellA) || allOfGroup.has(cellB)) {
+                if (allOfGroup.includes(cellA) || allOfGroup.includes(cellB)) {
                     continue
                 }
 

@@ -80,14 +80,16 @@ Some extended variants of the above are {`P3`}:
 - <kbd>Page Down</kbd> Moves the selection 3 rows down
 - <kbd>Page Up</kbd> Moves the selection 3 rows up
 
+For <kbd>Page Up</kbd> and <kbd>Page Down</kbd> commands we actually **_do stop_ at the end**
+
 (The aria guide says "an author-determined amount of rows" and I chose 3)
 (The last two were optional but what the heck let's implement them anyway)
 
 ```txt
 012344321 1
-011222211 1 2
-012122121 1 3
-012211221 1 4
+011223221 1 2
+012122221 1 3
+012212321 1 4
 ```
 
 Also mentioned by the aria-grid link is scrolling to the selection

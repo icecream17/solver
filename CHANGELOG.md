@@ -4,10 +4,16 @@ Note: Many earlier versions are not specified, that's too much work.
 
 When a `@types` dependency updates, they almost always don't affect anything.
 
+## v0.34.0
+
+- (use) Add "explanations" for some strategies.
+- (ui) Fix margin in aside causing `1.5rem` misalignment in two-column mode.
+- (ui) _Increase_ amount of blank space at the bottom of the page in one-column mode. (`20vh` ⇒ `25vh`)
+
 ## v0.33.0
 
 - (a11y) Theoretically, screen readers can tell now that a candidate is eliminated (or rarely, added).
-- (a11y) Use `p`, `span`, and `layout: grid` instead of `table` et al.
+- (a11y) Use `p`, `span`, and `layout: grid` instead of `table` et al. As a side effect, the highlighting for cells is slightly bigger.
 
 ## v0.32.0
 
@@ -17,7 +23,7 @@ When a `@types` dependency updates, they almost always don't affect anything.
 
 ## v0.31.0
 
-- (ui) Do not lazy load anything
+- (ux) Do not lazy load anything
   - I will add back this later. A better experience is loading things silently but ahead of time.
   - 100% of the time, loading cells will be done. A better candidate is the strategies, or in the
     future, the settings page.

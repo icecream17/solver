@@ -1,0 +1,11 @@
+.StrategyDetails {
+    margin-inline-start: 2px;
+    margin-inline-end: 2px;
+    border: 1px solid #a0a0a0;
+    padding: 0.5em;
+}
+
+.StrategyDetails > p {
+    margin: 0;
+    white-space: pre-wrap;
+}

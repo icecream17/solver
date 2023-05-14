@@ -8,6 +8,8 @@ import { colorGroup } from "../Utils.dependent";
  * you can remove N from R
  */
 export default function intersectionRemoval(sudoku: PureSudoku) {
+   const messages = new Set<string>()
+
    function _removeCandidate(candidate: SudokuDigits, cellID: CellID) {
       const newCandidates = sudoku.data[cellID.row][cellID.column]
       removeFromArray(candidate, newCandidates)
@@ -23,6 +25,8 @@ export default function intersectionRemoval(sudoku: PureSudoku) {
       candidate: SudokuDigits,
       boxLocations: Set<CellID>,
       group2Locations: Set<CellID>,
+      boxId: string,
+      group2Id: string,
    ) {
       // boxDiff is a copy of boxLocations
       const boxDiff = new Set(boxLocations) // Box locations not in line
@@ -42,6 +46,7 @@ export default function intersectionRemoval(sudoku: PureSudoku) {
          colorGroup(sudoku, boxLocations, candidate)
          for (const extraCell of group2Diff) {
             _removeCandidate(candidate, extraCell)
+            messages.add(`${candidate}: ${boxId} ⇒ ${group2Id}`)
          }
       }
 
@@ -51,6 +56,7 @@ export default function intersectionRemoval(sudoku: PureSudoku) {
          colorGroup(sudoku, group2Locations, candidate)
          for (const extraCell of boxDiff) {
             _removeCandidate(candidate, extraCell)
+            messages.add(`${candidate}: ${group2Id} ⇒ ${boxId}`)
          }
       }
    }
@@ -60,19 +66,19 @@ export default function intersectionRemoval(sudoku: PureSudoku) {
    const candidateLocations = sudoku.getCandidateLocations()
    for (const candidate of ALL_CANDIDATES) {
       // Boxes vs Rows (and) Boxes vs Columns
-      for (const box of INDICES_TO_NINE) {
-         const boxLocations = candidateLocations[candidate].box[box]
+      for (const boxIndex of INDICES_TO_NINE) {
+         const boxLocations = candidateLocations[candidate].box[boxIndex]
 
          for (const groupIndex of INDICES_TO_NINE) {
             const rowLocations = candidateLocations[candidate].row[groupIndex]
             const columnLocations = candidateLocations[candidate].column[groupIndex]
 
             if (boxLocations.size < 4 || rowLocations.size < 4) {
-               _innerTwoGroupLogic(candidate, boxLocations, rowLocations)
+               _innerTwoGroupLogic(candidate, boxLocations, rowLocations, `Box ${boxIndex + 1}`, `Row ${groupIndex + 1}`)
             }
 
             if (boxLocations.size < 4 || columnLocations.size < 4) {
-               _innerTwoGroupLogic(candidate, boxLocations, columnLocations)
+               _innerTwoGroupLogic(candidate, boxLocations, columnLocations, `Box ${boxIndex + 1}`, `Column ${groupIndex + 1}`)
             }
          }
       }
@@ -86,6 +92,7 @@ export default function intersectionRemoval(sudoku: PureSudoku) {
 
    return {
       success: true,
-      successcount
+      successcount,
+      message: [...messages].join("\n")
    } as const
 }

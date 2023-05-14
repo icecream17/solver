@@ -153,6 +153,7 @@ export default class Solver {
    private async FinishStep (strategyResult: {
       success: boolean
       successcount: number | null
+      message: string | null
    }) {
       // Set cells to non-strategy mode if failed
       if (strategyResult.success === false) {
@@ -205,7 +206,8 @@ export default class Solver {
       const _strategyResult = STRATEGIES[this.strategyIndex](this.sudoku, this.memory[this.strategyIndex])
       const strategyResult = {
          success: _strategyResult.success,
-         successcount: "successcount" in _strategyResult ? _strategyResult.successcount ?? null : null
+         successcount: _strategyResult.successcount ?? null,
+         message: _strategyResult.message ?? null,
       }
 
       const stop = await this.FinishStep(strategyResult)

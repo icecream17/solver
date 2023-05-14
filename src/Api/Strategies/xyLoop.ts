@@ -1,6 +1,6 @@
 import { SudokuDigits } from "../../Types";
 import PureSudoku from "../Spaces/PureSudoku";
-import { affects, assertGet, CandidateID, CellID, id, removeFromArray, sharedInSets } from "../Utils";
+import { affects, algebraic, assertGet, CandidateID, CellID, id, removeFromArray, sharedInSets } from "../Utils";
 import { colorCandidate, getCellsWithNCandidates } from "../Utils.dependent";
 
 /**
@@ -49,7 +49,8 @@ function checkLoop (sudoku: PureSudoku, color1: CandidateID[], color2: Candidate
 
       return {
          success: true,
-         successcount: 1
+         successcount: 1,
+         message: `${color2.map(cand => algebraic(cand.row, cand.column)).join("<>")}<>`,
       } as const
    }
 

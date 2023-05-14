@@ -144,4 +144,10 @@ test("Cell keyboard navigation: End / Home", () => {
    tryKey('{Home}', 0, 0) // Start of row
    tryKey('{Control>}{End}{/Control}', 8, 8) // Last cell
    tryKey('{Control>}{Home}{/Control}', 0, 0) // First cell
+   tryKey('{PageDown}', 3, 0)
+   tryKey('{PageDown}', 6, 0)
+   tryKey('{PageDown}', 8, 0) // Does not wrap around
+   tryKey('{PageUp}', 5, 0)
+   tryKey('{PageUp}', 2, 0)
+   tryKey('{PageUp}', 0, 0) // Does not wrap around
 })

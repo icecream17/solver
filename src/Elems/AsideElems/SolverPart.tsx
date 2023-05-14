@@ -5,6 +5,7 @@ import Sudoku from '../../Api/Spaces/Sudoku'
 import { StrategyResult } from '../../Api/Types'
 import StrategyControls from './StrategyControls'
 import StrategyList from './StrategyList'
+import StrategyDetails from './StrategyDetails'
 
 type SolverPartProps = Readonly<{
    sudoku: Sudoku
@@ -41,6 +42,7 @@ export default class SolverPart extends React.Component<SolverPartProps> {
                <legend>strategies</legend>
                <StrategyList solver={this.props.solver} whenConstruct={this.whenListConstructs} />
             </fieldset>
+            <StrategyDetails solver={this.props.solver} />
         </div>
       )
    }

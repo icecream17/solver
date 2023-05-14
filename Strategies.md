@@ -179,7 +179,7 @@ row: 2, row2: 1
 So instead, we eliminate the loops altogether,
 and track what rows were added to the pattern.
 
-That way, `row` --> row1 then row2 then row3 then row4....
+That way, `row` ⇒ row1 then row2 then row3 then row4....
   (goes in order)
 instead of `row` and `row2`
   (not in order)

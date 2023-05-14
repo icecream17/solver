@@ -138,9 +138,9 @@ function eliminateUsingConjugate(
    group: CellGroup,
    conjugate: CellGroup,
 ) {
-
-   let successcount = 0;
+   let successcount = 0
    const conjugateCandidates = getCandidatesOfConjugate(conjugate)
+   const eliminatedFrom = []
 
    for (const cell of group) {
       // If this cell is not in the conjugate
@@ -152,22 +152,31 @@ function eliminateUsingConjugate(
             successcount++ // Success!
             colorConjugate(sudoku, conjugate)
             sudoku.set(cell.position.row, cell.position.column).to(...nonConjugateCandidates)
+            eliminatedFrom.push(algebraic(cell.position.row, cell.position.column))
          }
       }
    }
 
-   return successcount
+   return [
+      successcount,
+      `${[...conjugateCandidates].join("")} ${conjugate.map(cell => algebraic(cell.position.row, cell.position.column))} ⇒ ${eliminatedFrom}`,
+   ] as const
 }
 
 function eliminateUsingConjugates(sudoku: PureSudoku, groups: CellGroup[], conjugatesOfGroup: CellGroup[][]) {
-   let successcount = 0;
+   let successcount = 0
+   const messages = []
    for (const [i, group] of groups.entries()) {
       for (const conjugate of conjugatesOfGroup[i]) {
-         successcount += eliminateUsingConjugate(sudoku, group, conjugate)
+         const [successes, message] = eliminateUsingConjugate(sudoku, group, conjugate)
+         successcount += successes
+         if (successes) {
+            messages.push(message)
+         }
       }
    }
 
-   return successcount
+   return [successcount, messages.join("\n")] as const
 }
 
 // Math.max(O(n^5), O(n^5))
@@ -185,7 +194,7 @@ export default function pairsTriplesAndQuads(sudoku: PureSudoku) {
       conjugatesOfGroup.push(conjugate)
    }
 
-   const successcount = eliminateUsingConjugates(sudoku, groups, conjugatesOfGroup)
+   const [successcount, message] = eliminateUsingConjugates(sudoku, groups, conjugatesOfGroup)
 
    if (successcount === 0) {
       return {
@@ -195,6 +204,7 @@ export default function pairsTriplesAndQuads(sudoku: PureSudoku) {
 
    return {
       success: true,
-      successcount
+      successcount,
+      message,
    } as const
 }

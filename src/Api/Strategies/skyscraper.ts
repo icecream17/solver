@@ -16,13 +16,12 @@ function _innerInnerSkyscraperLogic(
    candidate: SudokuDigits,
    sudoku: PureSudoku,
    sumLines: Set<CellID>,
-   isRow: boolean,
+   perpendProp: "row" | "column",
    wingSize: number
 ) {
    const patternPendLines = new Map<IndexToNine, number>()
-   const pendLineProp = isRow ? "column" : "row"
    for (const cell of sumLines) {
-      __incrementMapValue(patternPendLines, cell[pendLineProp])
+      __incrementMapValue(patternPendLines, cell[perpendProp])
    }
 
    if (patternPendLines.size === wingSize + 1) {
@@ -31,7 +30,7 @@ function _innerInnerSkyscraperLogic(
             const cellsNotInLine = [] as CellID[]
             const affectsNotInLine = [] as CellID[][]
             for (const cell of sumLines) {
-               if (cell[pendLineProp] !== eliminationPendLine) {
+               if (cell[perpendProp] !== eliminationPendLine) {
                   cellsNotInLine.push(cell)
                   affectsNotInLine.push(affects(cell.row, cell.column))
                }
@@ -55,7 +54,7 @@ function _innerInnerSkyscraperLogic(
    return null
 }
 
-function _innerSkyscraperLogic(line1: Set<CellID>, possibleLines: Set<CellID>[], candidate: SudokuDigits, sudoku: PureSudoku, isRow: boolean) {
+function _innerSkyscraperLogic(line1: Set<CellID>, possibleLines: Set<CellID>[], candidate: SudokuDigits, sudoku: PureSudoku, perpendProp: "row" | "column") {
    // line = row/column
    // pendLine = column/row
    for (const line2 of possibleLines) {
@@ -64,7 +63,7 @@ function _innerSkyscraperLogic(line1: Set<CellID>, possibleLines: Set<CellID>[],
       line2.forEach(cell => sumLines.add(cell))
 
       if (sumLines.size < 5) {
-         const result = _innerInnerSkyscraperLogic(candidate, sudoku, sumLines, isRow, 2)
+         const result = _innerInnerSkyscraperLogic(candidate, sudoku, sumLines, perpendProp, 2)
          if (result !== null) {
             return result
          }
@@ -86,11 +85,11 @@ export default function skyscraper(sudoku: PureSudoku) {
       const possibleRows = [] as Set<CellID>[]
       const possibleColumns = [] as Set<CellID>[]
       for (const index of INDICES_TO_NINE) {
-         const row = candidateLocations[candidate].rows[index]
-         const column = candidateLocations[candidate].columns[index]
+         const row = candidateLocations[candidate].row[index]
+         const column = candidateLocations[candidate].column[index]
 
          if (row.size < 3) {
-            const result = _innerSkyscraperLogic(row, possibleRows, candidate, sudoku, true)
+            const result = _innerSkyscraperLogic(row, possibleRows, candidate, sudoku, "column")
             if (result !== null) {
                return result
             }
@@ -99,7 +98,7 @@ export default function skyscraper(sudoku: PureSudoku) {
          }
 
          if (column.size < 3) {
-            const result = _innerSkyscraperLogic(column, possibleColumns, candidate, sudoku, false)
+            const result = _innerSkyscraperLogic(column, possibleColumns, candidate, sudoku, "row")
             if (result !== null) {
                return result
             }

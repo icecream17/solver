@@ -19,8 +19,11 @@ import xyLoop from "./xyLoop";
 import xyzWing from "./xyzWing";
 import yWing from "./yWing";
 
-// See comments on `Strategy`
-const STRATEGIES = [
+/**
+ * If testing a particular strategy, import that strategy instead of this array.
+ * This array is meant to be general not specific.
+ */
+export default [
    checkForSolved,
    updateCandidates,
    hiddenSingles,
@@ -39,6 +42,4 @@ const STRATEGIES = [
    pairCoversGroup,
    xyLoop,
    xyChain,
-] as const
-
-export default STRATEGIES as typeof STRATEGIES & Strategy[]
+] as Readonly<Strategy[]>

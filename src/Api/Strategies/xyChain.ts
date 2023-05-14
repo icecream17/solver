@@ -1,6 +1,6 @@
 import { SudokuDigits } from "../../Types";
 import PureSudoku from "../Spaces/PureSudoku";
-import { affects, assertGet, CandidateID, CellID, id, sharedInSets } from "../Utils";
+import { affects, algebraic, assertGet, CandidateID, CellID, id, sharedInSets } from "../Utils";
 import { colorCandidate, getCellsWithNCandidates, highlightCell } from "../Utils.dependent";
 import { cellIsValidLoop } from "./xyLoop";
 
@@ -42,7 +42,8 @@ function checkLoop (sudoku: PureSudoku, color1: CandidateID[], color2: Candidate
 
       return {
          success: true,
-         successcount: 1
+         successcount: 1,
+         message: `${color2End.digit} ${color2.map(cand => algebraic(cand.row, cand.column)).join("<>")} ${color1End.digit}`,
       } as const
    }
 
@@ -57,10 +58,10 @@ function checkLoop (sudoku: PureSudoku, color1: CandidateID[], color2: Candidate
  * There's still the restriction that the first and last cells of the chain must share a candidate
  *
  * The logic in this case is either:
- * first cell = candidate ---> not last cell
- * last cell = candidate ---> not first cell
+ * first cell = candidate --> not last cell
+ * last cell = candidate --> not first cell
  *
- * Basically no matter what, one of the ends has candidate.
+ * Basically no matter what, one of the ends has the candidate.
  */
 export default function xyChain(sudoku: PureSudoku) {
    /**

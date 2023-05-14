@@ -125,8 +125,8 @@ export default function twoMinusOneLines(sudoku: PureSudoku) {
       const possibleRows = [] as Set<CellID>[]
       const possibleColumns = [] as Set<CellID>[]
       for (const index of INDICES_TO_NINE) {
-         const row = candidateLocations[candidate].rows[index]
-         const column = candidateLocations[candidate].columns[index]
+         const row = candidateLocations[candidate].row[index]
+         const column = candidateLocations[candidate].column[index]
 
          const check = []
          if (row.size <= 4) { // 4 cells of a row cannot share anything affects other than the row

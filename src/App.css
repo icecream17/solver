@@ -91,10 +91,12 @@
    /**
     * Bigger text (aside)
     * Variable exists because of the strategyItem shenanigans
+    * Margin: Gap + Allow scrolling past the aside in one column mode
     */
    .App-aside {
       --font-size: calc(1rem + 1vh);
       font-size: var(--font-size);
+      margin: 1.5rem 0 25vh 0;
    }
 }
 

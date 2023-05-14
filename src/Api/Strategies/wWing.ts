@@ -1,4 +1,4 @@
-import { INDICES_TO_NINE, SudokuDigits } from "../../Types";
+import { GRP_TYPS, INDICES_TO_NINE, SudokuDigits } from "../../Types";
 import PureSudoku, { CandidateLocations } from "../Spaces/PureSudoku";
 import { SuccessError } from "../Types";
 import { affects, assertGet, CellID, id, sharedInArrays } from "../Utils";
@@ -19,7 +19,7 @@ function _checkPair(
 
     // check for a row, column, or box
     // which has two cells: an affectsA and an affectsB
-    for (const prop of ["rows", "columns", "boxes"] as const) {
+    for (const prop of GRP_TYPS) {
         for (const group of candidateLocations[candidateA][prop]) {
             if (group.size === 2) {
                 const cellxA = affectsA.find(cell => group.has(cell))

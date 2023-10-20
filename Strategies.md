@@ -103,6 +103,20 @@ So the rest of the candidates in those *cells* are eliminated.
 123...... ...456789 ...456789
 ```
 
+These strategies should basically be equivalent in any sane coding structure. Just swap cells and candidates. This algorithm description will be for non-hidden.
+
+Incidentally, it would seem that these two strategies are much harder than one would expect. A naive algorithm is exponential, as from k = \[1 to floor(n/2)], one checks every way to choose k out of n cells. There are at least $\frac{2^n - 1}{2}$ combinations (divide by two because symmetry).
+
+However, some optimizations are possible. A cell that contains too many candidates (a candidate that is in too many cells) cannot be part of a valid solution. A candidate that is in too many cells (a cell that has too many candidates) must partake in at least one cell (candidate). In cases where the number of required candidates (cells) is too high, this is a linear NO SOLUTION.
+
+```
+ 8 9 1, 9 1 2, 1 2 3, 2 3 4, 3 4 5, 4 5 6, 5 6 7, 6 7 8, 7 8 9,
+```
+
+We then check the case specifically for n=2 (thereby only polynomial, $\frac{n(n-1)}{2}$ ). Say we take the candidates 1 and 2. Cover all cells with 1 and 2. Add candidates to set (we add 9, 3, 4). Cover all cells with 1, 2, 9, 3, 4, etc. The process will quickly converge to the smallest conjugate containing just 1 and 2.
+
+Wait wow
+
 ### X wing, Swordfish, and Jellyfish
 
 Consider the rule that each (row, column, and box)... each group must have all digits 1-9.

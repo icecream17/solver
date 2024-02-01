@@ -105,6 +105,14 @@ So the rest of the candidates in those *cells* are eliminated.
 
 These strategies should basically be equivalent in any sane coding structure. Just swap cells and candidates. This algorithm description will be for non-hidden.
 
+(Swapping cells and candidates:)
+
+```rust
+123...... 123...... 123......
+123456789 123456789 123456789
+123456789 123456789 123456789
+```
+
 Incidentally, it would seem that these two strategies are much harder than one would expect. A naive algorithm is exponential, as from k = \[1 to floor(n/2)], one checks every way to choose k out of n cells. There are at least $\frac{2^n - 1}{2}$ combinations (divide by two because symmetry).
 
 However, some optimizations are possible. A cell that contains too many candidates (a candidate that is in too many cells) cannot be part of a valid solution. A candidate that is in too many cells (a cell that has too many candidates) must partake in at least one cell (candidate). In cases where the number of required candidates (cells) is too high, this is a linear NO SOLUTION.
@@ -115,7 +123,18 @@ However, some optimizations are possible. A cell that contains too many candidat
 
 We then check the case specifically for n=2 (thereby only polynomial, $\frac{n(n-1)}{2}$ ). Say we take the candidates 1 and 2. Cover all cells with 1 and 2. Add candidates to set (we add 9, 3, 4). Cover all cells with 1, 2, 9, 3, 4, etc. The process will quickly converge to the smallest conjugate containing just 1 and 2.
 
-Wait wow
+Then we check the cells containing 1 and 3.
+
+And 1 and 4. The current algorithm simply checks all possible combinations. Note that while the case n=2 is polynomial, the
+case n=2, n=3, ... n=floor(9/2) is exponential.
+
+However, there is a faster way to figure out this particular example. Notice that 1 cannot go along with 3, 4, 5, 6, 7, 8.
+
+```
+ 9 1, 9 1 2, 1 2, 2, 9,
+```
+
+Since 1 covers three cells, there needs to be 3 candidates. The only ones available are 2 and 9. But adding 2 and 9 fails.
 
 ### X wing, Swordfish, and Jellyfish
 

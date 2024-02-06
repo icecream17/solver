@@ -151,11 +151,13 @@ When the code thinks that <kbd>Example</kbd> is being held even though it's not,
 
 Then the user can either click the button or press+release the key again.
 
+And in practice, most detections of potentially released keys can be done with looking at the blur/focus of the window (to see if the user clicked off the tab) or oncontextmenu (to see if the right click context menu has happened). This needs to be tested though.
+
 #### Strategy
 
+1. Implement on-screen-keyboard (would also help mobile).
+1. Keep track of keys to allow diagonal movements.
 1. Implement multi-selection to separate focus and selection.
-2. Implement mobile on-screen-keyboard.
-3. Keep track of keys to allow diagonal movements.
 
 ### Ending
 

@@ -1,7 +1,5 @@
-// @flow
-
 import React from 'react';
-import { algebraic } from '../../Api/Utils';
+import { algebraic, id } from '../../Api/Utils';
 import { IndexToNine, SudokuDigits, ZeroToNine, _Callback } from '../../Types';
 import { arraysAreEqual } from '../../utils';
 
@@ -14,6 +12,8 @@ export type BaseCellProps = Readonly<{
 
    whenNewCandidates: (cell: Cell, candidates: SudokuDigits[]) => void
    whenCellKeydown: (cell: Cell, event: React.KeyboardEvent) => void
+   whenCellBlur: (cell: Cell, event: React.FocusEvent) => void
+   whenCellFocus: (cell: Cell, event: React.FocusEvent) => void
 
    whenCellMounts: _Callback
    whenCellUnmounts: _Callback
@@ -21,8 +21,11 @@ export type BaseCellProps = Readonly<{
 
 type CellProps = BaseCellProps
 
+// null = not selected
+// false = selection inactive
+// true = selection active
 type _UserDisplayState =
-   { active: false; pretend: false } |
+   { active: false | null; pretend: false } |
    { active: true; pretend: boolean }
 
 type _TrackCandidateState =
@@ -41,12 +44,12 @@ type _TrackCandidateState =
       highlighted: false
    }
 
-type CellState = Readonly<(
+type CellState = Readonly<
    {
       candidates: SudokuDigits[]
       error: boolean
    } & _UserDisplayState & _TrackCandidateState
-)>
+>
 
 
 /**
@@ -106,8 +109,12 @@ export default class Cell extends React.Component<CellProps, CellState> {
          /** Whether the candidates array is empty */
          error: false,
 
-         /** If this is currently focused by the user - set by whenFocus and whenBlur */
-         active: false,
+         /**
+          * If the cell is included in the selection and the cell is currently active.
+          * 
+          * If the cell is included, this is a boolean, false is the selection is deactivated.
+          */
+         active: null,
 
          /**
           * This boolean controls pretending.
@@ -121,6 +128,7 @@ export default class Cell extends React.Component<CellProps, CellState> {
 
          /**
           * Whether a candidate is being highlighted
+          * If so, we display in all-candidates mode even if there's only one
           */
          highlighted: false,
       }
@@ -130,12 +138,19 @@ export default class Cell extends React.Component<CellProps, CellState> {
       this.whenKeyDown = this.whenKeyDown.bind(this)
    }
 
+   // This is the key. If visuals and data are inconsistent, data is changed to reflect visuals.
+   // Otherwise they are modified in tandem. This callback allows indirect access to the data,
+   // and originate from App.tsx
    componentDidMount() {
       this.props.whenCellMounts(this)
    }
 
    componentWillUnmount() {
       this.props.whenCellUnmounts(this)
+   }
+
+   get id() {
+      return id(this.props.row, this.props.column)
    }
 
    /** How many candidates are left, this.state.candidates.length */
@@ -264,7 +279,7 @@ export default class Cell extends React.Component<CellProps, CellState> {
       if (this.state.explaining && !arraysAreEqual(this.state.previousCandidates.sort(), this.state.candidates.sort())) {
          content = <CandidatesDiff previous={this.state.previousCandidates} current={this.state.candidates} classes={this.state.candidateClasses} />
       } else if (this.state.active || this.state.highlighted || (this.numCandidates > 1 && this.numCandidates < 9)) {
-         // Also show candidates when editing a cell
+         // Also show candidates when editing a cell (actively)
          // Also show candidates as fallback when numCandidates is in [2, 8]
          content = <Candidates data={this.state.candidates} classes={this.state.candidateClasses} />
       } else if (this.numCandidates === 0) {
@@ -290,8 +305,8 @@ export default class Cell extends React.Component<CellProps, CellState> {
                role='button'
                title={Cell.title(this.props.row, this.props.column)}
                aria-label={Cell.labelAt(this.props.row, this.props.column)}
-               data-error={this.state.error ? "true" : undefined}
-               data-active={this.state.active ? "true" : undefined}
+               data-error={this.state.error || undefined}
+               data-active={this.state.active ?? undefined}
                tabIndex={0}
                onFocus={this.whenFocus}
                onBlur={this.whenBlur}
@@ -301,21 +316,33 @@ export default class Cell extends React.Component<CellProps, CellState> {
       )
    }
 
-   whenFocus(_event?: React.FocusEvent) {
-      this.setState(
-         state => ({
-            active: true,
-            pretend: state.candidates.length === 9
-         }) as const
-      )
+   updateSelectionStatus(isSelected: boolean, status: null | boolean) {
+      const active = isSelected ? status : null
+      this.setState((state: CellState) => ({
+         active,
+         pretend: active ? state.candidates.length === 9 : false
+      }))
    }
 
-   whenBlur(_event?: React.FocusEvent) {
+   // setState for both of these is called in the when handlers through updateSelectionStatus,
+   // but should be consistent with the commented out code
+   whenFocus(event: React.FocusEvent) {
+      this.props.whenCellFocus(this, event)
+      // this.setState(
+      //    state => ({
+      //       active: true,
+      //       pretend: state.candidates.length === 9
+      //    }) as const
+      // )
+   }
+
+   whenBlur(event: React.FocusEvent) {
       this.props.whenNewCandidates(this, this.state.candidates)
-      this.setState({
-         active: false,
-         pretend: false // See notes about state.pretend
-      })
+      this.props.whenCellBlur(this, event)
+      // this.setState({
+      //    active: false,
+      //    pretend: false // See notes about state.pretend
+      // })
    }
 
    /**
@@ -333,29 +360,12 @@ export default class Cell extends React.Component<CellProps, CellState> {
     * TODO: Arrow key navigation
     */
    whenKeyDown(event: React.KeyboardEvent) {
-      const target = event.target as HTMLTableCellElement
-      if ('123456789'.includes(event.key)) {
-         const candidate = Number(event.key) as SudokuDigits
-         this.toggleCandidate(candidate)
-      } else if (['Backspace', 'Delete', 'Clear'].includes(event.key)) {
-         if (event.shiftKey || event.altKey) {
-            this.setState({
-               candidates: [1, 2, 3, 4, 5, 6, 7, 8, 9],
-               error: false
-            })
-         } else {
-            this.setState({
-               candidates: [],
-               error: true
-            })
-         }
-      } else if (event.key === 'Escape') {
-         target.blur()
-      } else {
-         this.props.whenCellKeydown(this, event) // keyboard controls
-      }
+      this.props.whenCellKeydown(this, event) // keyboard controls
 
       // Something happened, (see "pretend" docs above)
-      this.setState({ pretend: false })
+
+      // TODO: See Changelog v0.35.0
+      //       Uncommenting this wouldn't work though, since it only affects one cell not the whole selection.
+      // this.setState({ pretend: false })
    }
 }

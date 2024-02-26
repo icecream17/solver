@@ -1,5 +1,3 @@
-// @flow
-
 import { AlgebraicName, BoxName, BOX_NAMES, COLUMN_NAMES, IndexTo81, IndexToNine, INDICES_TO_NINE, ROW_NAMES, SudokuDigits, ThreeDimensionalArray, TwoDimensionalArray, GrpTyp } from "../Types";
 
 export function algebraic (row: IndexToNine, column: IndexToNine): AlgebraicName {

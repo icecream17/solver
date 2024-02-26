@@ -12,6 +12,7 @@ import GithubCorner from './Elems/GithubCorner'
 import Cell from './Elems/MainElems/Cell'
 import Title from './Elems/Title'
 import Version from './Elems/Version'
+import { SudokuProps } from './Elems/MainElems/Sudoku'
 
 declare global {
    interface Window {
@@ -22,8 +23,8 @@ declare global {
    }
 
    interface Set<T> {
-      has (value: unknown): CouldAIsB<typeof value, T>
-      delete (value: unknown): CouldAIsB<typeof value, T>
+      has(value: unknown): CouldAIsB<typeof value, T>
+      delete(value: unknown): CouldAIsB<typeof value, T>
    }
 
    // eslint-disable-next-line @typescript-eslint/no-unused-vars --- I can't prefix this with an underscore, _typescript_
@@ -52,7 +53,7 @@ type AppState = {
 class App extends React.Component<_UnusedProps, AppState> {
    sudoku: SudokuData
    solver: Solver
-   propsPassedDown: { whenCellMounts: (cell: Cell) => void; whenCellUnmounts: (cell: Cell) => void; whenCellUpdates: (cell: Cell, candidates: SudokuDigits[]) => void }
+   sudokuProps: SudokuProps
    constructor(props: _UnusedProps) {
       super(props)
 
@@ -80,7 +81,8 @@ class App extends React.Component<_UnusedProps, AppState> {
       this.whenCellUnmounts = this.whenCellUnmounts.bind(this)
       this.whenCellUpdates = this.whenCellUpdates.bind(this)
       this.finishNotice = this.finishNotice.bind(this)
-      this.propsPassedDown = {
+      this.sudokuProps = {
+         sudoku: this.sudoku,
          whenCellMounts: this.whenCellMounts,
          whenCellUnmounts: this.whenCellUnmounts,
          whenCellUpdates: this.whenCellUpdates,
@@ -103,7 +105,7 @@ class App extends React.Component<_UnusedProps, AppState> {
                <Title />
                <Version />
             </header>
-            <Main propsPassedDown={this.propsPassedDown} />
+            <Main sudokuProps={this.sudokuProps} />
             <Aside sudoku={this.sudoku} solver={this.solver} />
 
             <GithubCorner />

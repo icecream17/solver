@@ -2,6 +2,13 @@ import Cell from "../../Elems/MainElems/Cell"
 import { IndexToNine, SudokuDigits, TwoDimensionalArray } from "../../Types"
 import PureSudoku from "./PureSudoku"
 
+/**
+ * Wraps PureSudoku, to sync the data with the Cell components.
+ * 
+ * It is also used by the Sudoku component to indirectly access the Cell components. -.-
+ * 
+ * For sanity, this class should be kept very simple.
+ */
 export default class Sudoku extends PureSudoku {
    cells: TwoDimensionalArray<Cell | undefined | null>
    constructor (...args: ConstructorParameters<typeof PureSudoku>) {
@@ -32,9 +39,16 @@ export default class Sudoku extends PureSudoku {
       }
    }
 
+   override clearCell(x: IndexToNine, y: IndexToNine) {
+      this.data[x][y] = [1, 2, 3, 4, 5, 6, 7, 8, 9]
+      this.cells[x][y]?.clearCandidates()
+   }
+
    /**
-    * Used for initialization but could also update things
-    * That's pretty complicated
+    * Used for Cell initialization
+    *
+    * An alternate possibility is having the cell reflect the data, but
+    * that allows inconsistencies between the visuals and the data.
     */
    addCell(cell: Cell) {
       this.cells[cell.props.row][cell.props.column] = cell
@@ -44,10 +58,5 @@ export default class Sudoku extends PureSudoku {
    removeCell(cell: Cell) {
       this.cells[cell.props.row][cell.props.column] = undefined
       // this.data[cell.props.row][cell.props.column] = cell.state.candidates
-   }
-
-   clearCell(x: IndexToNine, y: IndexToNine) {
-      this.data[x][y] = [1, 2, 3, 4, 5, 6, 7, 8, 9]
-      this.cells[x][y]?.clearCandidates()
    }
 }

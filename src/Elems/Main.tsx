@@ -1,10 +1,10 @@
 import './Main.css'
 import React from 'react'
 
-import Sudoku, { BaseSudokuProps } from './MainElems/Sudoku'
+import Sudoku, { SudokuProps } from './MainElems/Sudoku'
 
 type MainProps = Readonly<{
-   propsPassedDown: BaseSudokuProps
+   sudokuProps: SudokuProps
 }>
 
 /**
@@ -14,7 +14,7 @@ type MainProps = Readonly<{
 export default function Main (props: MainProps) {
    return (
       <main className="App-main">
-         <Sudoku {...props.propsPassedDown} />
+         <Sudoku {...props.sudokuProps} />
       </main>
-   );
+   )
 }

@@ -4,6 +4,24 @@ Note: Many earlier versions are not specified, that's too much work.
 
 When a `@types` dependency updates, they almost always don't affect anything.
 
+## v0.35.0
+
+- (use) Multiselectable cells! Select multiple cells at the same time with <kbd>Ctrl</kbd>+Click
+  - Instead of being turned off, a selection will be disabled when clicking off. This is to prepare for the on-screen keyboard later.
+- (use) Diagonal keyboard movement!!! Holding <kbd>Up</kbd> and <kbd>Left</kbd> at the same time will now go both directions!
+- (use) When editing a cell: the functions of <kbd>Backspace</kbd> and
+  (<kbd>Shift</kbd> or <kbd>Ctrl</kbd>)+<kbd>Backspace</kbd> have been switched.
+  - Previously, <kbd>Backspace</kbd> would delete all candidates. Now it adds back all candidates.
+    - _Additionally_ it sets `pretend` to `true`, so it will still change to a single digit when typing.
+  - (<kbd>Shift</kbd> or <kbd>Ctrl</kbd>)+<kbd>Backspace</kbd> used to add back all candidates;
+    now it deletes all candidates.
+- (use-bug) Previously, if a bunch of keypresses happen to cause a cell to end up at 9 candidates again,
+  it was not a condition to `pretend` as described above. Now it is. Personally, despite my extensive usage,
+  this edge-case has not been run into yet so I do not know if this should be reimplemented.
+- (temp-docs) The way the Tabs and the Cells handle multiple keypresses at the same time is different.
+  Specifically, Cells use a global event handler, while Tabs only have a local event handler.
+  This means that for example, holding down two keys then focusing the Tabs, the Tabs would only have one key stored on repeat.
+
 ## v0.34.0
 
 - (use) Add "explanations" for some strategies.

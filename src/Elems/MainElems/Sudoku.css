@@ -94,6 +94,10 @@ div.Cell[data-active="true"] {
    background-color: #555;
 }
 
+div.Cell[data-active="false"] {
+   background: repeating-linear-gradient(-45deg, #d35e5e, #44476b, #333);
+}
+
 /* Section moved to Candidates.css */
 
 /* For the lazy loaded props */

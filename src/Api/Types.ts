@@ -1,5 +1,3 @@
-// @flow
-
 import { SudokuDigits } from "../Types";
 import PureSudoku from "./Spaces/PureSudoku";
 import { CellID } from "./Utils";

@@ -1,17 +1,14 @@
-import { ReportHandler } from 'web-vitals';
+// This file is currently unused
+import { ReportCallback, onCLS, onINP, onFCP, onLCP, onTTFB } from 'web-vitals'
 
-const reportWebVitals = (onPerfEntry: ReportHandler) => {
-   if (onPerfEntry && onPerfEntry instanceof Function) {
-      import('web-vitals').then(({ getCLS, getFID, getFCP, getLCP, getTTFB }) => {
-         getCLS(onPerfEntry);
-         getFID(onPerfEntry);
-         getFCP(onPerfEntry);
-         getLCP(onPerfEntry);
-         getTTFB(onPerfEntry);
-      }).catch((error: unknown) => {
-         throw error
-      });
+const reportWebVitals = (onPerfEntry?: ReportCallback) => {
+   if (onPerfEntry instanceof Function) {
+      onCLS(onPerfEntry)
+      onINP(onPerfEntry)
+      onFCP(onPerfEntry)
+      onLCP(onPerfEntry)
+      onTTFB(onPerfEntry)
    }
-};
+}
 
-export default reportWebVitals;
+export default reportWebVitals

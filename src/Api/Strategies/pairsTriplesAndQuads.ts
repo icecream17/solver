@@ -1,4 +1,4 @@
-// @flow
+
 
 import { AlertType, SudokuDigits } from "../../Types";
 import { convertArrayToEnglishList } from "../../utils";

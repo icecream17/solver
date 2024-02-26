@@ -1,5 +1,3 @@
-// @flow
-
 import './StrategyItem.css'
 import React from 'react';
 import StrategyLabel, { StrategyLabelProps } from './StrategyLabel';

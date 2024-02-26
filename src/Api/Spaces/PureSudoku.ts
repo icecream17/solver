@@ -1,4 +1,3 @@
-// @flow
 import { ALL_CANDIDATES, GrpTyp, IndexToNine, INDICES_TO_NINE, SudokuDigits, ThreeDimensionalArray } from "../../Types"
 import { boxAt, CellID, id, to9by9 } from "../Utils"
 

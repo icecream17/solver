@@ -41,11 +41,25 @@ test.each(cellTests)('getting the cell at row %i, column %i', (row, column) => {
 // Right now it's by data-active
 test("Focused buttonCells are highlighted", () => {
    const buttonCell = getButtonCellElement(0, 0)
-   expect(buttonCell).not.toHaveAttribute('data-active')
+   expect(buttonCell).not.toHaveAttribute('data-active') // not selected
    userEvent.click(buttonCell)
-   expect(buttonCell).toHaveAttribute('data-active')
+   expect(buttonCell).toHaveAttribute('data-active', 'true') // selected
    fireEvent.blur(buttonCell)
-   expect(buttonCell).not.toHaveAttribute('data-active')
+   expect(buttonCell).toHaveAttribute('data-active', 'false') // selection disabled
+
+   // Multi-select
+   const nextCell = getButtonCellElement(3, 4)
+   userEvent.keyboard('{Control>}')
+   userEvent.click(nextCell)
+   expect(buttonCell).toHaveAttribute('data-active', 'true') // selected
+   expect(nextCell).toHaveAttribute('data-active', 'true') // selected
+   fireEvent.blur(nextCell)
+   expect(buttonCell).toHaveAttribute('data-active', 'false') // selection disabled
+   expect(nextCell).toHaveAttribute('data-active', 'false') // selection disabled
+   userEvent.click(nextCell)
+   userEvent.keyboard('{/Control}{Escape}')
+   expect(buttonCell).not.toHaveAttribute('data-active') // not selected
+   expect(nextCell).not.toHaveAttribute('data-active') // not selected
 })
 
 test("Setting a cell to a digit", () => {
@@ -64,22 +78,31 @@ test("Setting a cell to multiple candidates", () => {
 
 // Cell has 0 candidates
 test("Clearing all candidates of a cell", () => {
-   const buttonCell1 = getButtonCellElement(0, 0)
+   const buttonCell = getButtonCellElement(0, 0)
    const buttonCell2 = getButtonCellElement(0, 1)
+   
+   // Change to something
+   userEvent.click(buttonCell)
+   userEvent.keyboard('123') // And now subtract 123
+   fireEvent.blur(buttonCell)
+   expect(buttonCell).toHaveTextContent('456789')
 
-   userEvent.click(buttonCell1)
-   userEvent.keyboard('{Backspace}')
+   // Both Shift and Alt key work to delete all candidates
+   userEvent.click(buttonCell)
+   userEvent.keyboard('{Alt>}{Backspace}{/Alt}123')
+   fireEvent.blur(buttonCell)
+   expect(buttonCell).toHaveTextContent('123')
+
+   userEvent.click(buttonCell)
+   userEvent.keyboard('{Shift>}{Backspace}{/Shift}1234')
+   fireEvent.blur(buttonCell)
+   expect(buttonCell).toHaveTextContent('1234')
+
    userEvent.click(buttonCell2)
    userEvent.keyboard('12345') // Now the cell has "12345"
    userEvent.keyboard('12345') // Now the cell has ""
    fireEvent.blur(buttonCell2)
-
-   // Shows 0
-   expect(buttonCell1).toHaveTextContent('0')
    expect(buttonCell2).toHaveTextContent('0')
-
-   // Is error
-   expect(buttonCell1).toHaveAttribute('data-error')
    expect(buttonCell2).toHaveAttribute('data-error')
 })
 
@@ -89,41 +112,63 @@ test("Toggling every candidate", () => {
    const buttonCell = getButtonCellElement(0, 0)
    userEvent.click(buttonCell)
    userEvent.keyboard('123456789')
-   expect(buttonCell).toHaveTextContent('123456789') // Focus --> Show candidates
+   expect(buttonCell).toHaveTextContent('123456789') // Is editing --> Show candidates
 
-   fireEvent.blur(buttonCell)
-   expect(buttonCell).toHaveTextContent('') // Not focused + full = nothing shown
+   fireEvent.blur(buttonCell) // Not actively editing anymore
+   expect(buttonCell).toHaveTextContent('') // Inactive + full = nothing shown
 })
 
 test("Resetting the candidates", () => {
    const buttonCell = getButtonCellElement(0, 0)
    userEvent.click(buttonCell)
-   userEvent.keyboard('{Backspace}123') // 123 to prevent false negatives if backspace doesn't work
-   userEvent.keyboard('{Shift>}{Backspace}{/Shift}')
-   fireEvent.blur(buttonCell)
+   userEvent.keyboard('123{Backspace}') // 123 to prevent false negatives
+   fireEvent.blur(buttonCell) // Backspace resets to having all candidates
 
    // Is not error
    expect(buttonCell).not.toHaveAttribute('data-error')
 
    // Since the cell has all candidates, and is blurred, textcontent = ''
    expect(buttonCell).toHaveTextContent('')
-
-   // And now with the Alt key
-   userEvent.click(buttonCell)
-   userEvent.keyboard('{Backspace}123')
-   userEvent.keyboard('{Alt>}{Backspace}{/Alt}')
-   userEvent.keyboard('123') // And now subtract 123
-   fireEvent.blur(buttonCell)
-
-   expect(buttonCell).toHaveTextContent('456789')
 })
 
-test("Cell keyboard navigation: Arrows", () => {
+test("Multi-selection editing", () => {
+   const buttonCell1 = getButtonCellElement(0, 0)
+   const buttonCell2 = getButtonCellElement(0, 1)
+   const buttonCell3 = getButtonCellElement(0, 2)
+   userEvent.click(buttonCell1)
+   userEvent.keyboard('123')
+   userEvent.keyboard('{Control>}')
+   userEvent.click(buttonCell2)
+   userEvent.keyboard('456')
+   userEvent.keyboard('{Escape}')
+   expect(buttonCell1).toHaveTextContent('123456')
+   expect(buttonCell2).toHaveTextContent('456')
+   userEvent.click(buttonCell2)
+   userEvent.click(buttonCell3)
+   userEvent.keyboard('789')
+   expect(buttonCell1).toHaveTextContent('123456')
+   expect(buttonCell2).toHaveTextContent('456789')
+   expect(buttonCell3).toHaveTextContent('789')
+   userEvent.click(buttonCell1)
+   userEvent.keyboard('{Backspace}1{/Control}{Escape}')
+   expect(buttonCell1).toHaveTextContent('1')
+   expect(buttonCell2).toHaveTextContent('1')
+   expect(buttonCell3).toHaveTextContent('1')
+})
+
+// When implemented
+test.todo("Cell keyboard navigation while holding Shift and Control")
+
+test("Cell keyboard navigation: Tab + Arrows", () => {
    const cornerCell = getButtonCellElement(0, 8)
    userEvent.click(cornerCell)
 
+   userEvent.tab({ shift: true })
+   expect(getButtonCellElement(0, 7)).toHaveFocus()
+
    // Tab !== Right
-   // In this case, in goes into the next row
+   // In this case, it goes into the next row
+   userEvent.tab()
    userEvent.tab()
    expect(getButtonCellElement(1, 0)).toHaveFocus()
 

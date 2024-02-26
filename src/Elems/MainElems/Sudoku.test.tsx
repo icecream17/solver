@@ -81,11 +81,11 @@ test("Clearing all candidates of a cell", () => {
    const buttonCell = getButtonCellElement(0, 0)
    const buttonCell2 = getButtonCellElement(0, 1)
    
-   // Change to something
+   // Change to something to avoid false negative
    userEvent.click(buttonCell)
-   userEvent.keyboard('123') // And now subtract 123
+   userEvent.keyboard('7')
    fireEvent.blur(buttonCell)
-   expect(buttonCell).toHaveTextContent('456789')
+   expect(buttonCell).toHaveTextContent('7')
 
    // Both Shift and Alt key work to delete all candidates
    userEvent.click(buttonCell)

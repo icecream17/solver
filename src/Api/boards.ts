@@ -77,6 +77,7 @@ export default {
       009047000
    `,
 
+   // A lot of barely solvable boards come from mtBoards by running timeStrategies
    "Chokepoint": `
       000508000
       000000070

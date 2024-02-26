@@ -51,6 +51,8 @@ function main () {
          const {successcount = 0} = Strategy(sudoku, { solved: 0 })
 
          // Update process / error
+         let stratSuccess = false
+
          done++
          results[Strategy.name].processed++
          if (successcount === SuccessError) {
@@ -61,12 +63,15 @@ function main () {
             if (successcount > 0) {
                const isDone = sudoku.data.every(row => row.every(cell => cell.length === 1))
                if (isDone) {
+                  console.log('solved ' + i)
                   solved.add(i)
+                  stratSuccess = true
                } else {
                   const representation = sudoku.to729()
                   if (!already.has(representation)) {
                      already.add(representation)
                      todo.push({ repr: representation, i })
+                     stratSuccess = true
                   }
                }
             }
@@ -83,8 +88,8 @@ function main () {
          // }
 
          if (done % 0x1000 === 0) {
-            // unless there's a bug, done is at most 1465*18^729 = <919 digits>
-            // In practice, it currently finishes at (done: 5081776)
+            // unless there's a bug, done is at most 1465*729 = 1067985
+            // In practice, it currently finishes at (solved: 495, done: 122941)
             console.log({
                solved: solved.size,
                loops: done / 0x1000,
@@ -94,17 +99,26 @@ function main () {
                progress: (100 * done / (todo.length * (STRATEGIES.length + 1))).toPrecision(7),
             })
          }
+
+         // Earlier strats prevent later strats from being tried in most real scenarios
+         if (stratSuccess) {
+            break
+         }
       }
    }
 
-   console.log(done)
+   console.log(solved.size, done)
+
+   for (const key in results) { // @ts-ignore intentional
+      results[key].ts = results[key].totalspeed
+   }
    console.log(results)
 
    window._custom = old
 }
 
-// This test takes about 1600 s, so only enable in special circumstances
-// Enabling now since this is the first time, but the next commit will disable.
+// This test takes about 28s with many logs, so only enable in special circumstances
+// Simply increase this number then change it back
 const shouldTime = Date.now() < 1650642500000
 if (shouldTime) {
    main()

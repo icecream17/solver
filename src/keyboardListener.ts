@@ -8,7 +8,6 @@ const listenerHandler = new EventRegistry<''>()
 const EMPTY_SET = new Set<never>()
 
 const cancel: <E extends Event>(e: E) => void = e => {
-    console.log('cancel')
     for (const key of keysPressed) {
         listenerHandler.notify('', key, 'cancel', EMPTY_SET, e)
     }

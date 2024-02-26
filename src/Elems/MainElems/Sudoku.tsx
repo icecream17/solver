@@ -181,6 +181,12 @@ export default class Sudoku extends React.Component<SudokuProps> {
    }
 
    whenCellBlur(cell: Cell, event: React.FocusEvent) {
+      // When <kbd>Escape</kbd> blurs a cell, the selection could be empty
+      // in which case, do nothing
+      if (this.selectionStatus === null) {
+         return
+      }
+      
       const toAnotherElement = this.isCellElement(event.relatedTarget)
       const ctrlMultiselect = keysPressed.has('Control') && !keysPressed.has('Tab')
 
@@ -248,6 +254,7 @@ export default class Sudoku extends React.Component<SudokuProps> {
             } else if (key === 'Escape') {
                this.cellsSelected.clear()
                this.selectionStatus = null
+               this.syncSelectionStatus()
                target.blur()
                return
             } else {

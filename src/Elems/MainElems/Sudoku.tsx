@@ -223,7 +223,7 @@ export default class Sudoku extends React.Component<SudokuProps> {
 
       const target = event.target as HTMLDivElement
       const shiftHeld = keysPressed.has('Shift')
-      const ctrlHeld = keysPressed.has('Ctrl')
+      const ctrlHeld = keysPressed.has('Control')
 
       for (let {row, column} of this.cellsSelected) {
          let cell = this.props.sudoku.cells[row][column]

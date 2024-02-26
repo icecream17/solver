@@ -38,5 +38,3 @@ export const addListener: (f: Listener) => void = f => {
 
 export const removeListener: (f: Listener) => boolean = f =>
     listenerHandler.removeEventListener('', f)
-
-addListener(console.debug)

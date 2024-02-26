@@ -87,9 +87,9 @@ test("Clearing all candidates of a cell", () => {
    fireEvent.blur(buttonCell)
    expect(buttonCell).toHaveTextContent('7')
 
-   // Both Shift and Alt key work to delete all candidates
+   // Both Shift and Control key work to delete all candidates
    userEvent.click(buttonCell)
-   userEvent.keyboard('{Alt>}{Backspace}{/Alt}123')
+   userEvent.keyboard('{Control>}{Backspace}{/Control}123')
    fireEvent.blur(buttonCell)
    expect(buttonCell).toHaveTextContent('123')
 

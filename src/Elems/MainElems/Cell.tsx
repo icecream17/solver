@@ -291,8 +291,10 @@ export default class Cell extends React.Component<CellProps, CellState> {
 
       const className = this.state.classes?.concat(['Cell']).join(' ') ?? 'Cell'
 
+      // TODO: contenteditable attribute on td will cause it to be editable and tab-focusable
+      //       However there is no easy way to describe the custom text field
       // 1. inner div to separate aria roles
-      //    and because <button> elements cannot contain tables
+      //    and because <button> elements cannot contain block elements
       // 2. tabIndex for focusability
       //    ="0" because of a11y thing
       return (

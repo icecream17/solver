@@ -234,7 +234,7 @@ export default class Sudoku extends React.Component<SudokuProps> {
       const shiftHeld = keysPressed.has('Shift')
       const ctrlHeld = keysPressed.has('Control')
 
-      // Copy/save previous cells selected, since it changes during the loop
+      // eslint-disable-next-line unicorn/no-useless-spread -- Copy/save previous cells selected, since it changes during the loop
       for (let {row, column} of [...this.cellsSelected]) {
          let cell = this.props.sudoku.cells[row][column]
          const wasTarget = cell === targetCell

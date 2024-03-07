@@ -10,7 +10,7 @@ jest.setTimeout(17000);
 
 beforeEach(() => {
    render(<App />);
-   switchTab("strats");
+   switchTab("strategies");
 })
 
 test("Import board", async () => {

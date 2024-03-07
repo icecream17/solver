@@ -23,7 +23,7 @@ type AsideState = Readonly<{
 }>
 
 
-const tabNames = ["solving tools", "strats"]
+const tabNames = ["solving tools", "strategies"]
 
 /**
  * Currently a window of tabs

@@ -19,6 +19,8 @@
 ## Code
 
 [ ] Migrate undo functionality completely to the solver
+[ ] Make rtl handling consistent in the css files
+[ ] rtl keyboard navigation should be inverted?
 
 ## Features
 

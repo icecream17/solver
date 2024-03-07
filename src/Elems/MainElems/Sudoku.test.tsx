@@ -47,19 +47,26 @@ test("Focused buttonCells are highlighted", () => {
    fireEvent.blur(buttonCell)
    expect(buttonCell).toHaveAttribute('data-active', 'false') // selection disabled
 
+   // An actual bug - pressing right moved the focus right and selected the cell right
+   const nextCell = getButtonCellElement(0, 2)
+   userEvent.click(buttonCell)
+   userEvent.keyboard('{ArrowRight}')
+   expect(nextCell).not.toHaveAttribute('data-active') // not selected
+   userEvent.click(buttonCell)
+
    // Multi-select
-   const nextCell = getButtonCellElement(3, 4)
+   const buttonCell2 = getButtonCellElement(3, 4)
    userEvent.keyboard('{Control>}')
-   userEvent.click(nextCell)
+   userEvent.click(buttonCell2)
    expect(buttonCell).toHaveAttribute('data-active', 'true') // selected
-   expect(nextCell).toHaveAttribute('data-active', 'true') // selected
-   fireEvent.blur(nextCell)
+   expect(buttonCell2).toHaveAttribute('data-active', 'true') // selected
+   fireEvent.blur(buttonCell2)
    expect(buttonCell).toHaveAttribute('data-active', 'false') // selection disabled
-   expect(nextCell).toHaveAttribute('data-active', 'false') // selection disabled
-   userEvent.click(nextCell)
+   expect(buttonCell2).toHaveAttribute('data-active', 'false') // selection disabled
+   userEvent.click(buttonCell2)
    userEvent.keyboard('{/Control}{Escape}')
    expect(buttonCell).not.toHaveAttribute('data-active') // not selected
-   expect(nextCell).not.toHaveAttribute('data-active') // not selected
+   expect(buttonCell2).not.toHaveAttribute('data-active') // not selected
 })
 
 test("Setting a cell to a digit", () => {
@@ -179,6 +186,10 @@ test("Cell keyboard navigation: Tab + Arrows", () => {
    tryKey('{ArrowDown}', 0, 7)
    tryKey('{ArrowRight}', 0, 8)
    tryKey('{ArrowRight}', 0, 0)
+   tryKey('{ArrowRight>}{ArrowDown}{/ArrowRight}', 1, 1) // Actual bug
+   tryKey('{ArrowRight>3/}', 1, 4) // Repeat
+   // tryKey('{ArrowUp>}{ArrowLeft>4/}{/ArrowUp}', 7, 1) // Diagonal repeat
+   // I tested this manually and it works so... idk
 })
 
 test("Cell keyboard navigation: End / Home", () => {

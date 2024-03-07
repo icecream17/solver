@@ -19,7 +19,7 @@ test('a header exists', () => {
 })
 
 test("Strategy sections exist", () => {
-   switchTab('strats')
+   switchTab('strategies')
    expect(screen.getByRole('group', { name: 'strategies' })).toBeInTheDocument()
    expect(screen.getByRole('group', { name: 'controls' })).toBeInTheDocument()
 })

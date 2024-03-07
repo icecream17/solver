@@ -34,7 +34,6 @@
    position: absolute;
    left: -1rem;
    margin: 0; /* Now sanitize.css works! */
-   vertical-align: middle;
    text-align: center;
    line-height: inherit;
 
@@ -55,7 +54,7 @@
 
    .StrategyToggler:dir(rtl) {
       left: initial;
-      right: -1rem;
+      right: 0;
    }
 }
 
@@ -72,7 +71,7 @@
 
    [dir=rtl] .StrategyToggler {
       left: initial;
-      right: -1rem;
+      right: 0;
    }
 }
 

@@ -11,7 +11,7 @@ beforeEach(() => {
 })
 
 function getTogglers () {
-   switchTab('strats')
+   switchTab('strategies')
 
    try {
       return screen.getAllByRole('checkbox')

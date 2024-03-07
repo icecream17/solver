@@ -22,7 +22,7 @@ beforeEach(() => {
 
 test('Tab: When focus moves into the tab list, focus on the active tab element', () => {
    const dummyTextarea = screen.getByTestId("dummy-focusable")
-   const stratsTab = screen.getByRole("tab", { name: "strats" })
+   const stratsTab = screen.getByRole("tab", { name: "strategies" })
    userEvent.click(stratsTab)
    dummyTextarea.focus()
    userEvent.tab()
@@ -39,7 +39,7 @@ test.skip('Tab: When in the tab list, focus on the tabpanel unless the first mea
 
 test.skip('Left / Right arrow keys', () => {
    const solveToolsTab = screen.getByRole("tab", { name: "solving tools" })
-   const stratsTab = screen.getByRole("tab", { name: "strats" })
+   const stratsTab = screen.getByRole("tab", { name: "strategies" })
 
    userEvent.click(stratsTab)
    userEvent.keyboard('{ArrowLeft}')
@@ -58,7 +58,7 @@ test.skip('Left / Right arrow keys', () => {
 
 test('Home / End', () => {
    const solveToolsTab = screen.getByRole("tab", { name: "solving tools" })
-   const stratsTab = screen.getByRole("tab", { name: "strats" })
+   const stratsTab = screen.getByRole("tab", { name: "strategies" })
 
    userEvent.click(stratsTab)
    userEvent.keyboard('{Home}')

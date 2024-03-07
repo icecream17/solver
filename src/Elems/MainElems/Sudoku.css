@@ -57,6 +57,7 @@ td.Cell:nth-child(3n):not(:last-child) {
 
 [dir=rtl] td.Cell:nth-child(3n):not(:last-child),
 td.Cell:nth-child(3n):not(:last-child):dir(rtl) {
+   border-right: initial;
    border-left: var(--large-border) solid var(--border-color);
 }
 

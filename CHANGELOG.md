@@ -4,6 +4,12 @@ Note: Many earlier versions are not specified, that's too much work.
 
 When a `@types` dependency updates, they almost always don't affect anything.
 
+## v0.35.1
+
+- (use) Fix massive bug in cell keyboard nagivation, where pressing an arrow key would focus the next cell and select the next next cell
+- (a11y) Expand abbrevation (`strats` ⇒ `strategies`)
+- (css) Fix some incorrect rtl display
+
 ## v0.35.0
 
 - (use) Multiselectable cells! Select multiple cells at the same time with <kbd>Ctrl</kbd>+Click

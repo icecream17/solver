@@ -170,6 +170,7 @@ export default class Sudoku extends React.Component<SudokuProps> {
    // The effect of Ctrl is to add (or remove) only one cell to the selection.
 
    whenCellFocus(cell: Cell, _event: React.FocusEvent) {
+      // console.debug("focus", cell.id)
       const ctrlMultiselect = keysPressed.has('Control') && !keysPressed.has('Tab')
       if (!ctrlMultiselect) {
          this.cellsSelected.clear()
@@ -181,6 +182,7 @@ export default class Sudoku extends React.Component<SudokuProps> {
    }
 
    whenCellBlur(cell: Cell, event: React.FocusEvent) {
+      // console.debug("blur", cell.id)
       // When <kbd>Escape</kbd> blurs a cell, the selection could be empty
       // in which case, do nothing
       if (this.selectionStatus === null) {
@@ -208,6 +210,7 @@ export default class Sudoku extends React.Component<SudokuProps> {
     * Edit: I'm not sure if I should actually follow that section
     */
    whenCellKeydown(targetCell: Cell, event: React.KeyboardEvent) {
+      // console.debug("keyboard", targetCell.id, event.repeat, event.key)
       // Use default behavior when tabbing
       if (event.key === 'Tab') {
          return
@@ -219,17 +222,24 @@ export default class Sudoku extends React.Component<SudokuProps> {
       // This has no effect on the listeners. SAFETY
       keysPressed.add(event.key)
 
+      // Let's say the user pressed both Up and Right at basically the same time
+      // What the code sees: Up, Right, UpEnd, RightEnd
+      // What the code does: Up, Up+Right
+      // We will only consider other keys to repeat when a repeat event occurs
+      const keysToProcess = event.repeat ? keysPressed : [event.key]
+
       const newSelected = new Set<CellID>()
 
       const target = event.target as HTMLDivElement
       const shiftHeld = keysPressed.has('Shift')
       const ctrlHeld = keysPressed.has('Control')
 
-      for (let {row, column} of this.cellsSelected) {
+      // Copy/save previous cells selected, since it changes during the loop
+      for (let {row, column} of [...this.cellsSelected]) {
          let cell = this.props.sudoku.cells[row][column]
          const wasTarget = cell === targetCell
 
-         for (const key of keysPressed) {
+         for (const key of keysToProcess) {
             if (cell == null) {
                break
             }

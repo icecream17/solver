@@ -4,6 +4,11 @@ Note: Many earlier versions are not specified, that's too much work.
 
 When a `@types` dependency updates, they almost always don't affect anything.
 
+## v0.36.0
+
+- (use) Fix ANOTHER massive bug: editing multiple cells now works and is consistent with the visuals
+- (use) Ctrl+A to select all cells
+
 ## v0.35.1
 
 - (use) Fix massive bug in cell keyboard nagivation, where pressing an arrow key would focus the next cell and select the next next cell

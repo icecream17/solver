@@ -326,6 +326,11 @@ export default class Cell extends React.Component<CellProps, CellState> {
       }))
    }
 
+   // cell blur --> this is called for all selected cells
+   syncNewCandidates() {
+      this.props.whenNewCandidates(this, this.state.candidates)
+   }
+
    // setState for both of these is called in the when handlers through updateSelectionStatus,
    // but should be consistent with the commented out code
    whenFocus(event: React.FocusEvent) {
@@ -339,7 +344,6 @@ export default class Cell extends React.Component<CellProps, CellState> {
    }
 
    whenBlur(event: React.FocusEvent) {
-      this.props.whenNewCandidates(this, this.state.candidates)
       this.props.whenCellBlur(this, event)
       // this.setState({
       //    active: false,

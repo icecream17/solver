@@ -2,8 +2,9 @@
 import { fireEvent, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import App from '../../App';
-import { IndexToNine } from '../../Types';
+import { INDICES_TO_NINE, IndexToNine } from '../../Types';
 import { getButtonCellElement, getTableCellElement } from './Sudoku.testUtils';
+import { keysPressed } from '../../keyboardListener';
 
 function tryKey (keyboard: string, row: IndexToNine, column: IndexToNine) {
    userEvent.keyboard(keyboard)
@@ -11,7 +12,8 @@ function tryKey (keyboard: string, row: IndexToNine, column: IndexToNine) {
 }
 
 beforeEach(() => {
-   render(<App />);
+   render(<App />)
+   keysPressed.clear() // TODO: This should not be needed, test this!
 })
 
 // The name === 'Sudoku' because aria-label === 'Sudoku'
@@ -67,6 +69,14 @@ test("Focused buttonCells are highlighted", () => {
    userEvent.keyboard('{/Control}{Escape}')
    expect(buttonCell).not.toHaveAttribute('data-active') // not selected
    expect(buttonCell2).not.toHaveAttribute('data-active') // not selected
+
+   userEvent.click(buttonCell)
+   userEvent.keyboard('{Control>}a{/Control}')
+   for (const row of INDICES_TO_NINE) {
+      for (const col of INDICES_TO_NINE) {
+         expect(getButtonCellElement(row, col)).toHaveAttribute('data-active')
+      }
+   }
 })
 
 test("Setting a cell to a digit", () => {

@@ -3,7 +3,7 @@ import React from 'react'
 
 import Row from './Row'
 import Cell from './Cell'
-import { CouldAIsB, IndexToNine, SudokuDigits, _Callback } from '../../Types'
+import { CouldAIsB, INDICES_TO_NINE, IndexToNine, SudokuDigits, _Callback } from '../../Types'
 import { CellID, id } from '../../Api/Utils'
 import SudokuData from '../../Api/Spaces/Sudoku'
 import { keysPressed } from '../../keyboardListener'
@@ -62,7 +62,7 @@ export default class Sudoku extends React.Component<SudokuProps> {
 
       this.cellsSelected = new Set<CellID>()
       this.selectionStatus = null
-      this.listener = this.listener.bind(this)
+      // this.listener = this.listener.bind(this)
 
       this.whenCellBlur = this.whenCellBlur.bind(this)
       this.whenCellFocus = this.whenCellFocus.bind(this)
@@ -106,9 +106,9 @@ export default class Sudoku extends React.Component<SudokuProps> {
       )
    }
 
-   listener() {
-      // TODO
-   }
+   // listener() {
+   //    // TODO
+   // }
 
    syncSelectionStatus() {
       for (const row of this.props.sudoku.cells) {
@@ -121,19 +121,22 @@ export default class Sudoku extends React.Component<SudokuProps> {
       }
    }
 
+   syncSelectionCandidates() {
+      for (const row of this.props.sudoku.cells) {
+         for (const cell of row) {
+            if (cell != null && this.cellsSelected.has(cell.id)) {
+               cell.syncNewCandidates()
+            }
+         }
+      }
+   }
+
    /**
     * Implicitly blurs the previously focused cell
     * INCOMPLETELY DOCUMENTED BUG: This focuses the element, but often the
     */
    focusCell(row: IndexToNine, column: IndexToNine) {
       this.getCellElement(row, column).focus()
-   }
-
-   focusIfTargetMovedAndAddToSelection(row: IndexToNine, column: IndexToNine, targetMoved: boolean, newSelected: Set<CellID>) {
-      if (targetMoved) {
-         this.focusCell(row, column)
-      }
-      newSelected.add(id(row, column))
    }
 
    isCellElement(element: null | Element): CouldAIsB<typeof element, HTMLButtonElement> {
@@ -181,27 +184,19 @@ export default class Sudoku extends React.Component<SudokuProps> {
       this.syncSelectionStatus()
    }
 
-   whenCellBlur(cell: Cell, event: React.FocusEvent) {
+   whenCellBlur(_cell: Cell, _event: React.FocusEvent) {
       // console.debug("blur", cell.id)
       // When <kbd>Escape</kbd> blurs a cell, the selection could be empty
       // in which case, do nothing
       if (this.selectionStatus === null) {
          return
       }
-      
-      const toAnotherElement = this.isCellElement(event.relatedTarget)
-      const ctrlMultiselect = keysPressed.has('Control') && !keysPressed.has('Tab')
 
-      if (toAnotherElement) {
-         if (!ctrlMultiselect) {
-            this.cellsSelected.delete(cell.id)
-         }
-         // this.selectionStatus = true
-      } else {
-         this.selectionStatus = false
-      }
-
+      // if another cell is selected, it will clear selectedness for the rest of the cells
+      // until then, the cell stays inactively selected
+      this.selectionStatus = false
       this.syncSelectionStatus()
+      this.syncSelectionCandidates()
    }
 
    /**
@@ -230,9 +225,18 @@ export default class Sudoku extends React.Component<SudokuProps> {
 
       const newSelected = new Set<CellID>()
 
-      const target = event.target as HTMLDivElement
+      const target = event.target as HTMLDivElement // only used in Escape
       const shiftHeld = keysPressed.has('Shift')
       const ctrlHeld = keysPressed.has('Control')
+
+      // Ctrl+A = Select all
+      if (ctrlHeld && keysPressed.has('a')) {
+         for (const row of INDICES_TO_NINE) {
+            for (const col of INDICES_TO_NINE) {
+               this.cellsSelected.add(id(row, col))
+            }
+         }
+      }
 
       // eslint-disable-next-line unicorn/no-useless-spread -- Copy/save previous cells selected, since it changes during the loop
       for (let {row, column} of [...this.cellsSelected]) {
@@ -240,7 +244,7 @@ export default class Sudoku extends React.Component<SudokuProps> {
          const wasTarget = cell === targetCell
 
          for (const key of keysToProcess) {
-            if (cell == null) {
+            if (cell == null) { // `cell` may change within the loop, so the check is also within the loop
                break
             }
 
@@ -270,19 +274,19 @@ export default class Sudoku extends React.Component<SudokuProps> {
             } else {
                // Keyboard movements
                if (key in keyboardMappings) {
-                  const step = keyboardMappings[(key as keyof typeof keyboardMappings)];
+                  const step = keyboardMappings[key as keyof typeof keyboardMappings];
          
                   row = (row + 9 + step.vRow) % 9 as IndexToNine
                   column = (column + 9 + step.vColumn) % 9 as IndexToNine
                } else if (key === 'Home') {
-                  if (event.ctrlKey) {
+                  if (ctrlHeld) {
                      row = 0
                      column = 0
                   } else {
                      column = 0
                   }
                } else if (key === 'End') {
-                  if (event.ctrlKey) {
+                  if (ctrlHeld) {
                      row = 8
                      column = 8
                   } else {
@@ -300,9 +304,14 @@ export default class Sudoku extends React.Component<SudokuProps> {
             }
          }
 
-         // Due to keyboard movements, the original location may have moved to a new location.
-         // This new location is reflected by row and column
-         this.focusIfTargetMovedAndAddToSelection(row, column, wasTarget && cell !== targetCell, newSelected)
+         // Due to keyboard movements, the original focus may have moved to a new focus.
+         const targetMoved = wasTarget && cell !== targetCell
+         if (targetMoved) {
+            this.focusCell(row, column)
+         }
+
+         // Even if not focused we select the new cell after the movement
+         newSelected.add(id(row, column))
       }
 
       this.cellsSelected = newSelected

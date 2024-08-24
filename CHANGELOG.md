@@ -4,6 +4,11 @@ Note: Many earlier versions are not specified, that's too much work.
 
 When a `@types` dependency updates, they almost always don't affect anything.
 
+## v0.36.1
+
+- (css) Fix explanation changing the size of Aside
+  - Chain explanations now include zero width spaces to break-word nicely.
+
 ## v0.36.0
 
 - (use) Fix ANOTHER massive bug: editing multiple cells now works and is consistent with the visuals

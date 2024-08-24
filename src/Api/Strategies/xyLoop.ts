@@ -50,7 +50,7 @@ function checkLoop (sudoku: PureSudoku, color1: CandidateID[], color2: Candidate
       return {
          success: true,
          successcount: 1,
-         message: `${color2.map(cand => algebraic(cand.row, cand.column)).join("<>")}<>`,
+         message: `${color2.map(cand => algebraic(cand.row, cand.column)).join("\u200B<>\u200B")}\u200B<>\u200B`,
       } as const
    }
 

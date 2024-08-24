@@ -16,6 +16,17 @@
 [ ] Exocet
 [ ] Wow
 
+### Speed
+
+Premature optimization is bad, but this is the most exciting part of the code.
+
+[ ] Generalize strategies with a better API
+[ ] Switch ordering of loops: I think having the candidate loop be in the inner loop is much faster
+[ ] Hidden pairs, triples, and quads is much faster than pairs, triples, and quads
+[ ] Make XY Loop and XY Chain be able to short circuit (i.e. not include the starting cell).
+    This would allow us to skip cells that are already connected, bounding the strategies to n^4
+    The strategies are already really fast, so do some testing first.
+
 ## Code
 
 [ ] Migrate undo functionality completely to the solver

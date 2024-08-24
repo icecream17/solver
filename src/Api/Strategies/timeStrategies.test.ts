@@ -19,9 +19,7 @@ function main () {
       processed: number
       finds: number
       errors: number
-      totalspeed: number
-      totaldeviation: number
-      timetaken: number
+      speeds: number[]
    }>
 
    let done = 0
@@ -40,15 +38,17 @@ function main () {
             processed: 0,
             finds: 0,
             errors: 0,
-            get totalspeed() {return this.processed / this.timetaken},
-            totaldeviation: 0,
-            timetaken: 0,
+            speeds: [],
          }
          const start = Date.now()
 
          // Do strategy
          // @ts-expect-error - bruh
          const {successcount = 0} = Strategy(sudoku, { solved: 0 })
+         const timetaken = Date.now() - start
+
+         // Update speed
+         results[Strategy.name].speeds.push(timetaken)
 
          // Update process / error
          let stratSuccess = false
@@ -63,7 +63,7 @@ function main () {
             if (successcount > 0) {
                const isDone = sudoku.data.every(row => row.every(cell => cell.length === 1))
                if (isDone) {
-                  console.log('solved ' + i)
+                  // console.log('solved ' + i)
                   solved.add(i)
                   stratSuccess = true
                } else {
@@ -76,16 +76,6 @@ function main () {
                }
             }
          }
-
-         // Update speed
-         const oldtotalspeed = results[Strategy.name].totalspeed
-         const timetaken = Date.now() - start
-         results[Strategy.name].timetaken += timetaken
-         results[Strategy.name].totaldeviation += Math.abs(oldtotalspeed - results[Strategy.name].totalspeed)
-         // const averagedeviation = results[Strategy.name].totaldeviation / results[Strategy.name].processed
-         // if (averagedeviation / results[Strategy.name].processed < 0.0001 && timetaken > 100 && results[Strategy.name].processed > 100) {
-         //    break
-         // }
 
          if (done % 0x1000 === 0) {
             // unless there's a bug, done is at most 1465*729 = 1067985
@@ -107,10 +97,22 @@ function main () {
       }
    }
 
-   console.log(solved.size, done)
+   console.log(`Solved ${solved.size} out of ${mtBoards.length} (~${100 * solved.size / mtBoards.length}%)`, done)
 
-   for (const key in results) { // @ts-ignore intentional
-      results[key].ts = results[key].totalspeed
+   for (const key in results) {
+      // @ts-expect-error -- intentional
+      results[key].ts = results[key].speeds.reduce((a, b) => a + b)
+      // @ts-expect-error -- intentional
+      results[key].stdev = results[key].speeds.map(a => (results[key].ts / results[key].processed - a) ** 2).reduce((a, b) => a + b) / results[key].processed
+      // @ts-expect-error -- intentional
+      results[key].accuracy = Math.log10(results[key].ts / results[key].stdev)
+      // @ts-expect-error -- intentional
+      results[key].hertz = results[key].processed / results[key].ts
+
+      // @ts-expect-error
+      delete results[key].ts
+      // @ts-expect-error
+      delete results[key].speeds
    }
    console.log(results)
 

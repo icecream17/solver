@@ -16,7 +16,6 @@ function check(cell1: CellID, cell2: CellID, candidate: SudokuDigits, candLocati
    const sameRowAsCell1 = candLocations.row[cell1.row]
    const sameColAsCell2 = candLocations.column[cell2.column]
    if (sameRowAsCell1.size === 2 && sameColAsCell2.size === 2) {
-      // Looks big nesting but not really
       for (const cell1B of sameRowAsCell1) {
          if (cell1B !== cell1) {
             for (const cell2B of sameColAsCell2) {

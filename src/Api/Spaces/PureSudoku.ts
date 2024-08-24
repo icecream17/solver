@@ -219,6 +219,11 @@ export default class PureSudoku {
       return data.slice(startRow, startRow + 3).flatMap(row => row.slice(startColumn, startColumn + 3))
    }
 
+   /**
+    * A group is a set of maximally mutually exclusive set of cells.
+    * 
+    * Currently, we assume this is just the rows, columns, and boxes, but this will be changed later on.
+    */
    getGroups() {
       const groups = []
       const cellData = this.data.map((row, indexOfRow) =>

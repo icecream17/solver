@@ -390,57 +390,43 @@ About that XY Loop stuff... yeah, XY Chain is special enough to get it's own fun
 
 ## Strategy speed
 
-Here's a list of a bunch of strategies, ranked in order of how fast they currently are in my solver, and accompanied with some educated guesses on why they're slow/fast.
+Here's a list of a bunch of strategies, ranked in order of how fast they currently are in my solver, and accompanied with some educated guesses on why they're slow/fast. Note that _a strategy is only tried if the previous strategies fail_.
 
 "Has dual" just notes that it can happen twice with an almost similar setup (e.g. same base or something)
 
-I'm as surprised with the results as you are - this is definitely not how easy it is for humans
-
-Ranking is ln random sudokus proccessed per ms.
-So strategies that error or finish early get an advantage.
+Ironically, some of the "easiest" strategies for humans, like intersection removal, are the hardest so far.
+That's mostly because I haven't gotten to the actually complicated strategies.
 
 Some easy strategies find all instances within a sudoku = much slower
 
-Tries: 2
+Experimental evidence suggests there are generally only 1 to 2 digits of accuracy for really fast strategies,
+but more accuracy for less fast strategies. I tried to estimate digits of accuracy by `log10(time / stdev)`,
+but take it with a pinch of salt.
 
-- [x] Y wing / XY wing / Bent triple (11.71 - 11.77)
-  - [] Has dual (multi coloring). There's also 3D medusa
-  - [] This limited form is a subset of X chains
-- [x] XY Loop (11.63 - 11.76)
-- [x] Update candidates (11.62 - 11.76)
-  - n^3 (n for each cell, n for each affects(cell), n for checking if affects(cell) contains that solved candidate)
-- [x] XYZ Wing (11.64 - 11.73)
-- [x] XY Chain (11.64 - 11.71)
-- [x] Hidden singles (11.28 - 11.46)
-  - n^3 (n for each candidate, n for each group, n for each cell in group (checking single))
-  - Easier than update candidates because humans
-  - Despite this, hidden singles doesn't work if the candidates are not updated
-- [x] Check for solved (11.26 - 11.36)
-  - n
-  - But this also calls "checkValidity" which is about n^3
-- [x] Skyscraper (Subset of wing/coloring) (10.81 - 10.92)
-  - 2 lines - 1 line = extra
-  - n^6 ({fish note} - but instead I spend n^3 * {n counting pend lines, n^3 to get attacks(cell of line), n^3 per attacks to get shared} = n^6)
-- [x] X wing (really a fish) (10.64 - 10.84)
-  - 2 lines have a candidate in only 2 crosslines
-  - n^6 (see {fish note})
-  - I have no idea why skyscraper would be faster
-- [x] Swordfish (10.17 - 10.33)
-  - 3 lines have a candidate in only 3 crosslines
-  - n^6 (see {fish note})
-- [x] Hidden pairs, triples, and quads (10.01 - 10.26)
-  - N candidates are in N cells (which all see each other)
-  - n^5 (Pretty much the same as the non hidden strategy.)
-- [x] Pairs, triples, and quads (9.51 - 9.61)
-  - N cells have N candidates (and all see each other)
-  - n^5 (I have no idea how I did this. My code is quite big)
-- [x] Intersection Removal (9.32 - 9.41)
-  - All candidates in a box see OR All candidates in a line see
-  - n^4 (n for each candidate, n^2 for box + line, n for each cell in (box - line) or (line - box))
-- [x] Jellyfish (8.99 - 9.11)
-  - 4 lines have a candidate in only 4 crosslines
-  - n^6 (see {fish note})
-- [x] Two minus one lines (8.14 - 8.15)
+n is generally 9, so constants are rather important.
+
+Tries: 1
+
+| Strategy                  |  Usefulness  | Time^-1 | Estimated digits of accuracy |  Complexity  | Explanation                                                                                                                                 |
+|---------------------------|:------------:|:-------:|:----------------------------:|:------------:|---------------------------------------------------------------------------------------------------------------------------------------------|
+| Check for solved          | 819543/25790 | 22.2519 |             4.15             |      n^3     | n, but it includes "checkValidity" with is n^3                                                                                              |
+| Update candidates         | 499816/24325 | 56.8341 |             4.30             |     3n^4     | n^2 cells, 3n affects(cell), n in cell                                                                                                      |
+| Hidden singles            |  17844/12399 | 46.7887 |             4.02             |     3n^3     | Avoids the "n" because the target is a single cell, and instead of deleting candidates one by one, just set the cell to a single candidate. |
+| Intersection removal      |   8506/7059  |  1.3822 |             3.95             | 4(n^4-n^3.5) | n candidates, n\*2n box*line, 2(n-sqrt(n)) differences (probably did too much optimization here)                                            |
+| Pairs, triples, and quads |  12808/4264  |  1.9241 |             3.73             |              |                                                                                                                                             |
+| Hidden ""                 |   236/2543   |  3.4062 |             3.45             |              |                                                                                                                                             |
+| X wing (fish)             |    82/2348   |  7.5987 |             3.43             |      n^6     | wing note                                                                                                                                   |
+| Swordfish                 |    42/2282   |  3.1475 |             3.41             |      n^6     | wing note                                                                                                                                   |
+| Jellyfish                 |    3/2259    |  1.3203 |             3.18             |      n^6     | wing note                                                                                                                                   |
+| Skyscraper                |   205/2257   |  5.1063 |             3.30             |              |                                                                                                                                             |
+| 2 string kite             |   119/2053   |  20.53  |             3.33             |              |                                                                                                                                             |
+| Y wing                    |   102/1935   | 46.0714 |             3.30             |              |                                                                                                                                             |
+| 2-1 lines                 |   559/1834   |  0.2586 |             3.31             |              |                                                                                                                                             |
+| W wing                    |   152/1337   |  8.6258 |             3.17             |              |                                                                                                                                             |
+| XYZ wing                  |    72/1192   | 30.5641 |             2.91             |              |                                                                                                                                             |
+| Pair covers group         |    35/1120   |  3.5668 |             3.05             |              |                                                                                                                                             |
+| XY Loop                   |    30/1092   |  9.2542 |             2.24             |              |                                                                                                                                             |
+| XY Chain                  |    93/1062   |  7.4266 |             2.37             |              |                                                                                                                                             |
 
 > {wing note}: Instead of nesting loops for each line in a wing, I do the following:
 >

@@ -26,8 +26,6 @@ const oppositeKeys = {
 
 export default class Tabs extends React.Component<TabsProps, TabsState> {
    tabsElement: TabsElement = null;
-   tabTime = -Infinity;
-   focusTime = -Infinity;
    keysPressed: typeof importantKeys = new Set();
    setTabsElement: (element: TabsElement) => TabsElement;
    constructor (props: TabsProps) {
@@ -165,40 +163,23 @@ export default class Tabs extends React.Component<TabsProps, TabsState> {
       })
    }
 
-   /**
-    * when Tab & when Focus --> focus selected tab
-    */
    whenKeyUp (event: React.KeyboardEvent) {
       this.keysPressed.delete(event.key)
-
-      if (event.key === "Tab") {
-         this.tabTime = Date.now()
-         this.checkIfTabbedInto()
-      }
    }
 
    whenTabFocused () {
+      // align focused and selected tab
       this.setState(prevState => ({ focusedTab: prevState.selectedTab }))
-      if (this.focusTime === null) {
-         this.focusTime = Date.now()
-      }
    }
 
+   // When entering a group of tabs, focus the currently active ("selected") tab
+   // Note that a mouseup happens after a focus event, i.e. this always wins a race to be overridden.
    whenFocus (_event: React.FocusEvent) {
-      this.focusTime = Date.now()
-      this.checkIfTabbedInto()
+      this.whenTabFocused()
    }
 
    whenBlur() {
-      this.focusTime = -Infinity
       this.setState({ focusedTab: null })
-   }
-
-   checkIfTabbedInto () {
-      // My browser took 44ms 51ms
-      if (Math.abs(this.tabTime - this.focusTime) < 300) {
-         this.setState({ focusedTab: this.state.selectedTab })
-      }
    }
 
    changeToMainContent () {

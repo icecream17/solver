@@ -10,7 +10,7 @@ A simple sudoku solver I made. This is inspired by <https://sudokuwiki.org/>.
 
 [Install node](https://nodejs.org/), it comes with npm.
 
-Try `npm -i npm@latest` to update npm - if there's a "not recognized" error, search stackoverflow about adding node to path.
+Try `npm -i npm@latest` to update npm -- if there's a "not recognized" error, search stackoverflow about adding node to path.
 
 `npm -i yarn`
 
@@ -53,8 +53,6 @@ You can run `yarn install` and then `yarn npm audit` for the full report.
 
 ## Node version
 
-This uses `String.prototype.replaceAll`, so your node version must be `>=15.0.0`.
+This project does not seem to use node, but just in case, this uses `String.prototype.replaceAll`, so your node version must be `>=15.0.0`.
 
-If you're on gitpod run `nvm install 16` on each new terminal.
-
-Also, `@types/node` is usually on one of the latest versions. If this is incompatible with an earlier version of node, please post an issue.
+Also, `@types/node` is usually on one of the latest versions, since github actions eventually deprecates old versions of node. If `@types/node` is incompatible with an earlier version of node, you can try downgrading the dependency, or post an issue if it doesn't work. Alternatively, if you're on gitpod run `nvm install 16` or higher.

@@ -1,6 +1,6 @@
 {
   "name": "solver",
-  "version": "0.36.1",
+  "version": "0.36.2",
   "private": true,
   "homepage": "https://icecream17.github.io/solver",
   "dependencies": {
@@ -17,7 +17,7 @@
   },
   "devDependencies": {
     "@types/jest": "^27.0.2",
-    "@types/node": "^20.0.0",
+    "@types/node": "^22.0.0",
     "@types/react": "^17.0.34",
     "@types/react-dom": "^17.0.11",
     "eslint-plugin-jest-dom": "^4.0.0",
@@ -39,10 +39,7 @@
   },
   "browserslist": {
     "production": [
-      "supports prefers-color-scheme",
-      "not ios_saf < 14.5",
-      "not safari < 14.1",
-      "not firefox < 90",
+      "last 1 year",
       "not dead"
     ],
     "development": [
@@ -52,7 +49,7 @@
     ]
   },
   "engines": {
-    "node": ">=15.0.0"
+    "node": ">=22.0.0"
   },
   "packageManager": "yarn@3.8.5"
 }

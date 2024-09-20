@@ -53,6 +53,6 @@ You can run `yarn install` and then `yarn npm audit` for the full report.
 
 ## Node version
 
-This project does not seem to use node, but just in case, this uses `String.prototype.replaceAll`, so your node version must be `>=15.0.0`.
+This project does not seem to use node, but just in case, this uses `Set.prototype.isSubsetOf`, so your node version must be `>=22.0.0`.
 
 Also, `@types/node` is usually on one of the latest versions, since github actions eventually deprecates old versions of node. If `@types/node` is incompatible with an earlier version of node, you can try downgrading the dependency, or post an issue if it doesn't work. Alternatively, if you're on gitpod run `nvm install 16` or higher.

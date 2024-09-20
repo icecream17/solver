@@ -168,22 +168,32 @@ export function getIDFromIndexWithinBox(indexOfBox: IndexToNine, indexInBox: Ind
    return id(boxRow * 3 + withinRow as IndexToNine, boxColumn * 3 + withinColumn as IndexToNine)
 }
 
-export function groupInfo(type: GrpTyp, cells: CellID[]) {
+function elementInIterable<T>(iter: Iterable<T>): T | undefined {
+   for (const elem of iter) {
+      return elem
+   }
+}
+
+/**
+ * @param cells A nonempty iterable of `CellID`
+ */
+export function groupInfo(type: GrpTyp, cells: Iterable<CellID>) {
    let groupIndex: IndexToNine
    let cellsInGroup
+   const arbitraryCell = elementInIterable(cells) as CellID // If it is undefined, it will error at runtime
    switch (type) {
       case "row": {
-         groupIndex = cells[0].row
+         groupIndex = arbitraryCell.row
          cellsInGroup = INDICES_TO_NINE.map(indice => id(groupIndex, indice))
          break
       }
       case "column": {
-         groupIndex = cells[0].column
+         groupIndex = arbitraryCell.column
          cellsInGroup = INDICES_TO_NINE.map(indice => id(indice, groupIndex))
          break
       }
       case "box": {
-         groupIndex = boxAt(cells[0].row, cells[0].column)
+         groupIndex = boxAt(arbitraryCell.row, arbitraryCell.column)
          cellsInGroup = INDICES_TO_NINE.map(indice => getIDFromIndexWithinBox(groupIndex, indice))
          break
       }

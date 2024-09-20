@@ -1,6 +1,6 @@
 import { ALL_CANDIDATES, IndexToNine, INDICES_TO_NINE, SudokuDigits } from "../../Types";
 import PureSudoku from "../Spaces/PureSudoku";
-import { affects, CellID, setDifference, sharedInArrays } from "../Utils";
+import { affects, CellID, sharedInArrays } from "../Utils";
 import { colorGroup } from "../Utils.dependent";
 import { __incrementMapValue } from "./skyscraper";
 
@@ -101,7 +101,7 @@ export function _innerGroupSubtractionLogic(
 
    if (successcount) {
       const nonExtraLineCells = __inLine(sumLines, nonExtraLine as IndexToNine, pendLineProp)
-      const extraCells = setDifference(sumLines, nonExtraLineCells)
+      const extraCells = sumLines.difference(nonExtraLineCells)
       colorGroup(sudoku, extraCells, candidate, "orange")
       colorGroup(sudoku, nonExtraLineCells, candidate)
       return {

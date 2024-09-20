@@ -4,6 +4,10 @@ Note: Many earlier versions are not specified, that's too much work.
 
 When a `@types` dependency updates, they almost always don't affect anything.
 
+## v0.36.2
+
+- (code) Use new Set methods, simplifies code. This shouldn't break support for old browsers.
+
 ## v0.36.1
 
 - (css) Fix explanation changing the size of Aside

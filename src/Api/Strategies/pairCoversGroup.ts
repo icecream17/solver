@@ -25,15 +25,15 @@ function _checkPair(
             //     ^ group [sees A or B] [has A or B]
             // Avoid eliminating everything
             if (group_A.size === 0) {
-                const [groupIndex] = groupInfo(prop, [...group_A])
+                const [groupIndex] = groupInfo(prop, group_A)
                 window._custom.alert(`${prop} ${GRP_NAMES[prop][groupIndex]} has no possibilities for ${candidateA} !`)
                 return "error"
             }
 
             // Condition 2: The two cells see all cells in the group that have A.
-            if (isSubset(group_A, affectsEitherAorB)) {
+            if (group_A.isSubsetOf(affectsEitherAorB)) {
                 // Elimination type A
-                const [, allOfGroup, remaining] = groupInfo(prop, [...group_A])
+                const [, allOfGroup, remaining] = groupInfo(prop, group_A)
 
                 // Strategy does not work when X or Y is in the group
                 if (allOfGroup.includes(cellA) || allOfGroup.includes(cellB)) {

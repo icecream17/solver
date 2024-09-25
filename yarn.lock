@@ -3814,11 +3814,11 @@ __metadata:
   linkType: hard
 
 "@types/node@npm:*, @types/node@npm:^22.0.0":
-  version: 22.7.0
-  resolution: "@types/node@npm:22.7.0"
+  version: 22.7.1
+  resolution: "@types/node@npm:22.7.1"
   dependencies:
     undici-types: ~6.19.2
-  checksum: a40a013afb3d00c2246d6eca39885a5516216785e9c6668191fd836eefd9b3daed0c8865485ebab181838131dbded6b9ee3275b404202261c31a7f9fa51a871a
+  checksum: 694995bfc4dee0e53ba203d6be098b6aa613ad25da1b3facaab59c689131bb5cafaacad5c466e5358294f2522f1cca954da8f1e849118578cb981fbc03b2902e
   languageName: node
   linkType: hard
 

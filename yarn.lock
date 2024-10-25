@@ -7039,11 +7039,11 @@ __metadata:
   linkType: hard
 
 "eslint-plugin-react-perf@npm:^3.3.0":
-  version: 3.3.2
-  resolution: "eslint-plugin-react-perf@npm:3.3.2"
+  version: 3.3.3
+  resolution: "eslint-plugin-react-perf@npm:3.3.3"
   peerDependencies:
-    eslint: ^3.0.0 || ^4.0.0 || ^5.0.0 || ^6.0.0 || ^7.0.0 || ^8.0.0
-  checksum: 236982166bfb598c758a2ef0ba69e5173521c0f6481a8767aca5d29cf32928789d4bc1c7316aa274706baab820828bdb36336508c492071916bdb234a4c99417
+    eslint: ^3.0.0 || ^4.0.0 || ^5.0.0 || ^6.0.0 || ^7.0.0 || ^8.0.0 || ^9.0.0
+  checksum: 9ff63723fbedd96f1992afca11bc1f8336f6ce86ea2240cddcb487d65a678b289f772010175b102e73f06e58a243434f2de2dbbbf897f9e7629b908fa7829d70
   languageName: node
   linkType: hard
 

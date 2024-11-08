@@ -34,7 +34,10 @@
 
 /* Disabled strategy item */
 .StrategyItem.disabled {
-   color: rgb(170, 170, 170);
+   color: #bbb;
+   --link-color: #abb8e8;
+   --link-visited-color: #c1b6c9;
+   --link-active-color: #df8367;
 }
 
 .StrategyItem.disabled:nth-child(odd) {

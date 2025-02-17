@@ -3858,15 +3858,15 @@ __metadata:
   linkType: hard
 
 "@types/react-dom@npm:<18.0.0, @types/react-dom@npm:^17.0.11":
-  version: 17.0.25
-  resolution: "@types/react-dom@npm:17.0.25"
-  dependencies:
-    "@types/react": ^17
-  checksum: d1e582682478e0848c8d54ea3e89d02047bac6d916266b85ce63731b06987575919653ea7159d98fda47ade3362b8c4d5796831549564b83088e7aa9ce8b60ed
+  version: 17.0.26
+  resolution: "@types/react-dom@npm:17.0.26"
+  peerDependencies:
+    "@types/react": ^17.0.0
+  checksum: 2b62bf86c22b5e84a99d356bf50f5ea681aa70d11d0669c3ab6d5855751677ffb7e7b8d2cec01fff4d3923d0da3221821f7f55ddaa1cf42bc7a06545fe7cf2f1
   languageName: node
   linkType: hard
 
-"@types/react@npm:^17, @types/react@npm:^17.0.34":
+"@types/react@npm:^17.0.34":
   version: 17.0.83
   resolution: "@types/react@npm:17.0.83"
   dependencies:

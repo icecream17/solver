@@ -1,6 +1,6 @@
 import { SudokuDigits } from "../../Types";
 import PureSudoku from "../Spaces/PureSudoku";
-import { affects, assertGet, CellID, sharedInArrays } from "../Utils";
+import { affectsCell, CellID, sharedInArrays } from "../Utils";
 import { getCellsWithNCandidates, colorGroup, removeCandidateFromCells } from "../Utils.dependent";
 
 /**
@@ -22,16 +22,11 @@ export default function yWing (sudoku: PureSudoku) {
 
    const cellsWithTwoCandidates = getCellsWithNCandidates(sudoku, 2)
 
-   // CWTC acronym for cellsWithTwoCandidates
-   const affectsCWTC = new Map(
-      cellsWithTwoCandidates.map(cell => [cell, affects(cell.row, cell.column)])
-   )
-
    for (const cell of cellsWithTwoCandidates) {
       const [ candA, candB ] = sudoku.data[cell.row][cell.column]
 
       // All cells AB sees with 2 candidates
-      const validAffectsCell = assertGet(affectsCWTC, cell).filter(sees => cellsWithTwoCandidates.includes(sees))
+      const validAffectsCell = affectsCell(cell).filter(sees => cellsWithTwoCandidates.includes(sees))
 
       const possibleAC = validAffectsCell.filter(sees => cellIsValidWing(sudoku, sees, candA, candB))
       const possibleBC = validAffectsCell.filter(sees => cellIsValidWing(sudoku, sees, candB, candA))
@@ -49,7 +44,7 @@ export default function yWing (sudoku: PureSudoku) {
             if (cellBC.includes(candC)) {
                // Found a strong link with C in AC and BC!
                const sharedEffects = sharedInArrays(
-                  assertGet(affectsCWTC, AC), assertGet(affectsCWTC, BC)
+                  affectsCell(AC), affectsCell(BC)
                )
 
                if (removeCandidateFromCells(sudoku, candC, sharedEffects)) {

@@ -1,6 +1,6 @@
 import { SudokuDigits } from "../../Types";
 import PureSudoku from "../Spaces/PureSudoku";
-import { affects, algebraic, assertGet, CandidateID, CellID, id, sharedInSets } from "../Utils";
+import { affects, affectsCell, algebraic, CandidateID, CellID, id, sharedInSets } from "../Utils";
 import { colorCandidate, getCellsWithNCandidates, highlightCell } from "../Utils.dependent";
 import { cellIsValidLoop } from "./xyLoop";
 
@@ -113,15 +113,9 @@ export default function xyChain(sudoku: PureSudoku) {
    }
 
    const __getFellowCWTC = (cell: CellID) =>
-      assertGet(affectsCWTC, cell).filter(sees => cellsWithTwoCandidates.includes(sees))
-
+      affectsCell(cell).filter(sees => cellsWithTwoCandidates.includes(sees))
 
    const cellsWithTwoCandidates = getCellsWithNCandidates(sudoku, 2)
-
-   // CWTC acronym for cellsWithTwoCandidates
-   const affectsCWTC = new Map(
-      cellsWithTwoCandidates.map(cell => [cell, affects(cell.row, cell.column)])
-   )
 
    for (const cell of cellsWithTwoCandidates) {
       const [candA, candB] = sudoku.data[cell.row][cell.column]

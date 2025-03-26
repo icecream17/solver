@@ -1,12 +1,14 @@
 import React from 'react';
 import { SuccessError } from '../../Api/Types';
 
-export type StrategyStatusProps = Readonly<{
+export type StrategyStatusProps = (Readonly<{
    success: null
    successcount: null | number
 }> | Readonly<{
    success: boolean
    successcount: number
+}>) & Readonly<{
+   ariaLabel?: string
 }>
 
 /**
@@ -16,7 +18,7 @@ export default class StrategyStatus extends React.Component<StrategyStatusProps>
    render() {
       const resultText =
          this.props.success === null
-            ? '-'
+            ? ''
             : this.props.success
                ? this.props.successcount === 1
                   ? 'Yes'
@@ -37,7 +39,8 @@ export default class StrategyStatus extends React.Component<StrategyStatusProps>
          <span
             className={`StrategyResult ${cssClass} ${resultText === 'Error!' ? 'error' : ''}`}
             data-successcount={this.props.successcount}
-            aria-role="status"
+            role="status"
+            aria-label={this.props.ariaLabel}
             aria-live={this.props.success ? 'off' : undefined}>
             {resultText}
          </span>

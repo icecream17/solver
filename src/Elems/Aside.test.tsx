@@ -32,7 +32,7 @@ test('the togglers toggle the strategy item', () => {
    // The listItem is the parent of a label.
    // Remember that the checkbox has a label.
    const someCheckbox = getTogglers()[0]
-   const listItem = (someCheckbox.parentElement as HTMLElement).parentElement as HTMLElement
+   const listItem = someCheckbox.parentElement as HTMLElement
 
    expect(listItem).not.toBeNull()
 

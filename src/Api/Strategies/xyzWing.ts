@@ -1,6 +1,6 @@
 import { SudokuDigits } from "../../Types";
 import PureSudoku from "../Spaces/PureSudoku";
-import { affects, assertGet, boxAt, CellID, sharedInArrays } from "../Utils";
+import { affectsCell, boxAt, CellID, sharedInArrays } from "../Utils";
 import { getCellsWithNCandidates, highlightCell, removeCandidateFromCells } from "../Utils.dependent";
 
 /* TODO: When finished move to Utils */
@@ -28,21 +28,13 @@ export default function xyzWing (sudoku: PureSudoku) {
    const cellsWithThreeCandidates = getCellsWithNCandidates(sudoku, 3)
    const cellsWithTwoCandidates = getCellsWithNCandidates(sudoku, 2)
 
-   // CW3C acronym for cellsWithTwoCandidates
-   const affectsCW3C = new Map(
-      cellsWithThreeCandidates.map(cell => [cell, affects(cell.row, cell.column)])
-   )
-   const affectsCW2C = new Map(
-      cellsWithTwoCandidates.map(cell => [cell, affects(cell.row, cell.column)])
-   )
-
    for (const basecell of cellsWithThreeCandidates) {
       // AC BC --> ABC
       // AC AB --> ABC
       const sudokubasecell = sudoku.data[basecell.row][basecell.column]
 
       // All cells AB sees with 2 candidates
-      const affectsBaseCell = assertGet(affectsCW3C, basecell)
+      const affectsBaseCell = affectsCell(basecell)
       const validAffectsCell = affectsBaseCell.filter(
          sees => cellsWithTwoCandidates.includes(sees) && sudoku.data[sees.row][sees.column].every(candidate => sudokubasecell.includes(candidate))
       )
@@ -72,8 +64,8 @@ export default function xyzWing (sudoku: PureSudoku) {
 
                const affectsAll = sharedInArrays(
                   affectsBaseCell,
-                  assertGet(affectsCW2C, wing1),
-                  assertGet(affectsCW2C, wing2)
+                  affectsCell(wing1),
+                  affectsCell(wing2)
                )
 
                if (removeCandidateFromCells(sudoku, sharedCandidate, affectsAll)) {

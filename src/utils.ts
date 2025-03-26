@@ -28,6 +28,13 @@ export async function forComponentsToUpdate (): Promise<undefined> {
    return undefined
 }
 
+/**
+ * Stops a click from bubbling up and doing something else
+ */
+export function dontBubble (e: React.MouseEvent) {
+   e.stopPropagation()
+}
+
 // /**
 //  * Unlike the function "forComponentsToUpdate",
 //  * you await for the components to stop making any updates.

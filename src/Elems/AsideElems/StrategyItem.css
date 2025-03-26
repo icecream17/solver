@@ -95,25 +95,6 @@
     */
 }
 
-.StrategyTogglerLabel {
-   position: absolute;
-   color: transparent;
-   user-select: none;
-   overflow: hidden;
-   text-overflow: clip;
-
-   /* Tap size */
-   height: var(--item-height);
-   width: 100%;
-   right: 0;
-}
-
-/* If there's a link don't block it */
-/* (a[href] + label) selects label */
-a[href] + label > .StrategyTogglerLabel {
-   width: 20%;
-}
-
 /* Result */
 .StrategyResult {
    grid-area: status;

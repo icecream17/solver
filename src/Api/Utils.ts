@@ -90,6 +90,8 @@ const _affectsCache = new Map<IndexTo81, CellID[]>()
  * All cells that affect a square
  *
  * A cell does not affect itself
+ * 
+ * NO NEED TO CACHE, this function caches for you
  */
 export function affects (row: IndexToNine, column: IndexToNine) {
    const thisIndex = indexOf(row, column)
@@ -128,6 +130,13 @@ export function affects (row: IndexToNine, column: IndexToNine) {
    const result = results.map(index => id(...(indexToRowAndColumn[index] as [IndexToNine, IndexToNine]))) // Formatting
    _affectsCache.set(thisIndex, result) // Cache
    return result
+}
+
+/**
+ * See {@link affects}
+ */
+export function affectsCell (cell: CellID) {
+   return affects(cell.row, cell.column)
 }
 
 

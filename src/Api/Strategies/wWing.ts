@@ -1,7 +1,7 @@
 import { GRP_TYPS, INDICES_TO_NINE, SudokuDigits } from "../../Types";
 import PureSudoku, { CandidateLocations } from "../Spaces/PureSudoku";
 import { SuccessError } from "../Types";
-import { affects, assertGet, CellID, id, sharedInArrays } from "../Utils";
+import { affectsCell, CellID, id, sharedInArrays } from "../Utils";
 import { colorGroup, removeCandidateFromCells } from "../Utils.dependent";
 
 function _checkPair(
@@ -9,12 +9,11 @@ function _checkPair(
     cellB: CellID,
     candidateA: SudokuDigits,
     candidateB: SudokuDigits,
-    affectsCW2C: Map<CellID, CellID[]>,
     candidateLocations: CandidateLocations[],
     sudoku: PureSudoku,
 ) {
-    const affectsA = assertGet(affectsCW2C, cellA)
-    const affectsB = assertGet(affectsCW2C, cellB)
+    const affectsA = affectsCell(cellA)
+    const affectsB = affectsCell(cellB)
     const affectsAB = sharedInArrays(affectsA, affectsB)
 
     // check for a row, column, or box
@@ -45,12 +44,11 @@ function checkPair(
     cellB: CellID,
     candidateA: SudokuDigits,
     candidateB: SudokuDigits,
-    affectsCW2C: Map<CellID, CellID[]>,
     candidateLocations: CandidateLocations[],
     sudoku: PureSudoku,
 ): number | string {
-    return _checkPair(cellA, cellB, candidateA, candidateB, affectsCW2C, candidateLocations, sudoku) +
-        _checkPair(cellA, cellB, candidateB, candidateA, affectsCW2C, candidateLocations, sudoku)
+    return _checkPair(cellA, cellB, candidateA, candidateB, candidateLocations, sudoku) +
+        _checkPair(cellA, cellB, candidateB, candidateA, candidateLocations, sudoku)
 }
 
 /**
@@ -62,8 +60,6 @@ function checkPair(
  */
 export function wWingBase (sudoku: PureSudoku, callback: typeof checkPair) {
     const found = new Map<number, CellID[]>()
-    // Delay calculations
-    const affectsCW2C = new Map<CellID, CellID[]>()
     let candidateLocations
 
     for (const row of INDICES_TO_NINE) {
@@ -73,7 +69,6 @@ export function wWingBase (sudoku: PureSudoku, callback: typeof checkPair) {
                 const numericID = cell[0] * 10 + cell[1]
                 const equivs = found.get(numericID)
                 const cid = id(row, column)
-                affectsCW2C.set(cid, affects(row, column))
                 if (equivs === undefined) {
                     found.set(numericID, [cid])
                 } else {
@@ -81,7 +76,7 @@ export function wWingBase (sudoku: PureSudoku, callback: typeof checkPair) {
                     for (const cell2 of equivs) {
                         const [candidateA, candidateB] = cell
                         const successcount =
-                            callback(cid, cell2, candidateA, candidateB, affectsCW2C, candidateLocations, sudoku)
+                            callback(cid, cell2, candidateA, candidateB, candidateLocations, sudoku)
                         if (typeof successcount === "string") {
                             return {
                                 success: false,

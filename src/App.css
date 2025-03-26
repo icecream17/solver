@@ -129,14 +129,14 @@
    font-size: calc(10px + 2vmin);
 }
 
-.App-header > h1.Title {
+.Title {
    display: inline;
    font-size: 1em;
    padding: 0 2vw;
    margin: 0;
 }
 
-.App-header > .Version {
+.Version {
    font-size: 0.7em;
    color: silver;
 }

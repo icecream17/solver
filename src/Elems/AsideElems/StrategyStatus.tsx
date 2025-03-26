@@ -32,10 +32,13 @@ export default class StrategyStatus extends React.Component<StrategyStatusProps>
                ? 'success'
                : 'fail';
 
+      // Don't flood notifications of updates, only soft-notify if a strategy succeeded.
       return (
          <span
             className={`StrategyResult ${cssClass} ${resultText === 'Error!' ? 'error' : ''}`}
-            data-successcount={this.props.successcount}>
+            data-successcount={this.props.successcount}
+            aria-role="status"
+            aria-live={this.props.success ? 'off' : undefined}>
             {resultText}
          </span>
       )

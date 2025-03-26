@@ -11,7 +11,7 @@ export type StrategyTogglerLabelProps = Readonly<{
 export default class StrategyTogglerLabel extends React.PureComponent<StrategyTogglerLabelProps> {
    render() {
       return (
-         <span className="StrategyTogglerLabel" id={this.props.id}>
+         <span className="StrategyTogglerLabel">
             {`Toggle ${this.props.name}`}
          </span>
       )

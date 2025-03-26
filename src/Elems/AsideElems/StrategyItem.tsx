@@ -5,6 +5,7 @@ import StrategyToggler from './StrategyToggler';
 import StrategyStatus, { StrategyStatusProps } from './StrategyStatus';
 import Solver from '../../Api/Solver';
 import StrategyTogglerLabel from './StrategyTogglerLabel';
+import StrategyStatusLabel from './StrategyStatusLabel';
 
 export type StrategyItemProps = StrategyLabelProps & Readonly<{
    solver: Solver
@@ -30,15 +31,17 @@ type StrategyResult = {
 export default class StrategyItem extends React.Component<StrategyItemProps, StrategyItemState> {
    id: `strategy-${string}`;
    labelId: `label-for-strategy-${string}`;
-   togglerId?: `strategy-toggler-${string}`;
+   statusId: `status-for-strategy-${string}`
+   togglerId?: `toggler-for-strategy-${string}`;
    constructor(props: StrategyItemProps) {
       super(props)
 
       const name = this.props.name.replaceAll(' ', '-')
       this.id = `strategy-${name}` as const
       this.labelId = `label-for-strategy-${name}` as const
+      this.statusId = `status-for-strategy-${name}` as const
       if (this.props.required === undefined) {
-         this.togglerId = `strategy-toggler-${name}` as const
+         this.togglerId = `toggler-for-strategy-${name}` as const
       }
 
       this.state = {
@@ -98,11 +101,17 @@ export default class StrategyItem extends React.Component<StrategyItemProps, Str
          </label>
       )
 
+      const statusPart =
+         <label htmlFor={this.statusId}>
+            <StrategyStatusLabel {...this.props} />
+            <StrategyStatus {...this.state} id={this.statusId} />
+         </label>
+
       return (
          <li className={thisClass} id={this.id} aria-labelledby={this.labelId}>
             <StrategyLabel id={this.labelId} {...this.props} />
             {togglerPart}
-            <StrategyStatus {...this.state} />
+            {statusPart}
          </li>
       )
 

@@ -4,7 +4,6 @@ import StrategyLabel, { StrategyLabelProps } from './StrategyLabel';
 import StrategyToggler from './StrategyToggler';
 import StrategyStatus, { StrategyStatusProps } from './StrategyStatus';
 import Solver from '../../Api/Solver';
-import StrategyTogglerLabel from './StrategyTogglerLabel';
 
 export type StrategyItemProps = StrategyLabelProps & Readonly<{
    solver: Solver
@@ -30,16 +29,12 @@ type StrategyResult = {
 export default class StrategyItem extends React.Component<StrategyItemProps, StrategyItemState> {
    id: `strategy-${string}`;
    labelId: `label-for-strategy-${string}`;
-   togglerId?: `strategy-toggler-${string}`;
    constructor(props: StrategyItemProps) {
       super(props)
 
       const name = this.props.name.replaceAll(' ', '-')
       this.id = `strategy-${name}` as const
       this.labelId = `label-for-strategy-${name}` as const
-      if (this.props.required === undefined) {
-         this.togglerId = `strategy-toggler-${name}` as const
-      }
 
       this.state = {
          success: null,
@@ -51,6 +46,7 @@ export default class StrategyItem extends React.Component<StrategyItemProps, Str
 
       this.reset = this.reset.bind(this)
       this.toggle = this.toggle.bind(this)
+      this.onKeyDown = this.onKeyDown.bind(this)
       this.whenStepFinished = this.whenStepFinished.bind(this)
    }
 
@@ -92,17 +88,17 @@ export default class StrategyItem extends React.Component<StrategyItemProps, Str
       }
 
       const togglerPart = this.props.required ? <></> : (
-         <label htmlFor={ this.togglerId as string }>
-            <StrategyTogglerLabel {...this.props} />
-            <StrategyToggler callback={this.toggle} id={this.togglerId as string} />
-         </label>
+         <StrategyToggler toggle={this.toggle} checked={!this.state.disabled} ariaLabel={`Toggle ${this.props.name}`} />
       )
 
+      // Not a listbox > option role because options cannot have descendants
+      // https://github.com/w3c/aria/issues/1440
       return (
-         <li className={thisClass} id={this.id} aria-labelledby={this.labelId}>
+         // eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions -- Expanding the clickable area (a hidden label is NOT recommended)
+         <li className={thisClass} id={this.id} aria-labelledby={this.labelId} onClick={this.toggle} onKeyDown={this.onKeyDown}>
             <StrategyLabel id={this.labelId} {...this.props} />
             {togglerPart}
-            <StrategyStatus {...this.state} />
+            <StrategyStatus {...this.state} ariaLabel={`Status for ${this.props.name}`} />
          </li>
       )
 
@@ -112,7 +108,13 @@ export default class StrategyItem extends React.Component<StrategyItemProps, Str
       // And also because the site supports both ltr and rtl (hopefully)
    }
 
-   toggle(_event: React.ChangeEvent) {
+   onKeyDown(event: React.KeyboardEvent) {
+      if (event.key === 'Enter' || event.key === ' ') {
+         this.toggle(event)
+      }
+   }
+
+   toggle(_event: React.SyntheticEvent) {
       this.setState(state => ({ disabled: !state.disabled }), () => {
          this.props.solver.disabled[this.props.index] = this.state.disabled
       })

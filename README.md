@@ -10,9 +10,9 @@ A simple sudoku solver I made. This is inspired by <https://sudokuwiki.org/>.
 
 [Install node](https://nodejs.org/), it comes with npm.
 
-Try `npm -i npm@latest` to update npm -- if there's a "not recognized" error, search stackoverflow about adding node to path.
+Try `npm -i -g npm@latest` to update npm -- if there's a "not recognized" error, search stackoverflow about adding node to path.
 
-`npm -i yarn`
+`npm -i -g yarn`
 
 `yarn`
 
@@ -42,14 +42,19 @@ This project uses yarn. It's probably also possible to install with npm.
 
 ## Silly dependency note
 
-This projects is compatible with its latest dependencies' versions,
-though sometimes I didn't bother to make it not compatible with older versions.
+There is a mysterious error when compiling:
 
-And even then, sometimes those dependencies themselves aren't updated.
+```
+TypeError: Cannot set property mark of #<Object> which has only a getter
+    at Object.connectTypeScriptPerformance (.\solver\node_modules\fork-ts-checker-webpack-plugin\lib\typescript-reporter\profile\TypeScriptPerformance.js:12:36)
+    at createTypeScriptReporter (.\solver\node_modules\fork-ts-checker-webpack-plugin\lib\typescript-reporter\reporter\TypeScriptReporter.js:40:49)
+    at Object.<anonymous> (.\solver\node_modules\fork-ts-checker-webpack-plugin\lib\reporter\rep
+```
 
-Current status: `➤ YN0001: No audit suggestions`
+This is some incompatibility between `create-react-app` > `fork-ts-checker-webpack-plugin` and Typescript 5, but it does
+not seem to affect anything. According to Copilot:
 
-You can run `yarn install` and then `yarn npm audit` for the full report.
+> The error occurs in the performance profiling code of the plugin, which is not critical for the actual type-checking process. As a result, the type-checking and build process continue to work correctly despite the error.
 
 ## Node version
 

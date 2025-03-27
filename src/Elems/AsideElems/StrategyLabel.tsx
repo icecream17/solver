@@ -2,6 +2,7 @@ import React from 'react';
 import ExternalLink from '../ExternalLink';
 
 export type StrategyLabelProps = Readonly<{
+   /** The name of the strategy, as displayed */
    name: string
    href?: string
    id?: string

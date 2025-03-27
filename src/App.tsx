@@ -102,13 +102,15 @@ class App extends React.Component<_UnusedProps, AppState> {
       return (
          <div className="App">
             <header className="App-header">
-               <Title />
-               <Version />
+               <hgroup>
+                  <Title />
+                  <Version />
+               </hgroup>
+               <GithubCorner />
             </header>
             <Main sudokuProps={this.sudokuProps} />
             <Aside sudoku={this.sudoku} solver={this.solver} />
 
-            <GithubCorner />
             <NoticeWindow todo={this.state.notices} whenFinish={this.finishNotice} />
          </div>
       );

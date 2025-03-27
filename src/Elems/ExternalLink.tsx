@@ -1,5 +1,6 @@
 
 import React from 'react';
+import { dontBubble } from '../utils';
 
 type ExternalLinkProps = Readonly<{
    children: React.ReactNode
@@ -36,6 +37,7 @@ export default class ExternalLink extends React.PureComponent<ExternalLinkProps>
             id={this.props.id}
             className={className}
             href={this.props.href}
+            onClick={dontBubble}
             target="_blank"
             rel="noopener noreferrer"
          >

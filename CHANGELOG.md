@@ -4,6 +4,14 @@ Note: Many earlier versions are not specified, that's too much work.
 
 When a `@types` dependency updates, they almost always don't affect anything.
 
+## v0.36.4
+
+- (a11y) Strategy Items: Trade one technical error for a more understandable one.
+  - Hidden labels + focus margin hack replaced with letting the whole item have interaction despite not being a container and not having an interactive role. Links don't bubble the click now.
+- (a11y) Move github corner to header
+- (ui) Change null strategy result "-" to just be blank.
+- (code) Don't cache a function that is already cached + refactor
+
 ## v0.36.3
 
 - (css) Fix strategy disable not changing link color + slightly more accessible disabled color

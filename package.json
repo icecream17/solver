@@ -24,7 +24,7 @@
     "eslint-plugin-react-perf": "^3.3.0",
     "eslint-plugin-regexp": "^1.5.0",
     "eslint-plugin-sonarjs": "^0.25.0",
-    "eslint-plugin-unicorn": "^40.1.0",
+    "eslint-plugin-unicorn": "^59.0.0",
     "eslint-plugin-write-good-comments": "^0.2.0",
     "source-map-explorer": "^2.5.2"
   },

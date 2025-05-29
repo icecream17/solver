@@ -3,6 +3,7 @@
     ":automergeMinor",
     "config:base"
   ],
+  "ignorePaths": ["~v0.36.4-old/**"],
   "packageRules": [],
   "rangeStrategy": "update-lockfile"
 }

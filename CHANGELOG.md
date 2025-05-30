@@ -7,3 +7,4 @@
 - Rewrote code
 - Other size grids
 - Other kinds of grids, id est: hexagonal
+- New puzzles: akari, flow free

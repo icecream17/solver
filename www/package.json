@@ -1,0 +1,38 @@
+{
+  "name": "wasm-solver-ui",
+  "private": true,
+  "description": "ui/ux code for the wasm-solver project",
+  "main": "index.js",
+  "scripts": {
+    "dev": "vite serve",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/icecream17/solver.git"
+  },
+  "keywords": [
+    "webassembly",
+    "wasm",
+    "rust",
+    "webpack"
+  ],
+  "license": "(MIT OR Apache-2.0)",
+  "bugs": {
+    "url": "https://github.com/icecream17/solver/issues"
+  },
+  "homepage": "https://github.com/icecream17/solver#readme",
+  "browserslist": [
+    "> 1%"
+  ],
+  "dependencies": {
+    "snabbdom": "3.5.1",
+    "wasm-solver": "file:../pkg"
+  },
+  "devDependencies": {
+    "vite": "^6.3.5",
+    "vite-plugin-top-level-await": "^1.5.0",
+    "vite-plugin-wasm": "^3.4.1"
+  }
+}

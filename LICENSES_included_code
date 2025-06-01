@@ -1,0 +1,256 @@
+# Licenses for including code
+
+Code was copied from:
+
+## rustwasm/wasm-pack-template
+
+```
+Copyright (c) 2018-2023 {rustwasm/wasm-pack-template authors}
+
+Permission is hereby granted, free of charge, to any
+person obtaining a copy of this software and associated
+documentation files (the "Software"), to deal in the
+Software without restriction, including without
+limitation the rights to use, copy, modify, merge,
+publish, distribute, sublicense, and/or sell copies of
+the Software, and to permit persons to whom the Software
+is furnished to do so, subject to the following
+conditions:
+
+The above copyright notice and this permission notice
+shall be included in all copies or substantial portions
+of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF
+ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED
+TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A
+PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT
+SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR
+IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+DEALINGS IN THE SOFTWARE.
+```
+
+### location
+
++ `.github/dependabot.yml`
++ `src/`
+    + `lib.rs`
+        +   ```rs
+            mod utils;
+
+            use wasm_bindgen::prelude::*;
+
+            #[wasm_bindgen]
+            extern {
+                fn alert(s: &str);
+            }
+
+            #[wasm_bindgen]
+            pub fn greet() {
+                alert("Hello, solver!");
+            }
+            ```
+    + `utils.rs`
+        +   ```rs
+            pub fn set_panic_hook() {
+                // When the `console_error_panic_hook` feature is enabled, we can call the
+                // `set_panic_hook` function at least once during initialization, and then
+                // we will get better error messages if our code ever panics.
+                //
+                // For more details see
+                // https://github.com/rustwasm/console_error_panic_hook#readme
+                #[cfg(feature = "console_error_panic_hook")]
+                console_error_panic_hook::set_once();
+            }
+            ```
++ `tests/web.rs`
+    +   ```rs
+        //! Test suite for the Web and headless browsers.
+
+        #![cfg(target_arch = "wasm32")]
+
+        extern crate wasm_bindgen_test;
+        use wasm_bindgen_test::*;
+
+        wasm_bindgen_test_configure!(run_in_browser);
+
+        #[wasm_bindgen_test]
+        fn pass() {
+            assert_eq!(1 + 1, 2);
+        }
+        ```
++ `.gitignore`
+    +   ```
+        node_modules
+        dist
+        ```
++ `Cargo.toml`
++ `wasm-pack-template-readme.md`
+
+## rustwasm/create-wasm-app
+
+```
+Copyright (c) 2018-2020 {rustwasm/create-wasm-app authors}
+
+Permission is hereby granted, free of charge, to any
+person obtaining a copy of this software and associated
+documentation files (the "Software"), to deal in the
+Software without restriction, including without
+limitation the rights to use, copy, modify, merge,
+publish, distribute, sublicense, and/or sell copies of
+the Software, and to permit persons to whom the Software
+is furnished to do so, subject to the following
+conditions:
+
+The above copyright notice and this permission notice
+shall be included in all copies or substantial portions
+of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF
+ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED
+TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A
+PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT
+SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR
+IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+DEALINGS IN THE SOFTWARE.
+```
+
+### location
+
+In `www/`:
+
++ `create-wasm-app-readme.md`
++ `bootstrap.ts`
++ `index.html`
+    +   ```html
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Hello wasm-pack!</title>
+  </head>
+  <body>
+    <noscript>This page contains webassembly and javascript content, please enable javascript in your browser.</noscript>
+    <script src="./bootstrap.js"></script>
+  </body>
+</html>
+        ```
++ `index.tsx` (1 line: the `wasm` import)
++ `package.json`
+
+## parrotmac/rust-wasm-hello-world
+
+The code used is in the `www/` directory, whose `package.json` gives ISC as the license.
+
+This would seem to override the APACHE or MIT license that was copied over from
+rustwasm/create-wasm-app
+
+### ISC
+
+```
+Copyright 2025 Isaac Parker
+
+Permission to use, copy, modify, and/or distribute this
+software for any purpose with or without fee is hereby
+granted, provided that the above copyright notice and
+this permission notice appear in all copies.
+
+THE SOFTWARE IS PROVIDED “AS IS” AND THE AUTHOR
+DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE
+INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND
+FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY
+SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR
+ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA
+OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE
+OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION
+WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+```
+
+### location
+
+In `www/`:
+
++ `package.json`
+    +   ```json
+            "vite": "^6.3.5",
+            "vite-plugin-top-level-await": "^1.5.0",
+            "vite-plugin-wasm": "^3.4.1"
+        ```
++ `vite.config.ts`
+    +   ```ts
+        import { defineConfig } from 'vite'
+        import { resolve } from 'path'
+
+        import wasm from "vite-plugin-wasm"
+
+        export default defineConfig({
+            root: '.',
+            build: {
+                outDir: 'dist',
+            },
+            server: {
+                open: 'index.html'
+            },
+            plugins: [
+                wasm(),
+            ]
+        })
+        ```
+
+## irony/pureact
+
+```
+Copyright (c) 2023 Christian Landgren
+
+Permission is hereby granted, free of charge, to any
+person obtaining a copy of this software and associated
+documentation files (the "Software"), to deal in the
+Software without restriction, including without
+limitation the rights to use, copy, modify, merge,
+publish, distribute, sublicense, and/or sell copies of
+the Software, and to permit persons to whom the Software
+is furnished to do so, subject to the following
+conditions:
+
+The above copyright notice and this permission notice
+shall be included in all copies or substantial portions
+of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF
+ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED
+TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A
+PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT
+SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR
+IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+DEALINGS IN THE SOFTWARE.
+```
+
+### Location
+
++ `www/index.tsx`
+    +   ```js
+        import {
+            init,
+            classModule,
+            propsModule,
+            styleModule,
+            attributesModule,
+            eventListenersModule,
+            h,
+        } from 'snabbdom'
+
+        const patch = init([
+            // Init patch function with chosen modules
+            classModule, // makes it easy to toggle classes
+            propsModule, // for setting properties on DOM elements
+            styleModule, // handles styling on elements with support for animations
+            attributesModule, // for setting attributes on DOM elements
+            eventListenersModule, // attaches event listeners
+        ])
+        ```

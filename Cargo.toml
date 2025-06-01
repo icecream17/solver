@@ -1,6 +1,8 @@
 [package]
 name = "solver"
-version = "0.37.0"
+
+# The version depends on both the solver API and the UI/UX code.
+version = "0.37.0-alpha.1"
 
 # Includes code from rustwasm/wasm-pack-template, rustwasm/create-wasm-app,
 # and parrotmac/rust-wasm-hello-world, which are licensed under the Apache-2.0

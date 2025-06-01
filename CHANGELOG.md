@@ -4,7 +4,10 @@
 
 ## v0.37.0
 
+### Todo
+
 - Rewrote code
 - Other size grids
 - Other kinds of grids, id est: hexagonal
 - New puzzles: akari, flow free
+- Static site generation! (SSR without the server)

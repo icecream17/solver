@@ -27,6 +27,7 @@
     "> 1%"
   ],
   "dependencies": {
+    "snabbdom": "3.5.1",
     "wasm-solver": "file:../pkg"
   },
   "devDependencies": {

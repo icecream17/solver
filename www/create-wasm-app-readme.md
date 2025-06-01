@@ -22,9 +22,9 @@
 This template is designed for depending on NPM packages that contain
 Rust-generated WebAssembly and using them to create a Website.
 
-* Want to create an NPM package with Rust and WebAssembly? [Check out
+- Want to create an NPM package with Rust and WebAssembly? [Check out
   `wasm-pack-template`.](https://github.com/rustwasm/wasm-pack-template)
-* Want to make a monorepo-style Website without publishing to NPM? Check out
+- Want to make a monorepo-style Website without publishing to NPM? Check out
   [`rust-webpack-template`](https://github.com/rustwasm/rust-webpack-template)
   and/or
   [`rust-parcel-template`](https://github.com/rustwasm/rust-parcel-template).
@@ -44,8 +44,8 @@ npm init wasm-app
 - `index.js`: example js file with a comment showing how to import and use a wasm pkg
 - `package.json` and `package-lock.json`:
   - pulls in devDependencies for using webpack:
-      - [`webpack`](https://www.npmjs.com/package/webpack)
-      - [`webpack-cli`](https://www.npmjs.com/package/webpack-cli)
-      - [`webpack-dev-server`](https://www.npmjs.com/package/webpack-dev-server)
+    - [`webpack`](https://www.npmjs.com/package/webpack)
+    - [`webpack-cli`](https://www.npmjs.com/package/webpack-cli)
+    - [`webpack-dev-server`](https://www.npmjs.com/package/webpack-dev-server)
   - defines a `start` script to run `webpack-dev-server`
 - `webpack.config.js`: configuration file for bundling your js with webpack

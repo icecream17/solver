@@ -1,18 +1,16 @@
 import { defineConfig } from 'vite'
-import { resolve } from 'path'
 
 import wasm from "vite-plugin-wasm"
 
 export default defineConfig({
    root: '.',
    build: {
+      target: 'esnext',
+      modulePreload: {
+         polyfill: false,
+      },
       outDir: 'dist',
-      rollupOptions: {
-         input: {
-            main: resolve(import.meta.url, 'index.html'),
-            bootstrap: resolve(import.meta.url, 'bootstrap.js')
-         }
-      }
+      sourcemap: true,
    },
    server: {
       open: 'index.html'

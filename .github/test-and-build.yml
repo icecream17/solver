@@ -1,0 +1,48 @@
+name: CI
+
+on: [push, pull_request]
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        toolchain: [stable, nightly]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions-rust-lang/setup-rust-toolchain@v1
+        with:
+          components: rustfmt, clippy
+          toolchain: ${{ matrix.toolchain }}
+
+      - if: ${{ success() || failure() }} # Run even if previous steps failed
+        name: Rustfmt Check
+        uses: actions-rust-lang/rustfmt@v1
+
+      - if: ${{ success() || failure() }}
+        name: Run Clippy
+        run: cargo clippy --verbose --all-features -- -D warnings
+
+      - if: ${{ success() || failure() }}
+        name: Run Tests
+        run: cargo test --verbose --all-features
+
+      - name: Build API
+        run: cargo build --release --verbose
+
+      - name: Build Web
+        run: |
+          cd www
+          npm ci -D
+          npm run build
+          cd ..
+
+      - name: Deploy to github pages
+        uses: crazy-max/ghaction-github-pages@v4
+        with:
+          build_dir: ./www/dist
+        env:
+          GITHUB_TOKEN: ${{ secrets.PERSONALACCESSTOKEN }}
+        if: "contains(github.ref, 'main')"

@@ -3589,7 +3589,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@testing-library/dom@npm:^8.0.0, @testing-library/dom@npm:^8.11.1":
+"@testing-library/dom@npm:^8.0.0":
   version: 8.20.1
   resolution: "@testing-library/dom@npm:8.20.1"
   dependencies:
@@ -7029,16 +7029,19 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint-plugin-jest-dom@npm:^4.0.0":
-  version: 4.0.3
-  resolution: "eslint-plugin-jest-dom@npm:4.0.3"
+"eslint-plugin-jest-dom@npm:^5.0.0":
+  version: 5.5.0
+  resolution: "eslint-plugin-jest-dom@npm:5.5.0"
   dependencies:
     "@babel/runtime": ^7.16.3
-    "@testing-library/dom": ^8.11.1
     requireindex: ^1.2.0
   peerDependencies:
-    eslint: ^6.8.0 || ^7.0.0 || ^8.0.0
-  checksum: 6bd22cdb7951a4b9ac65fe35c7bdc3e44cbe09918c79535fa698433d730392ef7a6faa55468b84d1cb0303a923266a05d45e38278d88380b0f09c8e8f57c75de
+    "@testing-library/dom": ^8.0.0 || ^9.0.0 || ^10.0.0
+    eslint: ^6.8.0 || ^7.0.0 || ^8.0.0 || ^9.0.0
+  peerDependenciesMeta:
+    "@testing-library/dom":
+      optional: true
+  checksum: 4423ef06fae815d8278c0310b83dd7c97e44282a858fe259dca95affdb1ef53661c22eaa566f0202d391bf6fd07f57346aa26f3c2d36f34e7581394cf2e70221
   languageName: node
   linkType: hard
 
@@ -13445,7 +13448,7 @@ resolve@^2.0.0-next.3:
     "@types/node": ^22.0.0
     "@types/react": ^17.0.34
     "@types/react-dom": ^17.0.11
-    eslint-plugin-jest-dom: ^4.0.0
+    eslint-plugin-jest-dom: ^5.0.0
     eslint-plugin-react-perf: ^3.3.0
     eslint-plugin-regexp: ^1.5.0
     eslint-plugin-sonarjs: ^0.25.0

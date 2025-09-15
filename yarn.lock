@@ -13457,7 +13457,7 @@ resolve@^2.0.0-next.3:
     sanitize.css: ^13.0.0
     source-map-explorer: ^2.5.2
     typescript: ^5.0.0
-    web-vitals: ^3.0.0
+    web-vitals: ^5.0.0
   languageName: unknown
   linkType: soft
 
@@ -14756,10 +14756,10 @@ resolve@^2.0.0-next.3:
   languageName: node
   linkType: hard
 
-"web-vitals@npm:^3.0.0":
-  version: 3.5.2
-  resolution: "web-vitals@npm:3.5.2"
-  checksum: 4c208bb9384073c772055e9265a4cad4560dbbaeb111ec615ee23e71bbb952aacdf4e6bb8ffbfbe02b23540ac4f08d569d49fc0cd1e5d29c6c0ced566965320a
+"web-vitals@npm:^5.0.0":
+  version: 5.1.0
+  resolution: "web-vitals@npm:5.1.0"
+  checksum: bd6a3186d9e7d7d3ab418ce67f3df81df1f7bbea88235ee092c47504966d1abc7e784ba27229f0a6ed919b8b8584defdc983d51aeb450dad5725b231e26bafb4
   languageName: node
   linkType: hard
 

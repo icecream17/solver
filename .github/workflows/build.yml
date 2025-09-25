@@ -40,7 +40,7 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.PERSONALACCESSTOKEN }}
       if: "contains(github.ref, 'main')"
 
-    - uses: codecov/codecov-action@v4.6.0
+    - uses: codecov/codecov-action@v5.5.1
       if: "!contains(github.event.head_commit.message, 'skip test')"
       with:
         token: ${{ secrets.CODECOV_TOKEN }}

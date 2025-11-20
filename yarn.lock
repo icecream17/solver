@@ -3912,13 +3912,13 @@ __metadata:
   linkType: hard
 
 "@types/react@npm:^17.0.34":
-  version: 17.0.88
-  resolution: "@types/react@npm:17.0.88"
+  version: 17.0.90
+  resolution: "@types/react@npm:17.0.90"
   dependencies:
     "@types/prop-types": "*"
     "@types/scheduler": ^0.16
-    csstype: ^3.0.2
-  checksum: fe65e8bbb9028d4222075ae04c56217fb54d3030293585150bf93cbf1b8e00a5c44d9adfabf9cd3a556082b654d38531cce5580429bab42c37f4ad49ec71a446
+    csstype: ^3.2.2
+  checksum: 96de8ae4ecb49263de1a3adb405ab929fcb6577af4080b6aa17757c3ccc00a3163c0fab66e0938265888020bf7f31aefead2622385da81a8c562d01f60343b91
   languageName: node
   linkType: hard
 
@@ -6131,10 +6131,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"csstype@npm:^3.0.2":
-  version: 3.0.9
-  resolution: "csstype@npm:3.0.9"
-  checksum: 199f9af7e673f9f188525c3102a329d637ff46c52f6385a4427ff5cb17adcb736189150170a7af7c5701d18d7704bdad130273f4aa7e44c6c4f9967e6115dc93
+"csstype@npm:^3.2.2":
+  version: 3.2.3
+  resolution: "csstype@npm:3.2.3"
+  checksum: cb882521b3398958a1ce6ca98c011aec0bde1c77ecaf8a1dd4db3b112a189939beae3b1308243b2fe50fc27eb3edeb0f73a5a4d91d928765dc6d5ecc7bda92ee
   languageName: node
   linkType: hard
 

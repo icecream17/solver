@@ -3939,13 +3939,13 @@ __metadata:
   linkType: hard
 
 "@types/react@npm:^17.0.34":
-  version: 17.0.90
-  resolution: "@types/react@npm:17.0.90"
+  version: 17.0.91
+  resolution: "@types/react@npm:17.0.91"
   dependencies:
     "@types/prop-types": "*"
     "@types/scheduler": ^0.16
     csstype: ^3.2.2
-  checksum: 96de8ae4ecb49263de1a3adb405ab929fcb6577af4080b6aa17757c3ccc00a3163c0fab66e0938265888020bf7f31aefead2622385da81a8c562d01f60343b91
+  checksum: 2cc4cb20ef25cd09e65ac01d6b64b51c4a8f52cc55e77a1893eaedfaac5b2d0ef241e2a34cfe19b5462b5647d355b74f5df1ea113c75ed3db6ecde6b8376a37b
   languageName: node
   linkType: hard
 

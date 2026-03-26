@@ -1,0 +1,13 @@
+{
+  "files": {
+    "main.css": "/solver/static/css/main.f93e720c.css",
+    "main.js": "/solver/static/js/main.eec9596c.js",
+    "index.html": "/solver/index.html",
+    "main.f93e720c.css.map": "/solver/static/css/main.f93e720c.css.map",
+    "main.eec9596c.js.map": "/solver/static/js/main.eec9596c.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.f93e720c.css",
+    "static/js/main.eec9596c.js"
+  ]
+}

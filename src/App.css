@@ -62,7 +62,7 @@
    .App {
       grid-template-columns: 250fr 1432fr 150fr 1314fr 250fr; /* ~ (8%, 44%, 40%, 8%)  */
       grid-template-rows: auto var(--app-main-height) 0.3fr; /* prev ~ (7%, 7%, 2rem, 72%, 7%) */
-      gap: 0 0;
+      gap: 0;
       grid-template-areas:
          "Header Header Header Header Header"
          ". Main . Aside ."

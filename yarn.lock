@@ -2975,17 +2975,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@eslint-community/regexpp@npm:^4.4.0":
-  version: 4.4.0
-  resolution: "@eslint-community/regexpp@npm:4.4.0"
-  checksum: 2d127af0c752b80e8a782eacfe996a86925d21de92da3ffc6f9e615e701145e44a62e26bdd88bfac2cd76779c39ba8d9875a91046ec5e7e5f23cb647c247ea6a
-  languageName: node
-  linkType: hard
-
-"@eslint-community/regexpp@npm:^4.5.0":
-  version: 4.5.0
-  resolution: "@eslint-community/regexpp@npm:4.5.0"
-  checksum: 99c01335947dbd7f2129e954413067e217ccaa4e219fe0917b7d2bd96135789384b8fedbfb8eb09584d5130b27a7b876a7150ab7376f51b3a0c377d5ce026a10
+"@eslint-community/regexpp@npm:^4.11.0, @eslint-community/regexpp@npm:^4.8.0":
+  version: 4.12.2
+  resolution: "@eslint-community/regexpp@npm:4.12.2"
+  checksum: 1770bc81f676a72f65c7200b5675ff7a349786521f30e66125faaf767fde1ba1c19c3790e16ba8508a62a3933afcfc806a893858b3b5906faf693d862b9e4120
   languageName: node
   linkType: hard
 
@@ -3961,6 +3954,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/estree@npm:^1.0.9":
+  version: 1.0.9
+  resolution: "@types/estree@npm:1.0.9"
+  checksum: 752c0afee3ec82b8e24484bf6a27dfa093bbf3de4ef1c20ed0364fb6ad2c0c7971e7504ed9a7aaff103a47e2d945ce7a17f74951743dd944782a0735f53170de
+  languageName: node
+  linkType: hard
+
 "@types/graceful-fs@npm:^4.1.2":
   version: 4.1.5
   resolution: "@types/graceful-fs@npm:4.1.5"
@@ -4067,6 +4067,15 @@ __metadata:
   dependencies:
     undici-types: ~6.21.0
   checksum: 03cc6d9941229b13fa9ab4e477d6550e85ed3e3d5f85734c03c84e0c18346d8a7c9f22b93570bb9cb4a44ffa176279f8a7ab3cd328fbdcf5d4e6ec541ce03f21
+  languageName: node
+  linkType: hard
+
+"@types/node@npm:^26.4.0":
+  version: 26.4.1
+  resolution: "@types/node@npm:26.4.1"
+  dependencies:
+    undici-types: ~8.3.0
+  checksum: 1db2b61b2f291c3a8a6e8d4d1a470634911e41047a48ef78d5c2f2c2935e69b362505a85b35004dbea5ee8c091947a951c61dd88605428e3bc5c8a6bf6483524
   languageName: node
   linkType: hard
 
@@ -5875,10 +5884,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"comment-parser@npm:^1.1.2":
-  version: 1.2.4
-  resolution: "comment-parser@npm:1.2.4"
-  checksum: 36ac280bce4c472fac22b3ec4d8aebb4d3d7c22c6808c70174f4deabee3b82144db66f8bd61eca9c514a6d0f12f6087ddab99e7d531e660d0da793b4730fd445
+"comment-parser@npm:^1.4.0":
+  version: 1.4.8
+  resolution: "comment-parser@npm:1.4.8"
+  checksum: c3105aff7ef47325ee8b958a063527ae06391e220a8c79168fab0065b9bb737fb5946082c82eb3c1ba0c9c061227b813f9751692f7489cb317c76cf9e1eafa81
   languageName: node
   linkType: hard
 
@@ -7428,21 +7437,20 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint-plugin-regexp@npm:^1.5.0":
-  version: 1.15.0
-  resolution: "eslint-plugin-regexp@npm:1.15.0"
+"eslint-plugin-regexp@npm:^3.0.0":
+  version: 3.3.0
+  resolution: "eslint-plugin-regexp@npm:3.3.0"
   dependencies:
     "@eslint-community/eslint-utils": ^4.2.0
-    "@eslint-community/regexpp": ^4.4.0
-    comment-parser: ^1.1.2
-    grapheme-splitter: ^1.0.4
-    jsdoctypeparser: ^9.0.0
-    refa: ^0.11.0
-    regexp-ast-analysis: ^0.6.0
-    scslre: ^0.2.0
+    "@eslint-community/regexpp": ^4.11.0
+    comment-parser: ^1.4.0
+    jsdoc-type-pratt-parser: ^9.0.0
+    refa: ^0.12.1
+    regexp-ast-analysis: ^0.7.1
+    scslre: ^0.3.0
   peerDependencies:
-    eslint: ">=6.0.0"
-  checksum: 6f5c6588b4463e11999d2fc70c9348e7cf250867a4889bdfcdef10d867cc317ba159b2053f833d43cf1141bc9b4956504647a8e251a84e4d010ad72cecf4d68e
+    eslint: ">=9.38.0"
+  checksum: 5ebb18ebf32a47d515928e95cdeb4dd58f1a35121992130f4cefb7727a306deb1bfb072ea46d53a8dc5ff466432797548356e8c789bfe039eb90ff391c565841
   languageName: node
   linkType: hard
 
@@ -8408,13 +8416,6 @@ __metadata:
   version: 4.2.11
   resolution: "graceful-fs@npm:4.2.11"
   checksum: ac85f94da92d8eb6b7f5a8b20ce65e43d66761c55ce85ac96df6865308390da45a8d3f0296dd3a663de65d30ba497bd46c696cc1e248c72b13d6d567138a4fc7
-  languageName: node
-  linkType: hard
-
-"grapheme-splitter@npm:^1.0.4":
-  version: 1.0.4
-  resolution: "grapheme-splitter@npm:1.0.4"
-  checksum: 0c22ec54dee1b05cd480f78cf14f732cb5b108edc073572c4ec205df4cd63f30f8db8025afc5debc8835a8ddeacf648a1c7992fe3dcd6ad38f9a476d84906620
   languageName: node
   linkType: hard
 
@@ -10136,12 +10137,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"jsdoctypeparser@npm:^9.0.0":
-  version: 9.0.0
-  resolution: "jsdoctypeparser@npm:9.0.0"
-  bin:
-    jsdoctypeparser: bin/jsdoctypeparser
-  checksum: d9fd932fc657ee8df93b112ceb23f0c27862da7302c27325101d3700110d78d264f9ef08837ed84e7dd47b83657ffb323b47b1942b237111055cefb647b4a8ba
+"jsdoc-type-pratt-parser@npm:^9.0.0":
+  version: 9.2.1
+  resolution: "jsdoc-type-pratt-parser@npm:9.2.1"
+  dependencies:
+    "@types/estree": ^1.0.9
+    "@types/node": ^26.4.0
+  checksum: 7d425159113a9d3ec0091b67496d48c0a1458e717da5421cff2127e41895f69ebae7b4e76b56055a459f48f9014fb32626a80fe25d01b24b8c97a2f013b36ad3
   languageName: node
   linkType: hard
 
@@ -13043,12 +13045,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"refa@npm:^0.11.0":
-  version: 0.11.0
-  resolution: "refa@npm:0.11.0"
+"refa@npm:^0.12.0, refa@npm:^0.12.1":
+  version: 0.12.1
+  resolution: "refa@npm:0.12.1"
   dependencies:
-    "@eslint-community/regexpp": ^4.5.0
-  checksum: 2b86c348dca15dde99f906bd08d64d6f08a7587e57789ed0a634065b60d8800c65d73b19e0d97ff79306591b9db8f15f4ef726026522d08da27da4ce278872be
+    "@eslint-community/regexpp": ^4.8.0
+  checksum: 845cef54786884d5f09558dd600cec20ee354ebbcabd206503d5cc5d63d22bb69dee8b66bf8411de622693fc5c2b9d42b9cf1e5e6900c538ee333eefb5cc1b41
   languageName: node
   linkType: hard
 
@@ -13098,13 +13100,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"regexp-ast-analysis@npm:^0.6.0":
-  version: 0.6.0
-  resolution: "regexp-ast-analysis@npm:0.6.0"
+"regexp-ast-analysis@npm:^0.7.0, regexp-ast-analysis@npm:^0.7.1":
+  version: 0.7.1
+  resolution: "regexp-ast-analysis@npm:0.7.1"
   dependencies:
-    "@eslint-community/regexpp": ^4.5.0
-    refa: ^0.11.0
-  checksum: 13db2add3a824d7795f1606b48131a048a5c26b47413078f232351bbcf8204ef09f4d717ec6c4c1524248ab7b37fd16bcbe9f3aa0c8bec5cb6c3a51416fc6274
+    "@eslint-community/regexpp": ^4.8.0
+    refa: ^0.12.1
+  checksum: c1c47fea637412d8362a9358b1b2952a6ab159daaede2244c05e79c175844960259c88e30072e4f81a06e5ac1c80f590b14038b17bc8cff09293f752cf843b1c
   languageName: node
   linkType: hard
 
@@ -13545,14 +13547,14 @@ resolve@^2.0.0-next.3:
   languageName: node
   linkType: hard
 
-"scslre@npm:^0.2.0":
-  version: 0.2.0
-  resolution: "scslre@npm:0.2.0"
+"scslre@npm:^0.3.0":
+  version: 0.3.0
+  resolution: "scslre@npm:0.3.0"
   dependencies:
-    "@eslint-community/regexpp": ^4.5.0
-    refa: ^0.11.0
-    regexp-ast-analysis: ^0.6.0
-  checksum: 6e1df2eddf33e4559a19614fb78401bc16efb56f3af65e4bb7c11b71581ab22962c5e66c6a622f53370cbd6967061c94fe34dad11c1a47dc60712332d7d12fa4
+    "@eslint-community/regexpp": ^4.8.0
+    refa: ^0.12.0
+    regexp-ast-analysis: ^0.7.0
+  checksum: a89d4fe5dbf632cae14cc1e53c9d18012924cc88d6615406ad90190d2b9957fc8db16994c2023235af1b6a6c25290b089eb4c26e47d21b05073b933be5ca9d33
   languageName: node
   linkType: hard
 
@@ -13856,7 +13858,7 @@ resolve@^2.0.0-next.3:
     "@types/react-dom": ^17.0.11
     eslint-plugin-jest-dom: ^4.0.0
     eslint-plugin-react-perf: ^3.3.0
-    eslint-plugin-regexp: ^1.5.0
+    eslint-plugin-regexp: ^3.0.0
     eslint-plugin-sonarjs: ^0.25.0
     eslint-plugin-unicorn: ^40.1.0
     eslint-plugin-write-good-comments: ^0.2.0

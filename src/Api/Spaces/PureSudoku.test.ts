@@ -27,6 +27,17 @@ test('it imports', () => {
    expect(testSudoku.import(`https://www.sudokuwiki.org/sudoku.htm?bd=000000001004060208070320400900018000005000600000540009008037040609080300100000000`).success).toBe(true)
 })
 
+test.each([' ', '\t', '\n', '\r\n'])('importing candidate grids separated by %p', separator => {
+   const cells = Array.from({ length: 81 }, (_, index) => index % 2 === 0 ? '12' : '345')
+   const testSudoku = new PureSudoku()
+
+   expect(testSudoku.import(cells.join(separator))).toStrictEqual({
+      success: true,
+      representationType: 'grid'
+   })
+   expect(testSudoku.data.flat()).toStrictEqual(cells.map(cell => cell.split('').map(Number)))
+})
+
 test('setting a candidate', () => {
    const testSudoku = new PureSudoku()
    testSudoku.set(3, 1).to(4, 1, 5, 9, 2, 6)

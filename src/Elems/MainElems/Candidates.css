@@ -21,6 +21,10 @@ span.Candidate {
    text-align: center;
    color: inherit;
 
+   /* vertically center text */
+   display: grid;
+   align-items: center;
+
    /* [ref 1] */
    overflow: hidden;
    text-overflow: clip;

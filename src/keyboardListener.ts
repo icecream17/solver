@@ -29,6 +29,7 @@ document.body.addEventListener('keyup', e => {
 
 document.body.addEventListener('focusout', cancel)
 document.body.addEventListener('contextmenu', cancel)
+window.addEventListener('blur', cancel)
 
 /** Remember to cleanup with removeListener! */
 export const addListener: (f: Listener) => void = f => {

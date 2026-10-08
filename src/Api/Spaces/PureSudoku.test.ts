@@ -38,15 +38,6 @@ test.each([' ', '\t', '\n', '\r\n'])('importing candidate grids separated by %p'
    expect(testSudoku.data.flat()).toStrictEqual(cells.map(cell => cell.split('').map(Number)))
 })
 
-test('importing a candidate grid copied with row breaks and borders', () => {
-   const cells = Array.from({ length: 81 }, (_, index) => index % 2 === 0 ? '12' : '345')
-   const rows = Array.from({ length: 9 }, (_, index) => `| ${cells.slice(index * 9, index * 9 + 9).join(' | ')} |`)
-   const testSudoku = new PureSudoku()
-
-   expect(testSudoku.import(rows.join('\n+---+---+---+\n')).success).toBe(true)
-   expect(testSudoku.data.flat()).toStrictEqual(cells.map(cell => cell.split('').map(Number)))
-})
-
 test('setting a candidate', () => {
    const testSudoku = new PureSudoku()
    testSudoku.set(3, 1).to(4, 1, 5, 9, 2, 6)

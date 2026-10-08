@@ -5,7 +5,7 @@ beforeEach(() => {
    keysPressed.clear()
 })
 
-test.each(['blur', 'contextmenu'])('releasing held keys on %s', eventType => {
+test.each(['blur', 'contextmenu'])('cancelling on %s keeps held keys for resuming', eventType => {
    const listener = jest.fn()
    addListener(listener)
 
@@ -20,13 +20,14 @@ test.each(['blur', 'contextmenu'])('releasing held keys on %s', eventType => {
          fireEvent.contextMenu(document.body)
       }
 
-      expect(keysPressed.size).toBe(0)
+      expect(keysPressed).toStrictEqual(new Set(['Control', 'ArrowRight']))
       expect(listener).toHaveBeenCalledTimes(2)
       expect(listener).toHaveBeenCalledWith('Control', 'cancel', new Set(), expect.any(Event))
       expect(listener).toHaveBeenCalledWith('ArrowRight', 'cancel', new Set(), expect.any(Event))
 
-      fireEvent.keyDown(document.body, { key: '1' })
-      expect(keysPressed).toStrictEqual(new Set(['1']))
+      fireEvent.keyUp(document.body, { key: 'Control' })
+      fireEvent.keyUp(document.body, { key: 'ArrowRight' })
+      expect(keysPressed.size).toBe(0)
    } finally {
       removeListener(listener)
    }

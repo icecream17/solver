@@ -173,17 +173,25 @@ test("Multi-selection editing", () => {
    expect(buttonCell3).toHaveTextContent('1')
 })
 
-test('Control stops selecting extra cells after leaving the window', () => {
+test('a multi-selection can be resumed after leaving the window', () => {
    const buttonCell1 = getButtonCellElement(0, 0)
    const buttonCell2 = getButtonCellElement(0, 1)
    userEvent.click(buttonCell1)
    userEvent.keyboard('{Control>}')
-
-   fireEvent(window, new Event('blur'))
    userEvent.click(buttonCell2)
 
-   expect(buttonCell1).not.toHaveAttribute('data-active')
+   fireEvent.blur(buttonCell2)
+   fireEvent(window, new Event('blur'))
+
+   expect(buttonCell1).toHaveAttribute('data-active', 'false')
+   expect(buttonCell2).toHaveAttribute('data-active', 'false')
+
+   userEvent.click(buttonCell1)
+   expect(buttonCell1).toHaveAttribute('data-active', 'true')
    expect(buttonCell2).toHaveAttribute('data-active', 'true')
+   userEvent.keyboard('7{/Control}{Escape}')
+   expect(buttonCell1).toHaveTextContent('7')
+   expect(buttonCell2).toHaveTextContent('7')
 })
 
 // When implemented

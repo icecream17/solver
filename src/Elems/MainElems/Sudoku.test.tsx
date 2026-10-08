@@ -180,7 +180,6 @@ test('a multi-selection can be resumed after leaving the window', () => {
    userEvent.keyboard('{Control>}')
    userEvent.click(buttonCell2)
 
-   fireEvent.blur(buttonCell2)
    fireEvent(window, new Event('blur'))
 
    expect(buttonCell1).toHaveAttribute('data-active', 'false')

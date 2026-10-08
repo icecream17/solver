@@ -6,10 +6,9 @@ When a `@types` dependency updates, they almost always don't affect anything.
 
 ## v0.36.5
 
-- (use) Fix importing candidate grids with tabs or line breaks between cells
-- (use) Send cancel events when leaving the window too. Held keys are still remembered so selection can resume.
+- (use) Fix importing non-space-whitespace--separated cells
+- (use) Send cancel events when leaving the window
 - (css) Vertically center candidate text
-- (docs) Fix install instructions + remove the old gitpod suggestion
 
 ## v0.36.4
 

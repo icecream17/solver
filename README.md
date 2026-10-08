@@ -16,7 +16,7 @@ Try `npm -i -g npm@latest` to update npm -- if there's a "not recognized" error,
 
 `yarn`
 
-Congrats! You've installed all the depedencies!
+Congrats! You've installed all the dependencies!
 
 You can try the current dev code with `yarn start`
 

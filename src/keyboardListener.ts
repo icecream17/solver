@@ -13,6 +13,14 @@ const cancel: <E extends Event>(e: E) => void = e => {
     }
 }
 
+const releaseKeys: <E extends Event>(e: E) => void = e => {
+    const cancelledKeys = [...keysPressed]
+    keysPressed.clear()
+    for (const key of cancelledKeys) {
+        listenerHandler.notify('', key, 'cancel', EMPTY_SET, e)
+    }
+}
+
 document.body.addEventListener('keydown', e => {
     keysPressed.add(e.key)
     if (e.repeat) {
@@ -28,7 +36,8 @@ document.body.addEventListener('keyup', e => {
 })
 
 document.body.addEventListener('focusout', cancel)
-document.body.addEventListener('contextmenu', cancel)
+document.body.addEventListener('contextmenu', releaseKeys)
+window.addEventListener('blur', releaseKeys)
 
 /** Remember to cleanup with removeListener! */
 export const addListener: (f: Listener) => void = f => {

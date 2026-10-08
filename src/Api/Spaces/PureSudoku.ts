@@ -155,7 +155,7 @@ export default class PureSudoku {
 
 
       const gridRepresentation = representation
-         .replaceAll(/[^1-9\s]/g, '')
+         .replaceAll(/[^\s1-9]/g, '')
          .trim()
          .split(/\s+/) // split ignores g flag
 

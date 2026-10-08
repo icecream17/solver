@@ -8,7 +8,7 @@ A simple sudoku solver I made. This is inspired by <https://sudokuwiki.org/>.
 
 ## how to install / starting development
 
-[Install node](https://nodejs.org/) (22 or newer), it comes with npm.
+[Install node](https://nodejs.org/), it comes with npm.
 
 If there's a "not recognized" error, search stackoverflow about adding node to path.
 

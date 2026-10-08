@@ -60,4 +60,4 @@ not seem to affect anything. According to Copilot:
 
 This project does not seem to use node, but just in case, this uses `Set.prototype.isSubsetOf`, so your node version must be `>=22.0.0`.
 
-Also, `@types/node` is usually on one of the latest versions, since github actions eventually deprecates old versions of node. If `@types/node` is incompatible with an earlier version of node, you can try downgrading the dependency, or post an issue if it doesn't work. Alternatively, if you're on gitpod run `nvm install 22` or higher.
+Also, `@types/node` is usually on one of the latest versions, since github actions eventually deprecates old versions of node. If `@types/node` is incompatible with an earlier version of node, you can try downgrading the dependency, or post an issue if it doesn't work.

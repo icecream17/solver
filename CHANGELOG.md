@@ -10,7 +10,6 @@ When a `@types` dependency updates, they almost always don't affect anything.
 - (use) Send cancel events when leaving the window too. Held keys are still remembered so selection can resume.
 - (css) Vertically center candidate text
 - (docs) Fix install instructions + remove the old gitpod suggestion
-- (tests) Check whitespace-separated grids and resuming selection after leaving the window
 
 ## v0.36.4
 

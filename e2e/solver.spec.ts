@@ -12,7 +12,19 @@ async function importPuzzle(page: Page, text: string = fixtures['Simple sudoku']
    await expect(page.getByRole('dialog')).toHaveCount(0)
 }
 
-test.beforeEach(async ({ page }) => { await page.goto('/') })
+test.beforeEach(async ({ page }) => {
+   page.on('pageerror', error => console.error('Browser runtime error:', error.message))
+   await page.goto('/')
+})
+
+test.afterEach(async ({ page }, info) => {
+   if (info.status !== info.expectedStatus) {
+      console.log('Failure state:', await page.evaluate(() => ({
+         focus: document.activeElement?.outerHTML,
+         cell: document.querySelector('[data-cell="0"]')?.outerHTML,
+      })))
+   }
+})
 
 test('candidate editing, reset, empty state, and undo', async ({ page }) => {
    await cell(page).click()
@@ -26,7 +38,9 @@ test('candidate editing, reset, empty state, and undo', async ({ page }) => {
    await page.getByRole('button', { name: 'undo', exact: true }).click()
    await expect(cell(page)).toHaveAttribute('data-error', 'true')
    await cell(page).click()
+   await expect(cell(page)).toBeFocused()
    await page.keyboard.press('Backspace')
+   await expect(cell(page)).not.toHaveAttribute('data-error')
    await page.keyboard.press('Escape')
    await expect(cell(page).locator('.digit')).toHaveCount(0)
    await expect(cell(page)).not.toHaveAttribute('data-error')

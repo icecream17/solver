@@ -41,6 +41,14 @@ jobs:
       if: matrix.os == 'ubuntu-latest'
       run: npm run test:e2e -- --workers=2
 
+    - name: Upload browser failure traces
+      if: failure() && matrix.os == 'ubuntu-latest'
+      uses: actions/upload-artifact@v4
+      with:
+        name: browser-failures
+        path: test-results/
+        retention-days: 7
+
     - name: Deploy to github pages
       uses: crazy-max/ghaction-github-pages@v5.0.0
       with:

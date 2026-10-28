@@ -1,2 +1,4 @@
-/.yarn/releases/** binary
-/.yarn/plugins/** binary
+# Keep formatter output identical across Linux, macOS and Windows checkouts.
+* text=auto eol=lf
+*.ico binary
+*.png binary

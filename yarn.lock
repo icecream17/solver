@@ -4061,12 +4061,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:^22.0.0":
-  version: 22.20.5
-  resolution: "@types/node@npm:22.20.5"
+"@types/node@npm:^26.0.0":
+  version: 26.6.6
+  resolution: "@types/node@npm:26.6.6"
   dependencies:
-    undici-types: ~6.21.0
-  checksum: c9258c97d580c980fe229b8a3598f68c896dd71a9b7cbabe55027842de06a7ecc16101f3f1c22ac35cc01c7636db0c05532e8c1299968ab0d2d2648dab5849e1
+    undici-types: ~8.9.0
+  checksum: e937cc3f4181fb2147241e3bacbd81f57c5e20c47eaa2f79b937908f45170ef8e751dfa62f5ebaff75953eca5f9158ed43363d7360ab5034d7985e5f8c4b6d1f
   languageName: node
   linkType: hard
 
@@ -13842,7 +13842,7 @@ resolve@^2.0.0-next.3:
     "@testing-library/react": ^12.1.2
     "@testing-library/user-event": ^13.5.0
     "@types/jest": ^27.0.2
-    "@types/node": ^22.0.0
+    "@types/node": ^26.0.0
     "@types/react": ^17.0.34
     "@types/react-dom": ^17.0.11
     eslint-plugin-jest-dom: ^4.0.0
@@ -14864,13 +14864,6 @@ resolve@^2.0.0-next.3:
     has-symbols: ^1.0.2
     which-boxed-primitive: ^1.0.2
   checksum: 89d950e18fb45672bc6b3c961f1e72c07beb9640c7ceed847b571ba6f7d2af570ae1a2584cfee268b9d9ea1e3293f7e33e0bc29eaeb9f8e8a0bab057ff9e6bba
-  languageName: node
-  linkType: hard
-
-"undici-types@npm:~6.21.0":
-  version: 6.21.0
-  resolution: "undici-types@npm:6.21.0"
-  checksum: 46331c7d6016bf85b3e8f20c159d62f5ae471aba1eb3dc52fff35a0259d58dcc7d592d4cc4f00c5f9243fa738a11cfa48bd20203040d4a9e6bc25e807fab7ab3
   languageName: node
   linkType: hard
 

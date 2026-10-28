@@ -1,5 +1,6 @@
 import { expect, test, type Page } from '@playwright/test'
 import fixtures from '../src/core/fixtures'
+import { DENSE_BIVALUE_BOARD } from '../src/core/stress-boards'
 
 const cell = (page: Page, row = 0, column = 0) => page.getByRole('button', { name: `Cell at row ${row + 1}, column ${column + 1}`, exact: true })
 const visibleCandidates = (page: Page, row = 0, column = 0) => cell(page, row, column).locator('.candidates')
@@ -189,5 +190,53 @@ test('clicking an imported digit retains focus when the display switches to cand
    await page.keyboard.press('Backspace')
    await page.keyboard.press('Escape')
    await expect(cell(page)).not.toHaveAttribute('data-error')
+   await expect(cell(page).locator('.digit')).toHaveCount(0)
+})
+
+
+test('keyboard Undo restores the next digit as a new entry', async ({ page }) => {
+   await cell(page).click()
+   await page.keyboard.type('1')
+   await page.keyboard.press('Control+z')
+   await page.keyboard.type('2')
+   await page.keyboard.press('Escape')
+   await expect(cell(page).locator('.digit')).toHaveText('2')
+})
+
+test('re-enabled propagation runs even if the solved count did not change', async ({ page }) => {
+   await importPuzzle(page, '1' + '.'.repeat(80))
+   await page.getByRole('tab', { name: 'strategies', exact: true }).click()
+   const propagation = page.getByRole('switch', { name: 'Toggle Update candidates', exact: true })
+   await propagation.uncheck()
+   await page.getByRole('button', { name: 'go', exact: true }).click()
+   await expect(page.getByRole('status')).toContainText('No more progress')
+   await propagation.check()
+   await page.getByRole('button', { name: 'go', exact: true }).click()
+   await expect(page.getByLabel('Status for Update candidates', { exact: true })).toHaveText('20')
+   await expect(cell(page, 0, 1)).toHaveAccessibleDescription(/Eliminated: 1/)
+   await expect(cell(page, 0, 1).locator('.candidate s')).toHaveText('1')
+})
+
+test('a dense chain search is cancellable without freezing the page', async ({ page }) => {
+   await importPuzzle(page, DENSE_BIVALUE_BOARD)
+   await page.getByRole('tab', { name: 'strategies', exact: true }).click()
+   await page.getByRole('button', { name: 'go', exact: true }).click()
+   await expect(page.getByRole('status')).toContainText('XY Ring')
+   await page.getByRole('button', { name: 'cancel solving', exact: true }).click()
+   await expect(page.getByRole('status')).toContainText('cancelled')
+   await page.getByRole('tab', { name: 'solving tools', exact: true }).click()
+   await page.getByRole('button', { name: 'clear', exact: true }).click()
+   await page.getByRole('tab', { name: 'strategies', exact: true }).click()
+   await page.getByRole('button', { name: 'go', exact: true }).click()
+   await expect(page.getByRole('status')).toContainText('No more progress')
+})
+
+test('touch users can enter a puzzle without a physical keyboard', async ({ page, isMobile }) => {
+   // eslint-disable-next-line sonarjs/no-skipped-tests -- desktop projects have no touch input
+   test.skip(!isMobile, 'Touch entry is exercised by the mobile project.')
+   await cell(page).tap()
+   await page.getByRole('button', { name: 'Toggle candidate 5', exact: true }).tap()
+   await expect(cell(page).locator('.digit')).toHaveText('5')
+   await page.getByRole('button', { name: 'reset candidates', exact: true }).tap()
    await expect(cell(page).locator('.digit')).toHaveCount(0)
 })

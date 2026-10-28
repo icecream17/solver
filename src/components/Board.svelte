@@ -2,11 +2,15 @@
    import Cell from './Cell.svelte'
    import { INDICES_TO_NINE, type SudokuDigits } from '../core/types'
    import type { Workspace } from '../workspace.svelte'
+   import { EMPTY_CELL_MARKS } from '../core/marks'
+   import './Board.css'
 
    let { workspace }: { workspace: Workspace } = $props()
    let table: HTMLTableElement
    let navigating = false
    let pointerFocus = false
+   // Held keys are event-only state; they do not drive rendering.
+   // eslint-disable-next-line svelte/prefer-svelte-reactivity
    const pressed = new Set<string>()
 
    function focus(index: number) {
@@ -99,14 +103,14 @@
 
 <table bind:this={table} class="board" role="grid" aria-label="Sudoku" aria-multiselectable="true" aria-describedby="board-help">
    <tbody>
-      {#each INDICES_TO_NINE as row}
+      {#each INDICES_TO_NINE as row (row)}
          <tr>
-            {#each INDICES_TO_NINE as column}
+            {#each INDICES_TO_NINE as column (column)}
                {@const index = row * 9 + column}
                <Cell
                   {index} candidates={workspace.session.grid[row][column]}
                   previous={workspace.session.previous?.[row][column]}
-                  marks={workspace.session.annotations[index]}
+                  marks={workspace.session.annotations[index] ?? EMPTY_CELL_MARKS}
                   selected={workspace.selected.includes(index)}
                   active={workspace.selectionActive && workspace.selected.includes(index)}
                   onfocus={() => focus(index)} onblur={blur}

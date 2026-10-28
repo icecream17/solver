@@ -1,0 +1,7 @@
+/* Native dialog supplies modality, focus containment, and Escape behavior. */
+dialog.transfer-dialog { width: min(40rem, calc(100vw - 2rem)); max-height: calc(100dvh - 2rem); overflow: auto; border: 1px solid #8894a7; border-radius: .3rem; background: var(--background); color: whitesmoke; padding: 1.5rem; }
+dialog.transfer-dialog::backdrop { background: #10141cbb; }
+dialog.transfer-dialog h2 { margin-top: 0; font-size: 1.35rem; }
+dialog.transfer-dialog label { display: block; margin-top: 1rem; }
+.transfer-dialog textarea { width: 100%; resize: vertical; margin-top: .5rem; border: 1px solid #8894a7; background: #20242c; color: whitesmoke; font: .9rem/1.5 var(--mono); padding: .6rem; border-radius: .15rem; overflow-wrap: anywhere; }
+@media print { dialog.transfer-dialog { display: none; } }

@@ -8,6 +8,6 @@ export default defineConfig({
    test: {
       globals: true,
       include: ['src/**/*.test.ts'],
-      coverage: { reporter: ['text', 'lcov', 'json'], include: ['src/core/**/*.ts'], exclude: ['**/*.test.ts', '**/*fixtures*', '**/benchmark-boards.ts'] },
+      coverage: { reporter: ['text', 'lcov', 'json'], include: ['src/**/*.ts', 'src/**/*.svelte'], exclude: ['**/*.test.ts', '**/*fixtures*', '**/benchmark-boards.ts', 'src/main.ts', 'src/core/solver.worker.ts'] },
    },
 })

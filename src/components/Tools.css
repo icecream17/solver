@@ -1,0 +1,30 @@
+/* Tabs and the strategy panel are scoped to this tools region. */
+.tabs { display: flex; border-bottom: 1px solid #697381; margin-bottom: 1.25rem; }
+.tabs button { padding: .7rem 1rem; border: 0; border-bottom: 3px solid transparent; background: transparent; color: var(--muted); }
+.tabs button[aria-selected='true'] { color: whitesmoke; border-bottom-color: var(--cyan); }
+.tools details { margin-top: 1.5rem; }
+.tools summary { cursor: pointer; }
+.help li { margin-block: .75rem; line-height: 1.6; font-size: .9rem; }
+.help ul { padding-inline-start: 1.3rem; }
+kbd { font: .85em var(--mono); border: 1px solid #6f7a8a; border-radius: .2rem; padding: .1em .3em; white-space: nowrap; }
+.tools fieldset { border: 1px solid #6f7a8a; padding: .5rem .75rem .75rem; margin: 1.25rem 0; min-width: 0; }
+.tools legend { padding-inline: .5rem; }
+.strategy-list { margin: .25rem 0; padding-inline-start: 1.9rem; }
+.strategy-list li { position: relative; padding: .3rem .1rem .3rem .35rem; font-size: .85rem; line-height: 1.45; }
+.strategy-list li::marker { color: var(--muted); font: .75rem var(--mono); }
+.strategy-list label { display: inline-flex; align-items: baseline; gap: .5rem; width: calc(100% - 5rem); cursor: pointer; }
+.strategy-list label input { flex-shrink: 0; accent-color: var(--cyan); margin: 0; }
+.required { width: 13px; flex-shrink: 0; text-align: center; color: var(--muted); }
+.strategy-list .disabled label > span { text-decoration: line-through; opacity: .6; }
+.strategy-list .current { background: #394453; border-radius: 2px; }
+.strategy-link { display: inline-block; width: 1.6rem; text-align: center; text-decoration: none; }
+.strategy-result { display: inline-block; width: 3rem; text-align: end; font-variant-numeric: tabular-nums; }
+.explanation p { white-space: pre-wrap; overflow-wrap: anywhere; font-size: .9rem; line-height: 1.6; }
+.legend { display: flex; gap: .5rem; flex-wrap: wrap; font: .7rem var(--mono); }
+.legend span { padding: .3rem .4rem; border-radius: .15rem; }
+
+/* Text explanations supplement colors and the candidate strike-through. */
+.legend { list-style: none; padding: 0; }
+.legend li { padding: .3rem .4rem; border-radius: .15rem; }
+.step-details li { margin-block: .4rem; font-size: .85rem; line-height: 1.5; }
+@media print { .tools { display: none; } }

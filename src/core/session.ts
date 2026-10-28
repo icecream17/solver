@@ -5,7 +5,8 @@ import type { SudokuDigits } from './types'
 import checkValidity from './strategies/checkValidity'
 
 export type Grid = SudokuDigits[][][]
-export type Annotations = Board['annotations']
+import type { Annotations } from './marks'
+export type { Annotations } from './marks'
 export type Session = {
    grid: Grid
    previous: Grid | null
@@ -46,9 +47,10 @@ export function exportGrid(grid: Grid) {
 }
 
 /** One synchronous domain operation. Rendering and timing are the caller's choice. */
-export function step(session: Session): Session {
+export function step(session: Session, onStrategy?: (strategy: string) => void): Session {
    let index = session.strategyIndex
    while (index !== 0 && session.disabled[index]) index = (index + 1) % catalog.length
+   onStrategy?.(catalog[index].name)
    const board = new Board()
    board.data = copyGrid(session.grid)
    const memory = new StrategyMemory()
@@ -64,7 +66,7 @@ export function step(session: Session): Session {
    const invalid = errored || (changed && !validity.ok)
    if (invalid) results[index] = { success: false, successcount: SuccessError, message: result.message }
    const solved = !invalid && validity.ok && board.data.flat().every(cell => cell.length === 1)
-   let nextIndex = index
+   let nextIndex: number
    let outcome: Session['outcome'] = result.success ? 'progress' : 'ready'
    if (invalid || solved) {
       nextIndex = 0
@@ -73,10 +75,10 @@ export function step(session: Session): Session {
       nextIndex = 0
       skippable.fill(false)
    } else {
-      // Check for solved also counts newly entered givens. Always try candidate
-      // propagation next; a failed check means propagation already found none.
-      nextIndex = index === 0 ? (result.success ? 1 : 2) : index + 1
-      if (!result.success) skippable[index === 0 ? 1 : index] = true
+      // An unchanged solved count does not imply propagation has run: its switch
+      // may have been disabled. A fresh pass always considers it normally.
+      nextIndex = index + 1
+      if (!result.success) skippable[index] = true
       while (nextIndex < catalog.length && (session.disabled[nextIndex] || skippable[nextIndex])) nextIndex++
       if (nextIndex >= catalog.length) {
          nextIndex = 0
@@ -99,10 +101,10 @@ export function step(session: Session): Session {
 }
 
 /** Go means stop at the next successful strategy or after one complete pass. */
-export function go(session: Session): Session {
+export function go(session: Session, onStrategy?: (strategy: string) => void): Session {
    let current = session
    for (let attempt = 0; attempt <= catalog.length; attempt++) {
-      current = step(current)
+      current = step(current, onStrategy)
       if (current.strategyIndex === 0 || current.outcome === 'error' || current.outcome === 'solved') return current
    }
    return current

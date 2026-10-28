@@ -1,9 +1,19 @@
 // @vitest-environment jsdom
 import { afterEach, beforeAll, expect, test } from 'vitest'
-import { cleanup, fireEvent, render, screen, waitFor } from '@testing-library/svelte'
+import { cleanup, fireEvent, render as renderComponent, screen, waitFor } from '@testing-library/svelte'
 import userEvent from '@testing-library/user-event'
 import App from './App.svelte'
 import fixtures from './core/fixtures'
+import { Workspace } from './workspace.svelte'
+import { go, step } from './core/session'
+
+// Only the worker transport is replaced; component tests exercise the real solver.
+function render(component: typeof App) {
+   return renderComponent(component, { workspace: new Workspace({
+      run: async (session, mode) => (mode === 'step' ? step : go)(session),
+      cancel() {}
+   }) })
+}
 
 // jsdom does not implement native dialog layout/focus management. The browser
 // suite covers that contract; these shims only let component interactions run.
@@ -55,6 +65,14 @@ test('all candidates display while editing and hide after Escape', async () => {
    expect(candidates()).toBe('123456789')
    await u.keyboard('{Escape}')
    expect(candidates()).toBeUndefined()
+})
+
+test('keyboard Undo restores first-entry behavior without refocusing', async () => {
+   render(App)
+   const u = user()
+   await u.click(cell())
+   await u.keyboard('1{Control>}z{/Control}2{Escape}')
+   expect(cell().querySelector('.digit')?.textContent).toBe('2')
 })
 
 test('multiselection edits all selected cells and resumes after blur', async () => {

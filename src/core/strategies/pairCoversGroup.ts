@@ -118,11 +118,11 @@ function _checkPair(
 
     let success = 0
     for (const prop of GRP_TYPS) {
-        for (const group_A of candidateLocations[candidateA][prop]) {
+        for (const [groupIndex, group_A] of candidateLocations[candidateA][prop].entries()) {
             //     ^ group [sees A or B] [has A or B]
             // Avoid eliminating everything
             if (group_A.size === 0) {
-                sudoku.report(`A ${prop} has no possibilities for ${candidateA}.`)
+                sudoku.report(`${prop[0].toUpperCase()}${prop.slice(1)} ${GRP_NAMES[prop][groupIndex]} has no possibilities for ${candidateA}.`)
                 return "error"
             }
 

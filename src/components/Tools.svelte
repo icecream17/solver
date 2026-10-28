@@ -1,10 +1,14 @@
 <script lang="ts">
    import { catalog } from '../core/catalog'
+   import ExternalLink from './ExternalLink.svelte'
+   import { stepExplanations } from '../core/explanations'
+   import './Tools.css'
    import type { Workspace } from '../workspace.svelte'
-   let { workspace, onimport, onexport }: { workspace: Workspace; onimport: () => void; onexport: () => void } = $props()
+   let { workspace, onimport, onexport }: { workspace: Workspace; onimport: (trigger: HTMLButtonElement) => void; onexport: (trigger: HTMLButtonElement) => void } = $props()
    let tab = $state(0)
-   let tablist: HTMLDivElement
+   let tablist: HTMLElement
    const tabs = ['solving tools', 'strategies']
+   let explanationDetails = $derived(stepExplanations(workspace.session.grid, workspace.session.previous, workspace.session.annotations))
 
    function tabKey(event: KeyboardEvent, index: number) {
       let next: number
@@ -20,8 +24,9 @@
 </script>
 
 <section class="tools" aria-label="Solving tools">
+   <!-- Generic containers are intentional for the APG tablist/tabpanel roles. -->
    <div class="tabs" role="tablist" aria-label="Solver panels" bind:this={tablist}>
-      {#each tabs as name, index}
+      {#each tabs as name, index (name)}
          <button type="button" role="tab" id={`tab-${index}`} aria-selected={tab === index}
             aria-controls={`panel-${index}`} tabindex={tab === index ? 0 : -1}
             onclick={() => { tab = index }} onkeydown={event => tabKey(event, index)}>{name}</button>
@@ -29,12 +34,13 @@
    </div>
    <div id={`panel-${tab}`} role="tabpanel" aria-labelledby={`tab-${tab}`} tabindex="0">
       {#if tab === 0}
-         <div class="controls">
+         <p class="controls">
             <button type="button" onclick={() => workspace.clear()}>clear</button>
-            <button type="button" onclick={onimport}>import</button>
-            <button type="button" onclick={onexport}>export</button>
+            <button type="button" onclick={event => onimport(event.currentTarget)}>import</button>
+            <button type="button" onclick={event => onexport(event.currentTarget)}>export</button>
             <button type="button" onclick={() => workspace.undo()} disabled={!workspace.canUndo}>undo</button>
-         </div>
+            {#if workspace.busy}<button type="button" onclick={() => workspace.cancelSolve()}>cancel solving</button>{/if}
+         </p>
          <p class="hint">Enter a puzzle, then use the strategies tab to solve it one logical step at a time.</p>
          <details class="help" open>
             <summary>Keyboard controls</summary>
@@ -49,16 +55,17 @@
             </ul>
          </details>
       {:else}
-         <div class="controls">
-            <button type="button" onclick={() => workspace.solve('step')}>step</button>
-            <button type="button" onclick={() => workspace.solve('go')}>go</button>
+         <p class="controls">
+            <button type="button" onclick={() => workspace.solve('step')} disabled={workspace.busy}>step</button>
+            <button type="button" onclick={() => workspace.solve('go')} disabled={workspace.busy}>go</button>
             <button type="button" onclick={() => workspace.undo()} disabled={!workspace.canUndo}>undo</button>
-         </div>
+            {#if workspace.busy}<button type="button" onclick={() => workspace.cancelSolve()}>cancel solving</button>{/if}
+         </p>
          <p class="hint">Step tries one strategy. Go stops at the next successful strategy or the end of a pass.</p>
          <fieldset>
             <legend>strategies</legend>
             <ol class="strategy-list">
-               {#each catalog as strategy, index}
+               {#each catalog as strategy, index (strategy.name)}
                   {@const result = workspace.session.results[index]}
                   <li class:current={workspace.session.lastStrategy === index} class:disabled={workspace.session.disabled[index]}>
                      <label>
@@ -70,8 +77,8 @@
                         <span>{strategy.name}</span>
                      </label>
                      {#if strategy.href}
-                        <a class="strategy-link" href={strategy.href} target="_blank" rel="noreferrer"
-                           aria-label={`Learn about ${strategy.name}`} title={`Learn about ${strategy.name}`}>↗</a>
+                        <ExternalLink class="strategy-link" href={strategy.href}
+                           aria-label={`Learn about ${strategy.name}`} title={`Learn about ${strategy.name}`}>↗</ExternalLink>
                      {:else}<span></span>{/if}
                      <span class="strategy-result" aria-label={`Status for ${strategy.name}`}
                         class:success={result?.success} class:error={result?.successcount === -1}
@@ -85,7 +92,13 @@
          <details class="explanation" open>
             <summary>Strategy explanation</summary>
             <p>{workspace.session.message || 'Run a strategy to see its explanation.'}</p>
-            <div class="legend"><span class="blue">reason</span><span class="green">alternate</span><span class="orange">pivot</span><span class="eliminated">eliminated</span><span class="added">added</span></div>
+            <ul class="legend" aria-label="Explanation key"><li class="blue">reason</li><li class="green">alternate</li><li class="orange">pivot</li><li class="eliminated">eliminated</li><li class="added">added</li></ul>
+            {#if explanationDetails.length}
+               <details>
+                  <summary>Cell changes and reasoning</summary>
+                  <ul class="step-details">{#each explanationDetails as detail (detail)}<li>{detail}</li>{/each}</ul>
+               </details>
+            {/if}
          </details>
       {/if}
    </div>

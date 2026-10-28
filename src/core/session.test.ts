@@ -52,6 +52,17 @@ test('disabled strategies are skipped', () => {
    expect(step(checked).lastStrategy).toBe(2)
 })
 
+test('re-enabling propagation makes the available eliminations reachable', () => {
+   let session = createSession(importGrid('1' + '.'.repeat(80))!.grid)
+   session.disabled[1] = true
+   session = go(session)
+   expect(session.outcome).toBe('stalled')
+   session.disabled[1] = false
+   const result = go(session)
+   expect(result.results[1]).toMatchObject({ success: true, successcount: 20 })
+   expect(result.outcome).toBe('progress')
+})
+
 test('invalid and solved boards return useful outcomes', () => {
    expect(go(puzzle('Invalid board')).outcome).toBe('error')
    const solved = go(puzzle('Solved board'))

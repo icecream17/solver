@@ -49,8 +49,6 @@ describe('strategies', () => {
 
    beforeEach(() => {
       solver = { strategyIndex: 0, memory: new StrategyMemory() }
-      solver.strategyIndex = 0
-      solver.memory = new StrategyMemory()
    })
 
    test.each([...STRATEGIES.entries()])('$variable.name fails on an empty sudoku', (index: number, strategy: Strategy) => {
@@ -831,4 +829,18 @@ describe('strategies', () => {
          expect(twoStringKite(testSudoku).successcount).toBe(2)
       })
    })
+})
+
+
+test('pair covers group diagnostics name the missing group', () => {
+   const board = new Board()
+   board.data[0][0] = [1, 2]
+   board.data[8][8] = [1, 2]
+   for (let row = 3; row < 6; row++) {
+      for (let column = 3; column < 6; column++) {
+         board.data[row][column] = board.data[row][column].filter(digit => digit !== 1)
+      }
+   }
+   pairCoversGroup(board)
+   expect(board.diagnostics).toContain('Box 5 has no possibilities for 1.')
 })

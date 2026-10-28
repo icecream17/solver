@@ -1,5 +1,6 @@
 import { ALL_CANDIDATES, GrpTyp, IndexToNine, INDICES_TO_NINE, SudokuDigits, ThreeDimensionalArray } from "./types"
 import { boxAt, CellID, id, to9by9 } from "./geometry"
+import type { Annotations } from './marks'
 
 export type CandidateLocations = Record<GrpTyp, Set<CellID>[]>
 
@@ -16,14 +17,16 @@ function Cell (id: CellID, cell: SudokuDigits[]) {
  */
 export default class Board {
    diagnostics: string[] = []
-   annotations: Record<number, { cells: string[]; candidates: Record<number, string[]> }> = {}
+   annotations: Annotations = {}
 
    report(message: string) { this.diagnostics.push(message) }
 
-   mark(row: number, column: number, color: string, digit?: number) {
+   mark(row: number, column: number, color: string, digit?: SudokuDigits) {
       const mark = this.annotations[row * 9 + column] ??= { cells: [], candidates: {} }
-      const colors = digit === undefined ? mark.cells : (mark.candidates[digit] ??= [])
-      if (!colors.includes(color)) colors.push(color)
+      const colors = digit === undefined ? mark.cells : (mark.candidates[digit] ?? [])
+      if (colors.includes(color)) return
+      if (digit === undefined) mark.cells = [...colors, color]
+      else mark.candidates[digit] = [...colors, color]
    }
 
    data: ThreeDimensionalArray<SudokuDigits>

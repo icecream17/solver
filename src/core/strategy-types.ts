@@ -19,8 +19,7 @@ export type StrategyError = Readonly<{
 }>
 
 export type PureStrategy = (arg: Board) => StrategyResult
-type StatefulStrategy = (arg: Board, memory: StrategyMemory[number]) => StrategyResult
-export type Strategy = StatefulStrategy
+export type Strategy = (arg: Board, memory: StrategyMemory[number]) => StrategyResult
 
 // Group types
 export type CellInfo = {

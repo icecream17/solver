@@ -1,57 +1,63 @@
 # Sudoku solver
 
-A Sudoku solver with editable candidates and step-by-step human solving strategies.
-Built with Svelte 5, TypeScript, and Vite. The core solver runs without a DOM.
+[![build](https://github.com/icecream17/solver/workflows/build/badge.svg)](https://github.com/icecream17/solver/actions)
+[![codecov](https://codecov.io/gh/icecream17/solver/branch/main/graph/badge.svg)](https://codecov.io/gh/icecream17/solver)
 
-## Development
-
-Requires Node.js 22.12+ (Node 24 is used in CI).
-
-```sh
-npm ci
-npm run dev
-```
-
-## Checks
-
-```sh
-npm run check
-npm test
-npm run test:coverage
-npm run build
-npx playwright install chromium
-npm run test:e2e
-npm run bench -- 100
-```
-
-`npm run test:watch` watches unit tests. `npm run preview` serves the production
-build. Vite writes `dist/` with relative asset paths for GitHub Pages.
+A Sudoku solver with editable candidates and step-by-step human solving strategies,
+inspired by [SudokuWiki](https://sudokuwiki.org/). Built with Svelte 5, TypeScript,
+and Vite. The solver also runs without a DOM.
 
 ## Usage
 
 Select a cell and type digits to toggle candidates. The first digit in an untouched
-cell starts a new entry. Backspace resets to all candidates; Ctrl/Shift+Backspace
-removes all candidates. Ctrl+click selects multiple cells, Ctrl+A selects all,
-and Escape deselects. Arrows wrap, Home/End navigate a row, Ctrl+Home/End navigate
-the board, and Page Up/Down move three rows. Command also works on macOS.
+cell starts a new entry. On touch screens, use the candidate buttons below the board.
 
-Import accepts 81-cell puzzles, 729-character candidate strings, whitespace-separated
-candidate grids, and SudokuWiki URLs. Export includes both digits and candidates.
-The candidate format is lossless. In the 81-cell format, a dot means unsolved; a zero
-exports an empty candidate set but imports as a blank, matching the original app.
+| Action | Keyboard or pointer |
+| --- | --- |
+| Toggle a candidate | <kbd>1</kbd>–<kbd>9</kbd> |
+| Reset to all candidates | <kbd>Backspace</kbd> |
+| Remove all candidates | <kbd>Ctrl</kbd>/<kbd>Shift</kbd> + <kbd>Backspace</kbd> |
+| Select several cells | <kbd>Ctrl</kbd> + click |
+| Select all / deselect | <kbd>Ctrl</kbd> + <kbd>A</kbd> / <kbd>Escape</kbd> |
+| Move between cells, wrapping at edges | Arrow keys; <kbd>Tab</kbd> / <kbd>Shift</kbd> + <kbd>Tab</kbd> |
+| First / last cell in row | <kbd>Home</kbd> / <kbd>End</kbd> |
+| First / last cell on board | <kbd>Ctrl</kbd> + <kbd>Home</kbd> / <kbd>End</kbd> |
+| Move three rows | <kbd>Page Up</kbd> / <kbd>Page Down</kbd> |
+| Undo | <kbd>Ctrl</kbd> + <kbd>Z</kbd> |
 
-The strategies tab offers Step (one strategy), Go (until a strategy succeeds or the
-pass ends), Undo, strategy switches, result counts, and explanations. Yellow marks
-eliminated candidates, green marks additions, and blue/green/orange show reasoning.
-Undo supports the last 100 board edits or solver commands.
+<kbd>Command</kbd> also works for <kbd>Ctrl</kbd> shortcuts on macOS.
+
+The **Solving tools** tab imports puzzles and exports both digits and candidates.
+Import accepts 81-cell puzzles, 729-character candidate strings, candidate grids,
+and SudokuWiki URLs. Candidate export is lossless. In digit export, a dot means
+unsolved; a zero exports an empty candidate set but imports as a blank, matching
+the original app.
+
+The **Strategies** tab offers Step (one strategy), Go (until a strategy succeeds or
+the pass ends), strategy switches, result counts, and explanations. Removed digits
+are struck through; the explanation lists changes and reasoning in text as well as
+colors. Cancel stops a long search without changing the board. Undo retains the last
+100 board edits or solver commands. This human-strategy solver can stall; it does
+not guess or support variants.
 
 ## Code
 
-- `src/core/`: board, geometry, strategies, import/export, and headless sessions.
-- `src/workspace.svelte.ts`: reactive application state and user actions.
-- `src/components/`: Svelte board, cells, tools, and native transfer dialog.
-- `e2e/`: production-build browser tests.
-- `scripts/benchmark.ts`: benchmark runner using the existing puzzle corpus.
+Install [Node.js](https://nodejs.org/) 22.22.2+, 24.15.0+, or 26+ within the
+supported major ranges in `package.json`. CI checks the minimum and Node 24.
+Run `npm ci`, then `npm run dev` to start development.
 
-See [the rewrite notes](docs/svelte-rewrite.md) for architecture and feature parity.
-Historical strategy notes remain in [Strategies.md](Strategies.md).
+- Development: `npm run dev` (also `npm start`).
+  - Production preview: `npm run build`, then `npm run preview`.
+- Static checks: `npm run lint`, `npm run format`, and `npm run check`.
+  - Apply style fixes: `npm run lint:fix`, then `npm run format:write`.
+- Unit and component tests: `npm test`.
+  - Watch: `npm run test:watch`; coverage: `npm run test:coverage`.
+- Browser tests: `npx playwright install chromium firefox webkit`, then `npm run test:e2e`.
+- Benchmark: `npm run bench -- 100`; omit `100` for the full corpus.
+
+The solver lives in [`src/core/`](src/core/), reactive application state in
+[`src/workspace.svelte.ts`](src/workspace.svelte.ts), and UI in
+[`src/components/`](src/components/). See [development guidance](docs/development.md)
+for testing, lint rules, build and deployment references; [rewrite notes](docs/svelte-rewrite.md)
+for architecture, feature parity, and the old-to-new file table;
+and [strategy notes](Strategies.md) for historical research.

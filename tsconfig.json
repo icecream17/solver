@@ -1,10 +1,32 @@
 {
    "compilerOptions": {
-      "target": "ES2023", "lib": ["ES2023", "ESNext.Collection", "DOM", "DOM.Iterable"],
-      "module": "ESNext", "moduleResolution": "Bundler", "strict": true,
-      "isolatedModules": true, "allowJs": true, "checkJs": true,
-      "resolveJsonModule": true, "esModuleInterop": true, "skipLibCheck": true,
-      "noEmit": true, "types": ["vite/client", "vitest/globals", "node"]
+      "target": "ESNext",
+      "lib": [
+         "ESNext",
+         "DOM",
+         "DOM.Iterable"
+      ],
+      "module": "ESNext",
+      "moduleResolution": "Bundler",
+      "strict": true,
+      "isolatedModules": true,
+      "allowJs": true,
+      "checkJs": true,
+      "resolveJsonModule": true,
+      "esModuleInterop": true,
+      "skipLibCheck": true,
+      "noEmit": true,
+      "types": [
+         "vite/client",
+         "vitest/globals",
+         "node"
+      ]
    },
-   "include": ["src/**/*.ts", "src/**/*.svelte", "*.ts", "scripts/**/*.ts", "e2e/**/*.ts"]
+   "include": [
+      "src/**/*.ts",
+      "src/**/*.svelte",
+      "*.ts",
+      "scripts/**/*.ts",
+      "e2e/**/*.ts"
+   ]
 }

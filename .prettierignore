@@ -1,0 +1,13 @@
+node_modules/
+dist/
+coverage/
+test-results/
+playwright-report/
+package-lock.json
+src/core/fixtures.ts
+src/core/benchmark-boards.ts
+CHANGELOG.md
+Notes.md
+Strategies.md
+hmmStrat.md
+Todo

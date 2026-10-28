@@ -59,10 +59,7 @@ test('re-enabling propagation makes the available eliminations reachable', () =>
    expect(session.outcome).toBe('stalled')
    session.disabled[1] = false
    const result = go(session)
-   expect(result.results[1]).toMatchObject({
-      success: true,
-      successcount: 20
-   })
+   expect(result.results[1]).toMatchObject({ success: true, successcount: 20 })
    expect(result.outcome).toBe('progress')
 })
 
@@ -107,11 +104,7 @@ test('an invalid partial strategy result is rolled back atomically', () => {
    input.strategyIndex = 1
    catalog[1].run = (board) => {
       board.data[0][0] = []
-      return {
-         success: false,
-         successcount: -1,
-         message: 'Contradiction'
-      }
+      return { success: false, successcount: -1, message: 'Contradiction' }
    }
    try {
       const result = step(input)

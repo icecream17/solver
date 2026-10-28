@@ -106,10 +106,7 @@ test('clear, import, strategy preferences, and required strategies remain cohere
    expect(workspace.session.outcome).toBe('stalled')
    workspace.toggleStrategy(1, true)
    await workspace.solve('go')
-   expect(workspace.session.results[1]).toMatchObject({
-      success: true,
-      successcount: 20
-   })
+   expect(workspace.session.results[1]).toMatchObject({ success: true, successcount: 20 })
    workspace.clear()
    expect(workspace.selected).toHaveLength(0)
    expect(workspace.session.grid[0][0]).toHaveLength(9)

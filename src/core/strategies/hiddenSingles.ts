@@ -48,10 +48,7 @@ function _nextState(
    column: IndexToNine
 ) {
    if (currentState === undefined) {
-      return {
-         row,
-         column
-      }
+      return { row, column }
    }
 
    return false

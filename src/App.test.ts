@@ -145,10 +145,7 @@ test('window blur releases held navigation keys', async () => {
    await u.keyboard('{ArrowRight>}')
    await fireEvent(window, new Event('blur'))
    await u.click(cell())
-   await fireEvent.keyDown(cell(), {
-      key: 'ArrowDown',
-      repeat: true
-   })
+   await fireEvent.keyDown(cell(), { key: 'ArrowDown', repeat: true })
    expect(document.activeElement).toBe(cell(1, 0))
 })
 
@@ -251,10 +248,7 @@ test('clicking a displayed digit keeps keyboard focus while switching to candida
    const u = user()
    await importPuzzle(u)
    const digit = cell().querySelector('.digit')!
-   await fireEvent.pointerDown(digit, {
-      bubbles: true,
-      cancelable: true
-   })
+   await fireEvent.pointerDown(digit, { bubbles: true, cancelable: true })
    expect(document.activeElement).toBe(cell())
    await u.keyboard('{Backspace}{Escape}')
    expect(cell().hasAttribute('data-error')).toBe(false)

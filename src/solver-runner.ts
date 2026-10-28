@@ -44,10 +44,7 @@ export class WorkerSolverRunner implements SolverRunner {
             this.finish()
             reject(new Error('The solver worker failed. The board has not changed.'))
          }
-         worker.postMessage({
-            session,
-            mode
-         } satisfies SolverRequest)
+         worker.postMessage({ session, mode } satisfies SolverRequest)
       })
    }
 

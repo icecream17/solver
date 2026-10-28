@@ -54,21 +54,13 @@ export function importGrid(text: string): { grid: Grid; format: string } | null 
    if (!text.trim()) return null
    const board = new Board()
    const result = board.import(text)
-   return result.success
-      ? {
-           grid: board.data,
-           format: result.representationType
-        }
-      : null
+   return result.success ? { grid: board.data, format: result.representationType } : null
 }
 
 export function exportGrid(grid: Grid) {
    const board = new Board()
    board.data = copyGrid(grid)
-   return {
-      digits: board.to81(),
-      candidates: board.to729()
-   }
+   return { digits: board.to81(), candidates: board.to729() }
 }
 
 /** One synchronous domain operation. Rendering and timing are the caller's choice. */
@@ -94,11 +86,7 @@ export function step(session: Session, onStrategy?: (strategy: string) => void):
    // Reject a partially applied invalid strategy atomically; keep the input board.
    const invalid = errored || (changed && !validity.ok)
    if (invalid)
-      results[index] = {
-         success: false,
-         successcount: SuccessError,
-         message: result.message
-      }
+      results[index] = { success: false, successcount: SuccessError, message: result.message }
    const solved = !invalid && validity.ok && board.data.flat().every((cell) => cell.length === 1)
 
    // Choose whether to restart, continue the pass, or report exhaustion.

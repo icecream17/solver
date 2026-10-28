@@ -11,25 +11,10 @@ const visibleCandidates = (page: Page, row = 0, column = 0) =>
    cell(page, row, column).locator('.candidates')
 
 async function importPuzzle(page: Page, text: string = fixtures['Simple sudoku']) {
-   await page
-      .getByRole('tab', {
-         name: 'solving tools',
-         exact: true
-      })
-      .click()
-   await page
-      .getByRole('button', {
-         name: 'import',
-         exact: true
-      })
-      .click()
+   await page.getByRole('tab', { name: 'solving tools', exact: true }).click()
+   await page.getByRole('button', { name: 'import', exact: true }).click()
    await page.getByLabel('Enter digits or candidates').fill(text)
-   await page
-      .getByRole('button', {
-         name: 'Submit',
-         exact: true
-      })
-      .click()
+   await page.getByRole('button', { name: 'Submit', exact: true }).click()
    await expect(page.getByRole('dialog')).toHaveCount(0)
 }
 
@@ -59,12 +44,7 @@ test('candidate editing, reset, empty state, and undo', async ({ page }) => {
    await page.keyboard.type('7')
    await page.keyboard.press('Escape')
    await expect(cell(page).locator('.digit')).toHaveText('7')
-   await page
-      .getByRole('button', {
-         name: 'undo',
-         exact: true
-      })
-      .click()
+   await page.getByRole('button', { name: 'undo', exact: true }).click()
    await expect(cell(page)).toHaveAttribute('data-error', 'true')
    await cell(page).click()
    await expect(cell(page)).toBeFocused()
@@ -92,12 +72,7 @@ test('Ctrl selection edits multiple cells and survives blur', async ({ page }) =
    await page.keyboard.up('Control')
    await expect(visibleCandidates(page)).toHaveText('123456')
    await expect(visibleCandidates(page, 0, 1)).toHaveText('456')
-   await page
-      .getByRole('tab', {
-         name: 'solving tools',
-         exact: true
-      })
-      .click()
+   await page.getByRole('tab', { name: 'solving tools', exact: true }).click()
    await expect(cell(page)).toHaveAttribute('data-active', 'false')
    await cell(page).click()
    await expect(cell(page, 0, 1)).toHaveAttribute('data-active', 'true')
@@ -140,21 +115,13 @@ test('navigation wraps and supports Home, End, Page Up/Down, and Tab', async ({ 
 test('import/export candidate round trip and modal focus restoration', async ({ page }) => {
    await importPuzzle(page)
    await expect(cell(page).locator('.digit')).toHaveText('6')
-   const trigger = page.getByRole('button', {
-      name: 'export',
-      exact: true
-   })
+   const trigger = page.getByRole('button', { name: 'export', exact: true })
    await trigger.click()
    const candidates = await page.getByLabel('729-character candidates').inputValue()
    expect(candidates).toHaveLength(729)
    await page.keyboard.press('Escape')
    await expect(trigger).toBeFocused()
-   await page
-      .getByRole('button', {
-         name: 'clear',
-         exact: true
-      })
-      .click()
+   await page.getByRole('button', { name: 'clear', exact: true }).click()
    await expect(page.locator('.digit')).toHaveCount(0)
    await importPuzzle(page, candidates)
    await expect(cell(page).locator('.digit')).toHaveText('6')
@@ -162,128 +129,49 @@ test('import/export candidate round trip and modal focus restoration', async ({ 
 
 test('malformed input stays in the dialog and leaves the board unchanged', async ({ page }) => {
    await importPuzzle(page)
-   await page
-      .getByRole('button', {
-         name: 'import',
-         exact: true
-      })
-      .click()
+   await page.getByRole('button', { name: 'import', exact: true }).click()
    await page.getByLabel('Enter digits or candidates').fill('not a puzzle')
-   await page
-      .getByRole('button', {
-         name: 'Submit',
-         exact: true
-      })
-      .click()
+   await page.getByRole('button', { name: 'Submit', exact: true }).click()
    await expect(page.getByRole('alert')).toContainText('Could not read')
-   await page
-      .getByRole('button', {
-         name: 'Cancel',
-         exact: true
-      })
-      .click()
+   await page.getByRole('button', { name: 'Cancel', exact: true }).click()
    await expect(cell(page).locator('.digit')).toHaveText('6')
 })
 
 test('step, Go, candidate diffs, explanation, and solver undo', async ({ page }) => {
    await importPuzzle(page)
-   await page
-      .getByRole('tab', {
-         name: 'strategies',
-         exact: true
-      })
-      .click()
+   await page.getByRole('tab', { name: 'strategies', exact: true }).click()
    await expect(page.getByRole('switch')).toHaveCount(17)
-   await page
-      .getByRole('button', {
-         name: 'step',
-         exact: true
-      })
-      .click()
+   await page.getByRole('button', { name: 'step', exact: true }).click()
    await expect(page.getByLabel('Status for Check for solved', { exact: true })).toHaveText(
       String(fixtures['Simple sudoku'].replace(/[^1-9]/g, '').length)
    )
-   await page
-      .getByRole('button', {
-         name: 'step',
-         exact: true
-      })
-      .click()
+   await page.getByRole('button', { name: 'step', exact: true }).click()
    await expect(page.locator('.candidate.eliminated').first()).toBeVisible()
    await expect(page.locator('.explanation')).toContainText('Update candidates')
-   await page
-      .getByRole('button', {
-         name: 'undo',
-         exact: true
-      })
-      .click()
+   await page.getByRole('button', { name: 'undo', exact: true }).click()
    await expect(page.locator('.candidate.eliminated')).toHaveCount(0)
-   await page
-      .getByRole('button', {
-         name: 'go',
-         exact: true
-      })
-      .click()
+   await page.getByRole('button', { name: 'go', exact: true }).click()
    await expect(page.locator('.candidate.eliminated').first()).toBeVisible()
 })
 
 test('strategy toggles and results persist across tabs', async ({ page }) => {
    await importPuzzle(page)
-   await page
-      .getByRole('tab', {
-         name: 'strategies',
-         exact: true
-      })
-      .click()
-   await page
-      .getByRole('switch', {
-         name: 'Toggle Update candidates',
-         exact: true
-      })
-      .uncheck()
-   await page
-      .getByRole('button', {
-         name: 'step',
-         exact: true
-      })
-      .click()
-   await page
-      .getByRole('button', {
-         name: 'step',
-         exact: true
-      })
-      .click()
+   await page.getByRole('tab', { name: 'strategies', exact: true }).click()
+   await page.getByRole('switch', { name: 'Toggle Update candidates', exact: true }).uncheck()
+   await page.getByRole('button', { name: 'step', exact: true }).click()
+   await page.getByRole('button', { name: 'step', exact: true }).click()
    await expect(page.getByLabel('Status for Update candidates', { exact: true })).toBeEmpty()
-   await page
-      .getByRole('tab', {
-         name: 'solving tools',
-         exact: true
-      })
-      .click()
-   await page
-      .getByRole('tab', {
-         name: 'strategies',
-         exact: true
-      })
-      .click()
+   await page.getByRole('tab', { name: 'solving tools', exact: true }).click()
+   await page.getByRole('tab', { name: 'strategies', exact: true }).click()
    await expect(
-      page.getByRole('switch', {
-         name: 'Toggle Update candidates',
-         exact: true
-      })
+      page.getByRole('switch', { name: 'Toggle Update candidates', exact: true })
    ).not.toBeChecked()
    await expect(page.getByLabel('Status for Check for solved', { exact: true })).not.toBeEmpty()
 })
 
 test('tabs support arrows, Home, and End', async ({ page }) => {
-   const tools = page.getByRole('tab', {
-      name: 'solving tools',
-      exact: true
-   })
-   const strategies = page.getByRole('tab', {
-      name: 'strategies',
-      exact: true
-   })
+   const tools = page.getByRole('tab', { name: 'solving tools', exact: true })
+   const strategies = page.getByRole('tab', { name: 'strategies', exact: true })
    await tools.focus()
    await page.keyboard.press('ArrowRight')
    await expect(strategies).toBeFocused()
@@ -296,32 +184,12 @@ test('tabs support arrows, Home, and End', async ({ page }) => {
 
 test('invalid and solved puzzles announce outcomes', async ({ page }) => {
    await importPuzzle(page, fixtures['Invalid board'])
-   await page
-      .getByRole('tab', {
-         name: 'strategies',
-         exact: true
-      })
-      .click()
-   await page
-      .getByRole('button', {
-         name: 'go',
-         exact: true
-      })
-      .click()
+   await page.getByRole('tab', { name: 'strategies', exact: true }).click()
+   await page.getByRole('button', { name: 'go', exact: true }).click()
    await expect(page.getByRole('status')).toHaveClass(/error/)
    await importPuzzle(page, fixtures['Solved board'])
-   await page
-      .getByRole('tab', {
-         name: 'strategies',
-         exact: true
-      })
-      .click()
-   await page
-      .getByRole('button', {
-         name: 'go',
-         exact: true
-      })
-      .click()
+   await page.getByRole('tab', { name: 'strategies', exact: true }).click()
+   await page.getByRole('button', { name: 'go', exact: true }).click()
    await expect(page.getByRole('status')).toHaveText('Finished! :D')
 })
 
@@ -332,12 +200,7 @@ test('the app fits its viewport without horizontal scrolling or runtime errors',
    page.on('pageerror', (error) => errors.push(error.message))
    await page.reload()
    await expect(page.getByRole('grid', { name: 'Sudoku' })).toBeVisible()
-   await page
-      .getByRole('tab', {
-         name: 'strategies',
-         exact: true
-      })
-      .click()
+   await page.getByRole('tab', { name: 'strategies', exact: true }).click()
    expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true)
    expect(errors).toEqual([])
 })
@@ -365,31 +228,13 @@ test('keyboard Undo restores the next digit as a new entry', async ({ page }) =>
 
 test('re-enabled propagation runs even if the solved count did not change', async ({ page }) => {
    await importPuzzle(page, '1' + '.'.repeat(80))
-   await page
-      .getByRole('tab', {
-         name: 'strategies',
-         exact: true
-      })
-      .click()
-   const propagation = page.getByRole('switch', {
-      name: 'Toggle Update candidates',
-      exact: true
-   })
+   await page.getByRole('tab', { name: 'strategies', exact: true }).click()
+   const propagation = page.getByRole('switch', { name: 'Toggle Update candidates', exact: true })
    await propagation.uncheck()
-   await page
-      .getByRole('button', {
-         name: 'go',
-         exact: true
-      })
-      .click()
+   await page.getByRole('button', { name: 'go', exact: true }).click()
    await expect(page.getByRole('status')).toContainText('No more progress')
    await propagation.check()
-   await page
-      .getByRole('button', {
-         name: 'go',
-         exact: true
-      })
-      .click()
+   await page.getByRole('button', { name: 'go', exact: true }).click()
    await expect(page.getByLabel('Status for Update candidates', { exact: true })).toHaveText('20')
    await expect(cell(page, 0, 1)).toHaveAccessibleDescription(/Eliminated: 1/)
    await expect(cell(page, 0, 1).locator('.candidate s')).toHaveText('1')
@@ -397,68 +242,23 @@ test('re-enabled propagation runs even if the solved count did not change', asyn
 
 test('a dense chain search is cancellable without freezing the page', async ({ page }) => {
    await importPuzzle(page, DENSE_BIVALUE_BOARD)
-   await page
-      .getByRole('tab', {
-         name: 'strategies',
-         exact: true
-      })
-      .click()
-   await page
-      .getByRole('button', {
-         name: 'go',
-         exact: true
-      })
-      .click()
+   await page.getByRole('tab', { name: 'strategies', exact: true }).click()
+   await page.getByRole('button', { name: 'go', exact: true }).click()
    await expect(page.getByRole('status')).toContainText('XY Ring')
-   await page
-      .getByRole('button', {
-         name: 'cancel solving',
-         exact: true
-      })
-      .click()
+   await page.getByRole('button', { name: 'cancel solving', exact: true }).click()
    await expect(page.getByRole('status')).toContainText('cancelled')
-   await page
-      .getByRole('tab', {
-         name: 'solving tools',
-         exact: true
-      })
-      .click()
-   await page
-      .getByRole('button', {
-         name: 'clear',
-         exact: true
-      })
-      .click()
-   await page
-      .getByRole('tab', {
-         name: 'strategies',
-         exact: true
-      })
-      .click()
-   await page
-      .getByRole('button', {
-         name: 'go',
-         exact: true
-      })
-      .click()
+   await page.getByRole('tab', { name: 'solving tools', exact: true }).click()
+   await page.getByRole('button', { name: 'clear', exact: true }).click()
+   await page.getByRole('tab', { name: 'strategies', exact: true }).click()
+   await page.getByRole('button', { name: 'go', exact: true }).click()
    await expect(page.getByRole('status')).toContainText('No more progress')
 })
 
 test('touch users can enter a puzzle without a physical keyboard', async ({ page, isMobile }) => {
    test.skip(!isMobile, 'Touch entry is exercised by the mobile project.')
    await cell(page).tap()
-   await page
-      .getByRole('button', {
-         name: 'Toggle candidate 5',
-         exact: true
-      })
-      .tap()
+   await page.getByRole('button', { name: 'Toggle candidate 5', exact: true }).tap()
    await expect(cell(page).locator('.digit')).toHaveText('5')
-   await page
-      .getByRole('button', {
-         name: 'reset candidates',
-         exact: true
-      })
-      .tap()
+   await page.getByRole('button', { name: 'reset candidates', exact: true }).tap()
    await expect(cell(page).locator('.digit')).toHaveCount(0)
 })

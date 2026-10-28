@@ -46,10 +46,7 @@ describe('strategies', () => {
    let solver: { strategyIndex: number; memory: StrategyMemory }
 
    beforeEach(() => {
-      solver = {
-         strategyIndex: 0,
-         memory: new StrategyMemory()
-      }
+      solver = { strategyIndex: 0, memory: new StrategyMemory() }
    })
 
    test.each([...STRATEGIES.entries()])(

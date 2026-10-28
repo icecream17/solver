@@ -1,4 +1,7 @@
-# Development
+# Development guidance for AI contributors
+
+This file is guidance for AI contributors working on the repository. The
+[rewrite notes](svelte-rewrite.md) describe how the systems fit together for review.
 
 Use the commands in the [README](../README.md). Commit `package-lock.json`; CI uses
 `npm ci` and an npm cache. Vite serves development files and writes a static `dist/`

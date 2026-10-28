@@ -34,9 +34,10 @@ Library checks. React-specific rules are replaced by Svelte rules. The original
 choice to avoid algorithm complexity and nesting limits is retained. Narrow rule
 exceptions explain false positives beside the code; unused exceptions are errors.
 
-Prettier owns whitespace: three spaces, no semicolons, single quotes, and one
-attribute per line. Stylistic ESLint rules put object properties on separate lines.
-Run lint fixes before formatting. `.editorconfig` supplies the same indentation.
+Prettier owns formatting: three spaces, no semicolons, single quotes, and one
+attribute per line. Short objects may fit on one line; existing multiline object
+literals are preserved. ESLint checks code quality without overlapping layout
+rules. `.editorconfig` supplies the same indentation.
 Separate global formatting changes from behavior changes when reviewing a migration.
 
 Component CSS sits beside the component. `App.css` owns shared layout and controls;

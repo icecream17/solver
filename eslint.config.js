@@ -7,7 +7,6 @@ import sonarjs from 'eslint-plugin-sonarjs'
 import vitest from '@vitest/eslint-plugin'
 import testingLibrary from 'eslint-plugin-testing-library'
 import prettier from 'eslint-config-prettier'
-import stylistic from '@stylistic/eslint-plugin'
 import svelteConfig from './svelte.config.js'
 
 // Flat-config replacement for .eslintrc. React-only rules no longer apply.
@@ -37,21 +36,9 @@ export default ts.config(
          },
          parserOptions: { extraFileExtensions: ['.svelte'] }
       },
-      plugins: { '@stylistic': stylistic },
       linterOptions: { reportUnusedDisableDirectives: 'error' },
       rules: {
          'no-alert': 'error',
-         '@stylistic/object-property-newline': ['error', { allowAllPropertiesOnSameLine: true }],
-         '@stylistic/object-curly-newline': [
-            'error',
-            {
-               ObjectExpression: {
-                  minProperties: 2,
-                  multiline: true,
-                  consistent: true
-               }
-            }
-         ],
          'prefer-const': 'warn',
          'prefer-arrow-callback': 'warn',
          'prefer-numeric-literals': 'warn',

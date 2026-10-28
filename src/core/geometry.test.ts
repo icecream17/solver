@@ -1,0 +1,36 @@
+import { IndexToNine, INDICES_TO_NINE } from "./types"
+import { affects, boxAt, getIDFromIndexWithinBox, id } from "./geometry"
+
+test('affects', () => {
+   expect(affects(0, 0)).toContainEqual({ row: 0, column: 3 }) // Row
+   expect(affects(0, 0)).toContainEqual({ row: 3, column: 0 }) // Column
+   expect(affects(0, 0)).toContainEqual({ row: 1, column: 2 }) // Box
+   expect(affects(0, 0)).not.toContainEqual({ row: 0, column: 0 }) // Doesn't affect itself
+
+   for (const row of INDICES_TO_NINE) {
+      for (const column of INDICES_TO_NINE) {
+         // All cells affects 8 in the same row, column, and box,
+         // with 4 overlaps
+         expect(affects(row, column)).toHaveLength(20)
+      }
+   }
+})
+
+test('boxAt maps the corners and center to their 3-by-3 boxes', () => {
+   expect(boxAt(0, 0)).toBe(0)
+   expect(boxAt(0, 8)).toBe(2)
+   expect(boxAt(4, 4)).toBe(4)
+   expect(boxAt(8, 0)).toBe(6)
+   expect(boxAt(8, 8)).toBe(8)
+})
+
+test('box methods', () => {
+   const boxCounts = [0, 0, 0, 0, 0, 0, 0, 0, 0] as [IndexToNine, IndexToNine, IndexToNine, IndexToNine, IndexToNine, IndexToNine, IndexToNine, IndexToNine, IndexToNine]
+   for (const row of INDICES_TO_NINE) {
+      for (const column of INDICES_TO_NINE) {
+         const indexOfBox = boxAt(row, column)
+         const indexInBox = boxCounts[indexOfBox]++ as IndexToNine
+         expect(getIDFromIndexWithinBox(indexOfBox, indexInBox)).toBe(id(row, column))
+      }
+   }
+})

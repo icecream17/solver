@@ -1,26 +1,10 @@
 {
-  "compilerOptions": {
-    "target": "esnext",
-    "lib": [
-      "dom",
-      "dom.iterable",
-      "esnext"
-    ],
-    "allowJs": true,
-    "skipLibCheck": true,
-    "esModuleInterop": true,
-    "allowSyntheticDefaultImports": true,
-    "strict": true,
-    "forceConsistentCasingInFileNames": true,
-    "noFallthroughCasesInSwitch": true,
-    "module": "esnext",
-    "moduleResolution": "node",
-    "resolveJsonModule": true,
-    "isolatedModules": true,
-    "noEmit": true,
-    "jsx": "react-jsx"
-  },
-  "include": [
-    "src"
-  ]
+   "compilerOptions": {
+      "target": "ES2023", "lib": ["ES2023", "ESNext.Collection", "DOM", "DOM.Iterable"],
+      "module": "ESNext", "moduleResolution": "Bundler", "strict": true,
+      "isolatedModules": true, "allowJs": true, "checkJs": true,
+      "resolveJsonModule": true, "esModuleInterop": true, "skipLibCheck": true,
+      "noEmit": true, "types": ["vite/client", "vitest/globals", "node"]
+   },
+   "include": ["src/**/*.ts", "src/**/*.svelte", "*.ts", "scripts/**/*.ts", "e2e/**/*.ts"]
 }

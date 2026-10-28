@@ -1,6 +1,9 @@
 # Styleguide
 
-1. Use the `Loading` class for lazy loaded placeholders.
-2. If you need to update a component's state based on the previous state, use callbacks.
-3. There's a top-down structure. Children should not know anything about their parents.
-   - Methods will be so useful when I extract `Sudoku` somewhere else
+- Keep a top-down structure: children receive data and callbacks. The solver must
+  never know about UI components or the DOM.
+- Own candidate data once. Derive display state rather than synchronizing copies.
+- Keep domain operations in ordinary TypeScript; use Svelte 5 runes at the UI boundary.
+- Preserve the dark palette, cyan links, monospace grid, and explanation color meanings.
+- Use the `Loading` class if adding a lazy-loaded placeholder.
+- Use native controls and retain keyboard, right-to-left, responsive, and print support.

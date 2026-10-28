@@ -1,63 +1,57 @@
-# solver
+# Sudoku solver
 
-[![codecov](https://codecov.io/gh/icecream17/solver/branch/main/graph/badge.svg?token=FOcsmxUx91)](https://codecov.io/gh/icecream17/solver)
-[![build](https://github.com/icecream17/solver/workflows/build/badge.svg)](https://github.com/icecream17/solver/actions)
-[![CodeFactor](https://www.codefactor.io/repository/github/icecream17/solver/badge/main)](https://www.codefactor.io/repository/github/icecream17/solver/overview/main)
+A Sudoku solver with editable candidates and step-by-step human solving strategies.
+Built with Svelte 5, TypeScript, and Vite. The core solver runs without a DOM.
 
-A simple sudoku solver I made. This is inspired by <https://sudokuwiki.org/>.
+## Development
 
-## how to install / starting development
+Requires Node.js 22.12+ (Node 24 is used in CI).
 
-[Install node](https://nodejs.org/), it comes with npm.
-
-If there's a "not recognized" error, search stackoverflow about adding node to path.
-
-`npm install -g yarn`
-
-`yarn`
-
-Congrats! You've installed all the dependencies!
-
-You can try the current dev code with `yarn start`
-
-## file structure
-
-Hopefully the folders are helpful and the code is clear enough.\
-If you have any feedback feel free to post an issue or something.
-
-For example, the actual code is in `src\`, and the strategies are in `src\Api\Strategies`.
-
-### Idea: Separate this repo into 4 packages
-
-1. core / shared stuff
-2. sudoku (and related react components)
-3. solver api
-4. website (all combined together)
-
-Plus, at some point I'd want to support variants: <https://github.com/dclamage/SudokuSolver>
-
-## yarn
-
-This project uses yarn. It's probably also possible to install with npm.
-
-## Silly dependency note
-
-There is a mysterious error when compiling:
-
-```
-TypeError: Cannot set property mark of #<Object> which has only a getter
-    at Object.connectTypeScriptPerformance (.\solver\node_modules\fork-ts-checker-webpack-plugin\lib\typescript-reporter\profile\TypeScriptPerformance.js:12:36)
-    at createTypeScriptReporter (.\solver\node_modules\fork-ts-checker-webpack-plugin\lib\typescript-reporter\reporter\TypeScriptReporter.js:40:49)
-    at Object.<anonymous> (.\solver\node_modules\fork-ts-checker-webpack-plugin\lib\reporter\rep
+```sh
+npm ci
+npm run dev
 ```
 
-This is some incompatibility between `create-react-app` > `fork-ts-checker-webpack-plugin` and Typescript 5, but it does
-not seem to affect anything. According to Copilot:
+## Checks
 
-> The error occurs in the performance profiling code of the plugin, which is not critical for the actual type-checking process. As a result, the type-checking and build process continue to work correctly despite the error.
+```sh
+npm run check
+npm test
+npm run test:coverage
+npm run build
+npx playwright install chromium
+npm run test:e2e
+npm run bench -- 100
+```
 
-## Node version
+`npm run test:watch` watches unit tests. `npm run preview` serves the production
+build. Vite writes `dist/` with relative asset paths for GitHub Pages.
 
-This project does not seem to use node, but just in case, this uses `Set.prototype.isSubsetOf`, so your node version must be `>=22.0.0`.
+## Usage
 
-Also, `@types/node` is usually on one of the latest versions, since github actions eventually deprecates old versions of node. If `@types/node` is incompatible with an earlier version of node, you can try downgrading the dependency, or post an issue if it doesn't work.
+Select a cell and type digits to toggle candidates. The first digit in an untouched
+cell starts a new entry. Backspace resets to all candidates; Ctrl/Shift+Backspace
+removes all candidates. Ctrl+click selects multiple cells, Ctrl+A selects all,
+and Escape deselects. Arrows wrap, Home/End navigate a row, Ctrl+Home/End navigate
+the board, and Page Up/Down move three rows. Command also works on macOS.
+
+Import accepts 81-cell puzzles, 729-character candidate strings, whitespace-separated
+candidate grids, and SudokuWiki URLs. Export includes both digits and candidates.
+The candidate format is lossless. In the 81-cell format, a dot means unsolved; a zero
+exports an empty candidate set but imports as a blank, matching the original app.
+
+The strategies tab offers Step (one strategy), Go (until a strategy succeeds or the
+pass ends), Undo, strategy switches, result counts, and explanations. Yellow marks
+eliminated candidates, green marks additions, and blue/green/orange show reasoning.
+Undo supports the last 100 board edits or solver commands.
+
+## Code
+
+- `src/core/`: board, geometry, strategies, import/export, and headless sessions.
+- `src/workspace.svelte.ts`: reactive application state and user actions.
+- `src/components/`: Svelte board, cells, tools, and native transfer dialog.
+- `e2e/`: production-build browser tests.
+- `scripts/benchmark.ts`: benchmark runner using the existing puzzle corpus.
+
+See [the rewrite notes](docs/svelte-rewrite.md) for architecture and feature parity.
+Historical strategy notes remain in [Strategies.md](Strategies.md).

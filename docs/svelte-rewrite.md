@@ -72,6 +72,9 @@ on the existing benchmark corpus without UI overhead.
 - Full existing corpus: 1,465 puzzles, 496 solved, 969 stalled, zero solver errors;
   about 13.9 seconds total in this environment. Stalled puzzles are expected with
   the current human-strategy catalog.
-- Local Playwright execution was blocked by Chromium exiting with SIGTRAP before
-  loading a page. Desktop/mobile browser tests are included in CI; native dialog
-  focus, actual viewport layout, and browser rendering still need that check.
+- GitHub Actions checks, all 124 tests, and production builds passed on Linux,
+  macOS, and Windows. All 26 desktop/mobile Chromium checks passed on Ubuntu,
+  including native dialog focus, viewport layout, and the pointer-focus regression.
+  See [the verified run](https://github.com/icecream17/solver/actions/runs/40629615483).
+- Local Chromium exits with SIGTRAP before loading a page; browser verification
+  was completed in GitHub Actions instead.

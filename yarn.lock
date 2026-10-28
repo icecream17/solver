@@ -4053,20 +4053,20 @@ __metadata:
   linkType: hard
 
 "@types/node@npm:*":
-  version: 26.6.2
-  resolution: "@types/node@npm:26.6.2"
+  version: 26.6.5
+  resolution: "@types/node@npm:26.6.5"
   dependencies:
     undici-types: ~8.9.0
-  checksum: 48b47e3fe659c63390e559ab5c6abc0484ef0d0940c9600ff0add3654617f0a75c9cc0ff91157d0e4dd360b20f8dfdf8a5abd38661b85f42d5543e70f20d7105
+  checksum: 3f7c73324d52cd7aaa0ae45a9a136228b59a2a3002fbea1377e2b949a0ea013ee792d46665dd9eff466f8bbe454560ac95c95ad950469b137c242bdeb88ae7e3
   languageName: node
   linkType: hard
 
 "@types/node@npm:^22.0.0":
-  version: 22.20.4
-  resolution: "@types/node@npm:22.20.4"
+  version: 22.20.5
+  resolution: "@types/node@npm:22.20.5"
   dependencies:
     undici-types: ~6.21.0
-  checksum: 223e3e78567718b4bc81c6ece16eeeeded8763f476f8b2aac2bc41434cab7992128328ff5ca5dd514f88490893d34b923238bf931c0eb2d2d8b21b6dcb0d1bee
+  checksum: c9258c97d580c980fe229b8a3598f68c896dd71a9b7cbabe55027842de06a7ecc16101f3f1c22ac35cc01c7636db0c05532e8c1299968ab0d2d2648dab5849e1
   languageName: node
   linkType: hard
 

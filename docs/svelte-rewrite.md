@@ -64,10 +64,10 @@ on the existing benchmark corpus without UI overhead.
 ## Local verification record
 
 - Type checking and Svelte diagnostics: no errors or warnings.
-- Vitest: 123 passing tests, including 12 Svelte interaction tests.
+- Vitest: 124 passing tests, including 13 Svelte interaction tests.
 - Core line coverage: 97.21% with V8 coverage.
-- Production build: 29.16 KB JavaScript and 2.23 KB CSS, gzipped, including all strategies.
-- Production source: 3,755 lines across 37 files versus 6,889 across 83 files before
+- Production build: 29.17 KB JavaScript and 2.23 KB CSS, gzipped, including all strategies.
+- Production source: 3,758 lines across 37 files versus 6,889 across 83 files before
   the rewrite (TS/TSX/Svelte/CSS, excluding tests and puzzle datasets).
 - Full existing corpus: 1,465 puzzles, 496 solved, 969 stalled, zero solver errors;
   about 13.9 seconds total in this environment. Stalled puzzles are expected with

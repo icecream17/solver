@@ -23,7 +23,8 @@ const user = () => userEvent.setup()
 async function importPuzzle(u: ReturnType<typeof user>, representation: string = fixtures['Simple sudoku']) {
    await u.click(screen.getByRole('tab', { name: 'solving tools' }))
    await u.click(screen.getByRole('button', { name: 'import' }))
-   await u.type(screen.getByLabelText('Enter digits or candidates'), representation, { skipClick: true })
+   await u.click(screen.getByLabelText('Enter digits or candidates'))
+   await u.paste(representation)
    await u.click(screen.getByRole('button', { name: 'Submit' }))
    await waitFor(() => expect(screen.queryByRole('dialog')).toBeNull())
 }
@@ -195,4 +196,17 @@ test('invalid and solved boards announce their outcomes', async () => {
    await u.click(screen.getByRole('tab', { name: 'strategies' }))
    await u.click(screen.getByRole('button', { name: 'go' }))
    expect(screen.getByRole('status').textContent).toBe('Finished! :D')
+})
+
+
+test('clicking a displayed digit keeps keyboard focus while switching to candidate editing', async () => {
+   render(App)
+   const u = user()
+   await importPuzzle(u)
+   const digit = cell().querySelector('.digit')!
+   await fireEvent.pointerDown(digit, { bubbles: true, cancelable: true })
+   expect(document.activeElement).toBe(cell())
+   await u.keyboard('{Backspace}{Escape}')
+   expect(cell().hasAttribute('data-error')).toBe(false)
+   expect(cell().querySelector('.digit')).toBeNull()
 })

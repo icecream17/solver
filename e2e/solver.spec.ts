@@ -180,3 +180,14 @@ test('the app fits its viewport without horizontal scrolling or runtime errors',
    expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true)
    expect(errors).toEqual([])
 })
+
+
+test('clicking an imported digit retains focus when the display switches to candidates', async ({ page }) => {
+   await importPuzzle(page)
+   await cell(page).locator('.digit').click()
+   await expect(cell(page)).toBeFocused()
+   await page.keyboard.press('Backspace')
+   await page.keyboard.press('Escape')
+   await expect(cell(page)).not.toHaveAttribute('data-error')
+   await expect(cell(page).locator('.digit')).toHaveCount(0)
+})

@@ -15,10 +15,14 @@
    }
 
    function pointer(event: PointerEvent, index: number) {
-      workspace.select(index, event.ctrlKey || event.metaKey)
+      // Selection changes may replace the digit/candidate span under the
+      // pointer before the browser's default focus action. Focus the stable
+      // button explicitly so keyboard input cannot be left on the document.
+      event.preventDefault()
       pointerFocus = true
-      // Focus occurs after pointerdown, even when this cell already had focus.
-      setTimeout(() => { pointerFocus = false }, 0)
+      workspace.select(index, event.ctrlKey || event.metaKey)
+      ;(event.currentTarget as HTMLButtonElement).focus({ preventScroll: true })
+      pointerFocus = false
    }
 
    function keydown(event: KeyboardEvent, targetIndex: number) {

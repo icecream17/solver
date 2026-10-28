@@ -31,7 +31,7 @@ test('Go stops on the next successful strategy, not at the final solution', () =
    expect(next.lastStrategy).toBe(1)
    expect(next.strategyIndex).toBe(0)
    expect(next.outcome).toBe('progress')
-   expect(next.grid.flat().filter(cell => cell.length === 1).length).toBeLessThan(81)
+   expect(next.grid.flat().filter((cell) => cell.length === 1).length).toBeLessThan(81)
 })
 
 test('a complete pass on an empty board terminates', () => {
@@ -59,7 +59,10 @@ test('re-enabling propagation makes the available eliminations reachable', () =>
    expect(session.outcome).toBe('stalled')
    session.disabled[1] = false
    const result = go(session)
-   expect(result.results[1]).toMatchObject({ success: true, successcount: 20 })
+   expect(result.results[1]).toMatchObject({
+      success: true,
+      successcount: 20
+   })
    expect(result.outcome).toBe('progress')
 })
 
@@ -102,14 +105,20 @@ test('an invalid partial strategy result is rolled back atomically', () => {
    const original = catalog[1].run
    const input = puzzle()
    input.strategyIndex = 1
-   catalog[1].run = board => {
+   catalog[1].run = (board) => {
       board.data[0][0] = []
-      return { success: false, successcount: -1, message: 'Contradiction' }
+      return {
+         success: false,
+         successcount: -1,
+         message: 'Contradiction'
+      }
    }
    try {
       const result = step(input)
       expect(result.outcome).toBe('error')
       expect(result.grid).toEqual(input.grid)
       expect(result.message).toBe('Contradiction')
-   } finally { catalog[1].run = original }
+   } finally {
+      catalog[1].run = original
+   }
 })

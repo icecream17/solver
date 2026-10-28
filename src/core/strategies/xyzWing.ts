@@ -1,13 +1,12 @@
-import { SudokuDigits } from "../types";
-import Board from "../board";
-import { affectsCell, boxAt, CellID, sharedInArrays } from "../geometry";
-import { getCellsWithNCandidates, highlightCell, removeCandidateFromCells } from "../annotations";
+import { SudokuDigits } from '../types'
+import Board from '../board'
+import { affectsCell, boxAt, CellID, sharedInArrays } from '../geometry'
+import { getCellsWithNCandidates, highlightCell, removeCandidateFromCells } from '../annotations'
 
 /* TODO: When finished move to Utils */
 function inSameBox(cellA: CellID, cellB: CellID) {
    return boxAt(cellA.row, cellA.column) === boxAt(cellB.row, cellB.column)
 }
-
 
 // /**
 //  * The AC cell has A but not B
@@ -18,7 +17,7 @@ function inSameBox(cellA: CellID, cellB: CellID) {
 //    return cell.includes(has) && !cell.includes(notHas)
 // }
 
-export default function xyzWing (sudoku: Board) {
+export default function xyzWing(sudoku: Board) {
    // ABC  eliminations | [ABC]{2}
    // AC                |
 
@@ -36,16 +35,23 @@ export default function xyzWing (sudoku: Board) {
       // All cells AB sees with 2 candidates
       const affectsBaseCell = affectsCell(basecell)
       const validAffectsCell = affectsBaseCell.filter(
-         sees => cellsWithTwoCandidates.includes(sees) && sudoku.data[sees.row][sees.column].every(candidate => sudokubasecell.includes(candidate))
+         (sees) =>
+            cellsWithTwoCandidates.includes(sees) &&
+            sudoku.data[sees.row][sees.column].every((candidate) =>
+               sudokubasecell.includes(candidate)
+            )
       )
-      const [valid1stWing, valid2ndWing] = validAffectsCell.reduce<[CellID[], CellID[]]>((accum, sees) => {
-         if (inSameBox(sees, basecell)) {
-            accum[0].push(sees)
-         } else {
-            accum[1].push(sees)
-         }
-         return accum
-      }, [[], []])
+      const [valid1stWing, valid2ndWing] = validAffectsCell.reduce<[CellID[], CellID[]]>(
+         (accum, sees) => {
+            if (inSameBox(sees, basecell)) {
+               accum[0].push(sees)
+            } else {
+               accum[1].push(sees)
+            }
+            return accum
+         },
+         [[], []]
+      )
 
       if (valid1stWing.length === 0 || valid2ndWing.length === 0) {
          continue
@@ -53,13 +59,18 @@ export default function xyzWing (sudoku: Board) {
 
       for (const wing1 of valid1stWing) {
          const wing1Cell = sudoku.data[wing1.row][wing1.column]
-         const extraCandidate = sudokubasecell.find(candidate => !wing1Cell.includes(candidate)) as SudokuDigits
+         const extraCandidate = sudokubasecell.find(
+            (candidate) => !wing1Cell.includes(candidate)
+         ) as SudokuDigits
 
          for (const wing2 of valid2ndWing) {
             const wing2Cell = sudoku.data[wing2.row][wing2.column]
-            if (wing2Cell.includes(extraCandidate) && wing2Cell.every(candidate => sudokubasecell.includes(candidate))) {
-               const sharedCandidate = sudokubasecell.find(candidate =>
-                  wing1Cell.includes(candidate) && wing2Cell.includes(candidate)
+            if (
+               wing2Cell.includes(extraCandidate) &&
+               wing2Cell.every((candidate) => sudokubasecell.includes(candidate))
+            ) {
+               const sharedCandidate = sudokubasecell.find(
+                  (candidate) => wing1Cell.includes(candidate) && wing2Cell.includes(candidate)
                ) as SudokuDigits
 
                const affectsAll = sharedInArrays(
@@ -82,7 +93,5 @@ export default function xyzWing (sudoku: Board) {
       }
    }
 
-   return {
-      success: false
-   } as const
+   return { success: false } as const
 }

@@ -1,8 +1,8 @@
-import { NUMBER_OF_CELLS } from "../types"
-import Board from "../board"
-import { StrategyMemory, SuccessError } from "../strategy-types"
-import { numberOfCellsWithNCandidates } from "../annotations"
-import checkValidity from "./checkValidity"
+import { NUMBER_OF_CELLS } from '../types'
+import Board from '../board'
+import { StrategyMemory, SuccessError } from '../strategy-types'
+import { numberOfCellsWithNCandidates } from '../annotations'
+import checkValidity from './checkValidity'
 
 export default function checkForSolved(sudoku: Board, memory: StrategyMemory[0]) {
    const validity = checkValidity(sudoku)
@@ -11,12 +11,12 @@ export default function checkForSolved(sudoku: Board, memory: StrategyMemory[0])
       return {
          success: false,
          message: validity.message,
-         successcount: SuccessError,
+         successcount: SuccessError
       } as const
    }
 
    // Should this be before checkValidity?
-   if (typeof memory.solved !== "number") {
+   if (typeof memory.solved !== 'number') {
       throw TypeError(`memory.solved is not a number - got ${String(memory.solved)}`)
    } else if (!Number.isInteger(memory.solved)) {
       throw TypeError(`memory.solved is not an integer - got ${memory.solved}`)
@@ -43,7 +43,5 @@ export default function checkForSolved(sudoku: Board, memory: StrategyMemory[0])
       } as const
    }
 
-   return {
-      success: false
-   } as const
+   return { success: false } as const
 }

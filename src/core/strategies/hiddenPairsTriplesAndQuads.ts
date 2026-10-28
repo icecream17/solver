@@ -1,20 +1,20 @@
-import { BOX_NAMES, COLUMN_NAMES, INDICES_TO_NINE, ROW_NAMES, SudokuDigits } from "../types";
-import { convertArrayToEnglishList } from "../text";
-import Board from "../board";
-import { CellGroup, CellInfo, SuccessError } from "../strategy-types";
-import { algebraic, removeFromArray } from "../geometry";
-import { colorConjugate, combinations } from "./pairsTriplesAndQuads";
+import { BOX_NAMES, COLUMN_NAMES, INDICES_TO_NINE, ROW_NAMES, SudokuDigits } from '../types'
+import { convertArrayToEnglishList } from '../text'
+import Board from '../board'
+import { CellGroup, CellInfo, SuccessError } from '../strategy-types'
+import { algebraic, removeFromArray } from '../geometry'
+import { colorConjugate, combinations } from './pairsTriplesAndQuads'
 
 /**
  * Returns an array of all the cells which contain at least one of the candidates
  */
-function getConjugateFromCandidates (cells: CellGroup, candidates: SudokuDigits[]) {
-   return cells.filter(cell =>
-      candidates.some(candidate => cell.candidates.includes(candidate))
+function getConjugateFromCandidates(cells: CellGroup, candidates: SudokuDigits[]) {
+   return cells.filter((cell) =>
+      candidates.some((candidate) => cell.candidates.includes(candidate))
    )
 }
 
-function __errorHandling (candidatesOfConjugate: SudokuDigits[], conjugate: CellInfo[]) {
+function __errorHandling(candidatesOfConjugate: SudokuDigits[], conjugate: CellInfo[]) {
    const invalidCandidateString = convertArrayToEnglishList(candidatesOfConjugate)
 
    // To prevent errors in convertArrayToEnglishList
@@ -23,7 +23,7 @@ function __errorHandling (candidatesOfConjugate: SudokuDigits[], conjugate: Cell
       return ` has 0 possibilities for ${invalidCandidateString}!!!\n`
    }
    const invalidGroupNames = convertArrayToEnglishList(
-      conjugate.map(someCell => algebraic(someCell.position.row, someCell.position.column))
+      conjugate.map((someCell) => algebraic(someCell.position.row, someCell.position.column))
    )
 
    if (candidatesOfConjugate.length === 1) {
@@ -35,9 +35,12 @@ function __errorHandling (candidatesOfConjugate: SudokuDigits[], conjugate: Cell
    }
 }
 
-function __filterPossibleCandidates (group: CellGroup, maxSize: number, possibleCandidates: Set<SudokuDigits>) {
-
-   function removeCandidate (candidate: SudokuDigits) {
+function __filterPossibleCandidates(
+   group: CellGroup,
+   maxSize: number,
+   possibleCandidates: Set<SudokuDigits>
+) {
+   function removeCandidate(candidate: SudokuDigits) {
       possibleCandidates.delete(candidate)
 
       for (const cell of group) {
@@ -103,7 +106,7 @@ function __filterPossibleCandidates (group: CellGroup, maxSize: number, possible
  */
 function findHiddenConjugatesOfGroup(group: CellGroup, maxSize = 4 as 2 | 3 | 4) {
    // copy cell objects and arrays before changing them
-   group = group.map(cell => ({
+   group = group.map((cell) => ({
       position: cell.position,
       candidates: cell.candidates.slice()
    }))
@@ -111,13 +114,13 @@ function findHiddenConjugatesOfGroup(group: CellGroup, maxSize = 4 as 2 | 3 | 4)
    // 1. Filter the possible candidates (return if error)
    const possibleCandidates = new Set([1, 2, 3, 4, 5, 6, 7, 8, 9] as const)
    const __result = __filterPossibleCandidates(group, maxSize, possibleCandidates)
-   if (typeof __result === "string") {
+   if (typeof __result === 'string') {
       return __result
    }
 
    //     c. Filter out cells that have too few candidates
    //        (No limit on max candidates)
-   const possibleCells = group.filter(cell => 1 < cell.candidates.length)
+   const possibleCells = group.filter((cell) => 1 < cell.candidates.length)
 
    if (possibleCandidates.size < 2 || possibleCells.length < 2) {
       return []
@@ -147,17 +150,25 @@ function findHiddenConjugatesOfGroup(group: CellGroup, maxSize = 4 as 2 | 3 | 4)
          // Check if this conjugate exactly overlaps a previous one
          // If so, error just like above
          for (const [i, prevConjugate] of conjugates.entries()) {
-            if (prevConjugate.length === conjugate.length && prevConjugate.every(cell => conjugate.some(cell2 => cell.position === cell2.position))) {
-               return __errorHandling([...new Set(candidatesOfConjugate.concat(conjugateCands[i]))], conjugate)
+            if (
+               prevConjugate.length === conjugate.length &&
+               prevConjugate.every((cell) =>
+                  conjugate.some((cell2) => cell.position === cell2.position)
+               )
+            ) {
+               return __errorHandling(
+                  [...new Set(candidatesOfConjugate.concat(conjugateCands[i]))],
+                  conjugate
+               )
             }
          }
 
          // Filter extra candidates
-         const filteredConjugate = conjugate.map(cell => ({
-            candidates: cell.candidates.filter(
-               candidate => candidatesOfConjugate.includes(candidate)
+         const filteredConjugate = conjugate.map((cell) => ({
+            candidates: cell.candidates.filter((candidate) =>
+               candidatesOfConjugate.includes(candidate)
             ),
-            position: cell.position,
+            position: cell.position
          }))
 
          conjugates.push(filteredConjugate)
@@ -168,23 +179,22 @@ function findHiddenConjugatesOfGroup(group: CellGroup, maxSize = 4 as 2 | 3 | 4)
    return conjugates
 }
 
-
 function findHiddenConjugatesOfSudoku(sudoku: Board, maxSize = 4 as 2 | 3 | 4) {
    const conjugates = [] as CellGroup[]
    const groups = sudoku.getGroups()
    for (const i of INDICES_TO_NINE) {
       const resultRow = findHiddenConjugatesOfGroup(groups[i * 3], maxSize)
-      if (typeof resultRow === "string") {
+      if (typeof resultRow === 'string') {
          return `Row ${ROW_NAMES[i]}${resultRow}`
       }
 
       const resultColumn = findHiddenConjugatesOfGroup(groups[i * 3 + 1], maxSize)
-      if (typeof resultColumn === "string") {
+      if (typeof resultColumn === 'string') {
          return `Column ${COLUMN_NAMES[i]}${resultColumn}`
       }
 
       const resultBox = findHiddenConjugatesOfGroup(groups[i * 3 + 2], maxSize)
-      if (typeof resultBox === "string") {
+      if (typeof resultBox === 'string') {
          return `Box ${BOX_NAMES[i]}${resultBox}`
       }
 
@@ -241,7 +251,7 @@ export default function hiddenPairsTriplesAndQuads(sudoku: Board) {
    let successcount = 0
 
    const result = findHiddenConjugatesOfSudoku(sudoku)
-   if (typeof result === "string") {
+   if (typeof result === 'string') {
       sudoku.report(result)
       return {
          success: false,
@@ -258,7 +268,9 @@ export default function hiddenPairsTriplesAndQuads(sudoku: Board) {
          // If different, replace
          // Note: Candidates are only ever removed so just check lengths
          if (actualCell.length > conjugateCell.candidates.length) {
-            sudoku.set(conjugateCell.position.row, conjugateCell.position.column).to(...conjugateCell.candidates)
+            sudoku
+               .set(conjugateCell.position.row, conjugateCell.position.column)
+               .to(...conjugateCell.candidates)
             colorConjugate(sudoku, conjugate, 'solved')
             success = true
          }
@@ -271,9 +283,7 @@ export default function hiddenPairsTriplesAndQuads(sudoku: Board) {
    }
 
    if (successcount === 0) {
-      return {
-         success: false
-      } as const
+      return { success: false } as const
    }
 
    return {

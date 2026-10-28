@@ -18,7 +18,7 @@
    target="_blank"
    rel="noopener noreferrer"
    referrerpolicy="no-referrer"
-   onclick={event => event.stopPropagation()}
+   onclick={(event) => event.stopPropagation()}
 >
    {@render children()}
 </a>

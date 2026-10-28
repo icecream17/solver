@@ -1,11 +1,27 @@
-import { AlgebraicName, BoxName, BOX_NAMES, COLUMN_NAMES, IndexTo81, IndexToNine, INDICES_TO_NINE, ROW_NAMES, SudokuDigits, ThreeDimensionalArray, TwoDimensionalArray, GrpTyp } from "./types";
+import {
+   AlgebraicName,
+   BoxName,
+   BOX_NAMES,
+   COLUMN_NAMES,
+   IndexTo81,
+   IndexToNine,
+   INDICES_TO_NINE,
+   ROW_NAMES,
+   SudokuDigits,
+   ThreeDimensionalArray,
+   TwoDimensionalArray,
+   GrpTyp
+} from './types'
 
-export function algebraic (row: IndexToNine, column: IndexToNine): AlgebraicName {
+export function algebraic(row: IndexToNine, column: IndexToNine): AlgebraicName {
    return `${ROW_NAMES[row]}${COLUMN_NAMES[column]}` as const
 }
 
 export class CellID {
-   constructor (public row: IndexToNine, public column: IndexToNine) {}
+   constructor(
+      public row: IndexToNine,
+      public column: IndexToNine
+   ) {}
 
    *[Symbol.iterator]() {
       yield this.row
@@ -17,10 +33,10 @@ export class CandidateID {
    constructor(
       public row: IndexToNine,
       public column: IndexToNine,
-      public digit: SudokuDigits,
+      public digit: SudokuDigits
    ) {}
 
-   *[Symbol.iterator] () {
+   *[Symbol.iterator]() {
       yield this.row
       yield this.column
       yield this.digit
@@ -29,9 +45,9 @@ export class CandidateID {
 
 const cellIDs = [] as TwoDimensionalArray<CellID>
 const candidateIDs = [] as ThreeDimensionalArray<CandidateID>
-export function id (row: IndexToNine, column: IndexToNine): CellID;
-export function id (row: IndexToNine, column: IndexToNine, digit: SudokuDigits): CandidateID;
-export function id (row: IndexToNine, column: IndexToNine, digit?: SudokuDigits) {
+export function id(row: IndexToNine, column: IndexToNine): CellID
+export function id(row: IndexToNine, column: IndexToNine, digit: SudokuDigits): CandidateID
+export function id(row: IndexToNine, column: IndexToNine, digit?: SudokuDigits) {
    if (digit === undefined) {
       cellIDs[row] ??= []
       cellIDs[row][column] ??= new CellID(row, column)
@@ -45,38 +61,116 @@ export function id (row: IndexToNine, column: IndexToNine, digit?: SudokuDigits)
 }
 
 /** What index a cell is at */
-export function indexOf (row: IndexToNine, column: IndexToNine): IndexTo81 {
+export function indexOf(row: IndexToNine, column: IndexToNine): IndexTo81 {
    return (row * 9 + column) as IndexTo81
 }
 
 export const indexToRowAndColumn = [
-   [0, 0], [0, 1], [0, 2], [0, 3], [0, 4], [0, 5], [0, 6], [0, 7], [0, 8],
-   [1, 0], [1, 1], [1, 2], [1, 3], [1, 4], [1, 5], [1, 6], [1, 7], [1, 8],
-   [2, 0], [2, 1], [2, 2], [2, 3], [2, 4], [2, 5], [2, 6], [2, 7], [2, 8],
-   [3, 0], [3, 1], [3, 2], [3, 3], [3, 4], [3, 5], [3, 6], [3, 7], [3, 8],
-   [4, 0], [4, 1], [4, 2], [4, 3], [4, 4], [4, 5], [4, 6], [4, 7], [4, 8],
-   [5, 0], [5, 1], [5, 2], [5, 3], [5, 4], [5, 5], [5, 6], [5, 7], [5, 8],
-   [6, 0], [6, 1], [6, 2], [6, 3], [6, 4], [6, 5], [6, 6], [6, 7], [6, 8],
-   [7, 0], [7, 1], [7, 2], [7, 3], [7, 4], [7, 5], [7, 6], [7, 7], [7, 8],
-   [8, 0], [8, 1], [8, 2], [8, 3], [8, 4], [8, 5], [8, 6], [8, 7], [8, 8],
+   [0, 0],
+   [0, 1],
+   [0, 2],
+   [0, 3],
+   [0, 4],
+   [0, 5],
+   [0, 6],
+   [0, 7],
+   [0, 8],
+   [1, 0],
+   [1, 1],
+   [1, 2],
+   [1, 3],
+   [1, 4],
+   [1, 5],
+   [1, 6],
+   [1, 7],
+   [1, 8],
+   [2, 0],
+   [2, 1],
+   [2, 2],
+   [2, 3],
+   [2, 4],
+   [2, 5],
+   [2, 6],
+   [2, 7],
+   [2, 8],
+   [3, 0],
+   [3, 1],
+   [3, 2],
+   [3, 3],
+   [3, 4],
+   [3, 5],
+   [3, 6],
+   [3, 7],
+   [3, 8],
+   [4, 0],
+   [4, 1],
+   [4, 2],
+   [4, 3],
+   [4, 4],
+   [4, 5],
+   [4, 6],
+   [4, 7],
+   [4, 8],
+   [5, 0],
+   [5, 1],
+   [5, 2],
+   [5, 3],
+   [5, 4],
+   [5, 5],
+   [5, 6],
+   [5, 7],
+   [5, 8],
+   [6, 0],
+   [6, 1],
+   [6, 2],
+   [6, 3],
+   [6, 4],
+   [6, 5],
+   [6, 6],
+   [6, 7],
+   [6, 8],
+   [7, 0],
+   [7, 1],
+   [7, 2],
+   [7, 3],
+   [7, 4],
+   [7, 5],
+   [7, 6],
+   [7, 7],
+   [7, 8],
+   [8, 0],
+   [8, 1],
+   [8, 2],
+   [8, 3],
+   [8, 4],
+   [8, 5],
+   [8, 6],
+   [8, 7],
+   [8, 8]
 ] as const
 
 // Imaginary apostrophe
 export const boxesCells = [
-   [0, 1, 2, 9, 10, 11, 18, 19, 20], [3, 4, 5, 12, 13, 14, 21, 22, 23], [6, 7, 8, 15, 16, 17, 24, 25, 26],
-   [27, 28, 29, 36, 37, 38, 45, 46, 47], [30, 31, 32, 39, 40, 41, 48, 49, 50], [33, 34, 35, 42, 43, 44, 51, 52, 53],
-   [54, 55, 56, 63, 64, 65, 72, 73, 74], [57, 58, 59, 66, 67, 68, 75, 76, 77], [60, 61, 62, 69, 70, 71, 78, 79, 80],
+   [0, 1, 2, 9, 10, 11, 18, 19, 20],
+   [3, 4, 5, 12, 13, 14, 21, 22, 23],
+   [6, 7, 8, 15, 16, 17, 24, 25, 26],
+   [27, 28, 29, 36, 37, 38, 45, 46, 47],
+   [30, 31, 32, 39, 40, 41, 48, 49, 50],
+   [33, 34, 35, 42, 43, 44, 51, 52, 53],
+   [54, 55, 56, 63, 64, 65, 72, 73, 74],
+   [57, 58, 59, 66, 67, 68, 75, 76, 77],
+   [60, 61, 62, 69, 70, 71, 78, 79, 80]
 ] as const
 
 export const boxRow = [0, 0, 0, 3, 3, 3, 6, 6, 6] as const
 export const boxColumn = [0, 0, 0, 1, 1, 1, 2, 2, 2] as const
-export function boxAt (row: IndexToNine, column: IndexToNine): IndexToNine {
+export function boxAt(row: IndexToNine, column: IndexToNine): IndexToNine {
    // + │ 0 1 2
    // ──┼──────
    // 0 │ 0 1 2
    // 3 │ 3 4 5
    // 6 │ 6 7 8
-   return boxRow[row] + boxColumn[column] as IndexToNine
+   return (boxRow[row] + boxColumn[column]) as IndexToNine
 }
 
 export function boxNameAt(row: IndexToNine, column: IndexToNine): BoxName {
@@ -90,10 +184,10 @@ const _affectsCache = new Map<IndexTo81, CellID[]>()
  * All cells that affect a square
  *
  * A cell does not affect itself
- * 
+ *
  * NO NEED TO CACHE, this function caches for you
  */
-export function affects (row: IndexToNine, column: IndexToNine) {
+export function affects(row: IndexToNine, column: IndexToNine) {
    const thisIndex = indexOf(row, column)
    const results = [] as IndexTo81[] // I could optimize, but it's here for simplicity
 
@@ -118,7 +212,7 @@ export function affects (row: IndexToNine, column: IndexToNine) {
    // this box
    for (const boxCellIndex of boxesCells[boxAt(row, column)]) {
       // different cell
-      if (boxCellIndex !== thisIndex) { // eslint-disable-line sonarjs/no-collapsible-if --- Documentation so can't collapse
+      if (boxCellIndex !== thisIndex) {
          // prevents duplicates
          // (there's no check for the row and column since they don't collide)
          if (!results.includes(boxCellIndex)) {
@@ -127,7 +221,9 @@ export function affects (row: IndexToNine, column: IndexToNine) {
       }
    }
 
-   const result = results.map(index => id(...(indexToRowAndColumn[index] as [IndexToNine, IndexToNine]))) // Formatting
+   const result = results.map((index) =>
+      id(...(indexToRowAndColumn[index] as [IndexToNine, IndexToNine]))
+   ) // Formatting
    _affectsCache.set(thisIndex, result) // Cache
    return result
 }
@@ -135,17 +231,18 @@ export function affects (row: IndexToNine, column: IndexToNine) {
 /**
  * See {@link affects}
  */
-export function affectsCell (cell: CellID) {
+export function affectsCell(cell: CellID) {
    return affects(cell.row, cell.column)
 }
-
 
 /**
  * Turns something with length 81
  * to an array of 9 things, each with length 9
  */
 export function to9by9<T>(thing: T[]): [T[], T[], T[], T[], T[], T[], T[], T[], T[]]
-export function to9by9(thing: string): [string, string, string, string, string, string, string, string, string]
+export function to9by9(
+   thing: string
+): [string, string, string, string, string, string, string, string, string]
 export function to9by9<T>(thing: T[] | string) {
    return [
       thing.slice(0, 9),
@@ -156,14 +253,20 @@ export function to9by9<T>(thing: T[] | string) {
       thing.slice(45, 54),
       thing.slice(54, 63),
       thing.slice(63, 72),
-      thing.slice(72),
+      thing.slice(72)
    ] as const
 }
 
 export const indexTo3x3 = [
-   [0, 0], [0, 1], [0, 2],
-   [1, 0], [1, 1], [1, 2],
-   [2, 0], [2, 1], [2, 2],
+   [0, 0],
+   [0, 1],
+   [0, 2],
+   [1, 0],
+   [1, 1],
+   [1, 2],
+   [2, 0],
+   [2, 1],
+   [2, 2]
 ] as const
 
 /**
@@ -174,7 +277,7 @@ export const indexTo3x3 = [
 export function getIDFromIndexWithinBox(indexOfBox: IndexToNine, indexInBox: IndexToNine) {
    const [boxRow, boxColumn] = indexTo3x3[indexOfBox]
    const [withinRow, withinColumn] = indexTo3x3[indexInBox]
-   return id(boxRow * 3 + withinRow as IndexToNine, boxColumn * 3 + withinColumn as IndexToNine)
+   return id((boxRow * 3 + withinRow) as IndexToNine, (boxColumn * 3 + withinColumn) as IndexToNine)
 }
 
 function elementInIterable<T>(iter: Iterable<T>): T | undefined {
@@ -191,19 +294,19 @@ export function groupInfo(type: GrpTyp, cells: Iterable<CellID>) {
    let cellsInGroup
    const arbitraryCell = elementInIterable(cells) as CellID // If it is undefined, it will error at runtime
    switch (type) {
-      case "row": {
+      case 'row': {
          groupIndex = arbitraryCell.row
-         cellsInGroup = INDICES_TO_NINE.map(indice => id(groupIndex, indice))
+         cellsInGroup = INDICES_TO_NINE.map((indice) => id(groupIndex, indice))
          break
       }
-      case "column": {
+      case 'column': {
          groupIndex = arbitraryCell.column
-         cellsInGroup = INDICES_TO_NINE.map(indice => id(indice, groupIndex))
+         cellsInGroup = INDICES_TO_NINE.map((indice) => id(indice, groupIndex))
          break
       }
-      case "box": {
+      case 'box': {
          groupIndex = boxAt(arbitraryCell.row, arbitraryCell.column)
-         cellsInGroup = INDICES_TO_NINE.map(indice => getIDFromIndexWithinBox(groupIndex, indice))
+         cellsInGroup = INDICES_TO_NINE.map((indice) => getIDFromIndexWithinBox(groupIndex, indice))
          break
       }
    }
@@ -214,7 +317,7 @@ export function groupInfo(type: GrpTyp, cells: Iterable<CellID>) {
 /**
  * Removes an {@param element} from an {@param array}
  */
-export function removeFromArray<T> (element: T, array: T[]) {
+export function removeFromArray<T>(element: T, array: T[]) {
    const index = array.indexOf(element)
    if (index !== -1) {
       array.splice(index, 1)
@@ -248,8 +351,8 @@ export function sharedInArrays<T>(first?: Iterable<T>, ...arrays: T[][]): Set<T>
 /**
  * Very similar to {@link sharedInArrays}
  */
-export function sharedInSets<T>(...sets: [Iterable<T>, ...Set<T>[]]): Set<T>;
-export function sharedInSets<T> (first: Iterable<T>, ...sets: Set<T>[]) {
+export function sharedInSets<T>(...sets: [Iterable<T>, ...Set<T>[]]): Set<T>
+export function sharedInSets<T>(first: Iterable<T>, ...sets: Set<T>[]) {
    sets.sort((a, b) => a.size - b.size) // Optimization
    const shared = new Set<T>(first)
    for (const element of shared) {
@@ -266,7 +369,7 @@ export function sharedInSets<T> (first: Iterable<T>, ...sets: Set<T>[]) {
 // Set union? Would be uesd in pairCoversGroupd
 
 /** Return a new set of the elements in {@setA} not in {@setB} */
-export function setDifference<T> (setA: Iterable<T>, setB: Iterable<T>) {
+export function setDifference<T>(setA: Iterable<T>, setB: Iterable<T>) {
    const result = new Set(setA)
    for (const val of setB) {
       result.delete(val)
@@ -293,7 +396,7 @@ export function isSubarray<T>(arrayA: Iterable<T>, arrayB: T[]) {
    return true
 }
 
-export function assertGet<K, V> (map: Map<K, V>, key: K) {
+export function assertGet<K, V>(map: Map<K, V>, key: K) {
    const value = map.get(key)
    if (value === undefined) {
       throw new ReferenceError("Map doesn't have this value / This error will never happen")

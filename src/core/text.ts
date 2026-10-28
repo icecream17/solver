@@ -1,7 +1,7 @@
 export function convertArrayToEnglishList<T extends string | number>(array: T[]) {
    switch (array.length) {
       case 0:
-         throw TypeError("Array is empty!")
+         throw TypeError('Array is empty!')
       case 1:
          return `${array[0]}` as const
       case 2:

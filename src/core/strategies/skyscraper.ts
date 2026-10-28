@@ -1,7 +1,7 @@
-import { ALL_CANDIDATES, IndexToNine, INDICES_TO_NINE, SudokuDigits } from "../types";
-import Board from "../board";
-import { affects, CellID, sharedInArrays } from "../geometry";
-import { colorGroup, removeCandidateFromCells } from "../annotations";
+import { ALL_CANDIDATES, IndexToNine, INDICES_TO_NINE, SudokuDigits } from '../types'
+import Board from '../board'
+import { affects, CellID, sharedInArrays } from '../geometry'
+import { colorGroup, removeCandidateFromCells } from '../annotations'
 
 export function __incrementMapValue<T extends Map<K, number>, K>(map: T, key: K) {
    const value = map.get(key)
@@ -16,7 +16,7 @@ function _innerInnerSkyscraperLogic(
    candidate: SudokuDigits,
    sudoku: Board,
    sumLines: Set<CellID>,
-   perpendProp: "row" | "column",
+   perpendProp: 'row' | 'column',
    wingSize: number
 ) {
    const patternPendLines = new Map<IndexToNine, number>()
@@ -41,7 +41,7 @@ function _innerInnerSkyscraperLogic(
 
             if (removeCandidateFromCells(sudoku, candidate, shared)) {
                colorGroup(sudoku, sumLines, candidate)
-               colorGroup(sudoku, cellsNotInLine, candidate, "orange")
+               colorGroup(sudoku, cellsNotInLine, candidate, 'orange')
                return {
                   success: true,
                   successcount: 1
@@ -54,13 +54,19 @@ function _innerInnerSkyscraperLogic(
    return null
 }
 
-function _innerSkyscraperLogic(line1: Set<CellID>, possibleLines: Set<CellID>[], candidate: SudokuDigits, sudoku: Board, perpendProp: "row" | "column") {
+function _innerSkyscraperLogic(
+   line1: Set<CellID>,
+   possibleLines: Set<CellID>[],
+   candidate: SudokuDigits,
+   sudoku: Board,
+   perpendProp: 'row' | 'column'
+) {
    // line = row/column
    // pendLine = column/row
    for (const line2 of possibleLines) {
       const sumLines = new Set<CellID>()
-      line1.forEach(cell => sumLines.add(cell))
-      line2.forEach(cell => sumLines.add(cell))
+      line1.forEach((cell) => sumLines.add(cell))
+      line2.forEach((cell) => sumLines.add(cell))
 
       if (sumLines.size < 5) {
          const result = _innerInnerSkyscraperLogic(candidate, sudoku, sumLines, perpendProp, 2)
@@ -89,7 +95,7 @@ export default function skyscraper(sudoku: Board) {
          const column = candidateLocations[candidate].column[index]
 
          if (row.size < 3) {
-            const result = _innerSkyscraperLogic(row, possibleRows, candidate, sudoku, "column")
+            const result = _innerSkyscraperLogic(row, possibleRows, candidate, sudoku, 'column')
             if (result !== null) {
                return result
             }
@@ -98,7 +104,7 @@ export default function skyscraper(sudoku: Board) {
          }
 
          if (column.size < 3) {
-            const result = _innerSkyscraperLogic(column, possibleColumns, candidate, sudoku, "row")
+            const result = _innerSkyscraperLogic(column, possibleColumns, candidate, sudoku, 'row')
             if (result !== null) {
                return result
             }
@@ -108,7 +114,5 @@ export default function skyscraper(sudoku: Board) {
       }
    }
 
-   return {
-      success: false
-   } as const
+   return { success: false } as const
 }

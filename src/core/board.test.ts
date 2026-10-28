@@ -1,7 +1,7 @@
-import Board from "./board"
-import BOARDS from "./fixtures"
-import { id } from "./geometry"
-import { IndexToNine } from "./types"
+import Board from './board'
+import BOARDS from './fixtures'
+import { id } from './geometry'
+import { IndexToNine } from './types'
 
 test('it constructs', () => {
    expect(() => new Board()).not.toThrow()
@@ -9,10 +9,10 @@ test('it constructs', () => {
 
 test('it imports', () => {
    const testSudoku = new Board()
-   expect(testSudoku.import(BOARDS["Solved board"]).success).toBe(true)
+   expect(testSudoku.import(BOARDS['Solved board']).success).toBe(true)
    expect(testSudoku.data[0][0]).toStrictEqual([1])
 
-   expect(testSudoku.import(BOARDS["Simple sudoku"]).success).toBe(true)
+   expect(testSudoku.import(BOARDS['Simple sudoku']).success).toBe(true)
    expect(testSudoku.data[4][2]).toStrictEqual([1, 2, 3, 4, 5, 6, 7, 8, 9])
 
    for (const board of Object.values(BOARDS)) {
@@ -24,18 +24,22 @@ test('it imports', () => {
       expect(testSudoku.to81()).toBe(new Board(board).to81())
    }
 
-   expect(testSudoku.import(`https://www.sudokuwiki.org/sudoku.htm?bd=000000001004060208070320400900018000005000600000540009008037040609080300100000000`).success).toBe(true)
+   expect(
+      testSudoku.import(
+         `https://www.sudokuwiki.org/sudoku.htm?bd=000000001004060208070320400900018000005000600000540009008037040609080300100000000`
+      ).success
+   ).toBe(true)
 })
 
-test.each([' ', '\t', '\n', '\r\n'])('importing candidate grids separated by %p', separator => {
-   const cells = Array.from({ length: 81 }, (_, index) => index % 2 === 0 ? '12' : '345')
+test.each([' ', '\t', '\n', '\r\n'])('importing candidate grids separated by %p', (separator) => {
+   const cells = Array.from({ length: 81 }, (_, index) => (index % 2 === 0 ? '12' : '345'))
    const testSudoku = new Board()
 
    expect(testSudoku.import(cells.join(separator))).toStrictEqual({
       success: true,
       representationType: 'grid'
    })
-   expect(testSudoku.data.flat()).toStrictEqual(cells.map(cell => cell.split('').map(Number)))
+   expect(testSudoku.data.flat()).toStrictEqual(cells.map((cell) => cell.split('').map(Number)))
 })
 
 test('setting a candidate', () => {
@@ -50,7 +54,7 @@ test('set/clear', () => {
    expect(testSudoku.data[3][1]).toStrictEqual([4, 1, 5, 9, 2, 6])
    testSudoku.clear()
    expect(testSudoku.data[3][1]).toStrictEqual([1, 2, 3, 4, 5, 6, 7, 8, 9])
-   testSudoku.import(BOARDS["Solved board"])
+   testSudoku.import(BOARDS['Solved board'])
    testSudoku.clear()
    expect(testSudoku.data[3][1]).toStrictEqual([1, 2, 3, 4, 5, 6, 7, 8, 9])
    testSudoku.set(3, 1).to(4, 1, 5, 9, 2, 6)

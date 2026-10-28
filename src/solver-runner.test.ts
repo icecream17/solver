@@ -8,8 +8,12 @@ class FakeWorker {
    terminate = vi.fn()
    postMessage = vi.fn()
 
-   constructor() { FakeWorker.instances.push(this) }
-   message(data: SolverResponse) { this.onmessage?.({ data } as MessageEvent<SolverResponse>) }
+   constructor() {
+      FakeWorker.instances.push(this)
+   }
+   message(data: SolverResponse) {
+      this.onmessage?.({ data } as MessageEvent<SolverResponse>)
+   }
 }
 
 beforeEach(() => {

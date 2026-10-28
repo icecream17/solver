@@ -13,16 +13,22 @@ const entries = [
    ['Skyscraper', 'https://www.sudopedia.org/wiki/Skyscraper'],
    ['Two string kite', 'https://www.sudopedia.org/wiki/2-String_Kite'],
    ['Y wing (aka Bent triple)', 'https://www.sudokuwiki.org/Y_Wing_Strategy'],
-   ['Two minus one lines', 'https://github.com/icecream17/solver/blob/main/Strategies.md#two-minus-one-lines'],
+   [
+      'Two minus one lines',
+      'https://github.com/icecream17/solver/blob/main/Strategies.md#two-minus-one-lines'
+   ],
    // Historical learning link only; ExternalLink suppresses referrer data.
    // eslint-disable-next-line sonarjs/no-clear-text-protocols
    ['W wing', 'http://sudopedia.enjoysudoku.com/W-Wing.html'],
    ['XYZ wing', 'https://hodoku.sourceforge.net/en/tech_wings.php#xyz'],
    ['Pair covers group', 'https://github.com/icecream17/solver/wiki/Pair-covers-group/'],
    ['XY Ring (Loop)', 'https://youtu.be/OUKwjVs4MsY'],
-   ['XY Chain', 'https://www.sudokuwiki.org/XY_Chains'],
+   ['XY Chain', 'https://www.sudokuwiki.org/XY_Chains']
 ] as const
 
 export const catalog = entries.map(([name, href], index) => ({
-   name, href, required: index === 0, run: strategies[index],
+   name,
+   href,
+   required: index === 0,
+   run: strategies[index]
 }))

@@ -1,10 +1,17 @@
-import { ALL_CANDIDATES, GrpTyp, IndexToNine, INDICES_TO_NINE, SudokuDigits, ThreeDimensionalArray } from "./types"
-import { boxAt, CellID, id, to9by9 } from "./geometry"
+import {
+   ALL_CANDIDATES,
+   GrpTyp,
+   IndexToNine,
+   INDICES_TO_NINE,
+   SudokuDigits,
+   ThreeDimensionalArray
+} from './types'
+import { boxAt, CellID, id, to9by9 } from './geometry'
 import type { Annotations } from './marks'
 
 export type CandidateLocations = Record<GrpTyp, Set<CellID>[]>
 
-function Cell (id: CellID, cell: SudokuDigits[]) {
+function Cell(id: CellID, cell: SudokuDigits[]) {
    return {
       candidates: cell,
       position: id
@@ -19,10 +26,15 @@ export default class Board {
    diagnostics: string[] = []
    annotations: Annotations = {}
 
-   report(message: string) { this.diagnostics.push(message) }
+   report(message: string) {
+      this.diagnostics.push(message)
+   }
 
    mark(row: number, column: number, color: string, digit?: SudokuDigits) {
-      const mark = this.annotations[row * 9 + column] ??= { cells: [], candidates: {} }
+      const mark = (this.annotations[row * 9 + column] ??= {
+         cells: [],
+         candidates: {}
+      })
       const colors = digit === undefined ? mark.cells : (mark.candidates[digit] ?? [])
       if (colors.includes(color)) return
       if (digit === undefined) mark.cells = [...colors, color]
@@ -31,11 +43,7 @@ export default class Board {
 
    data: ThreeDimensionalArray<SudokuDigits>
    constructor(representation?: string) {
-      this.data = [
-         [], [], [],
-         [], [], [],
-         [], [], [],
-      ]
+      this.data = [[], [], [], [], [], [], [], [], []]
 
       for (let i = 0; i < 9; i++) {
          for (let j = 0; j < 9; j++) {
@@ -43,12 +51,15 @@ export default class Board {
          }
       }
 
-      if (typeof representation === "string") {
+      if (typeof representation === 'string') {
          this.import(representation)
       }
    }
 
-   static fromRepresentation<T extends typeof Board>(this: T, representation: string): InstanceType<T> {
+   static fromRepresentation<T extends typeof Board>(
+      this: T,
+      representation: string
+   ): InstanceType<T> {
       return new this(representation) as InstanceType<T>
    }
 
@@ -57,19 +68,19 @@ export default class Board {
     * "0" = a cell with no candidates
     * "." = an unsolved cell
     */
-   to81 () {
-      let str = ""
+   to81() {
+      let str = ''
       for (const row of this.data) {
          for (const cell of row) {
             if (cell.length === 1) {
                str += cell[0]
             } else if (cell.length === 0) {
-               str += "0"
+               str += '0'
             } else {
-               str += "."
+               str += '.'
             }
          }
-         str += "\n"
+         str += '\n'
       }
       return str
    }
@@ -79,12 +90,12 @@ export default class Board {
     * its candidates. No newlines.
     * Missing candidates are represented by "."
     */
-   to729 () {
-      let str = ""
+   to729() {
+      let str = ''
       for (const row of this.data) {
          for (const cell of row) {
             for (const candidate of ALL_CANDIDATES) {
-               str += cell.includes(candidate) ? candidate : "."
+               str += cell.includes(candidate) ? candidate : '.'
             }
          }
       }
@@ -104,7 +115,7 @@ export default class Board {
             totalIndex++ // after char
 
             // All candidate writes go through the board API.
-            if ("123456789".includes(char)) {
+            if ('123456789'.includes(char)) {
                this.set(i, j).to(Number(char) as SudokuDigits)
             } else {
                this.set(i, j).to(1, 2, 3, 4, 5, 6, 7, 8, 9)
@@ -121,12 +132,11 @@ export default class Board {
       let totalIndex = 0
       for (const i of INDICES_TO_NINE) {
          for (const j of INDICES_TO_NINE) {
-            const candidateData = (
-               representation.slice(totalIndex * 9, totalIndex * 9 + 9)
-                  .split('')
-                  .filter(candidate => "123456789".includes(candidate))
-                  .map(candidate => Number(candidate) as SudokuDigits)
-            )
+            const candidateData = representation
+               .slice(totalIndex * 9, totalIndex * 9 + 9)
+               .split('')
+               .filter((candidate) => '123456789'.includes(candidate))
+               .map((candidate) => Number(candidate) as SudokuDigits)
 
             totalIndex++
             this.set(i, j).to(...candidateData)
@@ -145,11 +155,16 @@ export default class Board {
    // Note: import is a keyword, but it doesn't cause a syntax error here
    import(representation: string) {
       representation = representation.trim().normalize()
-      const representationWithoutWhitespace = representation.replaceAll(/\s/g, "")
-      const onlyDigitRepresentation = representation.replaceAll(/\D/g, "")
-      const oneToNineOrDot = representation.replaceAll(/[^.1-9]/g, "")
+      const representationWithoutWhitespace = representation.replaceAll(/\s/g, '')
+      const onlyDigitRepresentation = representation.replaceAll(/\D/g, '')
+      const oneToNineOrDot = representation.replaceAll(/[^.1-9]/g, '')
 
-      for (const testRepresentation of [representation, representationWithoutWhitespace, onlyDigitRepresentation, oneToNineOrDot] as const) {
+      for (const testRepresentation of [
+         representation,
+         representationWithoutWhitespace,
+         onlyDigitRepresentation,
+         oneToNineOrDot
+      ] as const) {
          if (testRepresentation.length === 81) {
             this.import81(testRepresentation)
             return {
@@ -167,7 +182,6 @@ export default class Board {
          }
       }
 
-
       const gridRepresentation = representation
          .replaceAll(/[^\s1-9]/g, '')
          .trim()
@@ -175,11 +189,7 @@ export default class Board {
 
       if (gridRepresentation.length === 81) {
          this.importGrid(
-            to9by9(
-               gridRepresentation.map(
-                  a => a.split('').map(b => Number(b) as SudokuDigits)
-               )
-            )
+            to9by9(gridRepresentation.map((a) => a.split('').map((b) => Number(b) as SudokuDigits)))
          )
 
          return {
@@ -188,9 +198,7 @@ export default class Board {
          } as const
       }
 
-      return {
-         success: false
-      } as const
+      return { success: false } as const
    }
 
    // WARNING: The "candidates" aren't checked (other than the static type checking)
@@ -215,37 +223,43 @@ export default class Board {
    }
 
    getColumn(index: IndexToNine) {
-      return this.data.map(row => row[index])
+      return this.data.map((row) => row[index])
    }
 
    getBox(index: IndexToNine) {
       // 0 1 2 -> 0 3 6
       const startRow = index - (index % 3) // / 3 * 3
       const startColumn = (index % 3) * 3
-      return this.data.slice(startRow, startRow + 3).flatMap(row => row.slice(startColumn, startColumn + 3))
+      return this.data
+         .slice(startRow, startRow + 3)
+         .flatMap((row) => row.slice(startColumn, startColumn + 3))
    }
 
    getBoxGroup<T>(index: IndexToNine, data: T[][]) {
       const startRow = index - (index % 3)
       const startColumn = (index % 3) * 3
-      return data.slice(startRow, startRow + 3).flatMap(row => row.slice(startColumn, startColumn + 3))
+      return data
+         .slice(startRow, startRow + 3)
+         .flatMap((row) => row.slice(startColumn, startColumn + 3))
    }
 
    /**
     * A group is a set of maximally mutually exclusive set of cells.
-    * 
+    *
     * Currently, we assume this is just the rows, columns, and boxes, but this will be changed later on.
     */
    getGroups() {
       const groups = []
       const cellData = this.data.map((row, indexOfRow) =>
-         row.map((cell, indexInRow) => Cell(id(indexOfRow as IndexToNine, indexInRow as IndexToNine), cell))
+         row.map((cell, indexInRow) =>
+            Cell(id(indexOfRow as IndexToNine, indexInRow as IndexToNine), cell)
+         )
       )
 
       for (const i of INDICES_TO_NINE) {
          groups.push(
             cellData[i],
-            cellData.map(row => row[i]),
+            cellData.map((row) => row[i]),
             this.getBoxGroup(i, cellData)
          )
       }
@@ -281,9 +295,39 @@ export default class Board {
 
       for (const candidate of ALL_CANDIDATES) {
          candidateLocations[candidate] = {
-            row: [new Set<CellID>(), new Set<CellID>(), new Set<CellID>(), new Set<CellID>(), new Set<CellID>(), new Set<CellID>(), new Set<CellID>(), new Set<CellID>(), new Set<CellID>()],
-            column: [new Set<CellID>(), new Set<CellID>(), new Set<CellID>(), new Set<CellID>(), new Set<CellID>(), new Set<CellID>(), new Set<CellID>(), new Set<CellID>(), new Set<CellID>()],
-            box: [new Set<CellID>(), new Set<CellID>(), new Set<CellID>(), new Set<CellID>(), new Set<CellID>(), new Set<CellID>(), new Set<CellID>(), new Set<CellID>(), new Set<CellID>()]
+            row: [
+               new Set<CellID>(),
+               new Set<CellID>(),
+               new Set<CellID>(),
+               new Set<CellID>(),
+               new Set<CellID>(),
+               new Set<CellID>(),
+               new Set<CellID>(),
+               new Set<CellID>(),
+               new Set<CellID>()
+            ],
+            column: [
+               new Set<CellID>(),
+               new Set<CellID>(),
+               new Set<CellID>(),
+               new Set<CellID>(),
+               new Set<CellID>(),
+               new Set<CellID>(),
+               new Set<CellID>(),
+               new Set<CellID>(),
+               new Set<CellID>()
+            ],
+            box: [
+               new Set<CellID>(),
+               new Set<CellID>(),
+               new Set<CellID>(),
+               new Set<CellID>(),
+               new Set<CellID>(),
+               new Set<CellID>(),
+               new Set<CellID>(),
+               new Set<CellID>(),
+               new Set<CellID>()
+            ]
          }
       }
 
@@ -312,10 +356,9 @@ export default class Board {
       return {
          at: (row: IndexToNine, column: IndexToNine) => {
             this.set(row, column).to(
-               ...this.data[row][column].filter(candidatee => candidatee !== candidate)
+               ...this.data[row][column].filter((candidatee) => candidatee !== candidate)
             )
          }
       }
    }
 }
-

@@ -1,54 +1,55 @@
-import { GRP_TYPS, INDICES_TO_NINE, SudokuDigits } from "../types";
-import Board, { CandidateLocations } from "../board";
-import { SuccessError } from "../strategy-types";
-import { affectsCell, CellID, id, sharedInArrays } from "../geometry";
-import { colorGroup, removeCandidateFromCells } from "../annotations";
+import { GRP_TYPS, INDICES_TO_NINE, SudokuDigits } from '../types'
+import Board, { CandidateLocations } from '../board'
+import { SuccessError } from '../strategy-types'
+import { affectsCell, CellID, id, sharedInArrays } from '../geometry'
+import { colorGroup, removeCandidateFromCells } from '../annotations'
 
 function _checkPair(
-    cellA: CellID,
-    cellB: CellID,
-    candidateA: SudokuDigits,
-    candidateB: SudokuDigits,
-    candidateLocations: CandidateLocations[],
-    sudoku: Board,
+   cellA: CellID,
+   cellB: CellID,
+   candidateA: SudokuDigits,
+   candidateB: SudokuDigits,
+   candidateLocations: CandidateLocations[],
+   sudoku: Board
 ) {
-    const affectsA = affectsCell(cellA)
-    const affectsB = affectsCell(cellB)
-    const affectsAB = sharedInArrays(affectsA, affectsB)
+   const affectsA = affectsCell(cellA)
+   const affectsB = affectsCell(cellB)
+   const affectsAB = sharedInArrays(affectsA, affectsB)
 
-    // check for a row, column, or box
-    // which has two cells: an affectsA and an affectsB
-    for (const prop of GRP_TYPS) {
-        for (const group of candidateLocations[candidateA][prop]) {
-            if (group.size === 2) {
-                const cellxA = affectsA.find(cell => group.has(cell))
-                const cellxB = affectsB.find(cell => group.has(cell))
+   // check for a row, column, or box
+   // which has two cells: an affectsA and an affectsB
+   for (const prop of GRP_TYPS) {
+      for (const group of candidateLocations[candidateA][prop]) {
+         if (group.size === 2) {
+            const cellxA = affectsA.find((cell) => group.has(cell))
+            const cellxB = affectsB.find((cell) => group.has(cell))
 
-                // eslint-disable-next-line sonarjs/no-collapsible-if -- line too long
-                if (cellxA !== cellxB && cellxA !== undefined && cellxB !== undefined) {
-                    // check for shared cells containing the other candidate
-                    if (removeCandidateFromCells(sudoku, candidateB, affectsAB)) {
-                        colorGroup(sudoku, [cellA, cellB, cellxA, cellxB], candidateA, "green")
-                        colorGroup(sudoku, [cellA, cellB], candidateB)
-                        return 1
-                    }
-                }
+            if (cellxA !== cellxB && cellxA !== undefined && cellxB !== undefined) {
+               // check for shared cells containing the other candidate
+               if (removeCandidateFromCells(sudoku, candidateB, affectsAB)) {
+                  colorGroup(sudoku, [cellA, cellB, cellxA, cellxB], candidateA, 'green')
+                  colorGroup(sudoku, [cellA, cellB], candidateB)
+                  return 1
+               }
             }
-        }
-    }
-    return 0
+         }
+      }
+   }
+   return 0
 }
 
 function checkPair(
-    cellA: CellID,
-    cellB: CellID,
-    candidateA: SudokuDigits,
-    candidateB: SudokuDigits,
-    candidateLocations: CandidateLocations[],
-    sudoku: Board,
+   cellA: CellID,
+   cellB: CellID,
+   candidateA: SudokuDigits,
+   candidateB: SudokuDigits,
+   candidateLocations: CandidateLocations[],
+   sudoku: Board
 ): number | string {
-    return _checkPair(cellA, cellB, candidateA, candidateB, candidateLocations, sudoku) +
-        _checkPair(cellA, cellB, candidateB, candidateA, candidateLocations, sudoku)
+   return (
+      _checkPair(cellA, cellB, candidateA, candidateB, candidateLocations, sudoku) +
+      _checkPair(cellA, cellB, candidateB, candidateA, candidateLocations, sudoku)
+   )
 }
 
 /**
@@ -58,47 +59,51 @@ function checkPair(
  * NOTE: You must call another function with (candidateA, candidateB)
  * and (candidateB, candidateA)
  */
-export function wWingBase (sudoku: Board, callback: typeof checkPair) {
-    const found = new Map<number, CellID[]>()
-    let candidateLocations
+export function wWingBase(sudoku: Board, callback: typeof checkPair) {
+   const found = new Map<number, CellID[]>()
+   let candidateLocations
 
-    for (const row of INDICES_TO_NINE) {
-        for (const column of INDICES_TO_NINE) {
-            const cell = sudoku.data[row][column]
-            if (cell.length === 2) {
-                const numericID = cell[0] * 10 + cell[1]
-                const equivs = found.get(numericID)
-                const cid = id(row, column)
-                if (equivs === undefined) {
-                    found.set(numericID, [cid])
-                } else {
-                    candidateLocations ??= sudoku.getCandidateLocations()
-                    for (const cell2 of equivs) {
-                        const [candidateA, candidateB] = cell
-                        const successcount =
-                            callback(cid, cell2, candidateA, candidateB, candidateLocations, sudoku)
-                        if (typeof successcount === "string") {
-                            return {
-                                success: false,
-                                successcount: SuccessError,
-                                message: successcount
-                            }
-                        } else if (successcount) {
-                            return {
-                                success: true,
-                                successcount
-                            } as const
-                        }
-                    }
-                    equivs.push(cid)
-                }
+   for (const row of INDICES_TO_NINE) {
+      for (const column of INDICES_TO_NINE) {
+         const cell = sudoku.data[row][column]
+         if (cell.length === 2) {
+            const numericID = cell[0] * 10 + cell[1]
+            const equivs = found.get(numericID)
+            const cid = id(row, column)
+            if (equivs === undefined) {
+               found.set(numericID, [cid])
+            } else {
+               candidateLocations ??= sudoku.getCandidateLocations()
+               for (const cell2 of equivs) {
+                  const [candidateA, candidateB] = cell
+                  const successcount = callback(
+                     cid,
+                     cell2,
+                     candidateA,
+                     candidateB,
+                     candidateLocations,
+                     sudoku
+                  )
+                  if (typeof successcount === 'string') {
+                     return {
+                        success: false,
+                        successcount: SuccessError,
+                        message: successcount
+                     }
+                  } else if (successcount) {
+                     return {
+                        success: true,
+                        successcount
+                     } as const
+                  }
+               }
+               equivs.push(cid)
             }
-        }
-    }
+         }
+      }
+   }
 
-    return {
-        success: false
-    } as const
+   return { success: false } as const
 }
 
 /**
@@ -112,6 +117,6 @@ export function wWingBase (sudoku: Board, callback: typeof checkPair) {
  *       AB | x  x  x  | A
  * ```
  */
-export default function wWing (sudoku: Board) {
-    return wWingBase(sudoku, checkPair)
+export default function wWing(sudoku: Board) {
+   return wWingBase(sudoku, checkPair)
 }

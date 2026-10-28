@@ -1,11 +1,9 @@
+import { SudokuDigits } from '../types'
+import { convertArrayToEnglishList } from '../text'
+import Board from '../board'
 
-
-import { SudokuDigits } from "../types";
-import { convertArrayToEnglishList } from "../text";
-import Board from "../board";
-
-import { CellGroup, SuccessError } from "../strategy-types";
-import { algebraic } from "../geometry";
+import { CellGroup, SuccessError } from '../strategy-types'
+import { algebraic } from '../geometry'
 
 /**
  * Gets the unique combinations of an array\
@@ -52,31 +50,39 @@ export function combinations<T>(array: T[], min = 1, max = array.length, current
 function getCandidatesOfConjugate(conjugate: CellGroup) {
    // Array from the values of a set
    // The set is the accumulated candidates
-   return conjugate.reduce(
-      (accum, currentCell) => {
-         for (const candidate of currentCell.candidates) {
-            accum.add(candidate)
-         }
-         return accum
-      }, new Set<SudokuDigits>()
-   )
+   return conjugate.reduce((accum, currentCell) => {
+      for (const candidate of currentCell.candidates) {
+         accum.add(candidate)
+      }
+      return accum
+   }, new Set<SudokuDigits>())
 }
 
 // Inner inner function to make things look nicer below
-function __errorHandling (sudoku: Board, conjugate: CellGroup, invalidGroupCandidates: Set<SudokuDigits>) {
+function __errorHandling(
+   sudoku: Board,
+   conjugate: CellGroup,
+   invalidGroupCandidates: Set<SudokuDigits>
+) {
    const invalidGroupNames = convertArrayToEnglishList(
-      conjugate.map(someCell => algebraic(someCell.position.row, someCell.position.column))
+      conjugate.map((someCell) => algebraic(someCell.position.row, someCell.position.column))
    )
-   const invalidCandidateString = convertArrayToEnglishList(Array.from(invalidGroupCandidates).sort())
+   const invalidCandidateString = convertArrayToEnglishList(
+      Array.from(invalidGroupCandidates).sort()
+   )
 
    if (conjugate.length === 1) {
       // Never happens since cells are filtered away
       sudoku.report(`The cell ${invalidGroupNames} has 0 possibilities!`)
    } else if (invalidGroupCandidates.size === 1) {
       // Never happens
-      sudoku.report(`${invalidGroupNames}: ${conjugate.length} cells cannot share 1 candidate (${invalidCandidateString})!!!`)
+      sudoku.report(
+         `${invalidGroupNames}: ${conjugate.length} cells cannot share 1 candidate (${invalidCandidateString})!!!`
+      )
    } else {
-      sudoku.report(`${invalidGroupNames}: ${conjugate.length} cells cannot share ${invalidGroupCandidates.size} candidates (${invalidCandidateString})!!!`)
+      sudoku.report(
+         `${invalidGroupNames}: ${conjugate.length} cells cannot share ${invalidGroupCandidates.size} candidates (${invalidCandidateString})!!!`
+      )
    }
 }
 
@@ -97,7 +103,9 @@ function __errorHandling (sudoku: Board, conjugate: CellGroup, invalidGroupCandi
 function findConjugatesOfGroup(sudoku: Board, group: CellGroup, maxSize = 4 as 2 | 3 | 4) {
    // 1. Filter the possible cells
    // Each possible cell must have from 2 to maxSize candidates
-   const possibleCells = group.filter(cell => 1 < cell.candidates.length && cell.candidates.length <= maxSize)
+   const possibleCells = group.filter(
+      (cell) => 1 < cell.candidates.length && cell.candidates.length <= maxSize
+   )
 
    // 2. Now that the cells are filtered actually find the conjugates
    const conjugates = [] as CellGroup[]
@@ -107,7 +115,7 @@ function findConjugatesOfGroup(sudoku: Board, group: CellGroup, maxSize = 4 as 2
       // For example 3 cells needing 2 candidates = invalid.
       if (conjugate.length > candidatesOfConjugate.size) {
          __errorHandling(sudoku, conjugate, candidatesOfConjugate)
-         return "ERROR!!!" as const
+         return 'ERROR!!!' as const
       } else if (conjugate.length === candidatesOfConjugate.size) {
          // Found a conjugate!!!!!
          conjugates.push(conjugate)
@@ -116,7 +124,6 @@ function findConjugatesOfGroup(sudoku: Board, group: CellGroup, maxSize = 4 as 2
 
    return conjugates
 }
-
 
 // Idea for hidden:
 // For each candidate find squares
@@ -132,22 +139,20 @@ export function colorConjugate(sudoku: Board, conjugate: CellGroup, color = 'blu
    }
 }
 
-function eliminateUsingConjugate(
-   sudoku: Board,
-   group: CellGroup,
-   conjugate: CellGroup,
-) {
+function eliminateUsingConjugate(sudoku: Board, group: CellGroup, conjugate: CellGroup) {
    let successcount = 0
    const conjugateCandidates = getCandidatesOfConjugate(conjugate)
    const eliminatedFrom = []
 
    for (const cell of group) {
       // If this cell is not in the conjugate
-      if (!conjugate.some(jCell => jCell.position === cell.position)) {
-
+      if (!conjugate.some((jCell) => jCell.position === cell.position)) {
          // The cell now cannot have any of the candidates in the conjugate!!!
-         const nonConjugateCandidates = cell.candidates.filter(candidate => !conjugateCandidates.has(candidate))
-         if (cell.candidates.length !== nonConjugateCandidates.length) { // If has any...
+         const nonConjugateCandidates = cell.candidates.filter(
+            (candidate) => !conjugateCandidates.has(candidate)
+         )
+         if (cell.candidates.length !== nonConjugateCandidates.length) {
+            // If has any...
             successcount++ // Success!
             colorConjugate(sudoku, conjugate)
             sudoku.set(cell.position.row, cell.position.column).to(...nonConjugateCandidates)
@@ -158,11 +163,15 @@ function eliminateUsingConjugate(
 
    return [
       successcount,
-      `${[...conjugateCandidates].join("")} ${conjugate.map(cell => algebraic(cell.position.row, cell.position.column))} ⇒ ${eliminatedFrom}`,
+      `${[...conjugateCandidates].join('')} ${conjugate.map((cell) => algebraic(cell.position.row, cell.position.column))} ⇒ ${eliminatedFrom}`
    ] as const
 }
 
-function eliminateUsingConjugates(sudoku: Board, groups: CellGroup[], conjugatesOfGroup: CellGroup[][]) {
+function eliminateUsingConjugates(
+   sudoku: Board,
+   groups: CellGroup[],
+   conjugatesOfGroup: CellGroup[][]
+) {
    let successcount = 0
    const messages = []
    for (const [i, group] of groups.entries()) {
@@ -175,7 +184,7 @@ function eliminateUsingConjugates(sudoku: Board, groups: CellGroup[], conjugates
       }
    }
 
-   return [successcount, messages.join("\n")] as const
+   return [successcount, messages.join('\n')] as const
 }
 
 // Math.max(O(n^5), O(n^5))
@@ -184,7 +193,7 @@ export default function pairsTriplesAndQuads(sudoku: Board) {
    const conjugatesOfGroup = []
    for (const group of groups) {
       const conjugate = findConjugatesOfGroup(sudoku, group)
-      if (conjugate === "ERROR!!!") {
+      if (conjugate === 'ERROR!!!') {
          return {
             success: false,
             successcount: SuccessError
@@ -196,14 +205,12 @@ export default function pairsTriplesAndQuads(sudoku: Board) {
    const [successcount, message] = eliminateUsingConjugates(sudoku, groups, conjugatesOfGroup)
 
    if (successcount === 0) {
-      return {
-         success: false
-      } as const
+      return { success: false } as const
    }
 
    return {
       success: true,
       successcount,
-      message,
+      message
    } as const
 }

@@ -6,9 +6,17 @@ import checkValidity from './strategies/checkValidity'
 import Board from './board'
 
 test('changes and reason colors have a text explanation', () => {
-   expect(cellExplanation([1, 4], [1, 2, 3], {
-      cells: ['blue'], candidates: { 1: ['green', 'orange'], 4: ['solved'] }
-   })).toBe('Eliminated: 2, 3. Added: 4. Cell: reason. Candidate 1: alternate, pivot. Candidate 4: solved.')
+   expect(
+      cellExplanation([1, 4], [1, 2, 3], {
+         cells: ['blue'],
+         candidates: {
+            1: ['green', 'orange'],
+            4: ['solved']
+         }
+      })
+   ).toBe(
+      'Eliminated: 2, 3. Added: 4. Cell: reason. Candidate 1: alternate, pivot. Candidate 4: solved.'
+   )
    expect(cellExplanation([1], undefined, EMPTY_CELL_MARKS)).toBe('')
 })
 
@@ -24,5 +32,5 @@ test('the documented timeout board is valid and has two candidates per cell', ()
    const board = new Board()
    board.data = imported.grid
    expect(checkValidity(board).ok).toBe(true)
-   expect(board.data.flat().every(cell => cell.length === 2)).toBe(true)
+   expect(board.data.flat().every((cell) => cell.length === 2)).toBe(true)
 })

@@ -12,7 +12,15 @@ import svelteConfig from './svelte.config.js'
 
 // Flat-config replacement for .eslintrc. React-only rules no longer apply.
 export default ts.config(
-   { ignores: ['node_modules/**', 'dist/**', 'coverage/**', 'test-results/**', 'playwright-report/**'] },
+   {
+      ignores: [
+         'node_modules/**',
+         'dist/**',
+         'coverage/**',
+         'test-results/**',
+         'playwright-report/**'
+      ]
+   },
    js.configs.recommended,
    ...ts.configs.recommended,
    ...svelte.configs.recommended,
@@ -22,15 +30,28 @@ export default ts.config(
    ...svelte.configs.prettier,
    {
       languageOptions: {
-         globals: { ...globals.browser, ...globals.node, ...vitest.environments.env.globals },
+         globals: {
+            ...globals.browser,
+            ...globals.node,
+            ...vitest.environments.env.globals
+         },
          parserOptions: { extraFileExtensions: ['.svelte'] }
       },
       plugins: { '@stylistic': stylistic },
       linterOptions: { reportUnusedDisableDirectives: 'error' },
       rules: {
          'no-alert': 'error',
-         '@stylistic/object-property-newline': ['error', { allowAllPropertiesOnSameLine: false }],
-         '@stylistic/object-curly-newline': ['error', { ObjectExpression: { minProperties: 2, multiline: true } }],
+         '@stylistic/object-property-newline': ['error', { allowAllPropertiesOnSameLine: true }],
+         '@stylistic/object-curly-newline': [
+            'error',
+            {
+               ObjectExpression: {
+                  minProperties: 2,
+                  multiline: true,
+                  consistent: true
+               }
+            }
+         ],
          'prefer-const': 'warn',
          'prefer-arrow-callback': 'warn',
          'prefer-numeric-literals': 'warn',
@@ -39,7 +60,13 @@ export default ts.config(
          'prefer-rest-params': 'warn',
          'prefer-spread': 'warn',
          '@typescript-eslint/no-explicit-any': 'off',
-         '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_', varsIgnorePattern: '^_' }],
+         '@typescript-eslint/no-unused-vars': [
+            'error',
+            {
+               argsIgnorePattern: '^_',
+               varsIgnorePattern: '^_'
+            }
+         ],
          // As in the original config, mathematical algorithms are not flattened
          // just to satisfy a complexity score.
          'sonarjs/cognitive-complexity': 'off',
@@ -52,8 +79,16 @@ export default ts.config(
    },
    {
       files: ['**/*.svelte'],
-      languageOptions: { parserOptions: { parser: ts.parser, svelteConfig } },
-      rules: { 'svelte/no-at-html-tags': 'error', 'prefer-const': 'off' }
+      languageOptions: {
+         parserOptions: {
+            parser: ts.parser,
+            svelteConfig
+         }
+      },
+      rules: {
+         'svelte/no-at-html-tags': 'error',
+         'prefer-const': 'off'
+      }
    },
    {
       files: ['**/*.test.ts'],
@@ -68,6 +103,11 @@ export default ts.config(
       }
    },
    {
+      files: ['e2e/**/*.ts'],
+      // Playwright conditionally excludes touch-only cases from desktop projects.
+      rules: { 'sonarjs/no-skipped-tests': 'off' }
+   },
+   {
       files: ['**/*.svelte.ts'],
       languageOptions: { parser: ts.parser }
    },
@@ -79,6 +119,10 @@ export default ts.config(
    {
       files: ['src/App.test.ts', 'src/components/**/*.test.ts'],
       ...testingLibrary.configs['flat/svelte'],
-      rules: { ...testingLibrary.configs['flat/svelte'].rules, 'testing-library/no-node-access': 'off', 'testing-library/no-manual-cleanup': 'off' }
+      rules: {
+         ...testingLibrary.configs['flat/svelte'].rules,
+         'testing-library/no-node-access': 'off',
+         'testing-library/no-manual-cleanup': 'off'
+      }
    }
 )

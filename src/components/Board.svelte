@@ -59,18 +59,37 @@
          ;(event.currentTarget as HTMLElement).blur()
          return
       }
-      if (!['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'Home', 'End', 'PageUp', 'PageDown'].includes(event.key)) return
+      if (
+         ![
+            'ArrowUp',
+            'ArrowDown',
+            'ArrowLeft',
+            'ArrowRight',
+            'Home',
+            'End',
+            'PageUp',
+            'PageDown'
+         ].includes(event.key)
+      )
+         return
       event.preventDefault()
       const movements = event.repeat ? new Set([...pressed, event.key]) : new Set([event.key])
       const move = (index: number) => {
-         let row = Math.floor(index / 9), column = index % 9
+         let row = Math.floor(index / 9),
+            column = index % 9
          for (const key of movements) {
             if (key === 'ArrowUp') row = (row + 8) % 9
             if (key === 'ArrowDown') row = (row + 1) % 9
             if (key === 'ArrowLeft') column = (column + 8) % 9
             if (key === 'ArrowRight') column = (column + 1) % 9
-            if (key === 'Home') { column = 0; if (modifier) row = 0 }
-            if (key === 'End') { column = 8; if (modifier) row = 8 }
+            if (key === 'Home') {
+               column = 0
+               if (modifier) row = 0
+            }
+            if (key === 'End') {
+               column = 8
+               if (modifier) row = 8
+            }
             if (key === 'PageUp') row = Math.max(0, row - 3)
             if (key === 'PageDown') row = Math.min(8, row + 3)
          }
@@ -93,30 +112,47 @@
 </script>
 
 <svelte:window
-   onkeydown={event => pressed.add(event.key)}
-   onkeyup={event => pressed.delete(event.key)}
+   onkeydown={(event) => pressed.add(event.key)}
+   onkeyup={(event) => pressed.delete(event.key)}
    onblur={windowBlur}
    oncontextmenu={() => pressed.clear()}
 />
 
-<p id="board-help" class="sr-only">Use digits to toggle candidates, arrows to move, Control plus click for multiple selection, and Escape to deselect.</p>
+<p
+   id="board-help"
+   class="sr-only"
+>
+   Use digits to toggle candidates, arrows to move, Control plus click for multiple selection, and
+   Escape to deselect.
+</p>
 
-<table bind:this={table} class="board" role="grid" aria-label="Sudoku" aria-multiselectable="true" aria-describedby="board-help">
+<table
+   bind:this={table}
+   class="board"
+   role="grid"
+   aria-label="Sudoku"
+   aria-multiselectable="true"
+   aria-describedby="board-help"
+>
    <tbody>
       {#each INDICES_TO_NINE as row (row)}
          <tr>
             {#each INDICES_TO_NINE as column (column)}
                {@const index = row * 9 + column}
                <Cell
-                  {index} candidates={workspace.session.grid[row][column]}
+                  {index}
+                  candidates={workspace.session.grid[row][column]}
                   previous={workspace.session.previous?.[row][column]}
                   marks={workspace.session.annotations[index] ?? EMPTY_CELL_MARKS}
                   selected={workspace.selected.includes(index)}
                   active={workspace.selectionActive && workspace.selected.includes(index)}
-                  onfocus={() => focus(index)} onblur={blur}
-                  onkeydown={event => keydown(event, index)}
-                  onpointerdown={event => pointer(event, index)}
-                  onclick={event => { if (event.detail === 0) focus(index) }}
+                  onfocus={() => focus(index)}
+                  onblur={blur}
+                  onkeydown={(event) => keydown(event, index)}
+                  onpointerdown={(event) => pointer(event, index)}
+                  onclick={(event) => {
+                     if (event.detail === 0) focus(index)
+                  }}
                />
             {/each}
          </tr>

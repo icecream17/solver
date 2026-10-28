@@ -1,10 +1,14 @@
-import { ALL_CANDIDATES, IndexToNine, INDICES_TO_NINE, SudokuDigits } from "../types";
-import Board from "../board";
-import { affects, CellID, sharedInArrays } from "../geometry";
-import { colorGroup } from "../annotations";
-import { __incrementMapValue } from "./skyscraper";
+import { ALL_CANDIDATES, IndexToNine, INDICES_TO_NINE, SudokuDigits } from '../types'
+import Board from '../board'
+import { affects, CellID, sharedInArrays } from '../geometry'
+import { colorGroup } from '../annotations'
+import { __incrementMapValue } from './skyscraper'
 
-function __inLine(sumLines: Set<CellID>, eliminationPendLine: IndexToNine, pendLineProp: "column" | "row") {
+function __inLine(
+   sumLines: Set<CellID>,
+   eliminationPendLine: IndexToNine,
+   pendLineProp: 'column' | 'row'
+) {
    const inLine = new Set<CellID>()
    for (const cell of sumLines) {
       if (cell[pendLineProp] === eliminationPendLine) {
@@ -24,8 +28,7 @@ function __updatePatternPendLineElims(
    eliminationPendLine: IndexToNine
 ) {
    const complexCondition =
-      sudoku.data[cell.row][cell.column].includes(candidate) &&
-      !sumLines.has(cell)
+      sudoku.data[cell.row][cell.column].includes(candidate) && !sumLines.has(cell)
 
    if (complexCondition) {
       const recieved = patternPendLineElims.get(cell)
@@ -54,7 +57,7 @@ export function _innerGroupSubtractionLogic(
    // How many lines see a candidate
    const patternPendLineElims = new Map<CellID, IndexToNine[]>()
    const patternPendLines = isRow ? patternColumns : patternRows
-   const pendLineProp = isRow ? "column" : "row"
+   const pendLineProp = isRow ? 'column' : 'row'
 
    /**
     * A  B  C | D
@@ -82,7 +85,14 @@ export function _innerGroupSubtractionLogic(
       // shared = all extra see
       const shared = sharedInArrays(...inLine)
       for (const cell of shared) {
-         __updatePatternPendLineElims(sudoku, cell, candidate, sumLines, patternPendLineElims, eliminationPendLine)
+         __updatePatternPendLineElims(
+            sudoku,
+            cell,
+            candidate,
+            sumLines,
+            patternPendLineElims,
+            eliminationPendLine
+         )
       }
    }
 
@@ -90,7 +100,9 @@ export function _innerGroupSubtractionLogic(
    let nonExtraLine = null
    for (const [cell, linesWhichSee] of patternPendLineElims) {
       if (patternPendLines.size - linesWhichSee.length < wingSize) {
-         const currentNonExtraLine = [...patternPendLines.keys()].find(line => !linesWhichSee.includes(line))
+         const currentNonExtraLine = [...patternPendLines.keys()].find(
+            (line) => !linesWhichSee.includes(line)
+         )
          nonExtraLine ??= currentNonExtraLine
          if (nonExtraLine === currentNonExtraLine) {
             successcount++
@@ -102,7 +114,7 @@ export function _innerGroupSubtractionLogic(
    if (successcount) {
       const nonExtraLineCells = __inLine(sumLines, nonExtraLine as IndexToNine, pendLineProp)
       const extraCells = sumLines.difference(nonExtraLineCells)
-      colorGroup(sudoku, extraCells, candidate, "orange")
+      colorGroup(sudoku, extraCells, candidate, 'orange')
       colorGroup(sudoku, nonExtraLineCells, candidate)
       return {
          success: true,
@@ -129,7 +141,8 @@ export default function twoMinusOneLines(sudoku: Board) {
          const column = candidateLocations[candidate].column[index]
 
          const check = []
-         if (row.size <= 4) { // 4 cells of a row cannot share anything affects other than the row
+         if (row.size <= 4) {
+            // 4 cells of a row cannot share anything affects other than the row
             check.push([row, possibleRows] as const)
             possibleRows.push(row) // Marker 1
          }
@@ -149,10 +162,16 @@ export default function twoMinusOneLines(sudoku: Board) {
                }
 
                const sumLines = new Set<CellID>()
-               line1.forEach(cell => sumLines.add(cell))
-               line2.forEach(cell => sumLines.add(cell))
+               line1.forEach((cell) => sumLines.add(cell))
+               line2.forEach((cell) => sumLines.add(cell))
 
-               const result = _innerGroupSubtractionLogic(candidate, sudoku, sumLines, line1 === row, 2)
+               const result = _innerGroupSubtractionLogic(
+                  candidate,
+                  sudoku,
+                  sumLines,
+                  line1 === row,
+                  2
+               )
                if (result !== null) {
                   return result
                }
@@ -161,7 +180,5 @@ export default function twoMinusOneLines(sudoku: Board) {
       }
    }
 
-   return {
-      success: false
-   } as const
+   return { success: false } as const
 }

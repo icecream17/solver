@@ -1,4 +1,4 @@
-import { combinations } from "./pairsTriplesAndQuads"
+import { combinations } from './pairsTriplesAndQuads'
 
 test('Min > length', () => {
    expect(combinations([1, 2, 3], 5, 5)).toStrictEqual([])

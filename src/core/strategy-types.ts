@@ -1,20 +1,23 @@
-import { SudokuDigits } from "./types";
-import Board from "./board";
-import { CellID } from "./geometry";
+import { SudokuDigits } from './types'
+import Board from './board'
+import { CellID } from './geometry'
 
 export const SuccessError = -1
-export type StrategyResult = Readonly<{
-   success: true,
-   successcount: number,
-   message?: string
-} | {
-   success: false,
-   successcount?: number,
-   message?: string
-}>
+export type StrategyResult = Readonly<
+   | {
+        success: true
+        successcount: number
+        message?: string
+     }
+   | {
+        success: false
+        successcount?: number
+        message?: string
+     }
+>
 export type StrategyError = Readonly<{
-   success: false,
-   successcount: typeof SuccessError,
+   success: false
+   successcount: typeof SuccessError
    message?: string
 }>
 
@@ -28,7 +31,6 @@ export type CellInfo = {
 }
 
 export type CellGroup = CellInfo[]
-
 
 // Information strategies might want to know
 export class StrategyMemory extends Array {

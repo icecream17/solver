@@ -1,6 +1,12 @@
 // @vitest-environment jsdom
 import { afterEach, beforeAll, expect, test } from 'vitest'
-import { cleanup, fireEvent, render as renderComponent, screen, waitFor } from '@testing-library/svelte'
+import {
+   cleanup,
+   fireEvent,
+   render as renderComponent,
+   screen,
+   waitFor
+} from '@testing-library/svelte'
 import userEvent from '@testing-library/user-event'
 import App from './App.svelte'
 import fixtures from './core/fixtures'
@@ -9,10 +15,12 @@ import { go, step } from './core/session'
 
 // Only the worker transport is replaced; component tests exercise the real solver.
 function render(component: typeof App) {
-   return renderComponent(component, { workspace: new Workspace({
-      run: async (session, mode) => (mode === 'step' ? step : go)(session),
-      cancel() {}
-   }) })
+   return renderComponent(component, {
+      workspace: new Workspace({
+         run: async (session, mode) => (mode === 'step' ? step : go)(session),
+         cancel() {}
+      })
+   })
 }
 
 // jsdom does not implement native dialog layout/focus management. The browser
@@ -22,15 +30,22 @@ beforeAll(() => {
       this.open = true
       this.querySelector<HTMLElement>('textarea, button')?.focus()
    }
-   HTMLDialogElement.prototype.close = function () { this.open = false }
+   HTMLDialogElement.prototype.close = function () {
+      this.open = false
+   }
 })
 afterEach(cleanup)
 
-const cell = (row = 0, column = 0) => screen.getByRole('button', { name: `Cell at row ${row + 1}, column ${column + 1}` })
-const candidates = (row = 0, column = 0) => cell(row, column).querySelector('.candidates')?.textContent?.replace(/\s/g, '')
+const cell = (row = 0, column = 0) =>
+   screen.getByRole('button', { name: `Cell at row ${row + 1}, column ${column + 1}` })
+const candidates = (row = 0, column = 0) =>
+   cell(row, column).querySelector('.candidates')?.textContent?.replace(/\s/g, '')
 const user = () => userEvent.setup()
 
-async function importPuzzle(u: ReturnType<typeof user>, representation: string = fixtures['Simple sudoku']) {
+async function importPuzzle(
+   u: ReturnType<typeof user>,
+   representation: string = fixtures['Simple sudoku']
+) {
    await u.click(screen.getByRole('tab', { name: 'solving tools' }))
    await u.click(screen.getByRole('button', { name: 'import' }))
    await u.click(screen.getByLabelText('Enter digits or candidates'))
@@ -89,7 +104,7 @@ test('multiselection edits all selected cells and resumes after blur', async () 
    await u.click(cell())
    expect(cell(0, 1).getAttribute('data-active')).toBe('true')
    await u.keyboard('{Escape}')
-   expect(document.querySelectorAll('td[aria-selected="true"]').length).toBe(0)
+   expect(document.querySelectorAll('td[aria-selected="true"]')).toHaveLength(0)
 })
 
 test('Ctrl+A and the empty-candidates modifier affect the entire board', async () => {
@@ -97,9 +112,9 @@ test('Ctrl+A and the empty-candidates modifier affect the entire board', async (
    const u = user()
    await u.click(cell())
    await u.keyboard('{Control>}a{Delete}{/Control}')
-   expect(document.querySelectorAll('[data-error]').length).toBe(81)
+   expect(document.querySelectorAll('[data-error]')).toHaveLength(81)
    await u.keyboard('6{Escape}')
-   expect(document.querySelectorAll('.digit').length).toBe(81)
+   expect(document.querySelectorAll('.digit')).toHaveLength(81)
 })
 
 test('navigation, including native Tab, wrapping, Home/End, Page Up/Down', async () => {
@@ -107,9 +122,16 @@ test('navigation, including native Tab, wrapping, Home/End, Page Up/Down', async
    const u = user()
    await u.click(cell(0, 8))
    for (const [key, row, column] of [
-      ['{Tab}', 1, 0], ['{ArrowLeft}', 1, 8], ['{ArrowUp}', 0, 8], ['{ArrowUp}', 8, 8],
-      ['{Home}', 8, 0], ['{Control>}{Home}{/Control}', 0, 0], ['{End}', 0, 8],
-      ['{Control>}{End}{/Control}', 8, 8], ['{PageUp}', 5, 8], ['{PageDown}', 8, 8],
+      ['{Tab}', 1, 0],
+      ['{ArrowLeft}', 1, 8],
+      ['{ArrowUp}', 0, 8],
+      ['{ArrowUp}', 8, 8],
+      ['{Home}', 8, 0],
+      ['{Control>}{Home}{/Control}', 0, 0],
+      ['{End}', 0, 8],
+      ['{Control>}{End}{/Control}', 8, 8],
+      ['{PageUp}', 5, 8],
+      ['{PageDown}', 8, 8]
    ] as const) {
       await u.keyboard(key)
       expect(document.activeElement).toBe(cell(row, column))
@@ -123,7 +145,10 @@ test('window blur releases held navigation keys', async () => {
    await u.keyboard('{ArrowRight>}')
    await fireEvent(window, new Event('blur'))
    await u.click(cell())
-   await fireEvent.keyDown(cell(), { key: 'ArrowDown', repeat: true })
+   await fireEvent.keyDown(cell(), {
+      key: 'ArrowDown',
+      repeat: true
+   })
    expect(document.activeElement).toBe(cell(1, 0))
 })
 
@@ -134,7 +159,8 @@ test('import/export round trip preserves candidates and restores dialog trigger 
    expect(cell().querySelector('.digit')?.textContent).toBe('6')
    const trigger = screen.getByRole('button', { name: 'export' })
    await u.click(trigger)
-   const representation = (screen.getByLabelText('729-character candidates') as HTMLTextAreaElement).value
+   const representation = (screen.getByLabelText('729-character candidates') as HTMLTextAreaElement)
+      .value
    expect(representation).toHaveLength(729)
    await u.click(screen.getByRole('button', { name: 'Close' }))
    expect(document.activeElement).toBe(trigger)
@@ -161,14 +187,16 @@ test('solver steps, diffs, explanation, and undo have no component timing depend
    const u = user()
    await importPuzzle(u)
    await u.click(screen.getByRole('tab', { name: 'strategies' }))
-   expect(screen.getAllByRole('switch').length).toBe(17)
+   expect(screen.getAllByRole('switch')).toHaveLength(17)
    await u.click(screen.getByRole('button', { name: 'step' }))
-   expect(screen.getByLabelText('Status for Check for solved').textContent).toBe(String(fixtures['Simple sudoku'].replace(/[^1-9]/g, '').length))
+   expect(screen.getByLabelText('Status for Check for solved').textContent).toBe(
+      String(fixtures['Simple sudoku'].replace(/[^1-9]/g, '').length)
+   )
    await u.click(screen.getByRole('button', { name: 'step' }))
    expect(document.querySelectorAll('.eliminated.candidate').length).toBeGreaterThan(0)
    expect(document.querySelector('.explanation')?.textContent).toContain('Update candidates')
    await u.click(screen.getByRole('button', { name: 'undo' }))
-   expect(document.querySelectorAll('.eliminated.candidate').length).toBe(0)
+   expect(document.querySelectorAll('.eliminated.candidate')).toHaveLength(0)
    await u.click(screen.getByRole('button', { name: 'go' }))
    expect(document.querySelectorAll('.eliminated.candidate').length).toBeGreaterThan(0)
 })
@@ -184,7 +212,9 @@ test('toggles and results survive tab changes, and disabled strategies are skipp
    expect(screen.getByLabelText('Status for Update candidates').textContent).toBe('')
    await u.click(screen.getByRole('tab', { name: 'solving tools' }))
    await u.click(screen.getByRole('tab', { name: 'strategies' }))
-   expect((screen.getByRole('switch', { name: 'Toggle Update candidates' }) as HTMLInputElement).checked).toBe(false)
+   expect(
+      (screen.getByRole('switch', { name: 'Toggle Update candidates' }) as HTMLInputElement).checked
+   ).toBe(false)
    expect(screen.getByLabelText('Status for Check for solved').textContent).not.toBe('')
 })
 
@@ -216,13 +246,15 @@ test('invalid and solved boards announce their outcomes', async () => {
    expect(screen.getByRole('status').textContent).toBe('Finished! :D')
 })
 
-
 test('clicking a displayed digit keeps keyboard focus while switching to candidate editing', async () => {
    render(App)
    const u = user()
    await importPuzzle(u)
    const digit = cell().querySelector('.digit')!
-   await fireEvent.pointerDown(digit, { bubbles: true, cancelable: true })
+   await fireEvent.pointerDown(digit, {
+      bubbles: true,
+      cancelable: true
+   })
    expect(document.activeElement).toBe(cell())
    await u.keyboard('{Backspace}{Escape}')
    expect(cell().hasAttribute('data-error')).toBe(false)

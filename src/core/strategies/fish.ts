@@ -1,7 +1,7 @@
-import { ALL_CANDIDATES, IndexToNine, INDICES_TO_NINE, SudokuDigits } from "../types";
-import Board from "../board";
-import { CellID } from "../geometry";
-import { colorGroup } from "../annotations";
+import { ALL_CANDIDATES, IndexToNine, INDICES_TO_NINE, SudokuDigits } from '../types'
+import Board from '../board'
+import { CellID } from '../geometry'
+import { colorGroup } from '../annotations'
 
 type PossibleNth = Readonly<{
    lines: Set<CellID>[]
@@ -24,10 +24,9 @@ function _innerWingLogic(
    }
 
    // Undifferentiate rows and columns
-   const [patternLines, patternPendLines, lineProp, pendLineProp] =
-      isRow
-         ? [patternRows, patternColumns, "row", "column"] as const
-         : [patternColumns, patternRows, "column", "row"] as const
+   const [patternLines, patternPendLines, lineProp, pendLineProp] = isRow
+      ? ([patternRows, patternColumns, 'row', 'column'] as const)
+      : ([patternColumns, patternRows, 'column', 'row'] as const)
 
    if (patternPendLines.size <= wingSize) {
       // Pattern finally identified!
@@ -55,12 +54,18 @@ function _innerWingLogic(
  * Updates the accumulated arrays and sets.
  * If an accumulated array reaches the required amount of lines, callback()
  */
-function _accum (line: Set<CellID>, possibleNLines: PossibleNth[][], index: IndexToNine, size: 2 | 3 | 4, callback: (sumIthLines: Set<CellID>) => void) {
+function _accum(
+   line: Set<CellID>,
+   possibleNLines: PossibleNth[][],
+   index: IndexToNine,
+   size: 2 | 3 | 4,
+   callback: (sumIthLines: Set<CellID>) => void
+) {
    const optimization = Math.max(index + size - 9, 0) // Example: If index = 8, size = 2,
    for (let i = possibleNLines.length - 1; i >= optimization; i--) {
       for (const ithLines of possibleNLines[i]) {
          const sumIthLines = new Set(ithLines.sumLines)
-         line.forEach(cell => sumIthLines.add(cell))
+         line.forEach((cell) => sumIthLines.add(cell))
 
          if (sumIthLines.size <= size * size) {
             if (i + 1 === size) {
@@ -79,7 +84,7 @@ function _accum (line: Set<CellID>, possibleNLines: PossibleNth[][], index: Inde
 /**
  * See Strategies.md#fish
  */
-export default function fish (size: 2 | 3 | 4, sudoku: Board) {
+export default function fish(size: 2 | 3 | 4, sudoku: Board) {
    let successcount = 0
 
    const candidateLocations = sudoku.getCandidateLocations()
@@ -95,7 +100,10 @@ export default function fish (size: 2 | 3 | 4, sudoku: Board) {
          const row = candidateLocations[candidate].row[index]
          const column = candidateLocations[candidate].column[index]
 
-         for (const [line, isRow, possibleNLines] of [[row, true, possibleNRows] as const, [column, false, possibleNColumns] as const]) {
+         for (const [line, isRow, possibleNLines] of [
+            [row, true, possibleNRows] as const,
+            [column, false, possibleNColumns] as const
+         ]) {
             if (line.size <= size && line.size > 1) {
                // Optimization:
                // Say index = 6
@@ -108,8 +116,15 @@ export default function fish (size: 2 | 3 | 4, sudoku: Board) {
                   })
                }
 
-               _accum(line, possibleNLines, index, size, sumLines => { // eslint-disable-line no-loop-func
-                  successcount += _innerWingLogic(candidate, candidateLocations, sudoku, sumLines, isRow, size)
+               _accum(line, possibleNLines, index, size, (sumLines) => {
+                  successcount += _innerWingLogic(
+                     candidate,
+                     candidateLocations,
+                     sudoku,
+                     sumLines,
+                     isRow,
+                     size
+                  )
                })
             }
          }
@@ -117,9 +132,7 @@ export default function fish (size: 2 | 3 | 4, sudoku: Board) {
    }
 
    if (successcount === 0) {
-      return {
-         success: false
-      } as const
+      return { success: false } as const
    }
 
    return {

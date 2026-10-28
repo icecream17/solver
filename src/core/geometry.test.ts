@@ -1,11 +1,23 @@
-import { IndexToNine, INDICES_TO_NINE } from "./types"
-import { affects, boxAt, getIDFromIndexWithinBox, id } from "./geometry"
+import { IndexToNine, INDICES_TO_NINE } from './types'
+import { affects, boxAt, getIDFromIndexWithinBox, id } from './geometry'
 
 test('affects', () => {
-   expect(affects(0, 0)).toContainEqual({ row: 0, column: 3 }) // Row
-   expect(affects(0, 0)).toContainEqual({ row: 3, column: 0 }) // Column
-   expect(affects(0, 0)).toContainEqual({ row: 1, column: 2 }) // Box
-   expect(affects(0, 0)).not.toContainEqual({ row: 0, column: 0 }) // Doesn't affect itself
+   expect(affects(0, 0)).toContainEqual({
+      row: 0,
+      column: 3
+   }) // Row
+   expect(affects(0, 0)).toContainEqual({
+      row: 3,
+      column: 0
+   }) // Column
+   expect(affects(0, 0)).toContainEqual({
+      row: 1,
+      column: 2
+   }) // Box
+   expect(affects(0, 0)).not.toContainEqual({
+      row: 0,
+      column: 0
+   }) // Doesn't affect itself
 
    for (const row of INDICES_TO_NINE) {
       for (const column of INDICES_TO_NINE) {
@@ -25,7 +37,17 @@ test('boxAt maps the corners and center to their 3-by-3 boxes', () => {
 })
 
 test('box methods', () => {
-   const boxCounts = [0, 0, 0, 0, 0, 0, 0, 0, 0] as [IndexToNine, IndexToNine, IndexToNine, IndexToNine, IndexToNine, IndexToNine, IndexToNine, IndexToNine, IndexToNine]
+   const boxCounts = [0, 0, 0, 0, 0, 0, 0, 0, 0] as [
+      IndexToNine,
+      IndexToNine,
+      IndexToNine,
+      IndexToNine,
+      IndexToNine,
+      IndexToNine,
+      IndexToNine,
+      IndexToNine,
+      IndexToNine
+   ]
    for (const row of INDICES_TO_NINE) {
       for (const column of INDICES_TO_NINE) {
          const indexOfBox = boxAt(row, column)

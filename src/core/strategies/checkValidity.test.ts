@@ -1,8 +1,8 @@
-import { INDICES_TO_NINE } from "../types";
-import Board from "../board";
-import checkValidity from "./checkValidity";
+import { INDICES_TO_NINE } from '../types'
+import Board from '../board'
+import checkValidity from './checkValidity'
 
-let testSudoku: Board;
+let testSudoku: Board
 
 beforeEach(() => {
    testSudoku = new Board()

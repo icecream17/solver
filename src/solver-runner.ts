@@ -15,7 +15,11 @@ export class WorkerSolverRunner implements SolverRunner {
    private worker: Worker | null = null
    private reject: ((error: Error) => void) | null = null
 
-   run(session: Session, mode: SolveMode, onProgress?: (strategy: string) => void): Promise<Session> {
+   run(
+      session: Session,
+      mode: SolveMode,
+      onProgress?: (strategy: string) => void
+   ): Promise<Session> {
       this.cancel()
 
       return new Promise((resolve, reject) => {
@@ -40,7 +44,10 @@ export class WorkerSolverRunner implements SolverRunner {
             this.finish()
             reject(new Error('The solver worker failed. The board has not changed.'))
          }
-         worker.postMessage({ session, mode } satisfies SolverRequest)
+         worker.postMessage({
+            session,
+            mode
+         } satisfies SolverRequest)
       })
    }
 

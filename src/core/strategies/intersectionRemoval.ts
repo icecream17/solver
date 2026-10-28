@@ -1,7 +1,7 @@
-import { ALL_CANDIDATES, INDICES_TO_NINE, SudokuDigits } from "../types";
-import Board from "../board";
-import { boxAt, CellID, removeFromArray } from "../geometry";
-import { colorGroup } from "../annotations";
+import { ALL_CANDIDATES, INDICES_TO_NINE, SudokuDigits } from '../types'
+import Board from '../board'
+import { boxAt, CellID, removeFromArray } from '../geometry'
+import { colorGroup } from '../annotations'
 
 /**
  * If all candidate N in group G attacks range R,
@@ -20,13 +20,12 @@ export default function intersectionRemoval(sudoku: Board) {
       candidateLocations[candidate].box[boxAt(cellID.row, cellID.column)].delete(cellID)
    }
 
-
    function _innerTwoGroupLogic(
       candidate: SudokuDigits,
       boxLocations: Set<CellID>,
       group2Locations: Set<CellID>,
       boxId: string,
-      group2Id: string,
+      group2Id: string
    ) {
       // boxDiff is a copy of boxLocations
       const boxDiff = new Set(boxLocations) // Box locations not in line
@@ -61,7 +60,6 @@ export default function intersectionRemoval(sudoku: Board) {
       }
    }
 
-
    let successcount = 0
    const candidateLocations = sudoku.getCandidateLocations()
    for (const candidate of ALL_CANDIDATES) {
@@ -74,25 +72,35 @@ export default function intersectionRemoval(sudoku: Board) {
             const columnLocations = candidateLocations[candidate].column[groupIndex]
 
             if (boxLocations.size < 4 || rowLocations.size < 4) {
-               _innerTwoGroupLogic(candidate, boxLocations, rowLocations, `Box ${boxIndex + 1}`, `Row ${groupIndex + 1}`)
+               _innerTwoGroupLogic(
+                  candidate,
+                  boxLocations,
+                  rowLocations,
+                  `Box ${boxIndex + 1}`,
+                  `Row ${groupIndex + 1}`
+               )
             }
 
             if (boxLocations.size < 4 || columnLocations.size < 4) {
-               _innerTwoGroupLogic(candidate, boxLocations, columnLocations, `Box ${boxIndex + 1}`, `Column ${groupIndex + 1}`)
+               _innerTwoGroupLogic(
+                  candidate,
+                  boxLocations,
+                  columnLocations,
+                  `Box ${boxIndex + 1}`,
+                  `Column ${groupIndex + 1}`
+               )
             }
          }
       }
    }
 
    if (successcount === 0) {
-      return {
-         success: false
-      } as const
+      return { success: false } as const
    }
 
    return {
       success: true,
       successcount,
-      message: [...messages].join("\n")
+      message: [...messages].join('\n')
    } as const
 }

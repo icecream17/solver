@@ -1,6 +1,13 @@
 import { catalog } from './core/catalog'
 import { ALL_CANDIDATES, type SudokuDigits } from './core/types'
-import { createSession, importGrid, copyGrid, sameGrid, type Session, type Grid } from './core/session'
+import {
+   createSession,
+   importGrid,
+   copyGrid,
+   sameGrid,
+   type Session,
+   type Grid
+} from './core/session'
 import { WorkerSolverRunner, type SolverRunner, type SolveMode } from './solver-runner'
 
 /** Svelte owns the reactive boundary. The domain layer is ordinary TypeScript. */
@@ -21,7 +28,9 @@ export class Workspace {
 
    private refreshEntryState() {
       // eslint-disable-next-line svelte/prefer-svelte-reactivity -- private entry bookkeeping
-      this.fresh = new Set(this.selected.filter(id => this.session.grid[Math.floor(id / 9)][id % 9].length === 9))
+      this.fresh = new Set(
+         this.selected.filter((id) => this.session.grid[Math.floor(id / 9)][id % 9].length === 9)
+      )
    }
 
    private remember() {
@@ -40,7 +49,9 @@ export class Workspace {
       this.refreshEntryState()
    }
 
-   deactivate() { this.selectionActive = false }
+   deactivate() {
+      this.selectionActive = false
+   }
 
    deselect() {
       this.selected = []
@@ -67,7 +78,8 @@ export class Workspace {
       this.operationMessage = ''
       const grid = copyGrid(this.session.grid)
       for (const id of this.selected) {
-         const row = Math.floor(id / 9), column = id % 9
+         const row = Math.floor(id / 9),
+            column = id % 9
          if (digit === 'reset' || digit === 'empty') {
             grid[row][column] = digit === 'reset' ? [...ALL_CANDIDATES] : []
             if (digit === 'reset') this.fresh.add(id)
@@ -75,7 +87,7 @@ export class Workspace {
          } else {
             const current = this.fresh.has(id) ? [] : grid[row][column]
             grid[row][column] = current.includes(digit)
-               ? current.filter(value => value !== digit)
+               ? current.filter((value) => value !== digit)
                : [...current, digit].sort((a, b) => a - b)
             this.fresh.delete(id)
          }
@@ -93,8 +105,9 @@ export class Workspace {
       this.operationMessage = 'Solving… You can cancel a long search.'
 
       try {
-         const result = await this.runner.run($state.snapshot(this.session), mode, strategy => {
-            if (operation === this.operation) this.operationMessage = `Trying ${strategy}… You can cancel this search.`
+         const result = await this.runner.run($state.snapshot(this.session), mode, (strategy) => {
+            if (operation === this.operation)
+               this.operationMessage = `Trying ${strategy}… You can cancel this search.`
          })
          // A board edit, cancellation, or newer request invalidates an old result.
          if (operation !== this.operation) return
@@ -135,7 +148,9 @@ export class Workspace {
       return true
    }
 
-   clear() { this.replace(createSession().grid) }
+   clear() {
+      this.replace(createSession().grid)
+   }
 
    private replace(grid: Grid) {
       this.cancelSolve()
@@ -151,7 +166,10 @@ export class Workspace {
       const previous = this.history.pop()
       if (previous) {
          // Strategy enablement is a preference, not part of board undo.
-         this.session = { ...previous, disabled: [...this.session.disabled] }
+         this.session = {
+            ...previous,
+            disabled: [...this.session.disabled]
+         }
          this.refreshEntryState()
       }
       this.canUndo = this.history.length > 0

@@ -13,15 +13,19 @@ const meanings: Record<string, string> = {
 }
 
 function describeMarks(colors: readonly string[]) {
-   return colors.map(color => meanings[color] ?? color).join(', ')
+   return colors.map((color) => meanings[color] ?? color).join(', ')
 }
 
 /** The same explanation is available as visible text and as a cell description. */
-export function cellExplanation(current: SudokuDigits[], previous: SudokuDigits[] | undefined, marks: CellMarks) {
+export function cellExplanation(
+   current: SudokuDigits[],
+   previous: SudokuDigits[] | undefined,
+   marks: CellMarks
+) {
    const parts: string[] = []
    if (previous) {
-      const removed = previous.filter(digit => !current.includes(digit))
-      const added = current.filter(digit => !previous.includes(digit))
+      const removed = previous.filter((digit) => !current.includes(digit))
+      const added = current.filter((digit) => !previous.includes(digit))
       if (removed.length) parts.push(`Eliminated: ${removed.join(', ')}.`)
       if (added.length) parts.push(`Added: ${added.join(', ')}.`)
    }
@@ -33,8 +37,14 @@ export function cellExplanation(current: SudokuDigits[], previous: SudokuDigits[
 }
 
 export function stepExplanations(grid: Grid, previous: Grid | null, annotations: Annotations) {
-   return grid.flatMap((row, r) => row.flatMap((cell, c) => {
-      const explanation = cellExplanation(cell, previous?.[r][c], annotations[r * 9 + c] ?? EMPTY_CELL_MARKS)
-      return explanation ? [`${ROW_NAMES[r]}${c + 1}: ${explanation}`] : []
-   }))
+   return grid.flatMap((row, r) =>
+      row.flatMap((cell, c) => {
+         const explanation = cellExplanation(
+            cell,
+            previous?.[r][c],
+            annotations[r * 9 + c] ?? EMPTY_CELL_MARKS
+         )
+         return explanation ? [`${ROW_NAMES[r]}${c + 1}: ${explanation}`] : []
+      })
+   )
 }

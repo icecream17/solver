@@ -1,7 +1,7 @@
-import { SudokuDigits } from "../types";
-import Board from "../board";
-import { affectsCell, CellID, sharedInArrays } from "../geometry";
-import { getCellsWithNCandidates, colorGroup, removeCandidateFromCells } from "../annotations";
+import { SudokuDigits } from '../types'
+import Board from '../board'
+import { affectsCell, CellID, sharedInArrays } from '../geometry'
+import { getCellsWithNCandidates, colorGroup, removeCandidateFromCells } from '../annotations'
 
 /**
  * The AC cell has A but not B
@@ -12,7 +12,7 @@ function cellIsValidWing(sudoku: Board, sees: CellID, has: SudokuDigits, notHas:
    return cell.includes(has) && !cell.includes(notHas)
 }
 
-export default function yWing (sudoku: Board) {
+export default function yWing(sudoku: Board) {
    // AB   BC
    // AC
 
@@ -23,34 +23,38 @@ export default function yWing (sudoku: Board) {
    const cellsWithTwoCandidates = getCellsWithNCandidates(sudoku, 2)
 
    for (const cell of cellsWithTwoCandidates) {
-      const [ candA, candB ] = sudoku.data[cell.row][cell.column]
+      const [candA, candB] = sudoku.data[cell.row][cell.column]
 
       // All cells AB sees with 2 candidates
-      const validAffectsCell = affectsCell(cell).filter(sees => cellsWithTwoCandidates.includes(sees))
+      const validAffectsCell = affectsCell(cell).filter((sees) =>
+         cellsWithTwoCandidates.includes(sees)
+      )
 
-      const possibleAC = validAffectsCell.filter(sees => cellIsValidWing(sudoku, sees, candA, candB))
-      const possibleBC = validAffectsCell.filter(sees => cellIsValidWing(sudoku, sees, candB, candA))
+      const possibleAC = validAffectsCell.filter((sees) =>
+         cellIsValidWing(sudoku, sees, candA, candB)
+      )
+      const possibleBC = validAffectsCell.filter((sees) =>
+         cellIsValidWing(sudoku, sees, candB, candA)
+      )
 
       for (const AC of possibleAC) {
          for (const BC of possibleBC) {
             if (AC === BC) {
-               continue;
+               continue
             }
 
             const cellAC = sudoku.data[AC.row][AC.column]
             const cellBC = sudoku.data[BC.row][BC.column]
-            const candC = cellAC.find(candidate => candidate !== candA) as SudokuDigits
+            const candC = cellAC.find((candidate) => candidate !== candA) as SudokuDigits
 
             if (cellBC.includes(candC)) {
                // Found a strong link with C in AC and BC!
-               const sharedEffects = sharedInArrays(
-                  affectsCell(AC), affectsCell(BC)
-               )
+               const sharedEffects = sharedInArrays(affectsCell(AC), affectsCell(BC))
 
                if (removeCandidateFromCells(sudoku, candC, sharedEffects)) {
                   colorGroup(sudoku, [cell, AC], candA)
-                  colorGroup(sudoku, [cell, BC], candB, "green")
-                  colorGroup(sudoku, [AC, BC], candC, "orange")
+                  colorGroup(sudoku, [cell, BC], candB, 'green')
+                  colorGroup(sudoku, [AC, BC], candC, 'orange')
                   return {
                      success: true,
                      successcount: 1
@@ -61,7 +65,5 @@ export default function yWing (sudoku: Board) {
       }
    }
 
-   return {
-      success: false
-   } as const
+   return { success: false } as const
 }

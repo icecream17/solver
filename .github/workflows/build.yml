@@ -2,87 +2,87 @@
 name: build
 
 on:
-  workflow_dispatch:
-  push:
-  pull_request:
+   workflow_dispatch:
+   push:
+   pull_request:
 
 permissions:
-  contents: read
+   contents: read
 
 jobs:
-  build:
-    runs-on: ${{ matrix.os }}
+   build:
+      runs-on: ${{ matrix.os }}
 
-    strategy:
-      fail-fast: true
-      matrix:
-        os:
-        - macos-latest
-        - ubuntu-latest
-        - windows-latest
-        # Check both the dependency minimum and the recommended LTS.
-        node: ['22.22.2', '24']
+      strategy:
+         fail-fast: true
+         matrix:
+            os:
+               - macos-latest
+               - ubuntu-latest
+               - windows-latest
+            # Check both the dependency minimum and the recommended LTS.
+            node: ['22.22.2', '24']
 
-    steps:
-    - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+      steps:
+         - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
 
-    - name: Use Node.js
-      uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7
-      with:
-        node-version: ${{ matrix.node }}
-        cache: npm
+         - name: Use Node.js
+           uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7
+           with:
+              node-version: ${{ matrix.node }}
+              cache: npm
 
-    - run: npm ci
-    - run: npm run lint
-    - run: npm run format
-    - run: npm run check
-    - run: npm run test:coverage
-    - run: npm run build
+         - run: npm ci
+         - run: npm run lint
+         - run: npm run format
+         - run: npm run check
+         - run: npm run test:coverage
+         - run: npm run build
 
-    - name: Install browser for interaction tests
-      if: matrix.os == 'ubuntu-latest' && matrix.node == '24'
-      run: npx playwright install --with-deps chromium firefox webkit
+         - name: Install browser for interaction tests
+           if: matrix.os == 'ubuntu-latest' && matrix.node == '24'
+           run: npx playwright install --with-deps chromium firefox webkit
 
-    - name: Test browser interactions
-      if: matrix.os == 'ubuntu-latest' && matrix.node == '24'
-      run: npm run test:e2e -- --workers=2
+         - name: Test browser interactions
+           if: matrix.os == 'ubuntu-latest' && matrix.node == '24'
+           run: npm run test:e2e -- --workers=2
 
-    - name: Upload browser failure traces
-      if: failure() && matrix.os == 'ubuntu-latest' && matrix.node == '24'
-      uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
-      with:
-        name: browser-failures
-        path: test-results/
-        retention-days: 7
+         - name: Upload browser failure traces
+           if: failure() && matrix.os == 'ubuntu-latest' && matrix.node == '24'
+           uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+           with:
+              name: browser-failures
+              path: test-results/
+              retention-days: 7
 
-    - name: Deploy to github pages
-      uses: crazy-max/ghaction-github-pages@1d6ee9b181a81033a16bd707a1401afa978daab4 # v5.0.0
-      with:
-        build_dir: dist
-      env:
-        GITHUB_TOKEN: ${{ secrets.PERSONALACCESSTOKEN }}
-      if: github.ref == 'refs/heads/main' && matrix.os == 'ubuntu-latest' && matrix.node == '24'
+         - name: Deploy to github pages
+           uses: crazy-max/ghaction-github-pages@1d6ee9b181a81033a16bd707a1401afa978daab4 # v5.0.0
+           with:
+              build_dir: dist
+           env:
+              GITHUB_TOKEN: ${{ secrets.PERSONALACCESSTOKEN }}
+           if: github.ref == 'refs/heads/main' && matrix.os == 'ubuntu-latest' && matrix.node == '24'
 
-    - uses: codecov/codecov-action@b9fd7d16f6d7d1b5d2bec1a2887e65ceed900238 # v4.6.0
-      if: matrix.node == '24'
-      with:
-        token: ${{ secrets.CODECOV_TOKEN }}
+         - uses: codecov/codecov-action@b9fd7d16f6d7d1b5d2bec1a2887e65ceed900238 # v4.6.0
+           if: matrix.node == '24'
+           with:
+              token: ${{ secrets.CODECOV_TOKEN }}
 
-  dependabot:
-    needs: [build]
-    runs-on: ubuntu-latest
-    permissions:
-      pull-requests: write
-      contents: write
-    if: ${{ github.actor == 'dependabot[bot]' && github.event_name == 'pull_request'}}
-    steps:
-      - id: metadata
-        uses: dependabot/fetch-metadata@21025c705c08248db411dc16f3619e6b5f9ea21a # v2
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-      - run: |
-          gh pr review --approve "$PR_URL"
-          gh pr merge --squash --auto "$PR_URL"
-        env:
-          PR_URL: ${{github.event.pull_request.html_url}}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+   dependabot:
+      needs: [build]
+      runs-on: ubuntu-latest
+      permissions:
+         pull-requests: write
+         contents: write
+      if: ${{ github.actor == 'dependabot[bot]' && github.event_name == 'pull_request'}}
+      steps:
+         - id: metadata
+           uses: dependabot/fetch-metadata@21025c705c08248db411dc16f3619e6b5f9ea21a # v2
+           with:
+              github-token: ${{ secrets.GITHUB_TOKEN }}
+         - run: |
+              gh pr review --approve "$PR_URL"
+              gh pr merge --squash --auto "$PR_URL"
+           env:
+              PR_URL: ${{github.event.pull_request.html_url}}
+              GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

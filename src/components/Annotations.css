@@ -1,14 +1,51 @@
 /* Explanation colors: cell marks, candidate marks, and their visible legend. */
-.Cell.blue, .candidate.blue, .legend .blue { background-color: #8cadf3; color: black; }
-.Cell.green, .candidate.green, .legend .green { background-color: lightgreen; color: black; }
-.Cell.blue.green, .candidate.blue.green { background-color: #8ecec2; }
-.Cell.orange, .legend .orange { background-color: hsl(39, 80%, 70%); color: black; }
-.candidate.orange { background-color: orange; color: black; }
-.Cell.salmon { background-color: salmon; color: black; }
-.Cell.orange.salmon { background-color: hsl(23, 87%, 71%); }
-.candidate.solved { color: lightgreen; }
-.candidate.eliminated, .legend .eliminated { background-color: yellow; color: black; }
-.candidate.added, .legend .added { background-color: green; color: white; }
+.Cell.blue,
+.candidate.blue,
+.legend .blue {
+   background-color: #8cadf3;
+   color: black;
+}
+.Cell.green,
+.candidate.green,
+.legend .green {
+   background-color: lightgreen;
+   color: black;
+}
+.Cell.blue.green,
+.candidate.blue.green {
+   background-color: #8ecec2;
+}
+.Cell.orange,
+.legend .orange {
+   background-color: hsl(39, 80%, 70%);
+   color: black;
+}
+.candidate.orange {
+   background-color: orange;
+   color: black;
+}
+.Cell.salmon {
+   background-color: salmon;
+   color: black;
+}
+.Cell.orange.salmon {
+   background-color: hsl(23, 87%, 71%);
+}
+.candidate.solved {
+   color: lightgreen;
+}
+.candidate.eliminated,
+.legend .eliminated {
+   background-color: yellow;
+   color: black;
+}
+.candidate.added,
+.legend .added {
+   background-color: green;
+   color: white;
+}
 
 /* Removed digits remain legible without needing to distinguish yellow. */
-.candidate s { text-decoration-thickness: 2px; }
+.candidate s {
+   text-decoration-thickness: 2px;
+}

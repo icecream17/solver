@@ -1,19 +1,28 @@
-import { SudokuDigits } from "../types";
-import Board from "../board";
-import { affects, affectsCell, algebraic, CandidateID, CellID, id, removeFromArray, sharedInSets } from "../geometry";
-import { colorCandidate, getCellsWithNCandidates } from "../annotations";
+import { SudokuDigits } from '../types'
+import Board from '../board'
+import {
+   affects,
+   affectsCell,
+   algebraic,
+   CandidateID,
+   CellID,
+   id,
+   removeFromArray,
+   sharedInSets
+} from '../geometry'
+import { colorCandidate, getCellsWithNCandidates } from '../annotations'
 
 /**
  * next = has
  *
  * See {@link findLoop}
  */
-export function cellIsValidLoop (sudoku: Board, sees: CellID, has: SudokuDigits, loop: CellID[]) {
+export function cellIsValidLoop(sudoku: Board, sees: CellID, has: SudokuDigits, loop: CellID[]) {
    const cell = sudoku.data[sees.row][sees.column]
    return cell.includes(has) && !loop.includes(sees)
 }
 
-function seenByColor (sudoku: Board, color: CandidateID[]) {
+function seenByColor(sudoku: Board, color: CandidateID[]) {
    const seen = new Set<CandidateID>()
    for (const { row, column, digit } of color) {
       for (const cell of affects(row, column)) {
@@ -31,7 +40,7 @@ function seenByColor (sudoku: Board, color: CandidateID[]) {
  *
  * @param endsConnect If ends don't connect, only eliminate from the ends
  */
-function checkLoop (sudoku: Board, color1: CandidateID[], color2: CandidateID[]) {
+function checkLoop(sudoku: Board, color1: CandidateID[], color2: CandidateID[]) {
    const seenByColor1 = seenByColor(sudoku, color1)
    const seenByColor2 = seenByColor(sudoku, color2)
    const seenByBoth = sharedInSets(seenByColor1, seenByColor2)
@@ -41,7 +50,7 @@ function checkLoop (sudoku: Board, color1: CandidateID[], color2: CandidateID[])
          colorCandidate(sudoku, candidate)
       }
       for (const candidate of color2) {
-         colorCandidate(sudoku, candidate, "green")
+         colorCandidate(sudoku, candidate, 'green')
       }
       for (const { row, column, digit } of seenByBoth) {
          sudoku.remove(digit).at(row, column)
@@ -50,7 +59,7 @@ function checkLoop (sudoku: Board, color1: CandidateID[], color2: CandidateID[])
       return {
          success: true,
          successcount: 1,
-         message: `${color2.map(cand => algebraic(cand.row, cand.column)).join("\u200B<>\u200B")}\u200B<>\u200B`,
+         message: `${color2.map((cand) => algebraic(cand.row, cand.column)).join('\u200B<>\u200B')}\u200B<>\u200B`
       } as const
    }
 
@@ -69,7 +78,7 @@ function checkLoop (sudoku: Board, color1: CandidateID[], color2: CandidateID[])
  * or
  * BCDEF....A
  */
-export default function xyLoop (sudoku: Board) {
+export default function xyLoop(sudoku: Board) {
    /**
     * The most important util
     *
@@ -82,7 +91,7 @@ export default function xyLoop (sudoku: Board) {
     * @param loop The current built up loop
     * @returns false if failed, CellID[] is loop was found
     */
-   function findLoop (
+   function findLoop(
       cell: CellID,
       start: CellID,
       next: SudokuDigits,
@@ -92,11 +101,14 @@ export default function xyLoop (sudoku: Board) {
       loop: CellID[] = [cell]
    ): ReturnType<typeof checkLoop> | false {
       // All cells AB sees with 2 candidates
-      const validAffectsCell = __getFellowCWTC(cell).filter(fellow => cellIsValidLoop(sudoku, fellow, next, loop))
+      const validAffectsCell = __getFellowCWTC(cell).filter((fellow) =>
+         cellIsValidLoop(sudoku, fellow, next, loop)
+      )
 
       for (const possibleNext of validAffectsCell) {
          const nextNext = sudoku.data[possibleNext.row][possibleNext.column].find(
-            candidate => candidate !== next) as SudokuDigits
+            (candidate) => candidate !== next
+         ) as SudokuDigits
 
          loop.push(possibleNext)
 
@@ -127,8 +139,7 @@ export default function xyLoop (sudoku: Board) {
    }
 
    const __getFellowCWTC = (cell: CellID) =>
-      affectsCell(cell).filter(sees => cellsWithTwoCandidates.includes(sees))
-
+      affectsCell(cell).filter((sees) => cellsWithTwoCandidates.includes(sees))
 
    const cellsWithTwoCandidates = getCellsWithNCandidates(sudoku, 2)
 
@@ -150,7 +161,5 @@ export default function xyLoop (sudoku: Board) {
       removeFromArray(cell, cellsWithTwoCandidates)
    }
 
-   return {
-      success: false
-   } as const
+   return { success: false } as const
 }

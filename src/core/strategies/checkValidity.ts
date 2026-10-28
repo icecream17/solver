@@ -1,21 +1,26 @@
-import { SudokuDigits, ROW_NAMES, COLUMN_NAMES, ALL_CANDIDATES, BOX_NAMES, INDICES_TO_NINE } from "../types"
-import { convertArrayToEnglishList } from "../text"
-import Board from "../board"
-import { boxAt, algebraic, boxNameAt } from "../geometry"
+import {
+   SudokuDigits,
+   ROW_NAMES,
+   COLUMN_NAMES,
+   ALL_CANDIDATES,
+   BOX_NAMES,
+   INDICES_TO_NINE
+} from '../types'
+import { convertArrayToEnglishList } from '../text'
+import Board from '../board'
+import { boxAt, algebraic, boxNameAt } from '../geometry'
 
-type validityResult = {
-   ok: true
-} | {
-   ok: false,
-   message: string
-}
+type validityResult =
+   | {
+        ok: true
+     }
+   | {
+        ok: false
+        message: string
+     }
 
-function listOfMissingCandidatesIn (group: Set<SudokuDigits>) {
-   return convertArrayToEnglishList(
-      ALL_CANDIDATES.filter(
-         candidate => !group.has(candidate)
-      )
-   )
+function listOfMissingCandidatesIn(group: Set<SudokuDigits>) {
+   return convertArrayToEnglishList(ALL_CANDIDATES.filter((candidate) => !group.has(candidate)))
 }
 
 export default function checkValidity(sudoku: Board): validityResult {
@@ -113,7 +118,5 @@ export default function checkValidity(sudoku: Board): validityResult {
       }
    }
 
-   return {
-      ok: true
-   }
+   return { ok: true }
 }

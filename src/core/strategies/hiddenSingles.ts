@@ -1,7 +1,7 @@
-import { ALL_CANDIDATES, IndexToNine, INDICES_TO_NINE, SudokuDigits } from "../types"
-import Board from "../board"
-import { boxAt } from "../geometry"
-import { colorCandidateF } from "../annotations"
+import { ALL_CANDIDATES, IndexToNine, INDICES_TO_NINE, SudokuDigits } from '../types'
+import Board from '../board'
+import { boxAt } from '../geometry'
+import { colorCandidateF } from '../annotations'
 
 /**
  * The state for a candidate in a group
@@ -10,10 +10,12 @@ import { colorCandidateF } from "../annotations"
  * [...] = 1 found, position of hidden single
  * false = 2+ found, hidden single not possible anymore
  */
-type PossibleState = false | {
-   row: IndexToNine
-   column: IndexToNine
-}
+type PossibleState =
+   | false
+   | {
+        row: IndexToNine
+        column: IndexToNine
+     }
 
 /**
  * For each group (row, column, or box) there are 9 candidates.
@@ -24,31 +26,42 @@ type PossibleState = false | {
 type PossibleGroup = Partial<Record<SudokuDigits, PossibleState>>
 
 /** A group of rows or columns or boxes. */
-type PossibleGroups = [PossibleGroup, PossibleGroup, PossibleGroup, PossibleGroup, PossibleGroup, PossibleGroup, PossibleGroup, PossibleGroup, PossibleGroup]
+type PossibleGroups = [
+   PossibleGroup,
+   PossibleGroup,
+   PossibleGroup,
+   PossibleGroup,
+   PossibleGroup,
+   PossibleGroup,
+   PossibleGroup,
+   PossibleGroup,
+   PossibleGroup
+]
 
-function _CreateArrayOf9Groups (): PossibleGroups {
-   return [
-      {}, {}, {},
-      {}, {}, {},
-      {}, {}, {},
-   ] as PossibleGroups
+function _CreateArrayOf9Groups(): PossibleGroups {
+   return [{}, {}, {}, {}, {}, {}, {}, {}, {}] as PossibleGroups
 }
 
-
-function _nextState (currentState: PossibleState | undefined, row: IndexToNine, column: IndexToNine) {
+function _nextState(
+   currentState: PossibleState | undefined,
+   row: IndexToNine,
+   column: IndexToNine
+) {
    if (currentState === undefined) {
-      return { row, column }
+      return {
+         row,
+         column
+      }
    }
 
    return false
 }
 
-
 export default function hiddenSingles(sudoku: Board) {
    const possible = {
       rows: _CreateArrayOf9Groups(),
       columns: _CreateArrayOf9Groups(),
-      boxes: _CreateArrayOf9Groups(),
+      boxes: _CreateArrayOf9Groups()
    }
 
    for (const row of INDICES_TO_NINE) {
@@ -62,9 +75,21 @@ export default function hiddenSingles(sudoku: Board) {
          } else {
             const box = boxAt(row, column)
             for (const candidate of sudoku.data[row][column]) {
-               possible.rows[row][candidate] = _nextState(possible.rows[row][candidate], row, column)
-               possible.columns[column][candidate] = _nextState(possible.columns[column][candidate], row, column)
-               possible.boxes[box][candidate] = _nextState(possible.boxes[box][candidate], row, column)
+               possible.rows[row][candidate] = _nextState(
+                  possible.rows[row][candidate],
+                  row,
+                  column
+               )
+               possible.columns[column][candidate] = _nextState(
+                  possible.columns[column][candidate],
+                  row,
+                  column
+               )
+               possible.boxes[box][candidate] = _nextState(
+                  possible.boxes[box][candidate],
+                  row,
+                  column
+               )
             }
          }
       }
@@ -76,7 +101,7 @@ export default function hiddenSingles(sudoku: Board) {
          const currentPossible = [
             possible.rows[i][candidate],
             possible.columns[i][candidate],
-            possible.boxes[i][candidate],
+            possible.boxes[i][candidate]
          ]
 
          for (const cell of currentPossible) {
@@ -96,7 +121,5 @@ export default function hiddenSingles(sudoku: Board) {
       } as const
    }
 
-   return {
-      success: false
-   } as const
+   return { success: false } as const
 }

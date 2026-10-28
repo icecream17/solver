@@ -1,14 +1,19 @@
-import { ALL_CANDIDATES, SudokuDigits } from "../types";
-import Board, { CandidateLocations } from "../board";
-import { CellID } from "../geometry";
-import { colorCandidateF } from "../annotations";
+import { ALL_CANDIDATES, SudokuDigits } from '../types'
+import Board, { CandidateLocations } from '../board'
+import { CellID } from '../geometry'
+import { colorCandidateF } from '../annotations'
 
 /**
  * Checks if two cells create a two string kite
  * Maybe these checkers could be symbolized as matchers
  */
-function check(cell1: CellID, cell2: CellID, candidate: SudokuDigits, candLocations: CandidateLocations, sudoku: Board) {
-   /* eslint-disable sonarjs/no-collapsible-if -- It's clearer */
+function check(
+   cell1: CellID,
+   cell2: CellID,
+   candidate: SudokuDigits,
+   candLocations: CandidateLocations,
+   sudoku: Board
+) {
    if (cell1.row === cell2.row || cell1.column === cell2.column) {
       return 0
    }

@@ -1,7 +1,7 @@
-import { INDICES_TO_NINE } from "../types"
-import Board from "../board"
-import { SuccessError } from "../strategy-types"
-import { affects, algebraic, CellID } from "../geometry"
+import { INDICES_TO_NINE } from '../types'
+import Board from '../board'
+import { SuccessError } from '../strategy-types'
+import { affects, algebraic, CellID } from '../geometry'
 
 // O(n^5)
 export default function updateCandidates(sudoku: Board) {
@@ -12,13 +12,11 @@ export default function updateCandidates(sudoku: Board) {
       for (const j of INDICES_TO_NINE) {
          // Cell
          if (sudoku.data[i][j].length === 1) {
-
             // Cell > Candidate
             const solvedCandidate = sudoku.data[i][j][0]
 
             // Cell > Affects
             for (const id of affects(i, j)) {
-
                // Cell > Affects > Cell
                const datacell = sudoku.data[id.row][id.column]
                const tempIndex = datacell.indexOf(solvedCandidate)
@@ -44,7 +42,7 @@ export default function updateCandidates(sudoku: Board) {
    }
 
    if (updated > 0) {
-      for (const {row, column} of newResults) {
+      for (const { row, column } of newResults) {
          sudoku.set(row, column).to(...sudoku.data[row][column])
       }
 
@@ -54,7 +52,5 @@ export default function updateCandidates(sudoku: Board) {
       } as const
    }
 
-   return {
-      success: false
-   } as const
+   return { success: false } as const
 }

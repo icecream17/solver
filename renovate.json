@@ -1,8 +1,5 @@
 {
-  "extends": [
-    ":automergeMinor",
-    "config:base"
-  ],
-  "packageRules": [],
-  "rangeStrategy": "update-lockfile"
+   "extends": [":automergeMinor", "config:base"],
+   "packageRules": [],
+   "rangeStrategy": "update-lockfile"
 }

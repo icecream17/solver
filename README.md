@@ -12,18 +12,18 @@ and Vite. The solver also runs without a DOM.
 Select a cell and type digits to toggle candidates. The first digit in an untouched
 cell starts a new entry. On touch screens, use the candidate buttons below the board.
 
-| Action | Keyboard or pointer |
-| --- | --- |
-| Toggle a candidate | <kbd>1</kbd>–<kbd>9</kbd> |
-| Reset to all candidates | <kbd>Backspace</kbd> |
-| Remove all candidates | <kbd>Ctrl</kbd>/<kbd>Shift</kbd> + <kbd>Backspace</kbd> |
-| Select several cells | <kbd>Ctrl</kbd> + click |
-| Select all / deselect | <kbd>Ctrl</kbd> + <kbd>A</kbd> / <kbd>Escape</kbd> |
+| Action                                | Keyboard or pointer                                            |
+| ------------------------------------- | -------------------------------------------------------------- |
+| Toggle a candidate                    | <kbd>1</kbd>–<kbd>9</kbd>                                      |
+| Reset to all candidates               | <kbd>Backspace</kbd>                                           |
+| Remove all candidates                 | <kbd>Ctrl</kbd>/<kbd>Shift</kbd> + <kbd>Backspace</kbd>        |
+| Select several cells                  | <kbd>Ctrl</kbd> + click                                        |
+| Select all / deselect                 | <kbd>Ctrl</kbd> + <kbd>A</kbd> / <kbd>Escape</kbd>             |
 | Move between cells, wrapping at edges | Arrow keys; <kbd>Tab</kbd> / <kbd>Shift</kbd> + <kbd>Tab</kbd> |
-| First / last cell in row | <kbd>Home</kbd> / <kbd>End</kbd> |
-| First / last cell on board | <kbd>Ctrl</kbd> + <kbd>Home</kbd> / <kbd>End</kbd> |
-| Move three rows | <kbd>Page Up</kbd> / <kbd>Page Down</kbd> |
-| Undo | <kbd>Ctrl</kbd> + <kbd>Z</kbd> |
+| First / last cell in row              | <kbd>Home</kbd> / <kbd>End</kbd>                               |
+| First / last cell on board            | <kbd>Ctrl</kbd> + <kbd>Home</kbd> / <kbd>End</kbd>             |
+| Move three rows                       | <kbd>Page Up</kbd> / <kbd>Page Down</kbd>                      |
+| Undo                                  | <kbd>Ctrl</kbd> + <kbd>Z</kbd>                                 |
 
 <kbd>Command</kbd> also works for <kbd>Ctrl</kbd> shortcuts on macOS.
 
@@ -47,13 +47,13 @@ supported major ranges in `package.json`. CI checks the minimum and Node 24.
 Run `npm ci`, then `npm run dev` to start development.
 
 - Development: `npm run dev` (also `npm start`).
-  - Production preview: `npm run build`, then `npm run preview`.
+   - Production preview: `npm run build`, then `npm run preview`.
 - Static checks: `npm run lint`, `npm run format`, and `npm run check`.
-  - Apply style fixes: `npm run lint:fix`, then `npm run format:write`.
+   - Apply style fixes: `npm run lint:fix`, then `npm run format:write`.
 - Unit and component tests: `npm test`.
-  - Watch: `npm run test:watch`; coverage: `npm run test:coverage`.
+   - Watch: `npm run test:watch`; coverage: `npm run test:coverage`.
 - Browser tests: `npx playwright install chromium firefox webkit`, then `npm run test:e2e`.
-- Benchmark: `npm run bench -- 100`; omit `100` for the full corpus.
+- Benchmark: `npm run bench -- 100`; use `1465` for the full corpus (default: 50).
 
 The solver lives in [`src/core/`](src/core/), reactive application state in
 [`src/workspace.svelte.ts`](src/workspace.svelte.ts), and UI in

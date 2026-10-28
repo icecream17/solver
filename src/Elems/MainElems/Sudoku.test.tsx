@@ -180,7 +180,9 @@ test('a multi-selection can be resumed after leaving the window', () => {
    userEvent.keyboard('{Control>}')
    userEvent.click(buttonCell2)
 
-   fireEvent(window, new Event('blur'))
+   // The browser would blur the button for us, but here we are firing code events not user events.
+   fireEvent.blur(window)
+   fireEvent.blur(buttonCell2)
 
    expect(buttonCell1).toHaveAttribute('data-active', 'false')
    expect(buttonCell2).toHaveAttribute('data-active', 'false')

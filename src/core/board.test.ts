@@ -93,8 +93,12 @@ test('getBoxGroup', () => {
 test('to81', () => {
    const testSudoku = new Board()
    testSudoku.set(1, 2).to(3)
+   const serialized = testSudoku.to81()
+   expect(serialized).toHaveLength(89)
+   expect(serialized.split('\n')).toHaveLength(9)
+   expect(serialized.endsWith('\n')).toBe(false)
    const toSudoku = new Board()
-   expect(toSudoku.import(testSudoku.to81())).toStrictEqual({
+   expect(toSudoku.import(serialized)).toStrictEqual({
       success: true,
       representationType: '81'
    })

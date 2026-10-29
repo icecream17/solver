@@ -16,6 +16,7 @@ export type Session = {
    lastStrategy: number | null
    results: (StrategyResult | null)[]
    disabled: boolean[]
+   // Failed in this pass; unlike disabled, this is scan state rather than a user preference.
    skippable: boolean[]
    solvedCount: number
    message: string
@@ -60,7 +61,7 @@ export function importGrid(text: string): { grid: Grid; format: string } | null 
 export function exportGrid(grid: Grid) {
    const board = new Board()
    board.data = copyGrid(grid)
-   return { digits: board.to81().trimEnd(), candidates: board.to729() }
+   return { digits: board.to81(), candidates: board.to729() }
 }
 
 /** One synchronous domain operation. Rendering and timing are the caller's choice. */

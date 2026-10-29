@@ -64,25 +64,18 @@ export default class Board {
    }
 
    /**
-    * Convert the sudoku into 81 digits
-    * "0" = a cell with no candidates
-    * "." = an unsolved cell
+    * Nine rows separated by newlines, with no trailing newline.
+    * "0" = a cell with no candidates; "." = an unsolved cell.
+    * This digit view loses candidate subsets; use to729() for a lossless export.
     */
    to81() {
-      let str = ''
-      for (const row of this.data) {
-         for (const cell of row) {
-            if (cell.length === 1) {
-               str += cell[0]
-            } else if (cell.length === 0) {
-               str += '0'
-            } else {
-               str += '.'
-            }
-         }
-         str += '\n'
-      }
-      return str
+      return this.data
+         .map((row) =>
+            row
+               .map((cell) => (cell.length === 1 ? cell[0] : cell.length === 0 ? '0' : '.'))
+               .join('')
+         )
+         .join('\n')
    }
 
    /**

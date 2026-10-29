@@ -262,3 +262,98 @@ test('touch users can enter a puzzle without a physical keyboard', async ({ page
    await page.getByRole('button', { name: 'reset candidates', exact: true }).tap()
    await expect(cell(page).locator('.digit')).toHaveCount(0)
 })
+
+// Synthetic marks isolate the CSS precedence without depending on a strategy fixture.
+test('selected reason cells retain readable text, a single gradient, and candidate inset', async ({
+   page
+}) => {
+   await cell(page).click()
+   await page.keyboard.type('123')
+   await cell(page).evaluate((button) => button.closest('td')?.classList.add('blue'))
+   await expect(cell(page)).toHaveCSS('color', 'rgb(245, 245, 245)')
+   await expect(cell(page)).toHaveCSS('background-color', 'rgb(85, 85, 85)')
+   const inset = await visibleCandidates(page).evaluate((grid) =>
+      parseFloat(getComputedStyle(grid).paddingTop)
+   )
+   expect(inset).toBeGreaterThan(0)
+   await page.getByRole('tab', { name: 'strategies', exact: true }).click()
+   await expect(cell(page)).toHaveCSS('color', 'rgb(245, 245, 245)')
+   const background = await cell(page).evaluate(
+      (button) => getComputedStyle(button).backgroundImage
+   )
+   expect(background).toMatch(/^linear-gradient/)
+})
+
+test('strategy columns align at narrow widths and across the layout breakpoint', async ({
+   page
+}) => {
+   await page.getByRole('tab', { name: 'strategies', exact: true }).click()
+   // Populate every result slot to exercise text wrapping, including linked rows.
+   await page.locator('.strategy-result').evaluateAll((results) => {
+      for (const result of results) result.textContent = 'Yes'
+   })
+   for (const width of [320, 390, 899, 900, 901, 1280]) {
+      await page.setViewportSize({ width, height: 844 })
+      for (const direction of ['ltr', 'rtl']) {
+         await page
+            .locator('html')
+            .evaluate((root, dir) => root.setAttribute('dir', dir), direction)
+         const rows = await page.locator('.strategy-row').evaluateAll((elements) =>
+            elements.map((element) => {
+               const label = element.querySelector('label')!.getBoundingClientRect()
+               const result = element.querySelector('.strategy-result')!.getBoundingClientRect()
+               return {
+                  labelTop: label.top,
+                  labelBottom: label.bottom,
+                  resultTop: result.top,
+                  left: result.left
+               }
+            })
+         )
+         for (const row of rows) {
+            expect(row.resultTop).toBeGreaterThanOrEqual(row.labelTop - 2)
+            expect(row.resultTop).toBeLessThan(row.labelBottom)
+            expect(Math.abs(row.left - rows[0].left)).toBeLessThan(1)
+         }
+         expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(
+            true
+         )
+      }
+      await cell(page).click()
+      const fontSize = await cell(page)
+         .locator('.candidate')
+         .first()
+         .evaluate((candidate) => parseFloat(getComputedStyle(candidate).fontSize))
+      expect(fontSize).toBeGreaterThanOrEqual(8.8)
+   }
+})
+
+test('current strategy retains its edge marker and the print palette is light', async ({
+   page
+}) => {
+   await page.getByRole('tab', { name: 'strategies', exact: true }).click()
+   await page.getByRole('button', { name: 'step', exact: true }).click()
+   const current = page.locator('.strategy-list li.current')
+   await expect(current).toHaveCount(1)
+   await expect(current).toHaveCSS('border-inline-start-width', '4px')
+   await expect(current).toHaveCSS('border-inline-start-style', 'solid')
+   await page.emulateMedia({ forcedColors: 'active' })
+   await expect(current).toHaveCSS('border-inline-start-style', 'solid')
+   const marker = await current.evaluate((row) => {
+      const style = getComputedStyle(row)
+      return { border: style.borderInlineStartColor, background: style.backgroundColor }
+   })
+   expect(marker.border).not.toBe(marker.background)
+   await page.emulateMedia({ forcedColors: 'none' })
+   await cell(page).click()
+   await cell(page)
+      .locator('.candidate')
+      .first()
+      .evaluate((candidate) => candidate.classList.add('solved'))
+   await page.emulateMedia({ media: 'print' })
+   await expect(page.locator('html')).toHaveCSS('color-scheme', 'light')
+   await expect(page.locator('.board-caption')).toHaveCSS('color', 'rgb(68, 68, 68)')
+   await expect(page.locator('.tools')).toBeHidden()
+   await expect(cell(page)).toHaveCSS('color', 'rgb(0, 0, 0)')
+   await expect(cell(page).locator('.candidate.solved')).toHaveCSS('color', 'rgb(0, 0, 0)')
+})

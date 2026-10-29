@@ -1,3 +1,9 @@
+/* Size candidate text against the board, including across the column breakpoint. */
+.board-area {
+   min-width: 0;
+   container-type: inline-size;
+}
+
 /* Sudoku table: equal cells, heavier box boundaries, and reading-order labels. */
 .board {
    width: 100%;

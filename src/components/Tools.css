@@ -1,18 +1,18 @@
 /* Tabs and the strategy panel are scoped to this tools region. */
-.tabs {
+.tools .tabs {
    display: flex;
    border-bottom: 1px solid #697381;
    margin-bottom: 1.25rem;
 }
-.tabs button {
+.tools .tabs button {
    padding: 0.7rem 1rem;
    border: 0;
    border-bottom: 3px solid transparent;
    background: transparent;
    color: var(--muted);
 }
-.tabs button[aria-selected='true'] {
-   color: whitesmoke;
+.tools .tabs button[aria-selected='true'] {
+   color: var(--text-color);
    border-bottom-color: var(--cyan);
 }
 .tools details {
@@ -21,15 +21,15 @@
 .tools summary {
    cursor: pointer;
 }
-.help li {
+.tools .help li {
    margin-block: 0.75rem;
    line-height: 1.6;
    font-size: 0.9rem;
 }
-.help ul {
+.tools .help ul {
    padding-inline-start: 1.3rem;
 }
-kbd {
+.tools kbd {
    font: 0.85em var(--mono);
    border: 1px solid #6f7a8a;
    border-radius: 0.2rem;
@@ -45,88 +45,107 @@ kbd {
 .tools legend {
    padding-inline: 0.5rem;
 }
-.strategy-list {
+.tools .strategy-list {
    margin: 0.25rem 0;
    padding-inline-start: 1.9rem;
 }
-.strategy-list li {
+.tools .strategy-list li {
    position: relative;
-   padding: 0.3rem 0.1rem 0.3rem 0.35rem;
+   padding-block: 0.3rem;
+   padding-inline: 0.35rem 0.1rem;
+   border-inline-start: 4px solid transparent;
    font-size: 0.85rem;
    line-height: 1.45;
 }
-.strategy-list li::marker {
+.tools .strategy-list li::marker {
    color: var(--muted);
    font: 0.75rem var(--mono);
 }
-.strategy-list label {
+.tools .strategy-row {
+   display: grid;
+   grid-template-columns: minmax(0, 1fr) 1.6rem 3rem;
+   align-items: baseline;
+   column-gap: 0.2rem;
+}
+.tools .strategy-list label {
    display: inline-flex;
    align-items: baseline;
    gap: 0.5rem;
-   width: calc(100% - 5rem);
+   min-width: 0;
+   overflow-wrap: anywhere;
    cursor: pointer;
 }
-.strategy-list label input {
+.tools .strategy-list label input {
    flex-shrink: 0;
    accent-color: var(--cyan);
    margin: 0;
 }
-.required {
+.tools .required {
    width: 13px;
    flex-shrink: 0;
    text-align: center;
    color: var(--muted);
 }
-.strategy-list .disabled label > span {
+.tools .strategy-list .disabled label > span {
    text-decoration: line-through;
    opacity: 0.6;
 }
-.strategy-list .current {
+.tools .strategy-list li:nth-child(even) {
+   background: var(--panel-color);
+}
+.tools .strategy-list li.current {
    background: #394453;
+   border-inline-start-color: var(--cyan);
    border-radius: 2px;
 }
-.strategy-link {
+.tools .strategy-link {
    display: inline-block;
    width: 1.6rem;
    text-align: center;
    text-decoration: none;
 }
-.strategy-result {
+.tools .strategy-result {
    display: inline-block;
    width: 3rem;
    text-align: end;
    font-variant-numeric: tabular-nums;
 }
-.explanation p {
+.tools .explanation p {
    white-space: pre-wrap;
    overflow-wrap: anywhere;
    font-size: 0.9rem;
    line-height: 1.6;
 }
-.legend {
+.tools .legend {
    display: flex;
    gap: 0.5rem;
    flex-wrap: wrap;
    font: 0.7rem var(--mono);
-}
-.legend span {
-   padding: 0.3rem 0.4rem;
-   border-radius: 0.15rem;
-}
-
-/* Text explanations supplement colors and the candidate strike-through. */
-.legend {
    list-style: none;
    padding: 0;
 }
-.legend li {
+.tools .legend li {
    padding: 0.3rem 0.4rem;
    border-radius: 0.15rem;
 }
-.step-details li {
+.tools .step-details li {
    margin-block: 0.4rem;
    font-size: 0.85rem;
    line-height: 1.5;
+}
+/* Increase reading text without tying it to viewport height. */
+@media (max-width: 900px) {
+   .tools .strategy-list li,
+   .tools .help li,
+   .tools .explanation p,
+   .tools .step-details li {
+      font-size: 0.95rem;
+   }
+}
+@media (forced-colors: active) {
+   .tools .strategy-list li.current {
+      border-inline-start-color: Highlight;
+   }
 }
 @media print {
    .tools {

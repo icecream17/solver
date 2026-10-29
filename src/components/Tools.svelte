@@ -161,48 +161,50 @@
                      class:current={workspace.session.lastStrategy === index}
                      class:disabled={workspace.session.disabled[index]}
                   >
-                     <label>
-                        {#if !strategy.required}
-                           <input
-                              type="checkbox"
-                              role="switch"
-                              aria-label={`Toggle ${strategy.name}`}
-                              checked={!workspace.session.disabled[index]}
-                              onchange={(event) =>
-                                 workspace.toggleStrategy(index, event.currentTarget.checked)}
-                           />
-                        {:else}<span
-                              class="required"
-                              title="Required strategy"
-                              aria-hidden="true">•</span
-                           >{/if}
-                        <span>{strategy.name}</span>
-                     </label>
-                     {#if strategy.href}
-                        <ExternalLink
-                           class="strategy-link"
-                           href={strategy.href}
-                           aria-label={`Learn about ${strategy.name}`}
-                           title={`Learn about ${strategy.name}`}>↗</ExternalLink
+                     <div class="strategy-row">
+                        <label>
+                           {#if !strategy.required}
+                              <input
+                                 type="checkbox"
+                                 role="switch"
+                                 aria-label={`Toggle ${strategy.name}`}
+                                 checked={!workspace.session.disabled[index]}
+                                 onchange={(event) =>
+                                    workspace.toggleStrategy(index, event.currentTarget.checked)}
+                              />
+                           {:else}<span
+                                 class="required"
+                                 title="Required strategy"
+                                 aria-hidden="true">•</span
+                              >{/if}
+                           <span>{strategy.name}</span>
+                        </label>
+                        {#if strategy.href}
+                           <ExternalLink
+                              class="strategy-link"
+                              href={strategy.href}
+                              aria-label={`Learn about ${strategy.name}`}
+                              title={`Learn about ${strategy.name}`}>↗</ExternalLink
+                           >
+                        {:else}<span></span>{/if}
+                        <span
+                           class="strategy-result"
+                           aria-label={`Status for ${strategy.name}`}
+                           class:success={result?.success}
+                           class:error={result?.successcount === -1}
+                           class:fail={result && !result.success}
                         >
-                     {:else}<span></span>{/if}
-                     <span
-                        class="strategy-result"
-                        aria-label={`Status for ${strategy.name}`}
-                        class:success={result?.success}
-                        class:error={result?.successcount === -1}
-                        class:fail={result && !result.success}
-                     >
-                        {result
-                           ? result.success
-                              ? result.successcount === 1
-                                 ? 'Yes'
-                                 : (result.successcount ?? 'Yes')
-                              : result.successcount === -1
-                                ? 'Error!'
-                                : 'No'
-                           : ''}
-                     </span>
+                           {result
+                              ? result.success
+                                 ? result.successcount === 1
+                                    ? 'Yes'
+                                    : (result.successcount ?? 'Yes')
+                                 : result.successcount === -1
+                                   ? 'Error!'
+                                   : 'No'
+                              : ''}
+                        </span>
+                     </div>
                   </li>
                {/each}
             </ol>

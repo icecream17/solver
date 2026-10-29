@@ -3,10 +3,10 @@ dialog.transfer-dialog {
    width: min(40rem, calc(100vw - 2rem));
    max-height: calc(100dvh - 2rem);
    overflow: auto;
-   border: 1px solid #8894a7;
+   border: 1px solid var(--control-border);
    border-radius: 0.3rem;
    background: var(--background);
-   color: whitesmoke;
+   color: var(--text-color);
    padding: 1.5rem;
 }
 dialog.transfer-dialog::backdrop {
@@ -24,9 +24,9 @@ dialog.transfer-dialog label {
    width: 100%;
    resize: vertical;
    margin-top: 0.5rem;
-   border: 1px solid #8894a7;
+   border: 1px solid var(--control-border);
    background: #20242c;
-   color: whitesmoke;
+   color: var(--text-color);
    font: 0.9rem/1.5 var(--mono);
    padding: 0.6rem;
    border-radius: 0.15rem;

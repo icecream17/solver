@@ -3,8 +3,8 @@
 /* Shared theme and document defaults. Component layout lives beside its component. */
 :root {
    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-   color: whitesmoke;
-   background: #282c34;
+   color: var(--text-color);
+   background: var(--background);
    color-scheme: dark;
    --background: #282c34;
    --border: #e1e5ec;
@@ -13,6 +13,7 @@
    --mono: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
    --text-color: whitesmoke;
    --panel-color: #353c48;
+   --control-border: #8894a7;
    font-synthesis: none;
 }
 
@@ -90,9 +91,9 @@ main {
    margin-block: 1rem;
 }
 .controls button {
-   border: 1px solid #8894a7;
-   background: #353c48;
-   color: whitesmoke;
+   border: 1px solid var(--control-border);
+   background: var(--panel-color);
+   color: var(--text-color);
    border-radius: 0.2rem;
    padding: 0.5rem 1.15rem;
 }
@@ -144,8 +145,10 @@ main {
 /* Print the puzzle, with a light theme and no interactive chrome. */
 @media print {
    :root {
-      color: black;
-      background: white;
+      color-scheme: light;
+      --text-color: black;
+      --background: white;
+      --muted: #444;
       --border: black;
    }
    header {

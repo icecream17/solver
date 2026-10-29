@@ -1,7 +1,4 @@
 /* Cell interaction states. Selection has precedence over an explanation background. */
-.board-area {
-   min-width: 0;
-}
 .cell {
    position: relative;
    display: block;
@@ -22,21 +19,25 @@
 }
 .cell[data-active='true'] {
    background-color: #555;
+   color: var(--text-color);
 }
 .cell[data-active='false'] {
-   background: repeating-linear-gradient(-45deg, #704a50, #44476b 4px, #333 8px);
+   background: linear-gradient(-45deg, #704a50, #44476b, #333);
+   color: var(--text-color);
 }
 .cell[data-error] {
-   background-color: maroon;
+   background: maroon;
+   color: var(--text-color);
 }
 .digit {
    display: inline-flex;
    align-items: center;
    height: 100%;
-   font-size: clamp(1.2rem, 3.5vw, 2.6rem);
+   font-size: clamp(1.2rem, 7cqw, 2.8rem);
 }
 .candidates {
    height: 100%;
+   padding: clamp(1px, 0.45cqw, 2pt);
    display: grid;
    grid-template-columns: repeat(3, 1fr);
    grid-template-rows: repeat(3, 1fr);
@@ -45,24 +46,17 @@
    display: flex;
    align-items: center;
    justify-content: center;
-   font-size: clamp(0.55rem, 1.15vw, 0.95rem);
+   font-size: clamp(0.55rem, 2.5cqw, 1rem);
    min-width: 0;
 }
 
-/* Keep a 3-by-3 candidate layout at narrow viewport widths. */
-@media (max-width: 900px) {
-   .digit {
-      font-size: clamp(1.5rem, 7vw, 2.8rem);
-   }
-   .candidate {
-      font-size: clamp(0.55rem, 2.1vw, 1rem);
-   }
-}
 @media print {
-   .cell[data-active] {
+   .cell[data-active],
+   .cell[data-error] {
       background: transparent;
    }
-   .cell {
+   .cell,
+   .candidate.solved {
       color: black;
    }
 }

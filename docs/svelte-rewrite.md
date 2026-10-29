@@ -234,6 +234,17 @@ layout and theme variables. `Annotations.css`, imported there, connects the same
 reasoning palette to cells, candidates and the legend. CandidatePad's inline style
 is Svelte-scoped. The responsive layout, candidate sizes and print rules are spread
 across these owning stylesheets rather than being generated from solver state.
+The board area is an inline-size query container: candidate/digit font sizes and
+candidate padding use its width (`cqw`), so changing the page's column count does
+not independently change their scale. Strategy rows use a three-column grid inside
+each list item, reserving learning-link and result slots even without a link.
+Alternating row fills sit beneath the current row's fill and logical edge marker;
+the marker remains visible in forced colors. Tools-owned selectors are prefixed
+with `.tools`, while the annotation palette intentionally crosses components.
+Print keeps the puzzle-only layout, sets a light color scheme and dark caption /
+solved-candidate text, and suppresses selection/error fills. Reasoning/difference
+fills remain authored; their printing follows the browser's background setting,
+with text explanations and eliminated-candidate strike-through available on screen.
 
 `GithubCorner.svelte` contains the original SVG and uses `ExternalLink.svelte`, as
 do learning/report links. That wrapper owns target, referrer/privacy attributes and

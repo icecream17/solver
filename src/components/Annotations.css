@@ -37,7 +37,7 @@
 .candidate.eliminated,
 .legend .eliminated {
    background-color: yellow;
-   color: black;
+   color: #5c4b00;
 }
 .candidate.added,
 .legend .added {
@@ -47,5 +47,13 @@
 
 /* Removed digits remain legible without needing to distinguish yellow. */
 .candidate s {
-   text-decoration-thickness: 2px;
+   text-decoration-thickness: 1px;
+   text-decoration-style: double;
+   text-decoration-color: #8a2600;
+}
+
+@media (forced-colors: active), print {
+   .candidate s {
+      text-decoration-color: currentColor;
+   }
 }

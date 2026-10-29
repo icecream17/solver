@@ -236,8 +236,12 @@ is Svelte-scoped. The responsive layout, candidate sizes and print rules are spr
 across these owning stylesheets rather than being generated from solver state.
 The board area is an inline-size query container: candidate/digit font sizes and
 candidate padding use its width (`cqw`), so changing the page's column count does
-not independently change their scale. Strategy rows use a three-column grid inside
-each list item, reserving learning-link and result slots even without a link.
+not independently change their scale. Strategy rows use a four-column grid inside each list item: checkbox, centered
+visual number, strategy name/link, and result. Required rows reserve an empty
+checkbox slot. A shared puzzle toolbar stays mounted across tab changes; Step/Go
+use `aria-disabled` while busy so keyboard focus survives a command. Workspace
+rejects overlapping commands. The document reserves scrollbar space so a taller
+panel does not shift the columns.
 Alternating row fills sit beneath the current row's fill and logical edge marker;
 the marker remains visible in forced colors. Tools-owned selectors are prefixed
 with `.tools`, while the annotation palette intentionally crosses components.

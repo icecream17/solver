@@ -22,7 +22,7 @@
    color: var(--text-color);
 }
 .cell[data-active='false'] {
-   background: linear-gradient(-45deg, #704a50, #44476b, #333);
+   background: linear-gradient(-45deg, #80535f, #515374, #333);
    color: var(--text-color);
 }
 .cell[data-error] {

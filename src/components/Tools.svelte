@@ -63,6 +63,29 @@
          >
       {/each}
    </div>
+   <p class="controls">
+      <button
+         type="button"
+         onclick={() => workspace.clear()}>clear</button
+      >
+      <button
+         type="button"
+         onclick={(event) => onimport(event.currentTarget)}>import</button
+      >
+      <button
+         type="button"
+         onclick={(event) => onexport(event.currentTarget)}>export</button
+      >
+      <button
+         type="button"
+         onclick={() => workspace.undo()}
+         disabled={!workspace.canUndo}>undo</button
+      >
+      {#if workspace.busy}<button
+            type="button"
+            onclick={() => workspace.cancelSolve()}>cancel solving</button
+         >{/if}
+   </p>
    <div
       id={`panel-${tab}`}
       role="tabpanel"
@@ -70,29 +93,6 @@
       tabindex="0"
    >
       {#if tab === 0}
-         <p class="controls">
-            <button
-               type="button"
-               onclick={() => workspace.clear()}>clear</button
-            >
-            <button
-               type="button"
-               onclick={(event) => onimport(event.currentTarget)}>import</button
-            >
-            <button
-               type="button"
-               onclick={(event) => onexport(event.currentTarget)}>export</button
-            >
-            <button
-               type="button"
-               onclick={() => workspace.undo()}
-               disabled={!workspace.canUndo}>undo</button
-            >
-            {#if workspace.busy}<button
-                  type="button"
-                  onclick={() => workspace.cancelSolve()}>cancel solving</button
-               >{/if}
-         </p>
          <p class="hint">
             Enter a puzzle, then use the strategies tab to solve it one logical step at a time.
          </p>
@@ -132,29 +132,23 @@
             <button
                type="button"
                onclick={() => workspace.solve('step')}
-               disabled={workspace.busy}>step</button
+               aria-disabled={workspace.busy}>step</button
             >
             <button
                type="button"
                onclick={() => workspace.solve('go')}
-               disabled={workspace.busy}>go</button
+               aria-disabled={workspace.busy}>go</button
             >
-            <button
-               type="button"
-               onclick={() => workspace.undo()}
-               disabled={!workspace.canUndo}>undo</button
-            >
-            {#if workspace.busy}<button
-                  type="button"
-                  onclick={() => workspace.cancelSolve()}>cancel solving</button
-               >{/if}
          </p>
          <p class="hint">
             Step tries one strategy. Go stops at the next successful strategy or the end of a pass.
          </p>
          <fieldset>
             <legend>strategies</legend>
-            <ol class="strategy-list">
+            <ol
+               class="strategy-list"
+               role="list"
+            >
                {#each catalog as strategy, index (strategy.name)}
                   {@const result = workspace.session.results[index]}
                   <li
@@ -162,7 +156,7 @@
                      class:disabled={workspace.session.disabled[index]}
                   >
                      <div class="strategy-row">
-                        <label>
+                        <span class="strategy-toggle">
                            {#if !strategy.required}
                               <input
                                  type="checkbox"
@@ -172,21 +166,21 @@
                                  onchange={(event) =>
                                     workspace.toggleStrategy(index, event.currentTarget.checked)}
                               />
-                           {:else}<span
-                                 class="required"
-                                 title="Required strategy"
-                                 aria-hidden="true">•</span
-                              >{/if}
-                           <span>{strategy.name}</span>
-                        </label>
-                        {#if strategy.href}
-                           <ExternalLink
-                              class="strategy-link"
-                              href={strategy.href}
-                              aria-label={`Learn about ${strategy.name}`}
-                              title={`Learn about ${strategy.name}`}>↗</ExternalLink
-                           >
-                        {:else}<span></span>{/if}
+                           {/if}
+                        </span>
+                        <span
+                           class="strategy-number"
+                           aria-hidden="true">{index + 1}</span
+                        >
+                        <span class="strategy-name">
+                           {#if strategy.href}
+                              <ExternalLink
+                                 href={strategy.href}
+                                 aria-label={`Learn about ${strategy.name}`}
+                                 >{strategy.name}</ExternalLink
+                              >
+                           {:else}{strategy.name}{/if}
+                        </span>
                         <span
                            class="strategy-result"
                            aria-label={`Status for ${strategy.name}`}

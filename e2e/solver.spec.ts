@@ -300,7 +300,7 @@ test('strategy columns align at narrow widths and across the layout breakpoint',
             .evaluate((root, dir) => root.setAttribute('dir', dir), direction)
          const rows = await page.locator('.strategy-row').evaluateAll((elements) =>
             elements.map((element) => {
-               const label = element.querySelector('label')!.getBoundingClientRect()
+               const label = element.querySelector('.strategy-name')!.getBoundingClientRect()
                const result = element.querySelector('.strategy-result')!.getBoundingClientRect()
                return {
                   labelTop: label.top,
@@ -357,4 +357,32 @@ test('current strategy retains its edge marker and the print palette is light', 
    await expect(page.locator('.tools')).toBeHidden()
    await expect(cell(page)).toHaveCSS('color', 'rgb(0, 0, 0)')
    await expect(cell(page).locator('.candidate.solved')).toHaveCSS('color', 'rgb(0, 0, 0)')
+})
+
+test('Step and Go retain focus for repeated Space activation', async ({ page }) => {
+   await page.getByRole('tab', { name: 'strategies', exact: true }).click()
+   for (const name of ['step', 'go']) {
+      const button = page.getByRole('button', { name, exact: true })
+      await button.focus()
+      for (let attempt = 0; attempt < 2; attempt++) {
+         await page.keyboard.press('Space')
+         await expect(button).toHaveAttribute('aria-disabled', 'false')
+         await expect(button).toBeFocused()
+      }
+   }
+})
+
+test('puzzle actions stay available and columns stay stable across tabs', async ({ page }) => {
+   await page.setViewportSize({ width: 1280, height: 600 })
+   const before = await page.locator('.board-area').boundingBox()
+   await page.getByRole('tab', { name: 'strategies', exact: true }).click()
+   for (const name of ['clear', 'import', 'export', 'undo']) {
+      await expect(page.getByRole('button', { name, exact: true })).toBeVisible()
+   }
+   const after = await page.locator('.board-area').boundingBox()
+   expect(Math.abs(before!.width - after!.width)).toBeLessThan(1)
+   expect(Math.abs(before!.x - after!.x)).toBeLessThan(1)
+   await page.getByRole('button', { name: 'export', exact: true }).click()
+   await page.getByRole('button', { name: 'Close', exact: true }).click()
+   await expect(page.getByRole('button', { name: 'export', exact: true })).toBeFocused()
 })

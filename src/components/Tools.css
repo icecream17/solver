@@ -45,48 +45,47 @@
 .tools legend {
    padding-inline: 0.5rem;
 }
+/* Keep native list semantics; visual numbers have their own centered column. */
 .tools .strategy-list {
    margin: 0.25rem 0;
-   padding-inline-start: 1.9rem;
+   padding: 0;
+   list-style: none;
 }
 .tools .strategy-list li {
-   position: relative;
+   --strategy-font-size: 0.85rem;
+   --strategy-line-height: calc(var(--strategy-font-size) * 1.45);
    padding-block: 0.3rem;
-   padding-inline: 0.35rem 0.1rem;
+   padding-inline: 0.5rem 0.75rem;
    border-inline-start: 4px solid transparent;
-   font-size: 0.85rem;
+   font-size: var(--strategy-font-size);
    line-height: 1.45;
-}
-.tools .strategy-list li::marker {
-   color: var(--muted);
-   font: 0.75rem var(--mono);
 }
 .tools .strategy-row {
    display: grid;
-   grid-template-columns: minmax(0, 1fr) 1.6rem 3rem;
-   align-items: baseline;
-   column-gap: 0.2rem;
+   grid-template-columns: 0.9rem 1.4rem minmax(0, 1fr) 3rem;
+   align-items: start;
+   column-gap: 0.4rem;
 }
-.tools .strategy-list label {
-   display: inline-flex;
-   align-items: baseline;
-   gap: 0.5rem;
-   min-width: 0;
-   overflow-wrap: anywhere;
-   cursor: pointer;
+.tools .strategy-toggle,
+.tools .strategy-number {
+   display: flex;
+   align-items: center;
+   justify-content: center;
+   height: var(--strategy-line-height);
 }
-.tools .strategy-list label input {
-   flex-shrink: 0;
+.tools .strategy-number {
+   color: var(--muted);
+   font: 0.75rem var(--mono);
+}
+.tools .strategy-toggle input {
    accent-color: var(--cyan);
    margin: 0;
 }
-.tools .required {
-   width: 13px;
-   flex-shrink: 0;
-   text-align: center;
-   color: var(--muted);
+.tools .strategy-name {
+   min-width: 0;
+   overflow-wrap: anywhere;
 }
-.tools .strategy-list .disabled label > span {
+.tools .strategy-list .disabled .strategy-name {
    text-decoration: line-through;
    opacity: 0.6;
 }
@@ -98,15 +97,7 @@
    border-inline-start-color: var(--cyan);
    border-radius: 2px;
 }
-.tools .strategy-link {
-   display: inline-block;
-   width: 1.6rem;
-   text-align: center;
-   text-decoration: none;
-}
 .tools .strategy-result {
-   display: inline-block;
-   width: 3rem;
    text-align: end;
    font-variant-numeric: tabular-nums;
 }
@@ -135,7 +126,9 @@
 }
 /* Increase reading text without tying it to viewport height. */
 @media (max-width: 900px) {
-   .tools .strategy-list li,
+   .tools .strategy-list li {
+      --strategy-font-size: 0.95rem;
+   }
    .tools .help li,
    .tools .explanation p,
    .tools .step-details li {

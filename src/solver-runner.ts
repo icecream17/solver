@@ -39,12 +39,19 @@ export class WorkerSolverRunner implements SolverRunner {
             if ('error' in event.data) reject(new Error(event.data.error))
             else resolve(event.data.session)
          }
-         worker.onerror = () => {
+         const fail = () => {
             if (this.worker !== worker) return
             this.finish()
             reject(new Error('The solver worker failed. The board has not changed.'))
          }
-         worker.postMessage({ session, mode } satisfies SolverRequest)
+         worker.onerror = fail
+         worker.onmessageerror = fail
+         try {
+            worker.postMessage({ session, mode } satisfies SolverRequest)
+         } catch (error) {
+            this.finish()
+            reject(error)
+         }
       })
    }
 

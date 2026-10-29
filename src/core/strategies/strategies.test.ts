@@ -7,16 +7,15 @@ import checkForSolved from './checkForSolved'
 import hiddenSingles from './hiddenSingles'
 import updateCandidates from './updateCandidates'
 import pairsTriplesAndQuads from './pairsTriplesAndQuads'
-import { PureStrategy, Strategy, StrategyMemory, SuccessError } from '../strategy-types'
+import { PureStrategy, StrategyMemory, SuccessError } from '../strategy-types'
 import hiddenPairsTriplesAndQuads from './hiddenPairsTriplesAndQuads'
 import intersectionRemoval from './intersectionRemoval'
-import STRATEGIES from './Strategies'
+import { catalog } from '../catalog'
 import xWing from './xWing'
 import checkValidity from './checkValidity'
 import swordfish from './swordfish'
 import jellyfish from './jellyfish'
 import skyscraper from './skyscraper'
-import boards from '../fixtures'
 import yWing from './yWing'
 import twoMinusOneLines from './twoMinusOneLines'
 import xyLoop from './xyLoop'
@@ -32,10 +31,7 @@ function setupSudoku(representation: string) {
    return testSudoku
 }
 
-/**
- * Returns testSudoku as a side effect
- * TODO: This is a bad function
- */
+// Return the resulting board so callers can also assert exact eliminations.
 function testStrategy(representation: string, strategy: PureStrategy, shouldSucceed: boolean) {
    const testSudoku = setupSudoku(representation)
    expect(strategy(testSudoku).success).toBe(shouldSucceed)
@@ -43,72 +39,72 @@ function testStrategy(representation: string, strategy: PureStrategy, shouldSucc
 }
 
 describe('strategies', () => {
-   let solver: { strategyIndex: number; memory: StrategyMemory }
+   let memory: StrategyMemory
 
    beforeEach(() => {
-      solver = { strategyIndex: 0, memory: new StrategyMemory() }
+      memory = new StrategyMemory()
    })
 
-   test.each([...STRATEGIES.entries()])(
-      '$variable.name fails on an empty sudoku',
-      (index: number, strategy: Strategy) => {
+   test.each(catalog.map((strategy, index) => ({ ...strategy, index })))(
+      '$name fails on an empty sudoku',
+      ({ index, run }) => {
          const testSudoku = new Board()
-         expect(strategy(testSudoku, solver.memory[index]).success).toBe(false)
+         expect(run(testSudoku, memory[index]).success).toBe(false)
       }
    )
 
    describe('check for solved', () => {
-      test('error if solver.solved is invalid', () => {
+      test('error if the stored solved count is invalid', () => {
          const testSudoku = Board.fromRepresentation(testBoards['Solved board'])
 
          // @ts-expect-error obv
-         solver.memory[0].solved = undefined
-         expect(() => checkForSolved(testSudoku, solver.memory[0])).toThrow(TypeError)
+         memory[0].solved = undefined
+         expect(() => checkForSolved(testSudoku, memory[0])).toThrow(TypeError)
 
-         solver.memory[0].solved = 0.5
-         expect(() => checkForSolved(testSudoku, solver.memory[0])).toThrow(TypeError)
+         memory[0].solved = 0.5
+         expect(() => checkForSolved(testSudoku, memory[0])).toThrow(TypeError)
 
-         solver.memory[0].solved = -2
-         expect(() => checkForSolved(testSudoku, solver.memory[0])).toThrow(TypeError)
+         memory[0].solved = -2
+         expect(() => checkForSolved(testSudoku, memory[0])).toThrow(TypeError)
 
-         solver.memory[0].solved = Infinity
-         expect(() => checkForSolved(testSudoku, solver.memory[0])).toThrow(TypeError)
+         memory[0].solved = Infinity
+         expect(() => checkForSolved(testSudoku, memory[0])).toThrow(TypeError)
       })
 
       test('succeeds when sudoku is finished', () => {
          const testSudoku = Board.fromRepresentation(testBoards['Solved board'])
 
          {
-            solver.memory[0].solved = NUMBER_OF_CELLS
-            expect(checkForSolved(testSudoku, solver.memory[0])).toStrictEqual({
+            memory[0].solved = NUMBER_OF_CELLS
+            expect(checkForSolved(testSudoku, memory[0])).toStrictEqual({
                success: true,
                successcount: NUMBER_OF_CELLS
             })
-            expect(solver.memory[0].solved).toBe(NUMBER_OF_CELLS)
+            expect(memory[0].solved).toBe(NUMBER_OF_CELLS)
          }
 
          // Also check when the sudoku was just updated
          {
-            solver.memory[0].solved = 0
-            expect(checkForSolved(testSudoku, solver.memory[0])).toStrictEqual({
+            memory[0].solved = 0
+            expect(checkForSolved(testSudoku, memory[0])).toStrictEqual({
                success: true,
                successcount: NUMBER_OF_CELLS
             })
-            expect(solver.memory[0].solved).toBe(NUMBER_OF_CELLS)
+            expect(memory[0].solved).toBe(NUMBER_OF_CELLS)
          }
       })
 
-      // solver.solved is set in the beforeEach
+      // The stored solved count starts at zero.
       test('succeeds when the sudoku has new solved cells', () => {
          const testSudoku = Board.fromRepresentation(testBoards['Simple sudoku'])
-         expect(checkForSolved(testSudoku, solver.memory[0]).success).toBe(true)
-         expect(solver.memory[0].solved).not.toBe(0)
+         expect(checkForSolved(testSudoku, memory[0]).success).toBe(true)
+         expect(memory[0].solved).not.toBe(0)
       })
 
       test('and then fails when the sudoku doesnt have any new solved cells', () => {
          const testSudoku = Board.fromRepresentation(testBoards['Simple sudoku'])
-         checkForSolved(testSudoku, solver.memory[0])
-         expect(checkForSolved(testSudoku, solver.memory[0]).success).toBe(false)
+         checkForSolved(testSudoku, memory[0])
+         expect(checkForSolved(testSudoku, memory[0]).success).toBe(false)
       })
    })
 
@@ -565,7 +561,7 @@ describe('strategies', () => {
       })
 
       test('3', () => {
-         const testSudoku = setupSudoku(boards['swordfish wow'])
+         const testSudoku = setupSudoku(testBoards['swordfish wow'])
          hiddenPairsTriplesAndQuads(testSudoku)
          expect(swordfish(testSudoku).success).toBe(true)
       })
@@ -810,7 +806,7 @@ describe('strategies', () => {
    describe('wWing', () => {
       test('1', () => {
          const testSudoku = new Board()
-         testSudoku.import(boards['w wing'])
+         testSudoku.import(testBoards['w wing'])
          updateCandidates(testSudoku)
 
          // These are necessary because they allow a certain bug to happen
@@ -852,7 +848,7 @@ describe('strategies', () => {
       })
 
       test('Example', () => {
-         const testSudoku = new Board(boards['w wing 2?'])
+         const testSudoku = new Board(testBoards['w wing 2?'])
          expect(pairCoversGroup(testSudoku).success).toBe(true)
          expect(testSudoku.data[1][4]).toContain(7)
          expect(testSudoku.data[2][5]).toContain(1)

@@ -115,3 +115,11 @@ test('an invalid partial strategy result is rolled back atomically', () => {
       catalog[1].run = original
    }
 })
+
+test('digit export contains nine rows without an extra terminal line', () => {
+   const grid = puzzle('Solved board').grid
+   const { digits } = exportGrid(grid)
+   expect(digits.split('\n')).toHaveLength(9)
+   expect(digits.endsWith('\n')).toBe(false)
+   expect(importGrid(digits)?.grid).toEqual(grid)
+})

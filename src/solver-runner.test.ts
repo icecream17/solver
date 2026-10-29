@@ -5,6 +5,7 @@ class FakeWorker {
    static readonly instances: FakeWorker[] = []
    onmessage: ((event: MessageEvent<SolverResponse>) => void) | null = null
    onerror: (() => void) | null = null
+   onmessageerror: (() => void) | null = null
    terminate = vi.fn()
    postMessage = vi.fn()
 
@@ -57,4 +58,28 @@ test('both computation and transport failures reject without keeping a worker al
    FakeWorker.instances[1].onerror?.()
    await expect(transport).rejects.toThrow('worker failed')
    expect(FakeWorker.instances[1].terminate).toHaveBeenCalledOnce()
+})
+
+test('unreadable worker messages reject and release the worker', async () => {
+   const runner = new WorkerSolverRunner()
+   const operation = runner.run(createSession(), 'step')
+   const worker = FakeWorker.instances[0]
+   worker.onmessageerror?.()
+   await expect(operation).rejects.toThrow('worker failed')
+   expect(worker.terminate).toHaveBeenCalledOnce()
+})
+
+test('a synchronous send failure rejects and releases the worker', async () => {
+   const runner = new WorkerSolverRunner()
+   const failingSend = vi.fn(() => {
+      throw new Error('Cannot clone request')
+   })
+   vi.stubGlobal(
+      'Worker',
+      class extends FakeWorker {
+         postMessage = failingSend
+      }
+   )
+   await expect(runner.run(createSession(), 'step')).rejects.toThrow('Cannot clone request')
+   expect(FakeWorker.instances[0].terminate).toHaveBeenCalledOnce()
 })

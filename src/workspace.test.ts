@@ -1,4 +1,5 @@
 import { Workspace } from './workspace.svelte'
+import fixtures from './core/fixtures'
 import { createSession, go, step, type Session } from './core/session'
 import type { SolverRunner, SolveMode } from './solver-runner'
 
@@ -62,7 +63,7 @@ test('a completed worker response applies once and reports progress', async () =
    await operation
    expect(workspace.busy).toBe(false)
    expect(workspace.session.lastStrategy).toBe(0)
-   expect(workspace.canUndo).toBe(true)
+   expect(workspace.canUndo).toBe(false)
 })
 
 test('editing cancels work and a late response cannot replace the edited board', async () => {
@@ -111,4 +112,31 @@ test('clear, import, strategy preferences, and required strategies remain cohere
    expect(workspace.selected).toHaveLength(0)
    expect(workspace.session.grid[0][0]).toHaveLength(9)
    expect(workspace.import('bad')).toBe(false)
+})
+
+test('unchanged solver results advance the cursor without consuming board history', async () => {
+   const workspace = new Workspace(inlineRunner)
+   await workspace.solve('step')
+   expect(workspace.session.lastStrategy).toBe(0)
+   expect(workspace.session.strategyIndex).toBe(1)
+   expect(workspace.canUndo).toBe(false)
+   workspace.select(0)
+   workspace.edit(1)
+   await workspace.solve('step')
+   workspace.undo()
+   expect(workspace.session.grid[0][0]).toHaveLength(9)
+   expect(workspace.canUndo).toBe(false)
+})
+
+test('repeated solved checks preserve the preceding real undo action', async () => {
+   const workspace = new Workspace(inlineRunner)
+   workspace.import(fixtures['Solved board'])
+   await workspace.solve('step')
+   await workspace.solve('go')
+   expect(workspace.session.outcome).toBe('solved')
+   workspace.undo()
+   expect(workspace.session.grid[0][0]).toHaveLength(9)
+   expect(workspace.canUndo).toBe(false)
+   workspace.clear()
+   expect(workspace.canUndo).toBe(false)
 })

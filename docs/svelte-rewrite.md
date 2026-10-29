@@ -70,6 +70,10 @@ state, and deselect. A completed Step/Go records one history entry for the whole
 command, even if Go tried several strategies; a cancelled/failed worker request
 does not commit its partial work.
 
+Only grid changes create board-history entries. A failed/unchanged strategy still
+updates its cursor, results and status, but does not add an Undo action. Clearing
+or importing an identical grid also resets session state without adding history.
+
 Undo cancels active work and restores the previous session, including cursor,
 results and explanation grids. It keeps the **current** disabled-strategy flags:
 enablement is a preference rather than part of board history. Selected indices
@@ -101,15 +105,15 @@ Editing, Clear, successful import, Undo and a strategy toggle cancel active work
 App teardown also cancels. Selection/navigation alone does not change the grid and
 does not cancel. While solving, the committed board stays visible; intermediate
 mutations exist only in the worker. Computation errors become a text response;
-worker transport errors become a readable rejection. The existing session survives
+Worker loading, message decoding and request-send failures all release the
+worker and reject the command. The existing session survives
 both. Workers are created on demand and terminated after each command, trading
 startup/clone overhead for simple ownership and immediate cancellation.
 
 ## Strategy execution, validation and scan state
 
-`core/strategies/Strategies.ts` defines executable strategy order. `core/catalog.ts`
-associates each index with its UI name, learning link and whether it is required.
-The parallel arrays are positional: catalog entries, results, disabled flags,
+`core/catalog.ts` defines strategy order, function, UI name, learning link and
+whether it is required in one registry. Session arrays are positional: catalog entries, results, disabled flags,
 skippable flags and strategy memory all refer to that same index. Strategy zero
 (Check for solved) is mandatory. `core/strategy-types.ts` defines result variants
 and the `SuccessError` sentinel; a failure to find progress is distinct from an
@@ -198,9 +202,9 @@ focus history.
 
 `Tools.svelte` passes the actual opener button to App. App owns the transfer mode
 and creates `TransferDialog.svelte` with that opener, the grid and callbacks. On
-mount the component calls native `showModal()`; its teardown closes the dialog and
+mount the HTML `<dialog>` calls `showModal()`; its teardown closes the dialog and
 restores opener focus. Capturing the button explicitly avoids relying on browsers
-to focus a button when clicked. Native modal behavior supplies background inertness
+to focus a button when clicked. The HTML dialog supplies background inertness
 and the focus trap; Escape routes through App's close callback.
 
 The dialog owns only draft text and validation feedback. Submitting it calls
@@ -286,7 +290,7 @@ Lint/format configuration is described separately in [development guidance](deve
 | Ctrl+A, Escape, Tab, wrapping arrows                             | Preserved                                                                |
 | Home/End, Ctrl+Home/End, Page Up/Down, held-key movement         | Preserved                                                                |
 | 81-cell, 729-character, candidate-grid, SudokuWiki URL import    | Preserved                                                                |
-| Both export formats                                              | Shown together in a native dialog                                        |
+| Both export formats                                              | Shown together in an HTML `<dialog>` modal                               |
 | Step and Go                                                      | Go stops at a successful strategy/end of a pass; cancellable worker      |
 | All 18 strategies, order, learning links, toggles, result counts | Preserved; toggles reset scan state                                      |
 | Candidate diffs and cell/candidate explanation colors            | Preserved, with text and strike-through cues                             |
@@ -325,7 +329,7 @@ file, including consolidated and retired responsibilities; it is not a rename li
 | `src/Api/Spaces/PureSudoku.ts`                     | src/core/board.ts                                                                           |
 | `src/Api/Spaces/Sudoku.ts`                         | src/core/annotations.ts; src/core/board.ts (DOM coupling removed)                           |
 | `src/Api/Strategies/Strategies.test.tsx`           | src/core/strategies/strategies.test.ts                                                      |
-| `src/Api/Strategies/Strategies.ts`                 | src/core/strategies/Strategies.ts; src/core/catalog.ts; src/core/strategy-types.ts          |
+| `src/Api/Strategies/Strategies.ts`                 | src/core/catalog.ts; src/core/strategy-types.ts                                             |
 | `src/Api/Strategies/checkForSolved.ts`             | src/core/strategies/checkForSolved.ts                                                       |
 | `src/Api/Strategies/checkValidity.test.ts`         | src/core/strategies/checkValidity.test.ts                                                   |
 | `src/Api/Strategies/checkValidity.ts`              | src/core/strategies/checkValidity.ts                                                        |

@@ -111,7 +111,7 @@ export class Workspace {
          })
          // A board edit, cancellation, or newer request invalidates an old result.
          if (operation !== this.operation) return
-         this.remember()
+         if (!sameGrid(this.session.grid, result.grid)) this.remember()
          this.session = result
          this.operationMessage = ''
          this.deactivate()
@@ -155,7 +155,7 @@ export class Workspace {
    private replace(grid: Grid) {
       this.cancelSolve()
       this.operationMessage = ''
-      this.remember()
+      if (!sameGrid(this.session.grid, grid)) this.remember()
       this.session = createSession(grid, this.session.disabled)
       this.deselect()
    }

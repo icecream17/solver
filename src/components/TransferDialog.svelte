@@ -56,8 +56,8 @@
             id="import-help"
             class="hint"
          >
-            Accepts an 81-cell puzzle, a SudokuWiki URL, 729 candidate characters, or a
-            whitespace-separated candidate grid.
+            Paste nine rows of digits; use a dot or 0 for a blank cell. You can also paste a
+            SudokuWiki URL or a candidate grid exported by this solver.
          </p>
          <textarea
             id="puzzle-input"
@@ -81,10 +81,6 @@
          </p>
       </form>
    {:else}
-      <p class="hint">
-         Select and copy either representation. The candidate format preserves every candidate,
-         including empty cells.
-      </p>
       <label for="export-digits">81-cell digits</label>
       <textarea
          id="export-digits"

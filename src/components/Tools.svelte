@@ -1,5 +1,6 @@
 <script lang="ts">
    import { catalog } from '../core/catalog'
+   import { SuccessError, type StrategyResult } from '../core/strategy-types'
    import ExternalLink from './ExternalLink.svelte'
    import { stepExplanations } from '../core/explanations'
    import './Tools.css'
@@ -23,6 +24,12 @@
          workspace.session.annotations
       )
    )
+
+   function resultLabel(result: StrategyResult | null) {
+      if (!result) return ''
+      if (!result.success) return result.successcount === SuccessError ? 'Error!' : 'No'
+      return result.successcount === 1 ? 'Yes' : String(result.successcount)
+   }
 
    function tabKey(event: KeyboardEvent, index: number) {
       let next: number
@@ -185,18 +192,10 @@
                            class="strategy-result"
                            aria-label={`Status for ${strategy.name}`}
                            class:success={result?.success}
-                           class:error={result?.successcount === -1}
+                           class:error={result?.successcount === SuccessError}
                            class:fail={result && !result.success}
                         >
-                           {result
-                              ? result.success
-                                 ? result.successcount === 1
-                                    ? 'Yes'
-                                    : (result.successcount ?? 'Yes')
-                                 : result.successcount === -1
-                                   ? 'Error!'
-                                   : 'No'
-                              : ''}
+                           {resultLabel(result)}
                         </span>
                      </div>
                   </li>

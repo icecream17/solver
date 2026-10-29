@@ -32,7 +32,7 @@
    background-color: hsl(23, 87%, 71%);
 }
 .candidate.solved {
-   color: lightgreen;
+   color: var(--solved-color);
 }
 .candidate.eliminated,
 .legend .eliminated {

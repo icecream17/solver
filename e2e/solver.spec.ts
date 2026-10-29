@@ -346,6 +346,7 @@ test('current strategy retains its edge marker and the print palette is light', 
    expect(marker.border).not.toBe(marker.background)
    await page.emulateMedia({ forcedColors: 'none' })
    await cell(page).click()
+   await page.keyboard.type('123')
    await cell(page)
       .locator('.candidate')
       .first()

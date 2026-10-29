@@ -14,6 +14,7 @@
    --text-color: whitesmoke;
    --panel-color: #353c48;
    --control-border: #8894a7;
+   --solved-color: lightgreen;
    font-synthesis: none;
 }
 
@@ -150,6 +151,7 @@ main {
       --background: white;
       --muted: #444;
       --border: black;
+      --solved-color: black;
    }
    header {
       padding: 0;

@@ -55,8 +55,7 @@
    .cell[data-error] {
       background: transparent;
    }
-   .cell,
-   .candidate.solved {
+   .cell {
       color: black;
    }
 }

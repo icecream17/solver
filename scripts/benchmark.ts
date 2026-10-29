@@ -1,6 +1,8 @@
 import boards from '../src/core/benchmark-boards'
 import { createSession, importGrid, go } from '../src/core/session'
 
+// Earlier deductions can prevent later strategies from running on a corpus.
+// Dedicated candidate fixtures are still needed to exercise each strategy directly.
 const limit = Number(process.argv[2] ?? 50)
 if (!Number.isInteger(limit) || limit < 1)
    throw new Error('Pass a positive puzzle count: npm run bench -- 100')

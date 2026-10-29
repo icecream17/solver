@@ -20,6 +20,7 @@ jobs:
                - macos-latest
                - ubuntu-latest
                - windows-latest
+            # Node release schedule: https://nodejs.org/en/about/releases/
             # Check both the dependency minimum and the recommended LTS.
             node: ['22.22.2', '24']
 

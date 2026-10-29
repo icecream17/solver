@@ -15,7 +15,8 @@ export class Workspace {
    session = $state<Session>(createSession())
    selected = $state<number[]>([])
    selectionActive = $state(false)
-   // Entry bookkeeping is not rendered; updates go through edit()/selection methods.
+   // An untouched all-nine cell starts a new entry on its next digit, rather than
+   // toggling that digit out of all nine. This is bookkeeping, not render state.
    // eslint-disable-next-line svelte/prefer-svelte-reactivity
    private fresh = new Set<number>()
    private history: Session[] = []

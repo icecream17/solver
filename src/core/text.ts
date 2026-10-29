@@ -1,3 +1,8 @@
+/**
+ * Format a nonempty list, using "and" for a pair and an Oxford comma for longer lists.
+ * @example convertArrayToEnglishList([1, 2, 3]) // "1, 2, and 3"
+ * @throws {TypeError} if the list is empty.
+ */
 export function convertArrayToEnglishList<T extends string | number>(array: T[]) {
    switch (array.length) {
       case 0:

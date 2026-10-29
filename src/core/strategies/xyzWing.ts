@@ -3,7 +3,7 @@ import Board from '../board'
 import { affectsCell, boxAt, CellID, sharedInArrays } from '../geometry'
 import { getCellsWithNCandidates, highlightCell, removeCandidateFromCells } from '../annotations'
 
-/* TODO: When finished move to Utils */
+/* TODO: Consider sharing this same-box predicate through geometry. */
 function inSameBox(cellA: CellID, cellB: CellID) {
    return boxAt(cellA.row, cellA.column) === boxAt(cellB.row, cellB.column)
 }

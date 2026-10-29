@@ -16,6 +16,7 @@
    } = $props()
    let tab = $state(0)
    let tablist: HTMLElement
+   // Tab enters on the selected tab; arrow navigation keeps focus and selection together.
    const tabs = ['solving tools', 'strategies']
    let explanationDetails = $derived(
       stepExplanations(
@@ -44,6 +45,7 @@
    }
 </script>
 
+<!-- These controls are part of the puzzle, rather than complementary aside content. -->
 <section
    class="tools"
    aria-label="Solving tools"
@@ -152,6 +154,7 @@
          </p>
          <fieldset>
             <legend>strategies</legend>
+            <!-- Rows contain independent switches and links, so this is a list, not a listbox. -->
             <ol
                class="strategy-list"
                role="list"

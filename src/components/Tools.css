@@ -60,6 +60,7 @@
    font-size: var(--strategy-font-size);
    line-height: 1.45;
 }
+/* Reserve control/result space even when absent; wrapping names must not move results. */
 .tools .strategy-row {
    display: grid;
    grid-template-columns: 0.9rem 1.4rem minmax(0, 1fr) 3rem;

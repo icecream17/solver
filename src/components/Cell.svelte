@@ -31,7 +31,8 @@
       onclick: (event: MouseEvent) => void
    } = $props()
 
-   // Display candidates while editing or while explaining a change.
+   // Even a solved cell uses the 3-by-3 view when a candidate has a reasoning mark.
+   // Untouched all-nine cells stay blank after editing loses focus.
    let changed = $derived(
       previous !== undefined &&
          (previous.length !== candidates.length ||

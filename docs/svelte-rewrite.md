@@ -65,8 +65,8 @@ There is no global store or second editable copy of the candidate grid in the UI
 
 An edit copies the grid, changes the selected cells, and records the old session
 only if candidates actually changed. It then creates a fresh session while keeping
-strategy enablement. Clear and successful import record history, reset solver
-state, and deselect. A completed Step/Go records one history entry for the whole
+strategy enablement. Clear and successful import reset solver state and deselect, recording history
+when the grid changes. A completed Step/Go that changes the grid records one history entry for the whole
 command, even if Go tried several strategies; a cancelled/failed worker request
 does not commit its partial work.
 
@@ -198,6 +198,10 @@ it. `fresh` is separate again: it decides whether the next digit starts a new en
 or toggles an existing candidate, and is maintained by Workspace rather than DOM
 focus history.
 
+Shift-click range selection was an old TODO and remains unimplemented. Tab still
+uses the browser's normal cell-by-cell order; a roving single-tab-stop grid would
+be a separate interaction change, not a comment-only migration.
+
 ## Import/export and modal lifetime
 
 `Tools.svelte` passes the actual opener button to App. App owns the transfer mode
@@ -218,7 +222,7 @@ reported by the solving/validation path.
 
 Export uses `session.exportGrid`, which copies the supplied grid into a temporary
 Board and calls its serializers; exporting does not alter session/history.
-`to729()` preserves candidate membership, including empty sets. `to81()` cannot
+`to729()` preserves candidate membership, including empty sets. `to81()` returns nine rows separated by newlines, with no terminal newline. It cannot
 preserve unsolved candidate subsets: a dot represents an unsolved cell, and an empty
 set exports as zero, which imports as a full blank. The dialog displays both forms
 rather than maintaining a separate export-state store.
@@ -411,7 +415,7 @@ file, including consolidated and retired responsibilities; it is not a rename li
 | `src/ErrorNotice.css`                              | src/App.css (failure notice)                                                                |
 | `src/ErrorNotice.tsx`                              | src/App.svelte (Svelte boundary)                                                            |
 | `src/Types.tsx`                                    | src/core/types.ts; local component Props types                                              |
-| `src/asyncPrompt.ts`                               | src/components/TransferDialog.svelte (native dialog)                                        |
+| `src/asyncPrompt.ts`                               | src/components/TransferDialog.svelte (HTML dialog)                                          |
 | `src/deprecate.test.ts`                            | Retired with obsolete migration helper                                                      |
 | `src/deprecate.ts`                                 | Retired; obsolete migration helper                                                          |
 | `src/eventRegistry.ts`                             | Retired; declarative Svelte handlers and onDestroy cleanup                                  |
@@ -570,3 +574,9 @@ stalled and no solver errors. These are historical measurements, not assertions
 about later source size or coverage. The review follow-up expands tests and
 coverage to UI/state and browser projects. Local Chromium exits with SIGTRAP before
 loading a page in this environment; native browser verification runs in GitHub Actions.
+
+## Legacy comments and review confidence
+
+The [legacy comment audit](legacy-comment-audit.md) records which old explanations
+were retained, adapted or retired. The [review confidence assessment](review-confidence.md)
+separates tested behavior from remaining evidence gaps and ranks further checks.

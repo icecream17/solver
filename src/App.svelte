@@ -24,6 +24,7 @@
 
 <svelte:boundary>
    <header>
+      <!-- Keep the displayed version in sync with package.json. -->
       <h1>Sudoku solver <span class="version">v0.37.0</span></h1>
       <GithubCorner />
    </header>
@@ -38,6 +39,7 @@
          <p class="board-caption">
             {'ABCDEFGHJ'.split('').join(' · ')} <span>rows · columns 1–9</span>
          </p>
+         <!-- One polite status region avoids a separate announcement for every strategy row. -->
          <p
             class:error={workspace.session.outcome === 'error'}
             class:success={workspace.session.outcome === 'solved'}

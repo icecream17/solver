@@ -12,6 +12,7 @@ export function highlightGroup(board: Board, group: Iterable<CellID>, color = 'b
    for (const cell of group) highlightCell(board, cell, color)
 }
 
+/** Mark one digit across cells. Colors accumulate; Annotations.css resolves combinations. */
 export function colorGroup(
    board: Board,
    group: Iterable<CellID>,
@@ -47,6 +48,7 @@ export function getCellsWithNCandidates(board: Board, count: number) {
    )
 }
 
+/** Return whether any cell changed, not the number of eliminations. */
 export function removeCandidateFromCells(
    board: Board,
    digit: SudokuDigits,

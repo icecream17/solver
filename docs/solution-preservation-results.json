@@ -1,0 +1,33 @@
+{
+   "puzzles": 1465,
+   "searchNodeBudget": 200000,
+   "referenceSolutions": 1461,
+   "unverifiedPuzzles": [80, 299, 344, 1041],
+   "noSolution": 0,
+   "commandsChecked": 24288,
+   "solved": 494,
+   "stalled": 967,
+   "solverErrors": 0,
+   "turnLimit": 0,
+   "violations": [],
+   "changedCommands": {
+      "Check for solved": 0,
+      "Update candidates": 11907,
+      "Hidden singles": 5328,
+      "Intersection removal": 2794,
+      "Pairs, triples, and quads": 1719,
+      "Hidden pairs, triples, and quads": 195,
+      "X wing": 66,
+      "Swordfish": 23,
+      "Jellyfish": 2,
+      "Skyscraper": 205,
+      "Two string kite": 118,
+      "Y wing (aka Bent triple)": 102,
+      "Two minus one lines": 491,
+      "W wing": 147,
+      "XYZ wing": 73,
+      "Pair covers group": 27,
+      "XY Ring (Loop)": 31,
+      "XY Chain": 93
+   }
+}

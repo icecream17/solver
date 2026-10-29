@@ -129,7 +129,7 @@ function findConjugatesOfGroup(sudoku: Board, group: CellGroup, maxSize = 4 as 2
 // For each candidate find squares
 
 /**
- * Colors a conjugate, see Cell#highlight
+ * Mark each candidate in a conjugate through Board.mark; rendering consumes those marks.
  */
 export function colorConjugate(sudoku: Board, conjugate: CellGroup, color = 'blue') {
    for (const cell of conjugate) {

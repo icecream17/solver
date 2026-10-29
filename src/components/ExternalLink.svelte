@@ -10,7 +10,7 @@
    let { href, children, class: className = '', ...attributes }: Props = $props()
 </script>
 
-<!-- Keep external-link privacy and event behavior in one place. -->
+<!-- Keep privacy attributes together; clicks must not also activate a containing control. -->
 <a
    {...attributes}
    {href}

@@ -73,6 +73,8 @@
       )
          return
       event.preventDefault()
+      // Combine held directions only on repeat: a quick Up then Right must move
+      // once each, rather than replaying Up when the Right key first goes down.
       const movements = event.repeat ? new Set([...pressed, event.key]) : new Set([event.key])
       const move = (index: number) => {
          let row = Math.floor(index / 9),
@@ -126,6 +128,7 @@
    Escape to deselect.
 </p>
 
+<!-- The table exposes grid selection; the inner buttons own focus and input. -->
 <table
    bind:this={table}
    class="board"

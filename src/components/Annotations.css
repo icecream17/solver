@@ -11,10 +11,12 @@
    background-color: lightgreen;
    color: black;
 }
+/* Blend overlapping reason/alternate marks instead of hiding either role. */
 .Cell.blue.green,
 .candidate.blue.green {
    background-color: #8ecec2;
 }
+/* Softer whole-cell pivots keep large fills comfortable; candidate pivots stay orange. */
 .Cell.orange,
 .legend .orange {
    background-color: hsl(39, 80%, 70%);

@@ -43,6 +43,8 @@ export class CandidateID {
    }
 }
 
+// Strategies compare positions by object identity in Sets. Always obtain them
+// through id(); re-creating a CellID/CandidateID would break intersections.
 const cellIDs = [] as TwoDimensionalArray<CellID>
 const candidateIDs = [] as ThreeDimensionalArray<CandidateID>
 export function id(row: IndexToNine, column: IndexToNine): CellID

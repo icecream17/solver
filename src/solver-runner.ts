@@ -10,10 +10,11 @@ export interface SolverRunner {
 export type SolverRequest = { session: Session; mode: SolveMode }
 export type SolverResponse = { session: Session } | { error: string } | { progress: string }
 
-/** One worker per operation makes cancellation immediate, even inside a search. */
+type ActiveSolve = { worker: Worker; reject: (error: Error) => void }
+
+/** Own one active worker; release it on completion, failure or cancellation. */
 export class WorkerSolverRunner implements SolverRunner {
-   private worker: Worker | null = null
-   private reject: ((error: Error) => void) | null = null
+   private active: ActiveSolve | null = null
 
    run(
       session: Session,
@@ -26,44 +27,54 @@ export class WorkerSolverRunner implements SolverRunner {
          const worker = new Worker(new URL('./core/solver.worker.ts', import.meta.url), {
             type: 'module'
          })
-         this.worker = worker
-         this.reject = reject
+         const operation = { worker, reject }
+         this.active = operation
+         const fail = (error: Error) => {
+            if (this.release(operation)) reject(error)
+         }
 
          worker.onmessage = (event: MessageEvent<SolverResponse>) => {
-            if (this.worker !== worker) return
-            if ('progress' in event.data) {
-               onProgress?.(event.data.progress)
-               return
+            if (this.active !== operation) return
+            try {
+               const response = event.data
+               if (!response || typeof response !== 'object' || Object.keys(response).length !== 1)
+                  throw new Error('The solver worker returned an invalid response.')
+               if ('progress' in response && typeof response.progress === 'string') {
+                  onProgress?.(response.progress)
+               } else if ('error' in response && typeof response.error === 'string') {
+                  fail(new Error(response.error))
+               } else if ('session' in response && response.session) {
+                  if (this.release(operation)) resolve(response.session)
+               } else {
+                  throw new Error('The solver worker returned an invalid response.')
+               }
+            } catch (error) {
+               fail(error instanceof Error ? error : new Error(String(error)))
             }
-            this.finish()
-            if ('error' in event.data) reject(new Error(event.data.error))
-            else resolve(event.data.session)
          }
-         const fail = () => {
-            if (this.worker !== worker) return
-            this.finish()
-            reject(new Error('The solver worker failed. The board has not changed.'))
+         worker.onerror = worker.onmessageerror = () => {
+            fail(new Error('The solver worker failed. The board has not changed.'))
          }
-         worker.onerror = fail
-         worker.onmessageerror = fail
          try {
             worker.postMessage({ session, mode } satisfies SolverRequest)
          } catch (error) {
-            this.finish()
-            reject(error)
+            fail(error instanceof Error ? error : new Error(String(error)))
          }
       })
    }
 
    cancel() {
-      const reject = this.reject
-      this.finish()
-      reject?.(new DOMException('Solving cancelled.', 'AbortError'))
+      const operation = this.active
+      if (operation && this.release(operation))
+         operation.reject(new DOMException('Solving cancelled.', 'AbortError'))
    }
 
-   private finish() {
-      this.worker?.terminate()
-      this.worker = null
-      this.reject = null
+   private release(operation: ActiveSolve) {
+      if (this.active !== operation) return false
+      this.active = null
+      const { worker } = operation
+      worker.onmessage = worker.onerror = worker.onmessageerror = null
+      worker.terminate()
+      return true
    }
 }

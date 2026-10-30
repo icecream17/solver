@@ -11,7 +11,7 @@ import userEvent from '@testing-library/user-event'
 import App from './App.svelte'
 import fixtures from './core/fixtures'
 import { Workspace } from './workspace.svelte'
-import { go, step } from './core/session'
+import { createSession, go, step, type Session } from './core/session'
 
 // Only the worker transport is replaced; component tests exercise the real solver.
 function render(component: typeof App) {
@@ -253,4 +253,27 @@ test('clicking a displayed digit keeps keyboard focus while switching to candida
    await u.keyboard('{Backspace}{Escape}')
    expect(cell().hasAttribute('data-error')).toBe(false)
    expect(cell().querySelector('.digit')).toBeNull()
+})
+
+test('unmount cancels work and a late completion cannot publish after teardown', async () => {
+   let complete!: (session: Session) => void
+   const cancel = vi.fn()
+   const workspace = new Workspace({
+      run: () =>
+         new Promise<Session>((resolve) => {
+            complete = resolve
+         }),
+      cancel
+   })
+   const view = renderComponent(App, { workspace })
+   const operation = workspace.solve('go')
+   view.unmount()
+   expect(cancel).toHaveBeenCalledOnce()
+   const stale = createSession()
+   stale.grid[0][0] = [8]
+   complete(stale)
+   await operation
+   expect(workspace.busy).toBe(false)
+   expect(workspace.session.grid[0][0]).toHaveLength(9)
+   expect(workspace.canUndo).toBe(false)
 })

@@ -1,7 +1,9 @@
 # Development guidance for AI contributors
 
 This file is guidance for AI contributors working on the repository. The
-[rewrite notes](svelte-rewrite.md) describe how the systems fit together for review.
+[rewrite notes](svelte-rewrite.md) describe the implementation and migration. The
+[solver contract](solver-contract.md) defines required command/state behavior and
+its acceptance cases; use it when changing these boundaries.
 
 Use the commands in the [README](../README.md). Commit `package-lock.json`; CI uses
 `npm ci` and an npm cache. Vite serves development files and writes a static `dist/`
@@ -13,7 +15,9 @@ Keep mathematical strategies and snapshots in `src/core/`, free of components,
 Svelte runes, and browser globals. `Workspace` owns selection, edit history, and
 reactive state. Components receive data and callbacks. Browser solving uses a fresh
 module worker per command; terminating it cancels even a synchronous strategy search.
-The operation generation guards against stale results after editing or cancelling.
+Operation identity guards against stale results after editing or cancelling. Busy
+is derived from the current owner. Selection during work survives completion, and
+Undo must reconcile scan state with current strategy preferences.
 Always terminate workers during component teardown.
 
 Test strategies with candidate fixtures and exact eliminations. Test state

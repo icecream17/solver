@@ -1,5 +1,13 @@
 # Review confidence for PR #617
 
+This is a historical evidence assessment through the serializer/comment pass after
+`694130c`, not a design specification or permanent approval. The later
+[solver contract](solver-contract.md) defines required lifecycle/state behavior.
+That follow-up reproduced two previously uncovered bugs: restoring scan caches
+after preferences changed, and losing selection/entry intent when work completed.
+They demonstrate the limits of the earlier suite; the new focused regressions,
+rather than a higher coverage number, are the relevant improvement.
+
 Assessed against rewrite `694130c`, with the serializer/comment changes and
 additional verification in this pass. This is an evidence assessment, not an
 independent approval or a probability that the PR contains no bugs.

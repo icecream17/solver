@@ -386,3 +386,53 @@ test('puzzle actions stay available and columns stay stable across tabs', async 
    await page.getByRole('button', { name: 'Close', exact: true }).click()
    await expect(page.getByRole('button', { name: 'export', exact: true })).toBeFocused()
 })
+
+test('selection made while the worker loads survives completion and accepts a fresh digit', async ({
+   page
+}) => {
+   let release!: () => void
+   let started!: () => void
+   const gate = new Promise<void>((resolve) => {
+      release = resolve
+   })
+   const requested = new Promise<void>((resolve) => {
+      started = resolve
+   })
+   await page.route('**/solver.worker-*.js', async (route) => {
+      started()
+      await gate
+      await route.continue()
+   })
+   try {
+      await page.getByRole('tab', { name: 'strategies', exact: true }).click()
+      await page.getByRole('button', { name: 'go', exact: true }).click()
+      await requested
+      await cell(page, 0, 1).click()
+      release()
+      await expect(page.getByRole('status')).toContainText('No more progress')
+      await expect(cell(page, 0, 1)).toBeFocused()
+      await expect(cell(page, 0, 1)).toHaveAttribute('data-active', 'true')
+      await page.keyboard.type('7')
+      await expect(visibleCandidates(page, 0, 1)).toHaveText('7')
+   } finally {
+      release()
+   }
+})
+
+test('undo after changing strategy preferences runs newly enabled propagation', async ({
+   page
+}) => {
+   await importPuzzle(page, '1' + '.'.repeat(80))
+   await page.getByRole('tab', { name: 'strategies', exact: true }).click()
+   const propagation = page.getByRole('switch', { name: 'Toggle Update candidates', exact: true })
+   await propagation.uncheck()
+   const step = page.getByRole('button', { name: 'step', exact: true })
+   await step.click()
+   await expect(step).toHaveAttribute('aria-disabled', 'false')
+   await cell(page, 0, 1).click()
+   await page.keyboard.type('2')
+   await propagation.check()
+   await page.getByRole('button', { name: 'undo', exact: true }).click()
+   await page.getByRole('button', { name: 'go', exact: true }).click()
+   await expect(page.getByLabel('Status for Update candidates', { exact: true })).toHaveText('20')
+})

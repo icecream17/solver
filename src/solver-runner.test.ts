@@ -12,7 +12,7 @@ class FakeWorker {
    constructor() {
       FakeWorker.instances.push(this)
    }
-   message(data: SolverResponse) {
+   message(data: unknown) {
       this.onmessage?.({ data } as MessageEvent<SolverResponse>)
    }
 }
@@ -40,10 +40,13 @@ test('cancellation rejects the request and ignores stale events after a new requ
    const runner = new WorkerSolverRunner()
    const first = runner.run(createSession(), 'go')
    const stale = FakeWorker.instances[0]
+   const lateMessage = stale.onmessage!
+   const lateError = stale.onerror!
    const second = runner.run(createSession(), 'step')
    await expect(first).rejects.toHaveProperty('name', 'AbortError')
-   stale.message({ session: createSession() })
-   stale.onerror?.()
+   lateMessage({ data: { session: createSession() } } as MessageEvent<SolverResponse>)
+   lateError()
+   expect(stale.terminate).toHaveBeenCalledOnce()
    expect(FakeWorker.instances[1].terminate).not.toHaveBeenCalled()
    FakeWorker.instances[1].message({ session: createSession() })
    await second
@@ -82,4 +85,67 @@ test('a synchronous send failure rejects and releases the worker', async () => {
    )
    await expect(runner.run(createSession(), 'step')).rejects.toThrow('Cannot clone request')
    expect(FakeWorker.instances[0].terminate).toHaveBeenCalledOnce()
+})
+
+test('constructor failure leaves cancellation harmless and a later request usable', async () => {
+   const runner = new WorkerSolverRunner()
+   vi.stubGlobal(
+      'Worker',
+      class {
+         constructor() {
+            throw new Error('Cannot create worker')
+         }
+      }
+   )
+   await expect(runner.run(createSession(), 'step')).rejects.toThrow('Cannot create worker')
+   runner.cancel()
+   vi.stubGlobal('Worker', FakeWorker)
+   const next = runner.run(createSession(), 'step')
+   FakeWorker.instances[0].message({ session: createSession() })
+   await next
+})
+
+test.each([
+   { name: 'null', message: null },
+   { name: 'unknown', message: {} },
+   { name: 'invalid progress', message: { progress: 1 } },
+   { name: 'ambiguous', message: { progress: 'x', session: createSession() } }
+])('$name message rejects rather than leaving a pending request', async ({ message }) => {
+   const runner = new WorkerSolverRunner()
+   const operation = runner.run(createSession(), 'step')
+   const worker = FakeWorker.instances[0]
+   worker.message(message)
+   await expect(operation).rejects.toThrow('invalid response')
+   expect(worker.terminate).toHaveBeenCalledOnce()
+   expect(worker.onmessage).toBeNull()
+   runner.cancel()
+   expect(worker.terminate).toHaveBeenCalledOnce()
+})
+
+test('a progress callback failure releases only its owning request', async () => {
+   const runner = new WorkerSolverRunner()
+   const operation = runner.run(createSession(), 'step', () => {
+      throw new Error('Progress callback failed')
+   })
+   FakeWorker.instances[0].message({ progress: 'Check for solved' })
+   await expect(operation).rejects.toThrow('Progress callback failed')
+   expect(FakeWorker.instances[0].terminate).toHaveBeenCalledOnce()
+})
+
+test('late progress and duplicate terminal callbacks cannot affect a newer request', async () => {
+   const runner = new WorkerSolverRunner()
+   const first = runner.run(createSession(), 'step')
+   const worker = FakeWorker.instances[0]
+   const queued = worker.onmessage!
+   worker.message({ session: createSession() })
+   await first
+   const progress = vi.fn()
+   const second = runner.run(createSession(), 'go', progress)
+   queued({ data: { progress: 'Stale progress' } } as MessageEvent<SolverResponse>)
+   queued({ data: { session: createSession() } } as MessageEvent<SolverResponse>)
+   expect(progress).not.toHaveBeenCalled()
+   expect(FakeWorker.instances[1].terminate).not.toHaveBeenCalled()
+   FakeWorker.instances[1].message({ session: createSession() })
+   await second
+   expect(worker.terminate).toHaveBeenCalledOnce()
 })

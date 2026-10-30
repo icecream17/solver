@@ -21,11 +21,14 @@ export class Workspace {
    private fresh = new Set<number>()
    private history: Session[] = []
    canUndo = $state(false)
-   busy = $state(false)
+   private activeOperation = $state.raw<object | null>(null)
    operationMessage = $state('')
-   private operation = 0
 
    constructor(private runner: SolverRunner = new WorkerSolverRunner()) {}
+
+   get busy() {
+      return this.activeOperation !== null
+   }
 
    private refreshEntryState() {
       // eslint-disable-next-line svelte/prefer-svelte-reactivity -- private entry bookkeeping
@@ -101,35 +104,41 @@ export class Workspace {
 
    async solve(mode: SolveMode) {
       if (this.busy) return
-      const operation = ++this.operation
-      this.busy = true
+      const operation = {}
+      this.activeOperation = operation
       this.operationMessage = 'Solving… You can cancel a long search.'
 
       try {
          const result = await this.runner.run($state.snapshot(this.session), mode, (strategy) => {
-            if (operation === this.operation)
+            if (operation === this.activeOperation)
                this.operationMessage = `Trying ${strategy}… You can cancel this search.`
          })
          // A board edit, cancellation, or newer request invalidates an old result.
-         if (operation !== this.operation) return
+         if (operation !== this.activeOperation) return
          if (!sameGrid(this.session.grid, result.grid)) this.remember()
          this.session = result
          this.operationMessage = ''
-         this.deactivate()
-         this.fresh.clear()
+         // Navigation during work remains current. Only discard first-entry intent
+         // where the result narrowed that cell; untouched all-nine entries keep it.
+         for (const index of this.fresh) {
+            if (this.session.grid[Math.floor(index / 9)][index % 9].length !== 9)
+               this.fresh.delete(index)
+         }
       } catch (error) {
-         if (operation !== this.operation) return
-         this.operationMessage = error instanceof Error ? error.message : String(error)
+         if (operation !== this.activeOperation) return
+         const message = error instanceof Error ? error.message : String(error)
+         this.operationMessage = message.trim()
+            ? message
+            : 'Solving failed. The board has not changed.'
       } finally {
-         if (operation === this.operation) this.busy = false
+         if (operation === this.activeOperation) this.activeOperation = null
       }
    }
 
    cancelSolve() {
       if (!this.busy) return
-      this.operation++
+      this.activeOperation = null
       this.runner.cancel()
-      this.busy = false
       this.operationMessage = 'Solving cancelled. The board has not changed.'
    }
 
@@ -138,6 +147,10 @@ export class Workspace {
       this.cancelSolve()
       this.operationMessage = ''
       this.session.disabled[index] = !enabled
+      this.restartScan()
+   }
+
+   private restartScan() {
       this.session.strategyIndex = 0
       this.session.skippable.fill(false)
    }
@@ -166,11 +179,15 @@ export class Workspace {
       this.operationMessage = ''
       const previous = this.history.pop()
       if (previous) {
-         // Strategy enablement is a preference, not part of board undo.
+         // Scan caches belong to the preferences that produced the snapshot.
+         const preferencesChanged = previous.disabled.some(
+            (disabled, index) => disabled !== this.session.disabled[index]
+         )
          this.session = {
             ...previous,
             disabled: [...this.session.disabled]
          }
+         if (preferencesChanged) this.restartScan()
          this.refreshEntryState()
       }
       this.canUndo = this.history.length > 0

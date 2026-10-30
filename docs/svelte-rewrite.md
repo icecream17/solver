@@ -1,4 +1,9 @@
-# Svelte 5 rewrite
+# Svelte 5 rewrite — implementation and migration notes
+
+These notes were written alongside and after the implementation. They describe
+its structure and migration history; they are not an earlier design specification
+or independent evidence that the design is correct. Required command/state
+behavior and its focused acceptance cases are in the [solver contract](solver-contract.md).
 
 The UI, state ownership, solver orchestration, dialogs, keyboard handlers, build,
 and browser tests were rebuilt around Svelte 5 and Vite. Mathematical strategies
@@ -15,7 +20,7 @@ of components, Svelte runes and browser globals.
   `solver-runner.ts` owns worker messages, progress, errors and termination.
 - `workspace.svelte.ts` owns reactive state, selection and a bounded undo history.
   Editing, importing, undoing or toggling strategies cancels an active operation.
-  Operation generations prevent late results from replacing newer state.
+  Operation identity prevents late results from replacing newer state.
 - Components render data and send actions upward. The solver never waits for a
   render or registers component instances.
 
@@ -58,25 +63,27 @@ There is no global store or second editable copy of the candidate grid in the UI
 | Selected flat cell indices and active/inactive selection                                                             | `workspace.svelte.ts`                                                             | Board supplies each Cell's selection props; CandidatePad edits the same selection                                                    |
 | First-entry bookkeeping (`fresh`)                                                                                    | Private Workspace Set                                                             | Selected all-nine cells start with an empty candidate list when the next digit is typed; recomputed on selection/navigation and undo |
 | Undo snapshots and `canUndo`                                                                                         | Private Workspace history plus a reactive availability flag                       | At most 100 sessions; selection/focus and pending requests are not snapshotted                                                       |
-| Busy flag, progress/error text and request generation                                                                | Workspace                                                                         | Tools disables duplicate solve commands and offers Cancel; App displays live status                                                  |
+| Operation owner, derived busy state and progress/error text                                                          | Workspace                                                                         | Tools disables duplicate solve commands and offers Cancel; App displays live status                                                  |
 | Current tools tab                                                                                                    | `Tools.svelte` local `$state`                                                     | Switching tabs does not recreate Workspace or clear strategy results                                                                 |
 | Transfer mode and opener element                                                                                     | `App.svelte` local `$state`                                                       | Exist while coordinating the import/export dialog                                                                                    |
 | Held keys and temporary focus guards                                                                                 | `Board.svelte` local event bookkeeping                                            | Used only while handling keyboard/pointer events, not as render state                                                                |
 
 An edit copies the grid, changes the selected cells, and records the old session
 only if candidates actually changed. It then creates a fresh session while keeping
-strategy enablement. Clear and successful import reset solver state and deselect, recording history
-when the grid changes. A completed Step/Go that changes the grid records one history entry for the whole
-command, even if Go tried several strategies; a cancelled/failed worker request
+strategy enablement. Clear and successful import reset solver state and deselect,
+recording history when the grid changes. A completed Step/Go that changes the grid
+records one history entry for the whole command, even if Go tried several strategies; a cancelled/failed worker request
 does not commit its partial work.
 
 Only grid changes create board-history entries. A failed/unchanged strategy still
 updates its cursor, results and status, but does not add an Undo action. Clearing
 or importing an identical grid also resets session state without adding history.
 
-Undo cancels active work and restores the previous session, including cursor,
-results and explanation grids. It keeps the **current** disabled-strategy flags:
-enablement is a preference rather than part of board history. Selected indices
+Undo cancels active work and restores the previous session, including results and
+explanation grids. It keeps the **current** disabled-strategy flags:
+enablement is a preference rather than part of board history. If those preferences
+differ from the snapshot, its cursor and skip cache restart rather than bypassing
+newly enabled strategies. Otherwise the saved cursor is restored. Selected indices
 stay selected, and first-entry bookkeeping is recomputed against the restored
 grid. This is why the sequence type 1 → keyboard Undo → type 2 starts a new entry.
 
@@ -96,19 +103,23 @@ directly by tests and the benchmark without creating a worker.
 Cancellation uses termination rather than a cancellation message: a worker busy in
 a synchronous recursive strategy could not receive that message until the search
 returned. `WorkerSolverRunner.cancel()` terminates it and rejects the pending
-promise with `AbortError`. Workspace increments an operation generation before
-cancelling, so late progress/results/catch/finally callbacks cannot affect a newer
-operation. Runner also rejects messages from a worker it no longer owns. Both
-checks matter: transport ownership and application state have different lifetimes.
+promise with `AbortError`. Workspace revokes the current operation identity before cancelling. Its progress,
+result, catch and finally paths all check that identity. Busy is derived from the
+identity instead of being maintained independently. The runner separately owns a
+worker/rejection pair and releases only that exact pair; captured callbacks cannot
+release a newer worker. The contract lists the distinct acceptance cases for these
+two boundaries.
 
 Editing, Clear, successful import, Undo and a strategy toggle cancel active work.
 App teardown also cancels. Selection/navigation alone does not change the grid and
-does not cancel. While solving, the committed board stays visible; intermediate
+does not cancel. Completion preserves that newer selection and its entry intent;
+first-entry flags are removed for cells narrowed by the result. While solving, the committed board stays visible; intermediate
 mutations exist only in the worker. Computation errors become a text response;
 Worker loading, message decoding and request-send failures all release the
 worker and reject the command. The existing session survives
 both. Workers are created on demand and terminated after each command, trading
-startup/clone overhead for simple ownership and immediate cancellation.
+startup/clone overhead for a bounded ownership lifecycle. Fresh creation is not
+necessary for cancellation itself; worker reuse remains a performance question.
 
 ## Strategy execution, validation and scan state
 

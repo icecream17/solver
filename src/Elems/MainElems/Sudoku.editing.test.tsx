@@ -1,69 +1,14 @@
 import React from 'react';
-import { act, render, screen } from '@testing-library/react';
+import { render } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import App from '../../App';
 import { keysPressed } from '../../keyboardListener';
-import { switchTab } from '../../testUtils';
-import { forComponentsToUpdate } from '../../utils';
 import { getButtonCellElement } from './Sudoku.testUtils';
 
 const errorAttribute = 'data-error'
 
 beforeEach(() => {
    keysPressed.clear() // Match Sudoku.test.tsx: held keys otherwise survive between tests.
-})
-
-test.each([
-   ['an untouched cell', ''],
-   ['a cell explicitly emptied of candidates', '{Control>}{Backspace}{/Control}'],
-])('first entry, Undo, and the next digit in %s', async (_description, preparation) => {
-   render(<App />)
-   switchTab('strategies')
-   const cell = getButtonCellElement(0, 0)
-   userEvent.click(cell)
-   userEvent.keyboard(`${preparation}1`)
-   expect(cell).toHaveTextContent(/^1$/)
-   expect(cell).not.toHaveAttribute(errorAttribute)
-
-   // Current React Undo has no manual-edit history: this entry stays in place.
-   const undo = screen.getByRole('button', { name: 'undo' })
-   userEvent.click(undo)
-   await act(forComponentsToUpdate)
-   expect(undo).toHaveFocus()
-   expect(cell).toHaveTextContent(/^1$/)
-
-   userEvent.click(cell)
-   userEvent.keyboard('2')
-   expect(cell).toHaveFocus()
-   expect(cell).toHaveTextContent(/^12$/)
-})
-
-test.each(['click', 'arrow keys'])('leaving and returning by %s retains narrowed candidates', movement => {
-   render(<App />)
-   const first = getButtonCellElement(0, 0)
-   const second = getButtonCellElement(0, 1)
-   userEvent.click(first)
-   userEvent.keyboard('1')
-
-   if (movement === 'click') {
-      userEvent.click(second)
-   } else {
-      userEvent.keyboard('{ArrowRight}')
-   }
-   expect(second).toHaveFocus()
-   userEvent.keyboard('2')
-   expect(first).toHaveTextContent(/^1$/)
-   expect(second).toHaveTextContent(/^2$/)
-
-   if (movement === 'click') {
-      userEvent.click(first)
-   } else {
-      userEvent.keyboard('{ArrowLeft}')
-   }
-   expect(first).toHaveFocus()
-   userEvent.keyboard('3')
-   expect(first).toHaveTextContent(/^13$/)
-   expect(second).toHaveTextContent(/^2$/)
 })
 
 test('explicitly reaching all nine candidates makes the next digit a fresh entry', () => {

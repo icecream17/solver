@@ -4,6 +4,10 @@ Note: Many earlier versions are not specified, that's too much work.
 
 When a `@types` dependency updates, they almost always don't affect anything.
 
+## v0.36.6
+
+- (use) Fix the extra empty line at the end of the digit export: `to81()` now returns nine newline-separated rows without a trailing newline.
+
 ## v0.36.5
 
 - (use) Fix importing non-space-whitespace--separated cells

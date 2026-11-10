@@ -97,6 +97,16 @@ test('to81', () => {
    expect(toSudoku.data[1][2]).toStrictEqual([3]) // Only single candidate information is retained
 })
 
+test('to81 exports nine rows without an extra empty line', () => {
+   const testSudoku = new PureSudoku()
+   testSudoku.set(0, 0).to(1)
+   testSudoku.set(0, 1).to()
+   testSudoku.set(0, 2).to(2, 3)
+   testSudoku.set(8, 8).to(9)
+
+   expect(testSudoku.to81()).toBe('10.......\n' + '.........\n'.repeat(7) + '........9')
+})
+
 test('to729', () => {
    const testSudoku = new PureSudoku()
    testSudoku.set(1, 2).to(3, 4, 5)

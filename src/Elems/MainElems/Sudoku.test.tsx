@@ -151,7 +151,7 @@ test.each(['Backspace', 'Delete', 'Clear'])("Resetting the candidates with %s", 
    expect(buttonCell).not.toHaveAttribute('data-error')
 
    // Since the cell has all candidates, and is blurred, textcontent = ''
-   expect(buttonCell).toBeEmptyDOMElement()
+   expect(buttonCell).toHaveTextContent(/^$/)
 })
 
 test("Multi-selection editing", () => {

@@ -94,7 +94,7 @@ test("Setting a cell to multiple candidates", () => {
 })
 
 // Cell has 0 candidates
-test("Clearing all candidates of a cell", () => {
+test.each(['Backspace', 'Delete', 'Clear'])("Clearing all candidates of a cell with %s", key => {
    const buttonCell = getButtonCellElement(0, 0)
    const buttonCell2 = getButtonCellElement(0, 1)
    
@@ -106,12 +106,12 @@ test("Clearing all candidates of a cell", () => {
 
    // Both Shift and Control key work to delete all candidates
    userEvent.click(buttonCell)
-   userEvent.keyboard('{Control>}{Backspace}{/Control}123')
+   userEvent.keyboard(`{Control>}{${key}}{/Control}123`)
    fireEvent.blur(buttonCell)
    expect(buttonCell).toHaveTextContent('123')
 
    userEvent.click(buttonCell)
-   userEvent.keyboard('{Shift>}{Backspace}{/Shift}1234')
+   userEvent.keyboard(`{Shift>}{${key}}{/Shift}1234`)
    fireEvent.blur(buttonCell)
    expect(buttonCell).toHaveTextContent('1234')
 
@@ -135,17 +135,23 @@ test("Toggling every candidate", () => {
    expect(buttonCell).toHaveTextContent('') // Inactive + full = nothing shown
 })
 
-test("Resetting the candidates", () => {
+test.each(['Backspace', 'Delete', 'Clear'])("Resetting the candidates with %s", key => {
    const buttonCell = getButtonCellElement(0, 0)
    userEvent.click(buttonCell)
-   userEvent.keyboard('123{Backspace}') // 123 to prevent false negatives
-   fireEvent.blur(buttonCell) // Backspace resets to having all candidates
+   userEvent.keyboard(`123{${key}}`) // 123 to prevent false negatives
+   expect(buttonCell).toHaveTextContent(/^123456789$/)
+
+   // Reset starts a fresh entry without needing to leave and refocus the cell.
+   userEvent.keyboard('4')
+   expect(buttonCell).toHaveTextContent(/^4$/)
+   userEvent.keyboard(`{${key}}`)
+   fireEvent.blur(buttonCell) // Reset restores all candidates
 
    // Is not error
    expect(buttonCell).not.toHaveAttribute('data-error')
 
    // Since the cell has all candidates, and is blurred, textcontent = ''
-   expect(buttonCell).toHaveTextContent('')
+   expect(buttonCell).toHaveTextContent(/^$/)
 })
 
 test("Multi-selection editing", () => {

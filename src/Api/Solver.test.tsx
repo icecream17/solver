@@ -45,26 +45,33 @@ test("Strategy index goes to 1 next", async () => {
 })
 
 test("Stays at first strategy when board is invalid", async () => {
-   await importBoard(BOARDS["Invalid board"])
+   await importBoard('11' + '.'.repeat(79))
    userEvent.click(screen.getByRole("button", { name: "step" }))
-   userEvent.click(screen.getByRole("button", { name: "step" }))
-   await waitFor(() => expect(currentStrategyIndex()).toBe(0))
+   await waitFor(() => expect(screen.getByRole('status', { name: 'Status for Check for solved' })).toHaveTextContent(/^Error!$/))
+   expect(currentStrategyIndex()).toBe(0)
+   const message = 'Two (or more) 1s in row A!'
+   expect(screen.getByText(message, { selector: '.AlertNotice p' })).toBeInTheDocument()
+   expect(screen.getByText(message, { selector: '.StrategyDetails p' })).toBeInTheDocument()
+   expect(getButtonCellElement(0, 0)).toHaveTextContent(/^1$/)
+   expect(getButtonCellElement(0, 1)).toHaveTextContent(/^1$/)
 })
 
 test("After a strategy success, the index is 0 again", async () => {
-   console.time('long test')
-   await importBoard(BOARDS["Simple sudoku"])
+   await importBoard('1' + '.'.repeat(80))
+   expect(getButtonCellElement(0, 1)).toHaveTextContent(/^$/)
 
    userEvent.click(screen.getByRole("button", { name: "go" }))
    await waitFor(() => expect(currentStrategyIndex()).toBe(1))
+   expect(getButtonCellElement(0, 1)).toHaveTextContent(/^23456789$/)
+   expect(getButtonCellElement(8, 8)).toHaveTextContent(/^$/)
 
    userEvent.click(screen.getByRole("button", { name: "step" }))
    await waitFor(() => expect(currentStrategyIndex()).toBe(0))
-   console.timeEnd('long test')
+   expect(getButtonCellElement(0, 1)).toHaveTextContent(/^23456789$/)
 })
 
 test("It skips over a disabled strategy", async () => {
-   await importBoard(BOARDS["Simple sudoku"])
+   await importBoard('1' + '.'.repeat(80))
 
    userEvent.click(screen.getByRole("button", { name: "step" }))
    await waitFor(() => expect(currentStrategyIndex()).toBe(0))
@@ -73,5 +80,7 @@ test("It skips over a disabled strategy", async () => {
 
    userEvent.click(screen.getByRole("button", { name: "step" }))
    await waitFor(() => expect(currentStrategyIndex()).toBe(2)) // 0 indexing
+   expect(getButtonCellElement(0, 1)).toHaveTextContent(/^$/)
+   expect(screen.getByRole('status', { name: 'Status for Update candidates' })).toHaveTextContent(/^$/)
 })
 

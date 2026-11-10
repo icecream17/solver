@@ -39,13 +39,15 @@ export default class PureSudoku {
    }
 
    /**
-    * Convert the sudoku into 81 digits
+    * Convert the sudoku into nine rows, separated by newlines with no trailing newline.
     * "0" = a cell with no candidates
     * "." = an unsolved cell
+    * Candidate subsets are lost; use to729() to preserve all candidates.
     */
    to81 () {
-      let str = ""
+      const rows = []
       for (const row of this.data) {
+         let str = ""
          for (const cell of row) {
             if (cell.length === 1) {
                str += cell[0]
@@ -55,9 +57,9 @@ export default class PureSudoku {
                str += "."
             }
          }
-         str += "\n"
+         rows.push(str)
       }
-      return str
+      return rows.join("\n")
    }
 
    /**
